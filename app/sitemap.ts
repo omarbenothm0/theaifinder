@@ -22,7 +22,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/free-ai-tools`, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${baseUrl}/ai-apps`, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${baseUrl}/ai-tool-finder`, changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${baseUrl}/ai-tools-directory`, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${baseUrl}/for`, changeFrequency: 'weekly', priority: 0.8 }
   ];
 

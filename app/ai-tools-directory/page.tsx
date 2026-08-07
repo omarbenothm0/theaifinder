@@ -13,7 +13,11 @@ export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
     title: 'Full AI Tools Taxonomy Directory & Category Map (2026)',
     description: 'Complete directory architecture map indexing software categories and head-to-head comparison pages.',
-    canonicalUrl: siteUrl('/ai-tools-directory')
+    canonicalUrl: siteUrl('/ai-tools-directory'),
+    robots: {
+      index: false,
+      follow: true
+    }
   });
 }
 

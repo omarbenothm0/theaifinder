@@ -8,6 +8,7 @@ export interface SEOConfig {
   canonicalUrl?: string;
   ogImage?: string;
   noIndex?: boolean;
+  robots?: Metadata['robots'];
 }
 
 export function constructMetadata({
@@ -16,6 +17,7 @@ export function constructMetadata({
   canonicalUrl,
   ogImage = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
   noIndex = false,
+  robots,
 }: SEOConfig): Metadata {
   const fullCanonical = canonicalUrl ? (canonicalUrl.startsWith('http') ? canonicalUrl : `${SITE_URL}${canonicalUrl}`) : SITE_URL;
 
@@ -47,9 +49,9 @@ export function constructMetadata({
       description,
       images: [ogImage],
     },
-    robots: noIndex
+    robots: robots ?? (noIndex
       ? { index: false, follow: false }
-      : { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
+      : { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 }),
   };
 }
 
