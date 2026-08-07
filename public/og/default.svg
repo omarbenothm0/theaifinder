@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#0f172a"/>
+  <rect x="0" y="0" width="1200" height="630" fill="url(#grad)" opacity="0.15"/>
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#10b981"/>
+      <stop offset="1" stop-color="#0ea5e9"/>
+    </linearGradient>
+  </defs>
+  <circle cx="100" cy="100" r="200" fill="#10b981" opacity="0.08"/>
+  <circle cx="1100" cy="550" r="180" fill="#0ea5e9" opacity="0.08"/>
+  <rect x="80" y="240" width="80" height="80" rx="20" fill="#10b981"/>
+  <path d="M120 260 L120 300 M100 280 L140 280" stroke="#0f172a" stroke-width="6" stroke-linecap="round"/>
+  <text x="180" y="290" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="700" fill="#94a3b8" letter-spacing="2">AIFIND</text>
+  <text x="80" y="400" font-family="system-ui, -apple-system, sans-serif" font-size="64" font-weight="800" fill="#f8fafc" letter-spacing="-1">Discover, Compare &amp;</text>
+  <text x="80" y="475" font-family="system-ui, -apple-system, sans-serif" font-size="64" font-weight="800" fill="#f8fafc" letter-spacing="-1">Choose AI Tools</text>
+  <text x="80" y="540" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="500" fill="#64748b">Curated directory of 100+ AI software tools</text>
+</svg>

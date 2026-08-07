@@ -19,11 +19,20 @@ export const metadata: Metadata = {
     url: BASE_URL,
     siteName: 'AIFind Discovery Platform',
     type: 'website',
+    images: [
+      {
+        url: '/og/default.svg',
+        width: 1200,
+        height: 630,
+        alt: 'AIFind - Discover, Compare & Choose the Best AI Tools',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'AIFind - Discover, Compare & Choose the Best AI Tools',
     description: 'Find the right AI tool for any task. Search, compare, and filter 100+ top-rated AI software.',
+    images: ['/og/default.svg'],
   },
   robots: {
     index: true,

@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { Tool, Category, Persona, Comparison } from '../../types/tool';
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://aifind.io';
+const DEFAULT_OG_IMAGE = '/og/default.svg';
 
 export interface SEOConfig {
   title: string;
@@ -15,10 +16,11 @@ export function constructMetadata({
   title,
   description,
   canonicalUrl,
-  ogImage = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
+  ogImage = DEFAULT_OG_IMAGE,
   noIndex = false,
 }: SEOConfig): Metadata {
   const fullCanonical = canonicalUrl ? (canonicalUrl.startsWith('http') ? canonicalUrl : `${BASE_URL}${canonicalUrl}`) : BASE_URL;
+  const fullOgImage = ogImage.startsWith('http') ? ogImage : `${BASE_URL}${ogImage}`;
 
   return {
     title,
@@ -34,7 +36,7 @@ export function constructMetadata({
       siteName: 'AIFind Discovery Platform',
       images: [
         {
-          url: ogImage,
+          url: fullOgImage,
           width: 1200,
           height: 630,
           alt: title,
@@ -46,7 +48,7 @@ export function constructMetadata({
       card: 'summary_large_image',
       title,
       description,
-      images: [ogImage],
+      images: [fullOgImage],
     },
     robots: noIndex
       ? { index: false, follow: false }
@@ -59,11 +61,15 @@ export function generatePageMetadata(config: SEOConfig): Metadata {
 }
 
 export function generateToolMetadata(tool: Tool): Metadata {
+  const ogImage = tool.screenshots && tool.screenshots.length > 0
+    ? tool.screenshots[0]
+    : DEFAULT_OG_IMAGE;
+
   return constructMetadata({
     title: `${tool.name} Review, Pricing & Features (2026) | AIFind`,
     description: `${tool.tagline} Read verified user reviews, pricing options, API availability, and top alternatives for ${tool.name}.`,
     canonicalUrl: `/tools/${tool.slug}`,
-    ogImage: tool.logo
+    ogImage
   });
 }
 
