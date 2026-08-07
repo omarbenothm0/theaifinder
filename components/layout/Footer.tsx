@@ -158,6 +158,16 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/about" className="hover:text-emerald-400 transition-colors cursor-pointer">
+                  About AIFind
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-emerald-400 transition-colors cursor-pointer">
+                  Contact & Support
+                </Link>
+              </li>
+              <li>
                 <Link href="/admin" className="hover:text-emerald-400 transition-colors cursor-pointer text-slate-500">
                   Admin Portal
                 </Link>
@@ -165,6 +175,25 @@ export function Footer() {
             </ul>
           </div>
 
+        </div>
+
+        {/* Legal Row */}
+        <div className="pt-6 pb-8 border-b border-slate-800 flex flex-wrap justify-center gap-x-6 gap-y-3 text-[11px] text-slate-400">
+          <Link href="/about" className="hover:text-white transition-colors">
+            About
+          </Link>
+          <Link href="/contact" className="hover:text-white transition-colors">
+            Contact
+          </Link>
+          <Link href="/privacy" className="hover:text-white transition-colors">
+            Privacy Policy
+          </Link>
+          <Link href="/terms" className="hover:text-white transition-colors">
+            Terms of Service
+          </Link>
+          <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+            Sitemap
+          </a>
         </div>
 
         {/* Bottom Bar */}
