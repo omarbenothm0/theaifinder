@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbRepository } from '../../../../lib/dbRepository';
+import { requireAdmin } from '../../../../lib/auth/adminSession';
 
 export async function GET(
   _req: NextRequest,
@@ -19,6 +20,9 @@ export async function PUT(
   req: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
+  const authError = await requireAdmin(req);
+  if (authError) return authError;
+
   const { slug } = await params;
   const body = await req.json();
   const updated = dbRepository.updateTool(slug, body);
@@ -31,9 +35,12 @@ export async function PUT(
 }
 
 export async function DELETE(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
+  const authError = await requireAdmin(req);
+  if (authError) return authError;
+
   const { slug } = await params;
   const success = dbRepository.deleteTool(slug);
 

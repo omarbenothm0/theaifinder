@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Tool, Category, PricingModel, ReviewState } from '../../types/tool';
 import { getReviewState } from '../../lib/utils/reviewHelper';
-import { Settings, Plus, Edit2, Trash2, Search, X, Lock, Unlock, ShieldAlert } from 'lucide-react';
+import { Settings, Plus, Edit2, Trash2, Search, X, LogOut } from 'lucide-react';
 
 interface AdminDashboardProps {
   initialTools: Tool[];
@@ -15,11 +15,7 @@ export function AdminDashboard({ initialTools, initialCategories }: AdminDashboa
   const [tools, setTools] = useState<Tool[]>(initialTools);
   const [searchQuery, setSearchQuery] = useState('');
   const [reviewFilter, setReviewFilter] = useState<'all' | ReviewState>('all');
-
-  // Admin Security Auth State
-  const [isUnlocked, setIsUnlocked] = useState(false);
-  const [passkeyInput, setPasskeyInput] = useState('');
-  const [passkeyError, setPasskeyError] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // Modal State
   const [showModal, setShowModal] = useState(false);
@@ -231,23 +227,34 @@ export function AdminDashboard({ initialTools, initialCategories }: AdminDashboa
     }
   };
 
-  const handleUnlock = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (passkeyInput === 'admin123' || passkeyInput === 'admin' || passkeyInput.trim() !== '') {
-      setIsUnlocked(true);
-      setPasskeyError(false);
-    } else {
-      setPasskeyError(true);
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      await fetch('/api/admin/logout', { method: 'POST' });
+    } finally {
+      window.location.href = '/admin/login';
     }
   };
 
   const handleDeleteTool = async (toolSlug: string) => {
-    if (!isUnlocked) {
-      alert('Admin session locked. Please enter administrative passkey to modify database listings.');
-      return;
-    }
-    if (confirm(`Are you sure you want to delete ${toolSlug}?`)) {
+    if (!confirm(`Are you sure you want to delete ${toolSlug}?`)) return;
+
+    setSaveStatus('saving');
+    setSaveMessage('Deleting tool...');
+    try {
+      const res = await fetch(`/api/tools/${encodeURIComponent(toolSlug)}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setSaveStatus('error');
+        setSaveMessage(data?.error || 'Failed to delete tool.');
+        return;
+      }
       setTools((prev) => prev.filter((t) => t.slug !== toolSlug));
+      setSaveStatus('success');
+      setSaveMessage('Tool deleted successfully.');
+    } catch {
+      setSaveStatus('error');
+      setSaveMessage('Network error while deleting.');
     }
   };
 
@@ -276,31 +283,17 @@ export function AdminDashboard({ initialTools, initialCategories }: AdminDashboa
         </div>
 
         <div className="flex items-center gap-3">
-          {isUnlocked ? (
-            <button
-              onClick={() => setIsUnlocked(false)}
-              className="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs px-4 py-2.5 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 border border-slate-700"
-            >
-              <Lock className="w-3.5 h-3.5 text-amber-400" />
-              Lock Session
-            </button>
-          ) : (
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-emerald-400 font-bold flex items-center gap-1">
-                <Lock className="w-3.5 h-3.5" />
-                Protected Route
-              </span>
-            </div>
-          )}
+          <button
+            onClick={handleLogout}
+            disabled={isLoggingOut}
+            className="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs px-4 py-2.5 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 border border-slate-700 disabled:opacity-50 disabled:cursor-wait"
+          >
+            <LogOut className="w-3.5 h-3.5 text-amber-400" />
+            {isLoggingOut ? 'Logging out...' : 'Log Out'}
+          </button>
 
           <button
-            onClick={() => {
-              if (!isUnlocked) {
-                alert('Admin session locked. Please authenticate using passkey below.');
-                return;
-              }
-              handleOpenAddModal();
-            }}
+            onClick={handleOpenAddModal}
             className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs px-5 py-3 rounded-2xl transition-all cursor-pointer flex items-center gap-1.5 shadow-md shrink-0"
           >
             <Plus className="w-4 h-4" />
@@ -308,39 +301,6 @@ export function AdminDashboard({ initialTools, initialCategories }: AdminDashboa
           </button>
         </div>
       </div>
-
-      {/* Passkey Authentication Banner */}
-      {!isUnlocked && (
-        <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-6 text-slate-900 space-y-3">
-          <div className="flex items-center gap-2 text-amber-800 font-extrabold text-sm">
-            <ShieldAlert className="w-5 h-5 text-amber-600" />
-            <span>Administrator Passkey Verification Required</span>
-          </div>
-          <p className="text-xs text-slate-700 max-w-xl">
-            To make live database modifications (adding, editing, or removing software listings), enter passkey <code className="bg-amber-100 text-amber-900 font-mono px-1.5 py-0.5 rounded font-bold">admin123</code> below.
-          </p>
-
-          <form onSubmit={handleUnlock} className="flex items-center gap-3 max-w-md pt-1">
-            <input
-              type="password"
-              placeholder="Enter passkey (e.g. admin123)..."
-              value={passkeyInput}
-              onChange={(e) => setPasskeyInput(e.target.value)}
-              className="bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-xs font-mono text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500 flex-1 shadow-2xs"
-            />
-            <button
-              type="submit"
-              className="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-5 py-2 rounded-xl transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
-            >
-              <Unlock className="w-3.5 h-3.5 text-emerald-400" />
-              Unlock Admin
-            </button>
-          </form>
-          {passkeyError && (
-            <p className="text-xs font-bold text-rose-600">Incorrect passkey. Please try admin123.</p>
-          )}
-        </div>
-      )}
 
       {/* Admin Stats Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 text-xs">

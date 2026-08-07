@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbRepository } from '../../../lib/dbRepository';
 import { ToolFilterOptions } from '../../../types/tool';
+import { requireAdmin } from '../../../lib/auth/adminSession';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -25,6 +26,9 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  const authError = await requireAdmin(req);
+  if (authError) return authError;
+
   try {
     const body = await req.json();
     const newTool = dbRepository.createTool(body);
