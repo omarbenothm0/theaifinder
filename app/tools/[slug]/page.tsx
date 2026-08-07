@@ -47,6 +47,7 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
     ComparisonService.getComparisons(),
     ToolService.getTools({ category: tool.categoryId, limit: 4 })
   ]);
+  const categorySlug = categories.find((category) => category.id === tool.categoryId)?.slug;
 
   // Alternatives: prefer explicit tool.alternatives slugs; fall back to same-category tools if empty
   let alternativeTools = [];
@@ -68,7 +69,7 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: 'Home', url: `${BASE_URL}` },
     { name: 'AI Tools', url: `${BASE_URL}/ai-tools` },
-    { name: tool.categoryName, url: `${BASE_URL}/category/${tool.categoryId}` },
+    { name: tool.categoryName, url: `${BASE_URL}/category/${categorySlug}` },
     { name: tool.name, url: `${BASE_URL}/tools/${tool.slug}` }
   ]);
 
@@ -83,7 +84,7 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
         <span>/</span>
         <Link href="/ai-tools" className="hover:text-slate-900 transition-colors">Tools</Link>
         <span>/</span>
-        <Link href={`/category/${tool.categoryId}`} className="hover:text-slate-900 transition-colors">{tool.categoryName}</Link>
+        <Link href={`/category/${categorySlug}`} className="hover:text-slate-900 transition-colors">{tool.categoryName}</Link>
         <span>/</span>
         <span className="font-bold text-slate-900">{tool.name}</span>
       </nav>
@@ -115,7 +116,7 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
               <p className="text-sm text-slate-600 max-w-xl font-medium leading-relaxed">{tool.tagline}</p>
 
               <div className="flex items-center gap-3 text-xs text-slate-500 pt-1 flex-wrap">
-                <Link href={`/category/${tool.categoryId}`} className="font-bold text-slate-700 hover:text-emerald-600 flex items-center gap-1 bg-slate-100 px-2.5 py-1 rounded-md">
+                <Link href={`/category/${categorySlug}`} className="font-bold text-slate-700 hover:text-emerald-600 flex items-center gap-1 bg-slate-100 px-2.5 py-1 rounded-md">
                   <Layers className="w-3.5 h-3.5" />
                   {tool.categoryName}
                 </Link>

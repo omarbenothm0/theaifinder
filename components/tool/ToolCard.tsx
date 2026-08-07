@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Tool } from '../../types/tool';
+import { INITIAL_CATEGORIES } from '../../lib/data';
 import { Star, CheckCircle2, ExternalLink, ArrowRight, Sparkles, Smartphone, Code, Puzzle } from 'lucide-react';
 
 interface ToolCardProps {
@@ -10,6 +11,7 @@ interface ToolCardProps {
 
 export function ToolCard({ tool, layout = 'grid' }: ToolCardProps) {
   const isGrid = layout === 'grid';
+  const categorySlug = INITIAL_CATEGORIES.find((category) => category.id === tool.categoryId)?.slug;
 
   return (
     <div
@@ -54,7 +56,7 @@ export function ToolCard({ tool, layout = 'grid' }: ToolCardProps) {
 
             <div className="flex items-center gap-2 text-xs text-slate-500 mt-1 flex-wrap">
               <Link
-                href={`/category/${tool.categoryId}`}
+                href={`/category/${categorySlug}`}
                 className="text-[10px] font-bold text-slate-500 uppercase tracking-tight bg-slate-100 px-2 py-0.5 rounded hover:bg-slate-200 transition-colors"
               >
                 {tool.categoryName}
