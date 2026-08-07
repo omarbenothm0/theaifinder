@@ -4,6 +4,7 @@ import { PersonaService } from '../../lib/services/persona.service';
 import { JsonLd } from '../../components/shared/JsonLd';
 import { generatePageMetadata } from '../../lib/seo/metadata';
 import { generateBreadcrumbSchema } from '../../lib/seo/jsonld';
+import { siteUrl } from '../../lib/site-config';
 import { Users, ArrowRight } from 'lucide-react';
 
 export const revalidate = 3600;
@@ -12,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
     title: 'Browse AI Tools by Role & Profession',
     description: 'Find the best AI tools curated for your role — developers, marketers, content creators, teachers, and more.',
-    canonicalUrl: 'https://aifind.io/for'
+    canonicalUrl: siteUrl('/for')
   });
 }
 
@@ -20,8 +21,8 @@ export default async function ForIndexPage() {
   const personas = await PersonaService.getPersonas();
 
   const breadcrumbSchema = generateBreadcrumbSchema([
-    { name: 'Home', url: 'https://aifind.io' },
-    { name: 'By Role', url: 'https://aifind.io/for' }
+    { name: 'Home', url: siteUrl() },
+    { name: 'By Role', url: siteUrl('/for') }
   ]);
 
   return (

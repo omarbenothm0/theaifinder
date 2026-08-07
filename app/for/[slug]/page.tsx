@@ -8,6 +8,7 @@ import { InternalLinks } from '../../../components/shared/InternalLinks';
 import { JsonLd } from '../../../components/shared/JsonLd';
 import { generatePersonaMetadata } from '../../../lib/seo/metadata';
 import { generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
+import { siteUrl } from '../../../lib/site-config';
 import { Users, CheckCircle2, Compass, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
@@ -42,9 +43,9 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
   ]);
 
   const breadcrumbSchema = generateBreadcrumbSchema([
-    { name: 'Home', url: 'https://aifind.io' },
-    { name: 'Workflows', url: 'https://aifind.io/ai-tools-directory' },
-    { name: persona.title, url: `https://aifind.io/for/${persona.slug}` }
+    { name: 'Home', url: siteUrl() },
+    { name: 'Workflows', url: siteUrl('/ai-tools-directory') },
+    { name: persona.title, url: siteUrl(`/for/${persona.slug}`) }
   ]);
 
   return (

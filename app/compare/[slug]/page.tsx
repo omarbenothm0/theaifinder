@@ -9,6 +9,7 @@ import { InternalLinks } from '../../../components/shared/InternalLinks';
 import { JsonLd } from '../../../components/shared/JsonLd';
 import { generateComparisonMetadata } from '../../../lib/seo/metadata';
 import { generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
+import { siteUrl } from '../../../lib/site-config';
 import { Zap } from 'lucide-react';
 
 export const revalidate = 3600;
@@ -48,9 +49,9 @@ export default async function ComparisonPage({ params }: { params: Promise<{ slu
   }
 
   const breadcrumbSchema = generateBreadcrumbSchema([
-    { name: 'Home', url: 'https://aifind.io' },
-    { name: 'Comparisons', url: 'https://aifind.io/ai-tools-directory' },
-    { name: comp.title, url: `https://aifind.io/compare/${comp.slug}` }
+    { name: 'Home', url: siteUrl() },
+    { name: 'Comparisons', url: siteUrl('/ai-tools-directory') },
+    { name: comp.title, url: siteUrl(`/compare/${comp.slug}`) }
   ]);
 
   return (

@@ -3,9 +3,10 @@ import { ToolService } from '../lib/services/tool.service';
 import { CategoryService } from '../lib/services/category.service';
 import { PersonaService } from '../lib/services/persona.service';
 import { ComparisonService } from '../lib/services/comparison.service';
+import { siteUrl } from '../lib/site-config';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://aifind.io';
+  const baseUrl = siteUrl();
 
   const [toolsRes, categories, personas, comparisons] = await Promise.all([
     ToolService.getTools({ limit: Number.MAX_SAFE_INTEGER }),

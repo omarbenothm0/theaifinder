@@ -8,6 +8,7 @@ import { HomePageClient } from '../components/home/HomePageClient';
 import { JsonLd } from '../components/shared/JsonLd';
 import { getWebsiteSchema } from '../lib/seo/jsonld';
 import { generatePageMetadata } from '../lib/seo/metadata';
+import { siteUrl } from '../lib/site-config';
 
 export const revalidate = 3600;
 
@@ -15,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
     title: 'AIFind - Discover, Compare & Choose the Best AI Tools (2026)',
     description: 'Find the right AI tool for any task. Search, compare, and filter 100+ top-rated AI software for writing, coding, video, images, and productivity.',
-    canonicalUrl: 'https://aifind.io'
+    canonicalUrl: siteUrl()
   });
 }
 

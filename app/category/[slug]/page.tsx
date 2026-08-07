@@ -8,6 +8,7 @@ import { InternalLinks } from '../../../components/shared/InternalLinks';
 import { JsonLd } from '../../../components/shared/JsonLd';
 import { generateCategoryMetadata } from '../../../lib/seo/metadata';
 import { generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
+import { siteUrl } from '../../../lib/site-config';
 import { Layers, Sparkles } from 'lucide-react';
 
 export const revalidate = 3600;
@@ -41,9 +42,9 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
   ]);
 
   const breadcrumbSchema = generateBreadcrumbSchema([
-    { name: 'Home', url: 'https://aifind.io' },
-    { name: 'Categories', url: 'https://aifind.io/ai-tools-directory' },
-    { name: category.name, url: `https://aifind.io/category/${category.slug}` }
+    { name: 'Home', url: siteUrl() },
+    { name: 'Categories', url: siteUrl('/ai-tools-directory') },
+    { name: category.name, url: siteUrl(`/category/${category.slug}`) }
   ]);
 
   return (

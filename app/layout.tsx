@@ -3,20 +3,19 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
-
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'https://aifind.io';
+import { SITE_URL } from '../lib/site-config';
 
 export const metadata: Metadata = {
   title: 'AIFind - Discover, Compare & Choose the Best AI Tools (2026)',
   description: 'Find the right AI tool for any task. Search, compare, and filter 100+ top-rated AI software for writing, coding, video, images, and productivity.',
-  metadataBase: new URL(BASE_URL),
+  metadataBase: new URL(SITE_URL),
   alternates: {
-    canonical: BASE_URL,
+    canonical: SITE_URL,
   },
   openGraph: {
     title: 'AIFind - Discover, Compare & Choose the Best AI Tools',
     description: 'Find the right AI tool for any task. Search, compare, and filter 100+ top-rated AI software for writing, coding, video, images, and productivity.',
-    url: BASE_URL,
+    url: SITE_URL,
     siteName: 'AIFind Discovery Platform',
     type: 'website',
   },

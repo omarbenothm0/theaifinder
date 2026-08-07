@@ -4,6 +4,7 @@ import { CategoryService } from '../../lib/services/category.service';
 import { ComparisonService } from '../../lib/services/comparison.service';
 import { CategoryCard } from '../../components/category/CategoryCard';
 import { generatePageMetadata } from '../../lib/seo/metadata';
+import { siteUrl } from '../../lib/site-config';
 import { Layers, Zap, ArrowRight, Database } from 'lucide-react';
 
 export const revalidate = 3600;
@@ -12,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
     title: 'Full AI Tools Taxonomy Directory & Category Map (2026)',
     description: 'Complete directory architecture map indexing software categories and head-to-head comparison pages.',
-    canonicalUrl: 'https://aifind.io/ai-tools-directory'
+    canonicalUrl: siteUrl('/ai-tools-directory')
   });
 }
 

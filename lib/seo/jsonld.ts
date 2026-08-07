@@ -1,16 +1,15 @@
 import { Tool, Category } from '../../types/tool';
-
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://aifind.io';
+import { SITE_URL } from '../site-config';
 
 export function getWebsiteSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'AIFind Discovery Platform',
-    url: BASE_URL,
+    url: SITE_URL,
     potentialAction: {
       '@type': 'SearchAction',
-      target: `${BASE_URL}/ai-tools?search={search_term_string}`,
+      target: `${SITE_URL}/ai-tools?search={search_term_string}`,
       'query-input': 'required name=search_term_string',
     },
   };
@@ -72,6 +71,6 @@ export function getCollectionPageSchema(category: Category) {
     '@type': 'CollectionPage',
     name: category.name,
     description: category.description,
-    url: `${BASE_URL}/category/${category.slug}`,
+    url: `${SITE_URL}/category/${category.slug}`,
   };
 }

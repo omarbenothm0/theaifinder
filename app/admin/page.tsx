@@ -3,6 +3,7 @@ import { CategoryService } from '../../lib/services/category.service';
 import { ToolService } from '../../lib/services/tool.service';
 import { AdminDashboard } from '../../components/admin/AdminDashboard';
 import { generatePageMetadata } from '../../lib/seo/metadata';
+import { siteUrl } from '../../lib/site-config';
 
 export const revalidate = 0;
 
@@ -10,7 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
     title: 'Admin Management Dashboard | AIFind',
     description: 'Manage tools, categories, and database listings.',
-    canonicalUrl: 'https://aifind.io/admin'
+    canonicalUrl: siteUrl('/admin')
   });
 }
 

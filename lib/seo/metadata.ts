@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 import { Tool, Category, Persona, Comparison } from '../../types/tool';
-
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://aifind.io';
+import { SITE_URL } from '../site-config';
 
 export interface SEOConfig {
   title: string;
@@ -18,12 +17,12 @@ export function constructMetadata({
   ogImage = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
   noIndex = false,
 }: SEOConfig): Metadata {
-  const fullCanonical = canonicalUrl ? (canonicalUrl.startsWith('http') ? canonicalUrl : `${BASE_URL}${canonicalUrl}`) : BASE_URL;
+  const fullCanonical = canonicalUrl ? (canonicalUrl.startsWith('http') ? canonicalUrl : `${SITE_URL}${canonicalUrl}`) : SITE_URL;
 
   return {
     title,
     description,
-    metadataBase: new URL(BASE_URL),
+    metadataBase: new URL(SITE_URL),
     alternates: {
       canonical: fullCanonical,
     },

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Tool, Category, PricingModel, ReviewState } from '../../types/tool';
 import { getReviewState } from '../../lib/utils/reviewHelper';
+import { siteUrl } from '../../lib/site-config';
 import { Settings, Plus, Edit2, Trash2, Search, X, Lock, Unlock, ShieldAlert } from 'lucide-react';
 
 interface AdminDashboardProps {
@@ -167,7 +168,7 @@ export function AdminDashboard({ initialTools, initialCategories }: AdminDashboa
       pricingModel,
       monthlyPrice: monthlyPrice === '' ? undefined : Number(monthlyPrice),
       hasFreeTrial: pricingModel === 'Freemium' || pricingModel === 'Free',
-      websiteUrl: websiteUrl.trim() || 'https://aifind.io',
+      websiteUrl: websiteUrl.trim() || siteUrl(),
       pricingSource: pricingSource || existingTool?.pricingSource,
       featureSource: featureSource || existingTool?.featureSource,
       sources: parsedSources,

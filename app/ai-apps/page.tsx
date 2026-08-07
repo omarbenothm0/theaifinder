@@ -5,6 +5,7 @@ import { PersonaService } from '../../lib/services/persona.service';
 import { ToolCard } from '../../components/tool/ToolCard';
 import { InternalLinks } from '../../components/shared/InternalLinks';
 import { generatePageMetadata } from '../../lib/seo/metadata';
+import { siteUrl } from '../../lib/site-config';
 import { Smartphone, Sparkles } from 'lucide-react';
 
 export const revalidate = 3600;
@@ -13,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
     title: 'Top Mobile AI Apps for iOS & Android (2026 Directory)',
     description: 'Explore native iOS and Android AI applications with on-the-go speech recognition, photo generation, and smart assistants.',
-    canonicalUrl: 'https://aifind.io/ai-apps'
+    canonicalUrl: siteUrl('/ai-apps')
   });
 }
 

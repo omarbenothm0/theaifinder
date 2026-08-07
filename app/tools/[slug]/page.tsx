@@ -6,6 +6,7 @@ import { ToolService } from '../../../lib/services/tool.service';
 import { CategoryService } from '../../../lib/services/category.service';
 import { PersonaService } from '../../../lib/services/persona.service';
 import { ComparisonService } from '../../../lib/services/comparison.service';
+import { siteUrl } from '../../../lib/site-config';
 import { ToolCard } from '../../../components/tool/ToolCard';
 import { InternalLinks } from '../../../components/shared/InternalLinks';
 import { JsonLd } from '../../../components/shared/JsonLd';
@@ -13,7 +14,6 @@ import { generateToolMetadata } from '../../../lib/seo/metadata';
 import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
 import { Star, CheckCircle2, ExternalLink, Check, X, ArrowRight, Layers, Users, Building2, Monitor, Clock } from 'lucide-react';
 
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://aifind.io';
 
 export const revalidate = 3600;
 
@@ -67,10 +67,10 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
 
   const softwareSchema = generateSoftwareApplicationSchema(tool);
   const breadcrumbSchema = generateBreadcrumbSchema([
-    { name: 'Home', url: `${BASE_URL}` },
-    { name: 'AI Tools', url: `${BASE_URL}/ai-tools` },
-    { name: tool.categoryName, url: `${BASE_URL}/category/${categorySlug}` },
-    { name: tool.name, url: `${BASE_URL}/tools/${tool.slug}` }
+    { name: 'Home', url: siteUrl() },
+    { name: 'AI Tools', url: siteUrl('/ai-tools') },
+    { name: tool.categoryName, url: siteUrl(`/category/${categorySlug}`) },
+    { name: tool.name, url: siteUrl(`/tools/${tool.slug}`) }
   ]);
 
   return (
