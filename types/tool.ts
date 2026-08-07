@@ -91,6 +91,7 @@ export interface Category {
   faqs: FAQItem[];
   seoTitle: string;
   seoDescription: string;
+  updatedAt?: string;
 }
 
 export interface Persona {
@@ -104,6 +105,7 @@ export interface Persona {
   keyBenefits: string[];
   topToolSlugs: string[];
   faqs: FAQItem[];
+  updatedAt?: string;
 }
 
 export interface ComparisonFeatureRow {
@@ -125,6 +127,7 @@ export interface Comparison {
   verdict: string;
   winnerSlug: string | 'tie';
   featureBreakdown: ComparisonFeatureRow[];
+  updatedAt?: string;
 }
 
 export interface Review {
@@ -149,6 +152,7 @@ export interface Article {
   publishedAt: string;
   relatedCategorySlug?: string;
   relatedToolSlugs?: string[];
+  updatedAt?: string;
 }
 
 export interface ToolFilterOptions {
