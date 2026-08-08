@@ -11,46 +11,84 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { username, password } = body || {};
+    const contentType = req.headers.get('content-type') || '';
 
-    if (!username || !password || typeof username !== 'string' || typeof password !== 'string') {
-      return NextResponse.json(
-        { error: 'Username and password are required' },
-        { status: 400 }
+    let username = '';
+    let password = '';
+    let redirectTo = '/admin';
+        // Build the redirect origin safely from the incoming request Host header
+    const host = req.headers.get('host') || 'localhost:3000';
+    const forwardedProto = req.headers.get('x-forwarded-proto');
+
+    const isLocalhost =
+      host.startsWith('localhost') ||
+      host.startsWith('127.0.0.1') ||
+      host.startsWith('0.0.0.0');
+
+    const protocol =
+      forwardedProto || (isLocalhost ? 'http' : 'https');
+
+    const origin = `${protocol}://${host}`;
+
+    if (contentType.includes('application/json')) {
+      const body = await req.json();
+      username = body?.username || '';
+      password = body?.password || '';
+      redirectTo = body?.redirect || '/admin';
+    } else {
+      const formData = await req.formData();
+      username = String(formData.get('username') || '');
+      password = String(formData.get('password') || '');
+      redirectTo = String(formData.get('from') || '/admin');
+    }
+
+    if (!username || !password) {
+      return NextResponse.redirect(
+        new URL('/admin/login?err=invalid', origin)
       );
     }
 
     const expectedCreds = getAdminCredentials();
-    const usernameOk = username.toLowerCase().trim() === expectedCreds.username.toLowerCase().trim();
+
+    const usernameOk =
+      username.trim().toLowerCase() ===
+      expectedCreds.username.trim().toLowerCase();
+
     const passwordOk = verifyAdminPassword(password);
 
+    console.log('[ADMIN LOGIN DEBUG]', {
+  usernameReceived: username,
+  usernameExpected: expectedCreds.username,
+  usernameOk,
+  passwordLength: password.length,
+  passwordOk,
+});
+
     if (!usernameOk || !passwordOk) {
-      await new Promise((r) => setTimeout(r, 650));
-      return NextResponse.json(
-        { error: 'Invalid credentials' },
-        { status: 401 }
+      await new Promise((resolve) => setTimeout(resolve, 650));
+
+      return NextResponse.redirect(
+        new URL('/admin/login?err=invalid', origin)
       );
     }
 
-    const sessionToken = createSession(expectedCreds.username);
-    const redirectTo = req.nextUrl.searchParams.get('from') || '/admin';
+    const sessionToken = await createSession(expectedCreds.username);
 
-    const shouldRedirect =
-      req.headers.get('accept')?.includes('text/html') ||
-      (body && (body as any).redirect === true);
-
-    const response: NextResponse = shouldRedirect
-      ? NextResponse.redirect(new URL(redirectTo, req.nextUrl.origin))
-      : NextResponse.json(
-          { success: true, redirect: redirectTo },
-          { status: 200 }
-        );
+    const response = NextResponse.redirect(
+      new URL(redirectTo, origin)
+    );
 
     setAdminSessionCookie(response, sessionToken);
-    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+
+    response.headers.set(
+      'Cache-Control',
+      'no-store, no-cache, must-revalidate, proxy-revalidate'
+    );
+
     return response;
   } catch (err: any) {
+    console.error('Admin login error:', err);
+
     return NextResponse.json(
       { error: err?.message || 'Authentication failed' },
       { status: 500 }
