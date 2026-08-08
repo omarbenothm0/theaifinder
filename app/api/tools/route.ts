@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const newTool = dbRepository.createTool(body);
+    const newTool = await dbRepository.createTool(body);
     return NextResponse.json(newTool, { status: 201 });
   } catch (err: any) {
     return NextResponse.json({ error: err.message || 'Failed to create tool' }, { status: 400 });

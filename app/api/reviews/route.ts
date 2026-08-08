@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'toolSlug query param is required' }, { status: 400 });
   }
 
-  const reviews = dbRepository.getReviewsForTool(toolSlug);
+  const reviews = await dbRepository.getReviewsForTool(toolSlug);
   return NextResponse.json(reviews);
 }
 
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing required review fields' }, { status: 400 });
     }
 
-    const review = dbRepository.addReview(body);
+    const review = await dbRepository.addReview(body);
     return NextResponse.json(review, { status: 201 });
   } catch (err: any) {
     return NextResponse.json({ error: err.message || 'Failed to submit review' }, { status: 400 });

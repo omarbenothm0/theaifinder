@@ -6,14 +6,14 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const comp = dbRepository.getComparisonBySlug(slug);
+  const comp = await dbRepository.getComparisonBySlug(slug);
 
   if (!comp) {
     return NextResponse.json({ error: 'Comparison not found' }, { status: 404 });
   }
 
-  const tool1 = dbRepository.getToolBySlug(comp.tool1Slug);
-  const tool2 = dbRepository.getToolBySlug(comp.tool2Slug);
+  const tool1 = await dbRepository.getToolBySlug(comp.tool1Slug);
+  const tool2 = await dbRepository.getToolBySlug(comp.tool2Slug);
 
   return NextResponse.json({ comparison: comp, tool1, tool2 });
 }

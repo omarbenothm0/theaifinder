@@ -260,6 +260,7 @@ export function AdminDashboard({
       }
 
       const result = await response.json();
+console.log('API RESPONSE:', result);
       if (!response.ok) {
         setSaveStatus('error');
         setSaveMessage(result?.error || 'Unable to save tool data.');

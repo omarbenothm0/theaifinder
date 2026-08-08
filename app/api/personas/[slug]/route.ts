@@ -6,12 +6,12 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const persona = dbRepository.getPersonaBySlug(slug);
+  const persona = await dbRepository.getPersonaBySlug(slug);
 
   if (!persona) {
     return NextResponse.json({ error: 'Persona not found' }, { status: 404 });
   }
 
-  const tools = dbRepository.getTools({ persona: persona.slug }).tools;
+  const tools = (await dbRepository.getTools({ persona: persona.slug })).tools;
   return NextResponse.json({ persona, tools });
 }

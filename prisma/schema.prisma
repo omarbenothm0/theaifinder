@@ -1,6 +1,3 @@
-// Prisma Schema for AIFind Platform
-// Supports 10,000+ AI Tools, Categories, Personas, Comparisons, Reviews, Articles, and FAQs
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -10,10 +7,17 @@ generator client {
   provider = "prisma-client-js"
 }
 
-enum PricingModel {
+enum PricingModelEnum {
   Free
   Freemium
   Paid
+}
+
+enum ReviewStateEnum {
+  unverified
+  verified
+  needsReview
+  inReview
 }
 
 model Category {
@@ -23,163 +27,202 @@ model Category {
   iconName        String
   description     String   @db.Text
   longDescription String   @db.Text
-  seoTitle        String?
-  seoDescription  String?
+  seoTitle        String
+  seoDescription  String
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  tools           Tool[]
-  faqs            CategoryFAQ[]
+  tools Tool[]
+  faqs  CategoryFAQ[]
+
+  @@index([slug])
+}
+
+model CategoryFAQ {
+  id         String   @id @default(cuid())
+  categoryId String
+  question   String
+  answer     String   @db.Text
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@index([categoryId])
 }
 
 model Tool {
-  id           String       @id @default(cuid())
-  name         String
-  slug         String       @unique
-  logo         String
-  tagline      String
-  description  String       @db.Text
-  categoryId   String
-  categoryName String
-  pricingModel PricingModel @default(Freemium)
-  monthlyPrice Float?
-  hasFreeTrial Boolean      @default(true)
-  websiteUrl   String
-  rating       Float        @default(4.5)
-  reviewCount  Int          @default(0)
-  verified     Boolean      @default(true)
-  featured     Boolean      @default(false)
-  trending     Boolean      @default(false)
-  hasApi       Boolean      @default(false)
-  hasMobileApp Boolean      @default(false)
-  hasExtension Boolean      @default(false)
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  id                String            @id @default(cuid())
+  name              String
+  slug              String            @unique
+  logo              String
+  tagline           String            @db.Text
+  description       String            @db.Text
+  categoryId        String
+  pricingModel      PricingModelEnum  @default(Freemium)
+  monthlyPrice      Float?
+  hasFreeTrial      Boolean           @default(true)
+  companyName       String?
+  lastVerifiedDate  DateTime?
+  verifiedBy        String?
+  pricingSource     String?
+  featureSource     String?
+  reviewState       ReviewStateEnum?
+  reviewRequestedAt DateTime?
+  reviewAssignedTo  String?
+  reviewNotes       String?           @db.Text
+  websiteUrl        String
+  rating            Float             @default(0)
+  reviewCount       Int               @default(0)
+  verified          Boolean           @default(false)
+  featured          Boolean           @default(false)
+  trending          Boolean           @default(false)
+  hasApi            Boolean           @default(false)
+  hasMobileApp      Boolean           @default(false)
+  hasExtension      Boolean           @default(false)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
 
-  // Relationships
-  category     Category     @relation(fields: [categoryId], references: [id])
-  tags         ToolTag[]
-  features     ToolFeature[]
-  pros         ToolPro[]
-  cons         ToolCon[]
-  screenshots  ToolScreenshot[]
+  tags        String[]
+  features    String[]
+  pros        String[]
+  cons        String[]
+  screenshots String[]
+  platforms   String[]
+  targetUsers String[]
+
+  category     Category      @relation(fields: [categoryId], references: [id])
+  sources      ToolSource[]
+  pricingTiers PricingTier[]
   reviews      Review[]
-  targetUsers  ToolPersona[]
   faqs         ToolFAQ[]
-  
-  // Self-referential alternatives
-  alternativesFrom ToolAlternative[] @relation("ToolAlternativeSource")
-  alternativesTo   ToolAlternative[] @relation("ToolAlternativeTarget")
+  topForPersonas PersonaTopTool[]
 
-  // Comparisons
+  alternativesFrom ToolAlternative[] @relation("AltSource")
+  alternativesTo   ToolAlternative[] @relation("AltTarget")
+
   comparisonsAs1 Comparison[] @relation("Tool1Comparisons")
   comparisonsAs2 Comparison[] @relation("Tool2Comparisons")
+
+  @@index([slug])
+  @@index([categoryId])
 }
 
-model ToolTag {
-  id     String @id @default(cuid())
-  toolId String
-  tag    String
-  tool   Tool   @relation(fields: [toolId], references: [id], onDelete: Cascade)
+model ToolSource {
+  id         String   @id @default(cuid())
+  toolId     String
+  type       String
+  url        String
+  verifiedAt DateTime
+  notes      String?
+  tool       Tool     @relation(fields: [toolId], references: [id], onDelete: Cascade)
 
-  @@index([tag])
+  @@index([toolId])
 }
 
-model ToolFeature {
-  id          String  @id @default(cuid())
-  toolId      String
-  title       String
-  description String?
-  tool        Tool    @relation(fields: [toolId], references: [id], onDelete: Cascade)
+model PricingTier {
+  id            String   @id @default(cuid())
+  toolId        String
+  name          String
+  price         Float?
+  billingPeriod String
+  features      String[]
+  tool          Tool     @relation(fields: [toolId], references: [id], onDelete: Cascade)
+
+  @@index([toolId])
 }
 
-model ToolPro {
-  id     String @id @default(cuid())
-  toolId String
-  text   String
-  tool   Tool   @relation(fields: [toolId], references: [id], onDelete: Cascade)
-}
+model ToolFAQ {
+  id       String @id @default(cuid())
+  toolId   String
+  question String
+  answer   String @db.Text
+  tool     Tool   @relation(fields: [toolId], references: [id], onDelete: Cascade)
 
-model ToolCon {
-  id     String @id @default(cuid())
-  toolId String
-  text   String
-  tool   Tool   @relation(fields: [toolId], references: [id], onDelete: Cascade)
-}
-
-model ToolScreenshot {
-  id     String @id @default(cuid())
-  toolId String
-  url    String
-  tool   Tool   @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  @@index([toolId])
 }
 
 model ToolAlternative {
-  id            String @id @default(cuid())
-  sourceToolId  String
-  targetToolId  String
-  sourceTool    Tool   @relation("ToolAlternativeSource", fields: [sourceToolId], references: [id], onDelete: Cascade)
-  targetTool    Tool   @relation("ToolAlternativeTarget", fields: [targetToolId], references: [id], onDelete: Cascade)
+  id           String @id @default(cuid())
+  sourceToolId String
+  targetToolId String
+  sourceTool   Tool   @relation("AltSource", fields: [sourceToolId], references: [id], onDelete: Cascade)
+  targetTool   Tool   @relation("AltTarget", fields: [targetToolId], references: [id], onDelete: Cascade)
 
   @@unique([sourceToolId, targetToolId])
+  @@index([sourceToolId])
 }
 
 model Persona {
-  id           String   @id @default(cuid())
-  title        String   @unique
-  slug         String   @unique
-  iconName     String
-  subtitle     String
-  description  String   @db.Text
-  targetRole   String
-  keyBenefits  String[]
-  topToolSlugs String[]
-  createdAt    DateTime @default(now())
+  id          String   @id @default(cuid())
+  title       String   @unique
+  slug        String   @unique
+  iconName    String
+  subtitle    String
+  description String   @db.Text
+  targetRole  String
+  keyBenefits String[]
+  createdAt   DateTime @default(now())
 
-  tools        ToolPersona[]
-  faqs         PersonaFAQ[]
+  faqs     PersonaFAQ[]
+  topTools PersonaTopTool[]
+
+  @@index([slug])
 }
 
-model ToolPersona {
+model PersonaTopTool {
   id        String  @id @default(cuid())
-  toolId    String
   personaId String
+  toolId    String
+  order     Int     @default(0)
+  persona   Persona @relation(fields: [personaId], references: [id], onDelete: Cascade)
   tool      Tool    @relation(fields: [toolId], references: [id], onDelete: Cascade)
+
+  @@unique([personaId, toolId])
+  @@index([personaId])
+}
+
+model PersonaFAQ {
+  id        String  @id @default(cuid())
+  personaId String
+  question  String
+  answer    String  @db.Text
   persona   Persona @relation(fields: [personaId], references: [id], onDelete: Cascade)
 
-  @@unique([toolId, personaId])
+  @@index([personaId])
 }
 
 model Review {
   id           String   @id @default(cuid())
-  toolSlug     String
+  toolId       String
   authorName   String
   authorRole   String
   rating       Int
   comment      String   @db.Text
-  date         String
-  verifiedUser Boolean  @default(true)
+  date         DateTime
+  verifiedUser Boolean  @default(false)
   createdAt    DateTime @default(now())
 
-  tool         Tool     @relation(fields: [toolSlug], references: [slug], onDelete: Cascade)
+  tool Tool @relation(fields: [toolId], references: [id], onDelete: Cascade)
+
+  @@index([toolId])
 }
 
 model Comparison {
-  id        String   @id @default(cuid())
-  slug      String   @unique
-  tool1Slug String
-  tool2Slug String
-  title     String
-  overview  String   @db.Text
-  bestFor1  String
-  bestFor2  String
-  verdict   String   @db.Text
+  id         String   @id @default(cuid())
+  slug       String   @unique
+  tool1Id    String
+  tool2Id    String
+  title      String
+  overview   String   @db.Text
+  bestFor1   String   @db.Text
+  bestFor2   String   @db.Text
+  verdict    String   @db.Text
   winnerSlug String
-  createdAt DateTime @default(now())
+  createdAt  DateTime @default(now())
 
-  tool1     Tool     @relation("Tool1Comparisons", fields: [tool1Slug], references: [slug])
-  tool2     Tool     @relation("Tool2Comparisons", fields: [tool2Slug], references: [slug])
-  features  ComparisonFeature[]
+  tool1    Tool                @relation("Tool1Comparisons", fields: [tool1Id], references: [id])
+  tool2    Tool                @relation("Tool2Comparisons", fields: [tool2Id], references: [id])
+  features ComparisonFeature[]
+
+  @@index([slug])
 }
 
 model ComparisonFeature {
@@ -190,42 +233,22 @@ model ComparisonFeature {
   tool2Value   String
   winnerSlug   String
   comparison   Comparison @relation(fields: [comparisonId], references: [id], onDelete: Cascade)
-}
 
-model CategoryFAQ {
-  id         String   @id @default(cuid())
-  categoryId String
-  question   String
-  answer     String   @db.Text
-  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-}
-
-model PersonaFAQ {
-  id        String  @id @default(cuid())
-  personaId String
-  question  String
-  answer    String  @db.Text
-  persona   Persona @relation(fields: [personaId], references: [id], onDelete: Cascade)
-}
-
-model ToolFAQ {
-  id       String @id @default(cuid())
-  toolId   String
-  question String
-  answer   String @db.Text
-  tool     Tool   @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  @@index([comparisonId])
 }
 
 model Article {
-  id                 String   @id @default(cuid())
-  title              String
-  slug               String   @unique
-  excerpt            String   @db.Text
-  content            String   @db.Text
-  author             String
-  readTime           String
-  publishedAt        String
+  id                  String   @id @default(cuid())
+  title               String
+  slug                String   @unique
+  excerpt             String   @db.Text
+  content             String   @db.Text
+  author              String
+  readTime            String
+  publishedAt         DateTime
   relatedCategorySlug String?
-  relatedToolSlugs   String[]
-  createdAt          DateTime @default(now())
+  relatedToolSlugs    String[]
+  createdAt           DateTime @default(now())
+
+  @@index([slug])
 }

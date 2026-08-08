@@ -6,7 +6,7 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const tool = dbRepository.getToolBySlug(slug);
+  const tool = await dbRepository.getToolBySlug(slug);
 
   if (!tool) {
     return NextResponse.json({ error: 'Tool not found' }, { status: 404 });
@@ -21,7 +21,7 @@ export async function PUT(
 ) {
   const { slug } = await params;
   const body = await req.json();
-  const updated = dbRepository.updateTool(slug, body);
+  const updated = await dbRepository.updateTool(slug, body);
 
   if (!updated) {
     return NextResponse.json({ error: 'Tool not found' }, { status: 404 });
@@ -35,7 +35,7 @@ export async function DELETE(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const success = dbRepository.deleteTool(slug);
+  const success = await dbRepository.deleteTool(slug);
 
   if (!success) {
     return NextResponse.json({ error: 'Tool not found' }, { status: 404 });

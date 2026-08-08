@@ -1,5 +1,4 @@
-import fs from 'fs';
-import path from 'path';
+import { PrismaClient } from '@prisma/client';
 import {
   Tool,
   Category,
@@ -10,282 +9,437 @@ import {
   ToolFilterOptions,
   FinderAnswer
 } from '../types/tool';
-import {
-  INITIAL_TOOLS,
-  INITIAL_CATEGORIES,
-  INITIAL_PERSONAS,
-  INITIAL_COMPARISONS,
-  INITIAL_ARTICLES
-} from './data';
 
-interface DBState {
-  tools: Tool[];
-  categories: Category[];
-  personas: Persona[];
-  comparisons: Comparison[];
-  reviews: Review[];
-  articles: Article[];
+const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
+
+const prisma =
+  globalForPrisma.prisma ??
+  new PrismaClient();
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForPrisma.prisma = prisma;
 }
 
+// --- Mapping helpers: Prisma model -> app-facing Tool/Category/etc shape ---
+
+function mapTool(t: any): Tool {
+  return {
+    id: t.id,
+    name: t.name,
+    slug: t.slug,
+    logo: t.logo,
+    tagline: t.tagline,
+    description: t.description,
+    categoryId: t.categoryId,
+    categoryName: t.category?.name ?? '',
+    tags: t.tags ?? [],
+    pricingModel: t.pricingModel,
+    monthlyPrice: t.monthlyPrice ?? undefined,
+    hasFreeTrial: t.hasFreeTrial,
+    companyName: t.companyName ?? undefined,
+    lastVerifiedDate: t.lastVerifiedDate
+      ? t.lastVerifiedDate.toISOString().split('T')[0]
+      : undefined,
+    verifiedBy: t.verifiedBy ?? undefined,
+    sources: t.sources
+      ? t.sources.map((s: any) => ({
+          type: s.type,
+          url: s.url,
+          verifiedAt: s.verifiedAt.toISOString(),
+          notes: s.notes ?? undefined,
+        }))
+      : undefined,
+    pricingSource: t.pricingSource ?? undefined,
+    featureSource: t.featureSource ?? undefined,
+    reviewState: t.reviewState ?? undefined,
+    reviewRequestedAt: t.reviewRequestedAt
+      ? t.reviewRequestedAt.toISOString()
+      : undefined,
+    reviewAssignedTo: t.reviewAssignedTo ?? undefined,
+    reviewNotes: t.reviewNotes ?? undefined,
+    pricingTiers: t.pricingTiers
+      ? t.pricingTiers.map((pt: any) => ({
+          name: pt.name,
+          price: pt.price,
+          billingPeriod: pt.billingPeriod,
+          features: pt.features,
+        }))
+      : undefined,
+    platforms: t.platforms ?? [],
+    websiteUrl: t.websiteUrl,
+    features: t.features ?? [],
+    pros: t.pros ?? [],
+    cons: t.cons ?? [],
+    rating: t.rating,
+    reviewCount: t.reviewCount,
+    screenshots: t.screenshots ?? [],
+    alternatives: t.alternativesFrom
+      ? t.alternativesFrom.map((a: any) => a.targetTool?.slug).filter(Boolean)
+      : [],
+    targetUsers: t.targetUsers ?? [],
+    verified: t.verified,
+    featured: t.featured,
+    trending: t.trending,
+    hasApi: t.hasApi,
+    hasMobileApp: t.hasMobileApp,
+    hasExtension: t.hasExtension,
+    createdAt: t.createdAt ? t.createdAt.toISOString() : undefined,
+    updatedAt: t.updatedAt ? t.updatedAt.toISOString() : undefined,
+  };
+}
+
+function mapCategory(c: any, toolCount = 0): Category {
+  return {
+    id: c.id,
+    name: c.name,
+    slug: c.slug,
+    iconName: c.iconName,
+    description: c.description,
+    longDescription: c.longDescription,
+    toolCount,
+    faqs: c.faqs
+      ? c.faqs.map((f: any) => ({ question: f.question, answer: f.answer }))
+      : [],
+    seoTitle: c.seoTitle,
+    seoDescription: c.seoDescription,
+  };
+}
+
+function mapPersona(p: any): Persona {
+  return {
+    id: p.id,
+    title: p.title,
+    slug: p.slug,
+    iconName: p.iconName,
+    subtitle: p.subtitle,
+    description: p.description,
+    targetRole: p.targetRole,
+    keyBenefits: p.keyBenefits ?? [],
+    topToolSlugs: p.topTools
+      ? p.topTools
+          .sort((a: any, b: any) => a.order - b.order)
+          .map((tt: any) => tt.tool?.slug)
+          .filter(Boolean)
+      : [],
+    faqs: p.faqs
+      ? p.faqs.map((f: any) => ({ question: f.question, answer: f.answer }))
+      : [],
+  };
+}
+
+function mapComparison(c: any): Comparison {
+  return {
+    id: c.id,
+    slug: c.slug,
+    tool1Slug: c.tool1?.slug ?? '',
+    tool2Slug: c.tool2?.slug ?? '',
+    title: c.title,
+    overview: c.overview,
+    bestFor1: c.bestFor1,
+    bestFor2: c.bestFor2,
+    verdict: c.verdict,
+    winnerSlug: c.winnerSlug,
+    featureBreakdown: c.features
+      ? c.features.map((f: any) => ({
+          feature: f.feature,
+          tool1Value: f.tool1Value,
+          tool2Value: f.tool2Value,
+          winnerSlug: f.winnerSlug,
+        }))
+      : [],
+  };
+}
+
+function mapReview(r: any): Review {
+  return {
+    id: r.id,
+    toolSlug: r.tool?.slug ?? '',
+    authorName: r.authorName,
+    authorRole: r.authorRole,
+    rating: r.rating,
+    comment: r.comment,
+    date: r.date.toISOString().split('T')[0],
+    verifiedUser: r.verifiedUser,
+  };
+}
+
+function mapArticle(a: any): Article {
+  return {
+    id: a.id,
+    title: a.title,
+    slug: a.slug,
+    excerpt: a.excerpt,
+    content: a.content,
+    author: a.author,
+    readTime: a.readTime,
+    publishedAt: a.publishedAt.toISOString(),
+    relatedCategorySlug: a.relatedCategorySlug ?? undefined,
+    relatedToolSlugs: a.relatedToolSlugs ?? [],
+  };
+}
+
+const TOOL_INCLUDE = {
+  category: true,
+  sources: true,
+  pricingTiers: true,
+  alternativesFrom: { include: { targetTool: true } },
+};
+
 class DBRepository {
-  private dataFilePath = path.join(process.cwd(), 'data_store.json');
-  private state: DBState;
-
-  constructor() {
-    this.state = this.loadData();
-  }
-
-  private loadData(): DBState {
-    try {
-      if (fs.existsSync(this.dataFilePath)) {
-        const fileContent = fs.readFileSync(this.dataFilePath, 'utf-8');
-        const parsed = JSON.parse(fileContent);
-        return {
-          tools: parsed.tools && parsed.tools.length ? parsed.tools : INITIAL_TOOLS,
-          categories: parsed.categories && parsed.categories.length ? parsed.categories : INITIAL_CATEGORIES,
-          personas: parsed.personas && parsed.personas.length ? parsed.personas : INITIAL_PERSONAS,
-          comparisons: parsed.comparisons && parsed.comparisons.length ? parsed.comparisons : INITIAL_COMPARISONS,
-          reviews: parsed.reviews || this.getInitialReviews(),
-          articles: parsed.articles && parsed.articles.length ? parsed.articles : INITIAL_ARTICLES
-        };
-      }
-    } catch (err) {
-      console.warn('Could not read data_store.json, using seed data:', err);
-    }
-
-    return {
-      tools: INITIAL_TOOLS,
-      categories: INITIAL_CATEGORIES,
-      personas: INITIAL_PERSONAS,
-      comparisons: INITIAL_COMPARISONS,
-      reviews: this.getInitialReviews(),
-      articles: INITIAL_ARTICLES
-    };
-  }
-
-  private saveData() {
-    try {
-      fs.writeFileSync(this.dataFilePath, JSON.stringify(this.state, null, 2), 'utf-8');
-    } catch (err) {
-      console.error('Failed to save data store:', err);
-    }
-  }
-
-  private getInitialReviews(): Review[] {
-    return [
-      {
-        id: 'rev-1',
-        toolSlug: 'chatgpt',
-        authorName: 'Alex Rivers',
-        authorRole: 'Product Manager',
-        rating: 5,
-        comment: 'ChatGPT is an indispensable daily copilot. Standard GPT-4o analysis saves hours on market research.',
-        date: '2026-07-28',
-        verifiedUser: true
-      },
-      {
-        id: 'rev-2',
-        toolSlug: 'claude',
-        authorName: 'Elena Rostova',
-        authorRole: 'Lead Frontend Engineer',
-        rating: 5,
-        comment: 'Artifacts UI and Claude Sonnet prose quality are miles ahead for React code generation.',
-        date: '2026-08-02',
-        verifiedUser: true
-      },
-      {
-        id: 'rev-3',
-        toolSlug: 'cursor',
-        authorName: 'David Chen',
-        authorRole: 'Senior TypeScript Developer',
-        rating: 5,
-        comment: 'Composer multi-file edit mode completely changed how fast we refactor large components.',
-        date: '2026-08-04',
-        verifiedUser: true
-      }
-    ];
-  }
-
   // --- Tools CRUD & Querying ---
-  public getTools(options: ToolFilterOptions = {}) {
-    let list = [...this.state.tools];
+  public async getTools(options: ToolFilterOptions = {}) {
+    const where: any = {};
 
-    // Search query
     if (options.search && options.search.trim()) {
-      const q = options.search.toLowerCase().trim();
-      list = list.filter(
-        (t) =>
-          t.name.toLowerCase().includes(q) ||
-          t.tagline.toLowerCase().includes(q) ||
-          t.description.toLowerCase().includes(q) ||
-          t.categoryName.toLowerCase().includes(q) ||
-          t.tags.some((tag) => tag.toLowerCase().includes(q))
-      );
+      const q = options.search.trim();
+      where.OR = [
+        { name: { contains: q, mode: 'insensitive' } },
+        { tagline: { contains: q, mode: 'insensitive' } },
+        { description: { contains: q, mode: 'insensitive' } },
+        { tags: { has: q } },
+      ];
     }
 
-    // Category filter
     if (options.category && options.category !== 'all') {
-      const selectedCat = options.category;
-      const lowerCat = selectedCat.toLowerCase();
-      list = list.filter(
-        (t) => t.categoryId === selectedCat || t.categoryName.toLowerCase() === lowerCat
-      );
+      const cat = await prisma.category.findFirst({
+        where: {
+          OR: [{ id: options.category }, { slug: options.category.toLowerCase() }],
+        },
+      });
+      if (cat) where.categoryId = cat.id;
     }
 
-    // Pricing model
     if (options.pricing && options.pricing !== 'all') {
       if (options.pricing === 'Free') {
-        list = list.filter((t) => t.pricingModel === 'Free' || t.monthlyPrice === 0);
+        where.OR = [
+          ...(where.OR ?? []),
+          { pricingModel: 'Free' },
+          { monthlyPrice: 0 },
+        ];
       } else {
-        list = list.filter((t) => t.pricingModel === options.pricing);
+        where.pricingModel = options.pricing;
       }
     }
 
-    // Free option boolean filter
     if (options.hasFreeOption) {
-      list = list.filter((t) => t.pricingModel === 'Free' || t.pricingModel === 'Freemium' || t.hasFreeTrial);
+      where.OR = [
+        ...(where.OR ?? []),
+        { pricingModel: 'Free' },
+        { pricingModel: 'Freemium' },
+        { hasFreeTrial: true },
+      ];
     }
 
-    // Persona filter
     if (options.persona && options.persona !== 'all') {
-      list = list.filter((t) => t.targetUsers.includes(options.persona!));
+      where.targetUsers = { has: options.persona };
     }
 
-    // Feature toggles
-    if (options.hasApi) list = list.filter((t) => t.hasApi);
-    if (options.hasMobileApp) list = list.filter((t) => t.hasMobileApp);
-    if (options.hasExtension) list = list.filter((t) => t.hasExtension);
+    if (options.hasApi) where.hasApi = true;
+    if (options.hasMobileApp) where.hasMobileApp = true;
+    if (options.hasExtension) where.hasExtension = true;
+    if (options.minRating) where.rating = { gte: options.minRating };
 
-    // Min rating
-    if (options.minRating) {
-      list = list.filter((t) => t.rating >= options.minRating!);
-    }
-
-    // Sort order
+    let orderBy: any = [{ featured: 'desc' }, { reviewCount: 'desc' }];
     switch (options.sortBy) {
       case 'rating':
-        list.sort((a, b) => b.rating - a.rating || b.reviewCount - a.reviewCount);
+        orderBy = [{ rating: 'desc' }, { reviewCount: 'desc' }];
         break;
       case 'newest':
-        list.sort((a, b) => new Date(b.createdAt || '').getTime() - new Date(a.createdAt || '').getTime());
+        orderBy = [{ createdAt: 'desc' }];
         break;
       case 'price-asc':
-        list.sort((a, b) => (a.monthlyPrice ?? 0) - (b.monthlyPrice ?? 0));
+        orderBy = [{ monthlyPrice: 'asc' }];
         break;
       case 'price-desc':
-        list.sort((a, b) => (b.monthlyPrice ?? 0) - (a.monthlyPrice ?? 0));
+        orderBy = [{ monthlyPrice: 'desc' }];
         break;
       case 'popular':
       default:
-        list.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || b.reviewCount - a.reviewCount);
+        orderBy = [{ featured: 'desc' }, { reviewCount: 'desc' }];
         break;
     }
 
-    const total = list.length;
+    const total = await prisma.tool.count({ where });
     const page = options.page || 1;
     const limit = options.limit || 50;
-    const startIndex = (page - 1) * limit;
-    const paginated = list.slice(startIndex, startIndex + limit);
 
-    return {
-      tools: paginated,
-      total,
-      page,
-      totalPages: Math.ceil(total / limit)
-    };
-  }
-
-  public getToolBySlug(slug: string): Tool | undefined {
-    return this.state.tools.find((t) => t.slug.toLowerCase() === slug.toLowerCase());
-  }
-
-  public createTool(data: Omit<Tool, 'id' | 'createdAt' | 'updatedAt'>): Tool {
-    const newTool: Tool = {
-      ...data,
-      id: `tool-${Date.now()}`,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-    this.state.tools.unshift(newTool);
-    this.updateCategoryToolCounts();
-    this.saveData();
-    return newTool;
-  }
-
-  public updateTool(slug: string, updates: Partial<Tool>): Tool | undefined {
-    const index = this.state.tools.findIndex((t) => t.slug.toLowerCase() === slug.toLowerCase());
-    if (index === -1) return undefined;
-
-    const existingTool = this.state.tools[index];
-    const mergedTool = { ...existingTool };
-
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        (mergedTool as any)[key] = value;
-      }
+    const results = await prisma.tool.findMany({
+      where,
+      orderBy,
+      skip: (page - 1) * limit,
+      take: limit,
+      include: TOOL_INCLUDE,
     });
 
-    this.state.tools[index] = {
-      ...mergedTool,
-      updatedAt: new Date().toISOString()
+    return {
+      tools: results.map(mapTool),
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
     };
-    this.updateCategoryToolCounts();
-    this.saveData();
-    return this.state.tools[index];
   }
 
-  public deleteTool(slug: string): boolean {
-    const initialLen = this.state.tools.length;
-    this.state.tools = this.state.tools.filter((t) => t.slug.toLowerCase() !== slug.toLowerCase());
-    if (this.state.tools.length !== initialLen) {
-      this.updateCategoryToolCounts();
-      this.saveData();
-      return true;
-    }
-    return false;
+  public async getToolBySlug(slug: string): Promise<Tool | undefined> {
+    const tool = await prisma.tool.findFirst({
+      where: { slug: { equals: slug, mode: 'insensitive' } },
+      include: TOOL_INCLUDE,
+    });
+    return tool ? mapTool(tool) : undefined;
+  }
+
+  public async createTool(data: Omit<Tool, 'id' | 'createdAt' | 'updatedAt'>): Promise<Tool> {
+    const created = await prisma.tool.create({
+      data: {
+        name: data.name,
+        slug: data.slug,
+        logo: data.logo,
+        tagline: data.tagline,
+        description: data.description,
+        categoryId: data.categoryId,
+        pricingModel: data.pricingModel,
+        monthlyPrice: data.monthlyPrice ?? null,
+        hasFreeTrial: data.hasFreeTrial,
+        companyName: data.companyName ?? null,
+        lastVerifiedDate: data.lastVerifiedDate ? new Date(data.lastVerifiedDate) : null,
+        verifiedBy: data.verifiedBy ?? null,
+        pricingSource: data.pricingSource ?? null,
+        featureSource: data.featureSource ?? null,
+        reviewState: data.reviewState ?? null,
+        reviewRequestedAt: data.reviewRequestedAt ? new Date(data.reviewRequestedAt) : null,
+        reviewAssignedTo: data.reviewAssignedTo ?? null,
+        reviewNotes: data.reviewNotes ?? null,
+        websiteUrl: data.websiteUrl,
+        rating: data.rating ?? 0,
+        reviewCount: data.reviewCount ?? 0,
+        verified: data.verified,
+        featured: data.featured,
+        trending: data.trending,
+        hasApi: data.hasApi,
+        hasMobileApp: data.hasMobileApp,
+        hasExtension: data.hasExtension,
+        tags: data.tags ?? [],
+        features: data.features ?? [],
+        pros: data.pros ?? [],
+        cons: data.cons ?? [],
+        screenshots: data.screenshots ?? [],
+        platforms: data.platforms ?? [],
+        targetUsers: data.targetUsers ?? [],
+      },
+      include: TOOL_INCLUDE,
+    });
+    return mapTool(created);
+  }
+
+  public async updateTool(slug: string, updates: Partial<Tool>): Promise<Tool | undefined> {
+    const existing = await prisma.tool.findFirst({
+      where: { slug: { equals: slug, mode: 'insensitive' } },
+    });
+    if (!existing) return undefined;
+
+    const data: any = {};
+    if (updates.name !== undefined) data.name = updates.name;
+    if (updates.slug !== undefined) data.slug = updates.slug;
+    if (updates.logo !== undefined) data.logo = updates.logo;
+    if (updates.tagline !== undefined) data.tagline = updates.tagline;
+    if (updates.description !== undefined) data.description = updates.description;
+    if (updates.categoryId !== undefined) data.categoryId = updates.categoryId;
+    if (updates.pricingModel !== undefined) data.pricingModel = updates.pricingModel;
+    if (updates.monthlyPrice !== undefined) data.monthlyPrice = updates.monthlyPrice;
+    if (updates.hasFreeTrial !== undefined) data.hasFreeTrial = updates.hasFreeTrial;
+    if (updates.companyName !== undefined) data.companyName = updates.companyName;
+    if (updates.lastVerifiedDate !== undefined)
+      data.lastVerifiedDate = updates.lastVerifiedDate ? new Date(updates.lastVerifiedDate) : null;
+    if (updates.verifiedBy !== undefined) data.verifiedBy = updates.verifiedBy;
+    if (updates.pricingSource !== undefined) data.pricingSource = updates.pricingSource;
+    if (updates.featureSource !== undefined) data.featureSource = updates.featureSource;
+    if (updates.reviewState !== undefined) data.reviewState = updates.reviewState;
+    if (updates.reviewRequestedAt !== undefined)
+      data.reviewRequestedAt = updates.reviewRequestedAt ? new Date(updates.reviewRequestedAt) : null;
+    if (updates.reviewAssignedTo !== undefined) data.reviewAssignedTo = updates.reviewAssignedTo;
+    if (updates.reviewNotes !== undefined) data.reviewNotes = updates.reviewNotes;
+    if (updates.websiteUrl !== undefined) data.websiteUrl = updates.websiteUrl;
+    if (updates.verified !== undefined) data.verified = updates.verified;
+    if (updates.featured !== undefined) data.featured = updates.featured;
+    if (updates.trending !== undefined) data.trending = updates.trending;
+    if (updates.hasApi !== undefined) data.hasApi = updates.hasApi;
+    if (updates.hasMobileApp !== undefined) data.hasMobileApp = updates.hasMobileApp;
+    if (updates.hasExtension !== undefined) data.hasExtension = updates.hasExtension;
+    if (updates.tags !== undefined) data.tags = updates.tags;
+    if (updates.features !== undefined) data.features = updates.features;
+    if (updates.pros !== undefined) data.pros = updates.pros;
+    if (updates.cons !== undefined) data.cons = updates.cons;
+    if (updates.screenshots !== undefined) data.screenshots = updates.screenshots;
+    if (updates.platforms !== undefined) data.platforms = updates.platforms;
+    if (updates.targetUsers !== undefined) data.targetUsers = updates.targetUsers;
+
+    const updated = await prisma.tool.update({
+      where: { id: existing.id },
+      data,
+      include: TOOL_INCLUDE,
+    });
+    return mapTool(updated);
+  }
+
+  public async deleteTool(slug: string): Promise<boolean> {
+    const existing = await prisma.tool.findFirst({
+      where: { slug: { equals: slug, mode: 'insensitive' } },
+    });
+    if (!existing) return false;
+    await prisma.tool.delete({ where: { id: existing.id } });
+    return true;
   }
 
   // --- Categories ---
-  public getCategories(): Category[] {
-    this.updateCategoryToolCounts();
-    return this.state.categories;
-  }
-
-  public getCategoryBySlug(slug: string): Category | undefined {
-    this.updateCategoryToolCounts();
-    return this.state.categories.find((c) => c.slug.toLowerCase() === slug.toLowerCase());
-  }
-
-  private updateCategoryToolCounts() {
-    this.state.categories.forEach((cat) => {
-      cat.toolCount = this.state.tools.filter((t) => t.categoryId === cat.id).length;
+  public async getCategories(): Promise<Category[]> {
+    const categories = await prisma.category.findMany({
+      include: { faqs: true, _count: { select: { tools: true } } },
     });
+    return categories.map((c: any) => mapCategory(c, c._count.tools));
+  }
+
+  public async getCategoryBySlug(slug: string): Promise<Category | undefined> {
+    const cat = await prisma.category.findFirst({
+      where: { slug: { equals: slug, mode: 'insensitive' } },
+      include: { faqs: true, _count: { select: { tools: true } } },
+    });
+    return cat ? mapCategory(cat, (cat as any)._count.tools) : undefined;
   }
 
   // --- Personas ---
-  public getPersonas(): Persona[] {
-    return this.state.personas;
+  public async getPersonas(): Promise<Persona[]> {
+    const personas = await prisma.persona.findMany({
+      include: { faqs: true, topTools: { include: { tool: true } } },
+    });
+    return personas.map(mapPersona);
   }
 
-  public getPersonaBySlug(slug: string): Persona | undefined {
-    return this.state.personas.find((p) => p.slug.toLowerCase() === slug.toLowerCase());
+  public async getPersonaBySlug(slug: string): Promise<Persona | undefined> {
+    const persona = await prisma.persona.findFirst({
+      where: { slug: { equals: slug, mode: 'insensitive' } },
+      include: { faqs: true, topTools: { include: { tool: true } } },
+    });
+    return persona ? mapPersona(persona) : undefined;
   }
 
   // --- Comparisons ---
-  public getComparisons(): Comparison[] {
-    return this.state.comparisons;
+  public async getComparisons(): Promise<Comparison[]> {
+    const comparisons = await prisma.comparison.findMany({
+      include: { tool1: true, tool2: true, features: true },
+    });
+    return comparisons.map(mapComparison);
   }
 
-  public getComparisonBySlug(slug: string): Comparison | undefined {
-    // 1. Exact match in saved comparisons
-    const existing = this.state.comparisons.find((c) => c.slug.toLowerCase() === slug.toLowerCase());
-    if (existing) return existing;
+  public async getComparisonBySlug(slug: string): Promise<Comparison | undefined> {
+    const existing = await prisma.comparison.findFirst({
+      where: { slug: { equals: slug, mode: 'insensitive' } },
+      include: { tool1: true, tool2: true, features: true },
+    });
+    if (existing) return mapComparison(existing);
 
-    // 2. Dynamic slug resolution e.g. 'chatgpt-vs-claude'
     const parts = slug.split('-vs-');
     if (parts.length === 2) {
-      const tool1 = this.getToolBySlug(parts[0]);
-      const tool2 = this.getToolBySlug(parts[1]);
+      const tool1 = await this.getToolBySlug(parts[0]);
+      const tool2 = await this.getToolBySlug(parts[1]);
       if (tool1 && tool2) {
         return this.generateDynamicComparison(tool1, tool2);
       }
@@ -310,65 +464,89 @@ class DBRepository {
           feature: 'Rating',
           tool1Value: `${tool1.rating}/5 (${tool1.reviewCount} reviews)`,
           tool2Value: `${tool2.rating}/5 (${tool2.reviewCount} reviews)`,
-          winnerSlug: tool1.rating > tool2.rating ? tool1.slug : tool1.rating < tool2.rating ? tool2.slug : 'tie'
+          winnerSlug: tool1.rating > tool2.rating ? tool1.slug : tool1.rating < tool2.rating ? tool2.slug : 'tie',
         },
         {
           feature: 'Pricing Model',
           tool1Value: `${tool1.pricingModel} ${tool1.monthlyPrice ? `($${tool1.monthlyPrice}/mo)` : ''}`,
           tool2Value: `${tool2.pricingModel} ${tool2.monthlyPrice ? `($${tool2.monthlyPrice}/mo)` : ''}`,
-          winnerSlug: 'tie'
+          winnerSlug: 'tie',
         },
         {
           feature: 'API Access',
           tool1Value: tool1.hasApi ? 'Available' : 'No API',
           tool2Value: tool2.hasApi ? 'Available' : 'No API',
-          winnerSlug: tool1.hasApi && !tool2.hasApi ? tool1.slug : !tool1.hasApi && tool2.hasApi ? tool2.slug : 'tie'
+          winnerSlug: tool1.hasApi && !tool2.hasApi ? tool1.slug : !tool1.hasApi && tool2.hasApi ? tool2.slug : 'tie',
         },
         {
           feature: 'Mobile App',
           tool1Value: tool1.hasMobileApp ? 'iOS & Android' : 'Web Only',
           tool2Value: tool2.hasMobileApp ? 'iOS & Android' : 'Web Only',
-          winnerSlug: tool1.hasMobileApp && !tool2.hasMobileApp ? tool1.slug : !tool1.hasMobileApp && tool2.hasMobileApp ? tool2.slug : 'tie'
-        }
-      ]
+          winnerSlug: tool1.hasMobileApp && !tool2.hasMobileApp ? tool1.slug : !tool1.hasMobileApp && tool2.hasMobileApp ? tool2.slug : 'tie',
+        },
+      ],
     };
   }
 
   // --- Reviews ---
-  public getReviewsForTool(toolSlug: string): Review[] {
-    return this.state.reviews.filter((r) => r.toolSlug.toLowerCase() === toolSlug.toLowerCase());
+  public async getReviewsForTool(toolSlug: string): Promise<Review[]> {
+    const reviews = await prisma.review.findMany({
+      where: { tool: { slug: { equals: toolSlug, mode: 'insensitive' } } },
+      include: { tool: true },
+      orderBy: { createdAt: 'desc' },
+    });
+    return reviews.map(mapReview);
   }
 
-  public addReview(review: Omit<Review, 'id' | 'date'>): Review {
-    const newRev: Review = {
-      ...review,
-      id: `rev-${Date.now()}`,
-      date: new Date().toISOString().split('T')[0]
-    };
-    this.state.reviews.unshift(newRev);
-
-    // Recalculate tool average rating & count
-    const tool = this.getToolBySlug(review.toolSlug);
-    if (tool) {
-      const toolReviews = this.getReviewsForTool(review.toolSlug);
-      const totalRating = toolReviews.reduce((sum, r) => sum + r.rating, 0);
-      tool.rating = parseFloat((totalRating / toolReviews.length).toFixed(1));
-      tool.reviewCount = toolReviews.length;
-      this.saveData();
+  public async addReview(review: Omit<Review, 'id' | 'date'>): Promise<Review> {
+    const tool = await prisma.tool.findFirst({
+      where: { slug: { equals: review.toolSlug, mode: 'insensitive' } },
+    });
+    if (!tool) {
+      throw new Error(`Tool not found: ${review.toolSlug}`);
     }
 
-    return newRev;
+    const created = await prisma.review.create({
+      data: {
+        toolId: tool.id,
+        authorName: review.authorName,
+        authorRole: review.authorRole,
+        rating: review.rating,
+        comment: review.comment,
+        date: new Date(),
+        verifiedUser: review.verifiedUser,
+      },
+      include: { tool: true },
+    });
+
+    const agg = await prisma.review.aggregate({
+      where: { toolId: tool.id },
+      _avg: { rating: true },
+      _count: { rating: true },
+    });
+
+    await prisma.tool.update({
+      where: { id: tool.id },
+      data: {
+        rating: agg._avg.rating ? parseFloat(agg._avg.rating.toFixed(1)) : tool.rating,
+        reviewCount: agg._count.rating,
+      },
+    });
+
+    return mapReview(created);
   }
 
   // --- Interactive Finder Evaluator ---
-  public evaluateFinder(answer: FinderAnswer) {
+  public async evaluateFinder(answer: FinderAnswer) {
     const { useCase, role, budgetPreference } = answer;
 
-    const scored = this.state.tools.map((tool) => {
-      let score = 50; // base score
+    const allTools = await prisma.tool.findMany({ include: TOOL_INCLUDE });
+
+    const scored = allTools.map((toolRaw: any) => {
+      const tool = mapTool(toolRaw);
+      let score = 50;
       const matchReasons: string[] = [];
 
-      // 1. Category / UseCase match
       if (
         tool.categoryId.includes(useCase) ||
         tool.categoryName.toLowerCase().includes(useCase) ||
@@ -378,13 +556,11 @@ class DBRepository {
         matchReasons.push(`Direct match for ${useCase} workflows`);
       }
 
-      // 2. Role / Persona match
       if (tool.targetUsers.includes(role)) {
         score += 25;
         matchReasons.push(`Optimized specifically for ${role.replace('-', ' ')}`);
       }
 
-      // 3. Budget preference
       if (budgetPreference === 'free-only' && (tool.pricingModel === 'Free' || tool.monthlyPrice === 0)) {
         score += 20;
         matchReasons.push('100% Free plan available');
@@ -393,41 +569,51 @@ class DBRepository {
         matchReasons.push('Includes free trial or freemium tier');
       }
 
-      // 4. Feature bonuses
       if (tool.verified) score += 5;
       if (tool.rating >= 4.8) score += 10;
 
-      return {
-        tool,
-        score: Math.min(100, score),
-        matchReasons
-      };
+      return { tool, score: Math.min(100, score), matchReasons };
     });
 
     scored.sort((a, b) => b.score - a.score);
-    return scored.slice(0, 5); // Return top 5 recommendations
+    return scored.slice(0, 5);
   }
 
   // --- Admin Stats ---
-  public getAdminStats() {
+  public async getAdminStats() {
+    const [totalTools, totalCategories, totalPersonas, totalComparisons, totalReviews, verifiedTools, featuredTools] =
+      await Promise.all([
+        prisma.tool.count(),
+        prisma.category.count(),
+        prisma.persona.count(),
+        prisma.comparison.count(),
+        prisma.review.count(),
+        prisma.tool.count({ where: { verified: true } }),
+        prisma.tool.count({ where: { featured: true } }),
+      ]);
+
     return {
-      totalTools: this.state.tools.length,
-      totalCategories: this.state.categories.length,
-      totalPersonas: this.state.personas.length,
-      totalComparisons: this.state.comparisons.length,
-      totalReviews: this.state.reviews.length,
-      verifiedTools: this.state.tools.filter((t) => t.verified).length,
-      featuredTools: this.state.tools.filter((t) => t.featured).length
+      totalTools,
+      totalCategories,
+      totalPersonas,
+      totalComparisons,
+      totalReviews,
+      verifiedTools,
+      featuredTools,
     };
   }
 
   // --- Articles ---
-  public getArticles(): Article[] {
-    return this.state.articles;
+  public async getArticles(): Promise<Article[]> {
+    const articles = await prisma.article.findMany({ orderBy: { publishedAt: 'desc' } });
+    return articles.map(mapArticle);
   }
 
-  public getArticleBySlug(slug: string): Article | undefined {
-    return this.state.articles.find((a) => a.slug.toLowerCase() === slug.toLowerCase());
+  public async getArticleBySlug(slug: string): Promise<Article | undefined> {
+    const article = await prisma.article.findFirst({
+      where: { slug: { equals: slug, mode: 'insensitive' } },
+    });
+    return article ? mapArticle(article) : undefined;
   }
 }
 

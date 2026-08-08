@@ -6,12 +6,12 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const cat = dbRepository.getCategoryBySlug(slug);
+  const cat = await dbRepository.getCategoryBySlug(slug);
 
   if (!cat) {
     return NextResponse.json({ error: 'Category not found' }, { status: 404 });
   }
 
-  const tools = dbRepository.getTools({ category: cat.id }).tools;
+  const tools = (await dbRepository.getTools({ category: cat.id })).tools;
   return NextResponse.json({ category: cat, tools });
 }

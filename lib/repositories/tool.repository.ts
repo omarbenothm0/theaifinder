@@ -7,33 +7,34 @@ export class ToolRepository {
   }
 
   static async getBySlug(slug: string): Promise<Tool | null> {
-    const tool = dbRepository.getToolBySlug(slug);
+    const tool = await dbRepository.getToolBySlug(slug);
     return tool || null;
   }
 
   static async getFeatured(): Promise<Tool[]> {
-    const res = dbRepository.getTools({});
+    const res = await dbRepository.getTools({});
     return res.tools.filter((t) => t.featured);
   }
 
   static async getTrending(): Promise<Tool[]> {
-    const res = dbRepository.getTools({});
+    const res = await dbRepository.getTools({});
     return res.tools.filter((t) => t.trending);
   }
 
   static async getAlternatives(slug: string): Promise<Tool[]> {
-    const tool = dbRepository.getToolBySlug(slug);
+    const tool = await dbRepository.getToolBySlug(slug);
     if (!tool || !tool.alternatives) return [];
-    return tool.alternatives
-      .map((altSlug) => dbRepository.getToolBySlug(altSlug))
-      .filter((t): t is Tool => Boolean(t));
+    const results = await Promise.all(
+      tool.alternatives.map((altSlug) => dbRepository.getToolBySlug(altSlug))
+    );
+    return results.filter((t): t is Tool => Boolean(t));
   }
 
   static async save(tool: Partial<Tool>): Promise<Tool> {
     if (tool.slug) {
-      const existing = dbRepository.getToolBySlug(tool.slug);
+      const existing = await dbRepository.getToolBySlug(tool.slug);
       if (existing) {
-        const updated = dbRepository.updateTool(tool.slug, tool);
+        const updated = await dbRepository.updateTool(tool.slug, tool);
         if (updated) return updated;
       }
     }
