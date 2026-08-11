@@ -80,6 +80,38 @@ async function main() {
   }
   console.log(`Seeded ${INITIAL_CATEGORIES.length} categories.`);
 
+  // Sync enriched category metadata when seed modules replace placeholders
+  const ENRICHED_CATEGORY_SLUGS = new Set(['writing', 'study-education', 'project-management']);
+  for (const cat of INITIAL_CATEGORIES) {
+    if (!ENRICHED_CATEGORY_SLUGS.has(cat.slug)) continue;
+
+    const existing = await prisma.category.findUnique({ where: { slug: cat.slug } });
+    if (!existing) continue;
+
+    await prisma.category.update({
+      where: { slug: cat.slug },
+      data: {
+        name: cat.name,
+        iconName: cat.iconName,
+        description: cat.description,
+        longDescription: cat.longDescription,
+        seoTitle: cat.seoTitle,
+        seoDescription: cat.seoDescription,
+      },
+    });
+
+    await prisma.categoryFAQ.deleteMany({ where: { categoryId: existing.id } });
+    if (cat.faqs.length > 0) {
+      await prisma.categoryFAQ.createMany({
+        data: cat.faqs.map((f) => ({
+          categoryId: existing.id,
+          question: f.question,
+          answer: f.answer,
+        })),
+      });
+    }
+  }
+
   // 2. Personas (independent of tools for now, topTools linked later)
   const personaSlugToId = new Map<string, string>();
   for (const persona of INITIAL_PERSONAS) {

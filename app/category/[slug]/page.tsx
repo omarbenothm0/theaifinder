@@ -18,7 +18,7 @@ import { TeacherWorkflowLinks } from '../../../components/persona/TeacherWorkflo
 import { SmallBusinessWorkflowLinks } from '../../../components/persona/SmallBusinessWorkflowLinks';
 import { ResearcherWorkflowLinks } from '../../../components/persona/ResearcherWorkflowLinks';
 import { RealEstateWorkflowLinks } from '../../../components/persona/RealEstateWorkflowLinks';
-import { WriterWorkflowLinks } from '../../../components/persona/WriterWorkflowLinks';
+import { WritingCategoryContent } from '../../../components/category/WritingCategoryContent';
 
 const BASE_URL = getBaseUrl();
 
@@ -60,6 +60,15 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
     { name: category.name, url: absoluteUrl(`/category/${category.slug}`) },
   ]);
 
+  if (category.slug === 'writing') {
+    return (
+      <>
+        <JsonLd schema={breadcrumbSchema} />
+        <WritingCategoryContent category={category} categories={categories} personas={personas} />
+      </>
+    );
+  }
+
   return (
     <div className="space-y-10">
       <JsonLd schema={breadcrumbSchema} />
@@ -86,17 +95,14 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
           <ResearcherWorkflowLinks variant="category" />
         </>
       )}
-      {(category.slug === 'writing' || category.slug === 'seo') && (
+      {(category.slug === 'seo') && (
         <MarketerWorkflowLinks variant="category" />
       )}
-      {category.slug === 'writing' && <WriterWorkflowLinks variant="category" />}
-      {(category.slug === 'productivity' || category.slug === 'writing') && (
+      {(category.slug === 'productivity') && (
         <SmallBusinessWorkflowLinks variant="category" />
       )}
-      {(category.slug === 'seo' || category.slug === 'writing') && (
-        <ResearcherWorkflowLinks variant="category" />
-      )}
-      {(category.slug === 'image' || category.slug === 'writing' || category.slug === 'presentations') && (
+      {category.slug === 'seo' && <ResearcherWorkflowLinks variant="category" />}
+      {(category.slug === 'image' || category.slug === 'presentations') && (
         <RealEstateWorkflowLinks variant="category" />
       )}
 

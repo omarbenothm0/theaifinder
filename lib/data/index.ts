@@ -80,6 +80,7 @@ import {
   WRITER_TOOL_USE_CASES,
   WRITER_VERIFIED_AT,
 } from './writer-cluster';
+import { WRITING_CATEGORY } from './writing-category';
 
 export const INITIAL_TOOLS = [
   chatgptTool,
@@ -101,7 +102,12 @@ export const INITIAL_TOOLS = [
   ...MARKETER_TOOLS,
 ];
 
-export const INITIAL_CATEGORIES = [...SEED_CATEGORIES, PM_CATEGORY, STUDENT_CATEGORY];
+export const INITIAL_CATEGORIES = [
+  ...SEED_CATEGORIES.filter((c) => c.slug !== 'writing'),
+  WRITING_CATEGORY,
+  PM_CATEGORY,
+  STUDENT_CATEGORY,
+];
 export const INITIAL_PERSONAS = [
   ...SEED_PERSONAS.filter(
     (p) =>

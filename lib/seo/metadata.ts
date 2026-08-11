@@ -104,13 +104,17 @@ export function generateToolMetadata(tool: Tool): Metadata {
 
 export function generateCategoryMetadata(category: Category): Metadata {
   const indexResult = isCategoryIndexable(category);
-  const ogTitle = `Best ${category.name} AI Tools (2026)`;
-  const ogDescription = category.description;
-  const ogImage = `${BASE_URL}/api/og?title=${encodeURIComponent(ogTitle)}&description=${encodeURIComponent(ogDescription)}&badge=${encodeURIComponent('AI CATEGORY HUB')}&type=category`;
+  const title = category.seoTitle?.trim()
+    ? category.seoTitle
+    : `Best ${category.name} AI Tools (2026)`;
+  const description = category.seoDescription?.trim()
+    ? category.seoDescription
+    : category.description;
+  const ogImage = `${BASE_URL}/api/og?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}&badge=${encodeURIComponent('AI CATEGORY HUB')}&type=category`;
 
   return constructMetadata({
-    title: sitePageTitle(`Best ${category.name} AI Tools (2026)`),
-    description: category.description,
+    title: sitePageTitle(title),
+    description,
     canonicalUrl: `/category/${category.slug}`,
     ogImage,
     noIndex: !indexResult.indexable,
