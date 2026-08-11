@@ -26,6 +26,13 @@ enum PublishStatusEnum {
   archived
 }
 
+enum MonitoringCheckStatusEnum {
+  success
+  failed
+  timeout
+  invalid_url
+}
+
 model Category {
   id              String   @id @default(cuid())
   name            String   @unique
@@ -109,6 +116,7 @@ model Tool {
 
   comparisonsAs1 Comparison[] @relation("Tool1Comparisons")
   comparisonsAs2 Comparison[] @relation("Tool2Comparisons")
+  monitoringChecks ToolMonitoringCheck[]
 
   @@index([slug])
   @@index([categoryId])
@@ -127,6 +135,27 @@ model ToolSource {
   tool       Tool     @relation(fields: [toolId], references: [id], onDelete: Cascade)
 
   @@index([toolId])
+}
+
+model ToolMonitoringCheck {
+  id             String                    @id @default(cuid())
+  toolId         String
+  checkedAt      DateTime                  @default(now())
+  status         MonitoringCheckStatusEnum
+  httpStatus     Int?
+  finalUrl       String?
+  responseTimeMs Int?
+  isHttps        Boolean?
+  redirectCount  Int?
+  errorCode      String?
+  errorMessage   String?                   @db.Text
+  requestedUrl   String
+  createdAt      DateTime                  @default(now())
+
+  tool Tool @relation(fields: [toolId], references: [id], onDelete: Cascade)
+
+  @@index([toolId, checkedAt(sort: Desc)])
+  @@index([checkedAt])
 }
 
 model PricingTier {

@@ -1,7 +1,5 @@
 import { Tool, ToolSourceType } from '../../types/tool';
-
-const REVIEW_STALE_DAYS = 90;
-const REVIEW_HIGH_PRIORITY_DAYS = 180;
+import { getVerificationFreshnessConfig } from '../monitoring/config';
 
 export function parseDate(date: string | undefined): Date | null {
   if (!date) return null;
@@ -23,6 +21,7 @@ export function hasRequiredSources(tool: Tool): boolean {
 }
 
 export function getReviewStaleness(tool: Tool) {
+  const { staleDays, highPriorityDays } = getVerificationFreshnessConfig();
   const result = {
     isStale: false,
     daysSinceLastVerified: null as number | null,
@@ -38,8 +37,8 @@ export function getReviewStaleness(tool: Tool) {
 
   const elapsed = daysSince(lastVerified);
   result.daysSinceLastVerified = elapsed;
-  result.isStale = elapsed >= REVIEW_STALE_DAYS;
-  result.highPriorityReview = elapsed >= REVIEW_HIGH_PRIORITY_DAYS;
+  result.isStale = elapsed >= staleDays;
+  result.highPriorityReview = elapsed >= highPriorityDays;
 
   if (!tool.verified) {
     result.needsReview = true;

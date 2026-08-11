@@ -2,6 +2,11 @@
 
 import React, { useState, useMemo } from 'react';
 import { Tool, Category, PricingModel, ReviewState, PublishStatus } from '../../types/tool';
+import { ToolMonitoringSummary } from '../../types/monitoring';
+import {
+  getMonitoringSignalEmoji,
+  getMonitoringSignalLabel,
+} from '../../lib/monitoring/freshness.service';
 import { validateToolInput, formatValidationErrors } from '../../lib/validation/tool.validation';
 import { getReviewState } from '../../lib/utils/reviewHelper';
 import {
@@ -16,11 +21,14 @@ import {
   ShieldCheck,
   User,
   Clock,
+  Activity,
+  RefreshCw,
 } from 'lucide-react';
 
 interface AdminDashboardProps {
   initialTools: Tool[];
   initialCategories: Category[];
+  initialMonitoringSummaries?: ToolMonitoringSummary[];
   initialStats?: {
     totalTools: number;
     totalCategories: number;
@@ -37,12 +45,19 @@ interface AdminDashboardProps {
 export function AdminDashboard({
   initialTools,
   initialCategories,
+  initialMonitoringSummaries = [],
   initialStats,
   adminUser = 'admin',
   sessionExpiresAtEpoch,
 }: AdminDashboardProps) {
   const [categories] = useState<Category[]>(initialCategories);
   const [tools, setTools] = useState<Tool[]>(initialTools);
+  const [monitoringByToolId, setMonitoringByToolId] = useState<Record<string, ToolMonitoringSummary>>(
+    () =>
+      Object.fromEntries(initialMonitoringSummaries.map((summary) => [summary.toolId, summary]))
+  );
+  const [monitoringStatus, setMonitoringStatus] = useState<'idle' | 'running' | 'error'>('idle');
+  const [monitoringMessage, setMonitoringMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [reviewFilter, setReviewFilter] = useState<'all' | ReviewState>('all');
 
@@ -104,6 +119,40 @@ export function AdminDashboard({
       return '';
     }
   }, [sessionExpiresAtEpoch]);
+
+  const getMonitoringSummary = (tool: Tool): ToolMonitoringSummary | undefined =>
+    monitoringByToolId[tool.id];
+
+  const handleRunMonitoringCheck = async (tool: Tool) => {
+    setMonitoringStatus('running');
+    setMonitoringMessage('Running website health check...');
+
+    try {
+      const res = await fetch('/api/admin/monitoring/check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ toolId: tool.id }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Monitoring check failed');
+      }
+
+      if (data.summary) {
+        setMonitoringByToolId((prev) => ({
+          ...prev,
+          [tool.id]: data.summary as ToolMonitoringSummary,
+        }));
+      }
+
+      setMonitoringStatus('idle');
+      setMonitoringMessage('Website check completed.');
+    } catch (error) {
+      setMonitoringStatus('error');
+      setMonitoringMessage(error instanceof Error ? error.message : 'Monitoring check failed');
+    }
+  };
 
   const handleOpenAddModal = () => {
     setEditingToolSlug(null);
@@ -479,6 +528,7 @@ export function AdminDashboard({
                 <th className="p-3">Pricing</th>
                 <th className="p-3">Rating</th>
                 <th className="p-3">Review</th>
+                <th className="p-3">Monitor</th>
                 <th className="p-3">Badges</th>
                 <th className="p-3 text-right">Actions</th>
               </tr>
@@ -532,6 +582,21 @@ export function AdminDashboard({
                     >
                       {getReviewState(tool)}
                     </span>
+                  </td>
+                  <td className="p-3">
+                    {(() => {
+                      const summary = getMonitoringSummary(tool);
+                      const signal = summary?.signal ?? 'unchecked';
+                      return (
+                        <span
+                          className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold text-slate-700 bg-slate-100"
+                          title={getMonitoringSignalLabel(signal)}
+                        >
+                          <span>{getMonitoringSignalEmoji(signal)}</span>
+                          <span className="hidden xl:inline">{getMonitoringSignalLabel(signal)}</span>
+                        </span>
+                      );
+                    })()}
                   </td>
                   <td className="p-3">
                     <div className="flex items-center gap-1">
@@ -698,6 +763,95 @@ export function AdminDashboard({
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono text-slate-900 focus:outline-none"
                 />
               </div>
+
+              {editingToolSlug && (() => {
+                const editingTool = tools.find((t) => t.slug === editingToolSlug);
+                const summary = editingTool ? getMonitoringSummary(editingTool) : undefined;
+                const latest = summary?.latestCheck;
+
+                return (
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 space-y-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-2">
+                        <Activity className="w-4 h-4 text-emerald-600" />
+                        <span className="font-bold text-slate-900">Website Monitoring</span>
+                      </div>
+                      {editingTool && (
+                        <button
+                          type="button"
+                          onClick={() => handleRunMonitoringCheck(editingTool)}
+                          disabled={monitoringStatus === 'running'}
+                          className="inline-flex items-center gap-1.5 bg-slate-900 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg disabled:opacity-60"
+                        >
+                          <RefreshCw className={`w-3.5 h-3.5 ${monitoringStatus === 'running' ? 'animate-spin' : ''}`} />
+                          Run Website Check
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px] text-slate-600">
+                      <div>
+                        <span className="font-bold text-slate-700 block">Signal</span>
+                        {summary
+                          ? `${getMonitoringSignalEmoji(summary.signal)} ${getMonitoringSignalLabel(summary.signal)}`
+                          : '⚪ Not checked yet'}
+                      </div>
+                      <div>
+                        <span className="font-bold text-slate-700 block">Verification Freshness</span>
+                        {summary?.freshness ?? 'unknown'}
+                        {summary?.daysSinceVerification != null
+                          ? ` (${summary.daysSinceVerification} days since last editorial verification)`
+                          : ''}
+                      </div>
+                      <div>
+                        <span className="font-bold text-slate-700 block">Last Checked</span>
+                        {summary?.lastCheckedAt
+                          ? new Date(summary.lastCheckedAt).toLocaleString()
+                          : 'Never'}
+                      </div>
+                      <div>
+                        <span className="font-bold text-slate-700 block">Last Successful Check</span>
+                        {summary?.lastSuccessfulCheckAt
+                          ? new Date(summary.lastSuccessfulCheckAt).toLocaleString()
+                          : 'None recorded'}
+                      </div>
+                      {latest && (
+                        <>
+                          <div>
+                            <span className="font-bold text-slate-700 block">HTTP Status</span>
+                            {latest.httpStatus ?? 'N/A'}
+                          </div>
+                          <div>
+                            <span className="font-bold text-slate-700 block">Response Time</span>
+                            {latest.responseTimeMs != null ? `${latest.responseTimeMs} ms` : 'N/A'}
+                          </div>
+                          <div className="sm:col-span-2">
+                            <span className="font-bold text-slate-700 block">Final URL</span>
+                            <span className="font-mono break-all">{latest.finalUrl ?? latest.requestedUrl}</span>
+                          </div>
+                          {latest.errorMessage && (
+                            <div className="sm:col-span-2 text-rose-700">
+                              <span className="font-bold block">Error</span>
+                              {latest.errorCode ? `${latest.errorCode}: ` : ''}
+                              {latest.errorMessage}
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+
+                    {monitoringMessage && (
+                      <p className={`text-[11px] ${monitoringStatus === 'error' ? 'text-rose-600' : 'text-slate-500'}`}>
+                        {monitoringMessage}
+                      </p>
+                    )}
+
+                    <p className="text-[10px] text-slate-500">
+                      Monitoring reports website reachability only. Editorial verification, pricing, and features must be updated manually after human review.
+                    </p>
+                  </div>
+                );
+              })()}
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
