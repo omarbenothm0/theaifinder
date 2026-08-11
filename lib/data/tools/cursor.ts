@@ -1,40 +1,50 @@
 import { Tool } from '../../../types/tool';
 
+const VERIFIED_DATE = '2026-08-12';
+
+function favicon(domain: string): string {
+  return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+}
+
 export const cursorTool: Tool = {
   id: 'tool-cursor',
   name: 'Cursor',
   slug: 'cursor',
-  logo: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=120&h=120&q=80',
-  tagline: 'AI-first code editor designed for rapid multi-file engineering and intelligent code generation.',
-  description: 'Cursor is an AI-powered IDE built on top of VS Code. It combines local codebase indexing with models like Claude 3.5 Sonnet and GPT-4o to offer instant inline edits, multi-file code generation via Composer, and intelligent bug fixing.',
+  logo: favicon('cursor.com'),
+  tagline:
+    'AI-native code editor forked from VS Code with agents, Composer, MCP, and team controls.',
+  description:
+    'Cursor is an AI-powered IDE from Anysphere built on VS Code. Official pricing cites Agent requests, Composer, frontier models, MCPs, skills, hooks, cloud agents, and Bugbot. Plans include a free Hobby tier, Individual paid tiers (Pro and higher usage tiers), Teams, and Enterprise with usage-based model billing on paid plans.',
   categoryId: 'cat-coding',
   categoryName: 'Coding & Software Development',
-  tags: ['IDE', 'Code Generation', 'Developer Tools', 'Claude Sonnet'],
+  tags: ['IDE', 'AI Agent', 'Code Generation', 'Developer Tools', 'MCP'],
   pricingModel: 'Freemium',
   monthlyPrice: 20,
   hasFreeTrial: true,
   companyName: 'Anysphere',
-  lastVerifiedDate: '2026-08-07',
-  verifiedBy: 'AI Find Editorial Team',
+  lastVerifiedDate: VERIFIED_DATE,
+  verifiedBy: 'AI Find Research (official sources)',
+  reviewState: 'verified',
   sources: [
     {
       type: 'pricing',
       url: 'https://cursor.com/pricing',
-      verifiedAt: '2026-08-07',
-      notes: 'Verified pricing tiers and plan names from Cursor official pricing page.'
+      verifiedAt: VERIFIED_DATE,
+      notes:
+        'Verified Hobby, Individual (Pro/Pro+/Ultra), Teams, and Enterprise tiers; usage-based pricing described on official page.',
     },
     {
       type: 'features',
       url: 'https://cursor.com',
-      verifiedAt: '2026-08-07',
-      notes: 'Confirmed Cursor feature set and Composer workflow from product landing page.'
+      verifiedAt: VERIFIED_DATE,
+      notes: 'Verified AI IDE positioning and agent/composer workflow from product site.',
     },
     {
       type: 'company',
       url: 'https://anysphere.com',
-      verifiedAt: '2026-08-07',
-      notes: 'Verified company name and platform branding.'
-    }
+      verifiedAt: VERIFIED_DATE,
+      notes: 'Verified company name Anysphere.',
+    },
   ],
   pricingSource: 'https://cursor.com/pricing',
   featureSource: 'https://cursor.com',
@@ -44,35 +54,68 @@ export const cursorTool: Tool = {
       name: 'Hobby',
       price: 0,
       billingPeriod: 'monthly',
-      features: ['Limited agent requests', 'Limited tab completions', 'Access to core editor features']
+      features: [
+        'No credit card required per official pricing',
+        'Limited Agent requests',
+        'Access to Composer',
+      ],
     },
     {
-      name: 'Pro',
+      name: 'Individual Pro',
       price: 20,
       billingPeriod: 'monthly',
-      features: ['Extended agent and tab usage', 'Access to premium models', 'Priority support']
+      features: [
+        'Extended Agent limits',
+        'Frontier models, MCPs, skills, and hooks',
+        'Cloud agents',
+        'Bugbot on usage-based billing',
+      ],
     },
     {
-      name: 'Business',
+      name: 'Teams',
       price: 40,
       billingPeriod: 'monthly',
-      features: ['Per-user pricing', 'Centralized team billing', 'Admin dashboard and usage analytics', 'Privacy mode enforced org-wide']
+      features: [
+        'Per-user team billing and admin',
+        'Team marketplace for rules, skills, and plugins',
+        'Agentic code reviews with Bugbot',
+        'Team-wide privacy mode and SAML/OIDC SSO',
+      ],
     },
     {
       name: 'Enterprise',
       price: null,
       billingPeriod: 'custom',
-      features: ['Custom contract pricing', 'SAML SSO', 'Dedicated support', 'Advanced security and compliance controls']
-    }
+      features: [
+        'Pooled usage, invoice/PO billing, SCIM',
+        'Repository, model, and MCP access controls',
+        'Audit logs and priority support per official pricing',
+      ],
+    },
   ],
   websiteUrl: 'https://cursor.com',
-  features: ['Composer multi-file edit mode', 'Full codebase semantic indexing', 'Inline Cmd+K generation', 'AI terminal command execution', '1-click VS Code extensions import'],
-  pros: ['Dramatically accelerates frontend and full-stack coding', 'Seamless transition from standard VS Code', 'Composer mode handles complex refactors across files'],
-  cons: ['Pro subscription required for high-speed requests', 'Can consume significant local RAM on massive monorepos'],
-  rating: 4.8,
-  reviewCount: 1950,
-  screenshots: ['https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=500'],
-  alternatives: ['github-copilot', 'v0', 'claude'],
+  features: [
+    'AI Agent and Composer multi-file editing inside a VS Code–based IDE',
+    'Tab completions and inline edits with codebase context',
+    'MCPs, skills, hooks, and cloud agents per official pricing',
+    'Bugbot agentic code review (usage-based on paid plans)',
+    'VS Code extension import and familiar editor workflow',
+    'Team admin, privacy mode, and enterprise access controls',
+  ],
+  pros: [
+    'Unified AI-native IDE — agents, Composer, and editor in one product',
+    'Free Hobby tier with no credit card per official pricing',
+    'Strong team and enterprise controls on Teams and Enterprise plans',
+  ],
+  cons: [
+    'Paid Individual tiers required for extended agent and model usage',
+    'Usage-based model billing beyond included plan limits per official docs',
+    'Separate Claude subscription needed if you also want Anthropic Claude Code outside Cursor’s stack',
+  ],
+  rating: 0,
+  reviewCount: 0,
+  screenshots: [],
+  alternatives: ['claude-code', 'v0', 'claude'],
   targetUsers: ['developers', 'entrepreneurs'],
   verified: true,
   featured: true,
@@ -81,5 +124,5 @@ export const cursorTool: Tool = {
   hasMobileApp: false,
   hasExtension: true,
   createdAt: '2024-03-01T00:00:00.000Z',
-  updatedAt: '2026-08-03T00:00:00.000Z'
+  updatedAt: `${VERIFIED_DATE}T00:00:00.000Z`,
 };

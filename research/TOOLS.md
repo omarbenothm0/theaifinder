@@ -1,7 +1,7 @@
 # Tool Research Inventory
 
-**Last updated:** 2026-08-11  
-**Entries:** 34 (13 student + 21 PM Phase 3)
+**Last updated:** 2026-08-12
+**Entries:** 35 (13 student + 21 PM Phase 3 + 1 coding)
 
 Master inventory of **real AI tools** discovered through research. Demo/seed tools (chatgpt, claude, etc.) are **not** listed here — they are placeholder implementation data only.
 
@@ -130,6 +130,9 @@ TOOL: Tome | https://tome.app | Category: presentations (candidate) | Persona: p
 Notes: Revisit only if official site restores verifiable product pages.
 
 TOOL: Reclaim.ai | https://www.reclaim.ai | Category: NEW — pending category decision | Persona: project-managers | Status: RESEARCHED | Evidence: AI calendar — AI Tasks, AI Planner, AI Smart Meetings, AI Focus Time. **PM Phase 3:** VERIFIED `project-scheduling` **strong** (page deferred — hub cross-link). Lite free; Starter $10–12/user/mo. Source: https://www.reclaim.ai/ , https://www.reclaim.ai/pricing | Date: 2026-08-11
+
+TOOL: Claude Code | https://code.claude.com | Category: coding (`cat-coding`) | Persona: none (demo `developers` seed only — no cluster mappings) | Status: IMPLEMENTED | Evidence: Anthropic agentic coding tool — terminal CLI, VS Code/Cursor/JetBrains extensions, desktop app, claude.ai/code web, mobile, Slack, GitHub Actions/GitLab CI. Distinct from consumer `/tools/claude`. **Comparison:** `claude-code-vs-cursor` IMPLEMENTED. Sources: https://docs.anthropic.com/en/docs/claude-code/overview , https://code.claude.com/pricing , https://code.claude.com | Date: 2026-08-12
+Notes: Pricing: included with Claude Pro (~$20/mo; $17/mo annual cited) and Max 5x/20x plans; usage limits apply; Anthropic Console API path per docs | Limitation: requires Claude subscription or Console — not a standalone free coding product | Evidence type: VERIFIED FACT (official docs + pricing) | Confidence: HIGH | Keyword link: KEYWORDS.md `claude code`, `claude code vs cursor` — raw volume/CPC NOT VERIFIED
 
 TOOL: Clockwise | https://www.getclockwise.com | Category: NEW — pending | Persona: project-managers | Status: **REJECTED** | Evidence: Official site shows product shutdown (2026-08-11). Excluded from project-scheduling. See REJECTED.md. | Date: 2026-08-11
 

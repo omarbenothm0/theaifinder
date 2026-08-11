@@ -7,6 +7,7 @@ import {
 import { chatgptTool } from './tools/chatgpt';
 import { claudeTool } from './tools/claude';
 import { cursorTool } from './tools/cursor';
+import { claudeCodeTool } from './tools/claude-code';
 import { v0Tool } from './tools/v0';
 import { midjourneyTool } from './tools/midjourney';
 import { dallE3Tool } from './tools/dall-e-3';
@@ -28,6 +29,7 @@ import {
   PM_VERIFIED_AT,
 } from './pm-cluster';
 import { PM_COMPARISONS } from './pm-comparisons';
+import { CODING_COMPARISONS } from './coding-comparisons';
 import {
   STUDENT_CATEGORY,
   STUDENT_PERSONA,
@@ -86,6 +88,7 @@ export const INITIAL_TOOLS = [
   chatgptTool,
   claudeTool,
   cursorTool,
+  claudeCodeTool,
   v0Tool,
   midjourneyTool,
   dallE3Tool,
@@ -126,7 +129,7 @@ export const INITIAL_PERSONAS = [
   WRITER_PERSONA,
 ];
 
-export const INITIAL_COMPARISONS = [...SEED_COMPARISONS, ...PM_COMPARISONS];
+export const INITIAL_COMPARISONS = [...SEED_COMPARISONS, ...PM_COMPARISONS, ...CODING_COMPARISONS];
 
 export {
   INITIAL_ARTICLES,
@@ -135,6 +138,7 @@ export {
   PM_TOOL_USE_CASES,
   PM_VERIFIED_AT,
   PM_COMPARISONS,
+  CODING_COMPARISONS,
   STUDENT_USE_CASES,
   STUDENT_PERSONA_USE_CASES,
   STUDENT_TOOL_USE_CASES,

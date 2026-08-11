@@ -234,6 +234,85 @@ async function main() {
     });
     toolSlugToId.set(tool.slug, created.id);
   }
+
+  // Sync refreshed tool records when seed modules replace stale data
+  const SYNC_TOOL_SLUGS = new Set(['cursor', 'claude-code']);
+  for (const tool of INITIAL_TOOLS) {
+    if (!SYNC_TOOL_SLUGS.has(tool.slug)) continue;
+
+    const existingTool = await prisma.tool.findUnique({ where: { slug: tool.slug } });
+    if (!existingTool) continue;
+
+    const categorySlug = categoryIdToSlug.get(tool.categoryId);
+    const realCategoryId = categorySlug ? categorySlugToId.get(categorySlug) : undefined;
+    if (!realCategoryId) continue;
+
+    await prisma.tool.update({
+      where: { slug: tool.slug },
+      data: {
+        name: tool.name,
+        logo: tool.logo,
+        tagline: tool.tagline,
+        description: tool.description,
+        categoryId: realCategoryId,
+        pricingModel: tool.pricingModel,
+        monthlyPrice: tool.monthlyPrice ?? null,
+        hasFreeTrial: tool.hasFreeTrial,
+        companyName: tool.companyName ?? null,
+        lastVerifiedDate: tool.lastVerifiedDate ? new Date(tool.lastVerifiedDate) : null,
+        verifiedBy: tool.verifiedBy ?? null,
+        pricingSource: tool.pricingSource ?? null,
+        featureSource: tool.featureSource ?? null,
+        reviewState: tool.reviewState ?? null,
+        websiteUrl: tool.websiteUrl,
+        rating: tool.rating,
+        reviewCount: tool.reviewCount,
+        verified: tool.verified,
+        featured: tool.featured,
+        trending: tool.trending,
+        hasApi: tool.hasApi,
+        hasMobileApp: tool.hasMobileApp,
+        hasExtension: tool.hasExtension,
+        tags: tool.tags,
+        features: tool.features,
+        pros: tool.pros,
+        cons: tool.cons,
+        screenshots: tool.screenshots,
+        platforms: tool.platforms ?? [],
+        targetUsers: tool.targetUsers,
+        updatedAt: tool.updatedAt ? new Date(tool.updatedAt) : new Date(),
+      },
+    });
+
+    await prisma.pricingTier.deleteMany({ where: { toolId: existingTool.id } });
+    if (tool.pricingTiers?.length) {
+      await prisma.pricingTier.createMany({
+        data: tool.pricingTiers.map((tier) => ({
+          toolId: existingTool.id,
+          name: tier.name,
+          price: tier.price,
+          billingPeriod: tier.billingPeriod,
+          features: tier.features,
+        })),
+      });
+    }
+
+    await prisma.toolSource.deleteMany({ where: { toolId: existingTool.id } });
+    if (tool.sources?.length) {
+      await prisma.toolSource.createMany({
+        data: tool.sources.map((s) => ({
+          toolId: existingTool.id,
+          type: s.type,
+          url: s.url,
+          verifiedAt: new Date(s.verifiedAt),
+          notes: s.notes ?? null,
+        })),
+      });
+    }
+
+    toolSlugToId.set(tool.slug, existingTool.id);
+  }
+
   console.log(`Seeded ${toolSlugToId.size} tools.`);
 
   // 4. Tool alternatives (self-referential, needs all tools created first)
@@ -344,6 +423,7 @@ async function main() {
   console.log(`Seeded ${reviewCount} reviews.`);
 
   // 7. Comparisons (static list only — dynamic ones are generated at request time, not seeded)
+  const SYNC_COMPARISON_SLUGS = new Set(['claude-code-vs-cursor']);
   let comparisonCount = 0;
   for (const comp of INITIAL_COMPARISONS) {
     const tool1Id = toolSlugToId.get(comp.tool1Slug);
@@ -354,6 +434,33 @@ async function main() {
     }
     const existingComparison = await prisma.comparison.findUnique({ where: { slug: comp.slug } });
     if (existingComparison) {
+      if (SYNC_COMPARISON_SLUGS.has(comp.slug)) {
+        await prisma.comparison.update({
+          where: { slug: comp.slug },
+          data: {
+            tool1Id,
+            tool2Id,
+            title: comp.title,
+            overview: comp.overview,
+            bestFor1: comp.bestFor1,
+            bestFor2: comp.bestFor2,
+            verdict: comp.verdict,
+            winnerSlug: comp.winnerSlug,
+          },
+        });
+        await prisma.comparisonFeature.deleteMany({
+          where: { comparisonId: existingComparison.id },
+        });
+        await prisma.comparisonFeature.createMany({
+          data: comp.featureBreakdown.map((f) => ({
+            comparisonId: existingComparison.id,
+            feature: f.feature,
+            tool1Value: f.tool1Value,
+            tool2Value: f.tool2Value,
+            winnerSlug: f.winnerSlug,
+          })),
+        });
+      }
       comparisonCount++;
       continue;
     }
