@@ -21,12 +21,12 @@
 | Tools VERIFIED or higher | 0 | |
 | Tools APPROVED | 0 | |
 | Tools IMPLEMENTED (via research track) | 0 | Demo seed tools excluded |
-| Keywords researched | 0 | See `KEYWORDS.md` |
+| Keywords researched | 44 | See `KEYWORDS.md` |
 | Categories proposed (research track) | 0 | See `CATEGORIES.md` |
-| Personas proposed (research track) | 0 | See `PERSONAS.md` |
-| Comparisons proposed (research track) | 0 | See `COMPARISONS.md` |
+| Personas proposed (research track) | 1 | See `PERSONAS.md` — Students, RESEARCHED (not PROPOSED) |
+| Comparisons proposed (research track) | 2 | See `COMPARISONS.md` — both RESEARCHED |
 | Open opportunities | 0 | See `OPPORTUNITIES.md` |
-| Rejected items | 0 | See `REJECTED.md` |
+| Rejected items | 12 | See `REJECTED.md` — 9 rejected + 3 deprioritized |
 
 **Target (long-term):** ~100+ verified, high-quality real AI tools — quality over quantity.
 
@@ -36,10 +36,10 @@
 
 | Item | Status |
 |---|---|
-| Research infrastructure | **Scaffolded** (this session) |
+| Research infrastructure | **Complete** |
 | Real tool research | **Not started** |
-| Taxonomy validation research | **Not started** |
-| Keyword demand research | **Not started** |
+| Taxonomy validation research | **In progress** (Students persona candidate from keyword cluster) |
+| Keyword demand research | **In progress** (Round 1–6 recorded 2026-08-11) |
 
 ---
 
@@ -63,7 +63,7 @@ Full slug lists: Research Bible §18.
 | # | Question | Status |
 |---|---|---|
 | 1 | Final category taxonomy — keep/replace/merge seed categories? | Unresolved |
-| 2 | Final persona set — keep/replace/merge seed personas? | Unresolved |
+| 2 | Final persona set — keep/replace/merge seed personas? | Unresolved — Students candidate has RESEARCHED evidence |
 | 3 | Minimum evidence bar for VERIFIED tool status | Unresolved |
 | 4 | Priority order for first research batch (category vs tool-first) | Unresolved |
 
@@ -73,9 +73,11 @@ Full slug lists: Research Bible §18.
 
 - [ ] Define owner-approved evidence bar for VERIFIED status
 - [ ] Begin first real tool research batch (when directed)
-- [ ] Begin keyword/intent research (when directed)
+- [x] Begin keyword/intent research — Round 1–6 recorded (2026-08-11)
 - [ ] Evaluate seed taxonomy against real demand evidence
 - [ ] Build toward ~100+ tool target without lowering standards
+- [ ] SERP competition checks for demand-only keywords (free ai for code, best free ai tools, marketing sub-queries, email automation)
+- [ ] Third-party keyword tool export for raw volume/CPC (currently NOT VERIFIED for all entries)
 
 ---
 
@@ -85,6 +87,7 @@ Full slug lists: Research Bible §18.
 |---|---|
 | [TOOLS.md](./TOOLS.md) | Tool inventory |
 | [KEYWORDS.md](./KEYWORDS.md) | Keyword inventory |
+| [TEMPLATES.md](./TEMPLATES.md) | Quick-entry copy-paste formats |
 | [CATEGORIES.md](./CATEGORIES.md) | Category proposals |
 | [PERSONAS.md](./PERSONAS.md) | Persona proposals |
 | [COMPARISONS.md](./COMPARISONS.md) | Comparison proposals |

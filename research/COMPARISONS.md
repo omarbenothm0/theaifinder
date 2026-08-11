@@ -1,7 +1,7 @@
 # Comparison Research Inventory
 
 **Last updated:** 2026-08-11  
-**Entries:** 0
+**Entries:** 2
 
 Track head-to-head **comparison opportunities** for AI Finder.
 
@@ -61,4 +61,8 @@ Public URL pattern: `/compare/[slug]`
 
 ## Comparison proposals
 
-*No research entries yet.*
+COMPARISON: Claude Code vs Cursor | Slug: `claude-code-vs-cursor` | Seed: NEW (no seed comparison for this pair; seed has `cursor-vs-chatgpt`, different matchup) | Demand: Very high Trends spike + sustained baseline (R3); real comparison intent (R6 SERP) | Competition: MODERATE — freshness-driven dev blogs, not legacy media | Status: RESEARCHED | Date: 2026-08-11
+Notes: Evidence type: OBSERVATION | Tool A: Claude Code — slug NOT VERIFIED (no research-track tool entry yet) | Tool B: Cursor — overlaps demo seed `/tools/cursor` | Keyword link: KEYWORDS.md — `claude code vs cursor` | Destination: `/compare/claude-code-vs-cursor` | **Stronger comparison candidate** in this dataset — only comparison with both demand AND competition evidence supporting a real opportunity. | Status is RESEARCHED, not PROPOSED — owner sign-off required before implementation. | Raw search volume and CPC: NOT VERIFIED.
+
+COMPARISON: ChatGPT vs Claude | Slug: `chatgpt-vs-claude` | Seed: OVERLAPS EXISTING PLACEHOLDER — seed slug `chatgpt-vs-claude` exists; now has real evidence attached | Demand: Major spike + sustained baseline (R3); overlaps seed chatgpt-vs-claude | Competition: HARD — Tom's Guide, Zapier, Zendesk dominate (R6 SERP) | Status: RESEARCHED | Date: 2026-08-11
+Notes: Evidence type: OBSERVATION | Tool A: ChatGPT — overlaps demo seed `/tools/chatgpt` | Tool B: Claude — overlaps demo seed `/tools/claude` | Keyword link: KEYWORDS.md — `chatgpt vs claude` | Destination: `/compare/chatgpt-vs-claude` | Researched with both demand and competition evidence, but **not a validated opportunity** like Claude Code vs Cursor — competition is HARD. | Seed placeholder can be enriched with this research when owner approves implementation.
