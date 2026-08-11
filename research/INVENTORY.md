@@ -17,12 +17,12 @@
 
 | Metric | Count | Notes |
 |---|---|---|
-| Tools researched (any status) | 0 | See `TOOLS.md` |
+| Tools researched (any status) | 13 | See `TOOLS.md` |
 | Tools VERIFIED or higher | 0 | |
 | Tools APPROVED | 0 | |
 | Tools IMPLEMENTED (via research track) | 0 | Demo seed tools excluded |
 | Keywords researched | 44 | See `KEYWORDS.md` |
-| Categories proposed (research track) | 0 | See `CATEGORIES.md` |
+| Categories proposed (research track) | 1 | See `CATEGORIES.md` — Study & Research Tools gap finding, RESEARCHED (not PROPOSED) |
 | Personas proposed (research track) | 1 | See `PERSONAS.md` — Students, RESEARCHED (not PROPOSED) |
 | Comparisons proposed (research track) | 2 | See `COMPARISONS.md` — both RESEARCHED |
 | Open opportunities | 0 | See `OPPORTUNITIES.md` |
@@ -37,8 +37,8 @@
 | Item | Status |
 |---|---|
 | Research infrastructure | **Complete** |
-| Real tool research | **Not started** |
-| Taxonomy validation research | **In progress** (Students persona candidate from keyword cluster) |
+| Real tool research | **In progress** (13 student tools recorded 2026-08-11) |
+| Taxonomy validation research | **In progress** (Students persona + Study & Research Tools category gap) |
 | Keyword demand research | **In progress** (Round 1–6 recorded 2026-08-11) |
 
 ---
@@ -72,7 +72,7 @@ Full slug lists: Research Bible §18.
 ## Research remaining (high level)
 
 - [ ] Define owner-approved evidence bar for VERIFIED status
-- [ ] Begin first real tool research batch (when directed)
+- [x] Begin first real tool research batch — 13 student tools recorded (2026-08-11)
 - [x] Begin keyword/intent research — Round 1–6 recorded (2026-08-11)
 - [ ] Evaluate seed taxonomy against real demand evidence
 - [ ] Build toward ~100+ tool target without lowering standards

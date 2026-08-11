@@ -1,7 +1,7 @@
 # Category Research Inventory
 
 **Last updated:** 2026-08-11  
-**Entries:** 0
+**Entries:** 1
 
 Track **proposed, verified, and approved** categories for AI Finder. Categories must emerge from research — not from assuming seed data is correct.
 
@@ -63,4 +63,5 @@ Public URL pattern: `/category/[slug]`
 
 ## Category proposals
 
-*No research entries yet.*
+CATEGORY: Study & Research Tools | Slug: `study-research` (candidate) | Seed overlap: NEW — no existing seed category fits 11/13 student-tool cluster | Evidence: Category gap from first real tool research batch (2026-08-11): 11 of 13 student-persona tools do not map to any seed category (`writing`, `coding`, `image`, `video`, `voice`, `seo`, `presentations`, `productivity`). Only Grammarly → `writing` and Gamma App → `presentations` fit. Remaining cluster spans note-taking, flashcards, lecture transcription, academic paper search, computational math, and exam prep — unified by student study/research intent rather than output modality. | Status: RESEARCHED | Date: 2026-08-11
+Notes: Example tools supporting new category: NotebookLM, Otter.ai, RemNote, NoteGPT, Quizlet, Anki, Wolfram Alpha, Consensus, Elicit, Scite.ai, Monic.ai | Tools with seed fit (excluded from gap count): Grammarly (`writing`), Gamma App (`presentations`) | Evidence type: OBSERVATION (taxonomy mapping from verified tool research) | Alternative names considered: "Note-Taking & Flashcards" — rejected as too narrow (excludes transcription, paper search, computational engines) | Status is RESEARCHED, not PROPOSED — owner sign-off required per Research Bible §10 before category implementation

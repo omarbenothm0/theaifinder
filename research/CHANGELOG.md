@@ -40,6 +40,45 @@ Meaningful research decisions, session summaries, and inventory changes.
 
 ## Changelog
 
+### 2026-08-11 — First student tool research batch (13 tools)
+
+**Scope:** Record 13 student-persona tool candidates from Gemini live web verification against official sites (2026-08-11). Category gap analysis for seed taxonomy.
+
+**Discovered:**
+- 13 real AI/study tools researched for Students persona cluster
+- Category gap: 11/13 tools do not fit any existing seed category
+- New category candidate: Study & Research Tools (`study-research` slug candidate)
+
+**Verified:**
+- Pricing and product claims for 12/13 tools from official websites (Gemini live verification, 2026-08-11)
+- Seed category fit confirmed for Grammarly (`writing`) and Gamma App (`presentations`)
+
+**Not verified:**
+- Monic.ai — weaker evidence (directory listings + platform updates); flagged LOW confidence for re-verification
+- Affiliate availability for all 13 tools — NOT VERIFIED
+
+**Proposed / Approved:**
+- N/A — all entries remain RESEARCHED pending owner review
+
+**Rejected:**
+- N/A
+
+**Files updated:**
+- `research/TOOLS.md` — 13 entries added
+- `research/CATEGORIES.md` — Study & Research Tools gap finding added
+- `research/INVENTORY.md` — counts updated
+- `research/CHANGELOG.md` — this entry
+
+**Website/code changed:** **No**
+
+**Next steps:**
+- Owner review before commit
+- Owner decision on promoting Study & Research Tools category to PROPOSED
+- Re-verify Monic.ai before VERIFIED promotion
+- Owner decision on promoting Students persona and individual tools to PROPOSED
+
+---
+
 ### 2026-08-11 — Round 1–6 keyword/SERP research recorded
 
 **Scope:** Round 1–6 keyword/SERP research recorded into permanent inventory (SERP competition + Google Trends demand observations). No new research performed — data transcribed from completed sessions.
