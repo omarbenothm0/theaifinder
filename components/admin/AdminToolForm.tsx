@@ -117,7 +117,6 @@ export function AdminToolForm({
   const [verifiedBy, setVerifiedBy] = useState(
     editingTool?.verifiedBy ?? 'AI Find Editorial Team'
   );
-  const [lastVerifiedDate, setLastVerifiedDate] = useState(editingTool?.lastVerifiedDate ?? '');
   const [reviewState, setReviewState] = useState<ReviewState>(
     editingTool?.reviewState ?? 'unverified'
   );
@@ -238,7 +237,6 @@ export function AdminToolForm({
       reviewRequestedAt: reviewRequestedAt || undefined,
       reviewAssignedTo: reviewAssignedTo.trim() || undefined,
       reviewNotes: reviewNotes.trim() || undefined,
-      lastVerifiedDate: lastVerifiedDate || undefined,
       verifiedBy: verifiedBy.trim() || undefined,
     };
   };
@@ -842,15 +840,6 @@ export function AdminToolForm({
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Reviewed Date</label>
-                <input
-                  type="date"
-                  value={lastVerifiedDate}
-                  onChange={(e) => setLastVerifiedDate(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono text-slate-900 focus:outline-none"
-                />
-              </div>
               <div>
                 <label className="block font-bold text-slate-700 mb-1">Review State</label>
                 <select

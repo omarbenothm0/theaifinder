@@ -432,7 +432,7 @@ class DBRepository {
         monthlyPrice: data.monthlyPrice ?? null,
         hasFreeTrial: data.hasFreeTrial,
         companyName: data.companyName ?? null,
-        lastVerifiedDate: data.lastVerifiedDate ? new Date(data.lastVerifiedDate) : null,
+        lastVerifiedDate: new Date(),
         verifiedBy: data.verifiedBy ?? null,
         pricingSource: data.pricingSource ?? null,
         featureSource: data.featureSource ?? null,
@@ -475,6 +475,14 @@ class DBRepository {
     return mapTool(withRelations!);
   }
 
+  /** Updates lastVerifiedDate after a successful website health check. */
+  public async touchToolLastVerifiedDate(toolId: string): Promise<void> {
+    await prisma.tool.update({
+      where: { id: toolId },
+      data: { lastVerifiedDate: new Date() },
+    });
+  }
+
   public async updateTool(slug: string, updates: Partial<Tool>): Promise<Tool | undefined> {
     const existing = await prisma.tool.findFirst({
       where: { slug: { equals: slug, mode: 'insensitive' } },
@@ -492,8 +500,6 @@ class DBRepository {
     if (updates.monthlyPrice !== undefined) data.monthlyPrice = updates.monthlyPrice;
     if (updates.hasFreeTrial !== undefined) data.hasFreeTrial = updates.hasFreeTrial;
     if (updates.companyName !== undefined) data.companyName = updates.companyName;
-    if (updates.lastVerifiedDate !== undefined)
-      data.lastVerifiedDate = updates.lastVerifiedDate ? new Date(updates.lastVerifiedDate) : null;
     if (updates.verifiedBy !== undefined) data.verifiedBy = updates.verifiedBy;
     if (updates.pricingSource !== undefined) data.pricingSource = updates.pricingSource;
     if (updates.featureSource !== undefined) data.featureSource = updates.featureSource;
@@ -524,6 +530,8 @@ class DBRepository {
     if (updates.targetUsers !== undefined) data.targetUsers = updates.targetUsers;
     if (updates.rating !== undefined) data.rating = updates.rating;
     if (updates.reviewCount !== undefined) data.reviewCount = updates.reviewCount;
+
+    data.lastVerifiedDate = new Date();
 
     await prisma.tool.update({
       where: { id: existing.id },

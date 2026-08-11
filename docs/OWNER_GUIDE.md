@@ -1,256 +1,235 @@
-# AI Find — Owner / Operator Guide
+# AI Finder — Owner & Developer Handoff Guide
 
-This guide describes **how the site works today**, based on the actual codebase. It is written for you as the **owner/operator**, not as a developer handoff doc.
+**AI HANDOFF RULE:** Before making ANY change, read this guide and inspect the existing implementation. The existing website is already functional. Do not rebuild, replace, or redesign working systems just because you would architect them differently.
+
+This document describes **how the site works today**, based on the actual codebase. It is written for:
+
+- **You (owner/operator)** — day-to-day operations through Admin
+- **Future AI agents and developers** — architecture, safety rules, and what not to break
 
 **Last reviewed against codebase:** August 2026  
+**Public site brand (in code):** `TheRadarHub` (`lib/brand.ts`)  
 **Admin URL:** `/admin` (login at `/admin/login`)
 
 ---
 
-## Quick orientation
+## 1. Project identity
 
-| What you do day-to-day | Where |
+| Item | Value |
 |---|---|
-| Add/edit/delete AI tools | Admin → **Add New AI Tool** / edit pencil / trash icon |
-| Moderate visitor reviews | Admin → **Review Moderation** section |
-| Run a website health check | Admin → edit a tool → **Run Website Check** |
-| Change homepage layout/copy | Code (`app/page.tsx`, `components/home/`) — **not in Admin** |
-| Add categories/personas/comparisons | Code + database seed — **not in Admin** |
-| Deploy code changes | Git push + host rebuild (see [Deployment](#7-deployment)) |
-| Change live tool data | Admin — **no redeploy needed** |
+| **Project name** | AI Finder (AI tools discovery platform) |
+| **GitHub repository** | https://github.com/omarbenothm0/theaifinder |
+| **Current development branch** | `production-readiness-fixes` (as of last review) |
+| **Stack** | Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS |
+| **Database** | PostgreSQL via Prisma |
+| **Runtime data source** | PostgreSQL only — **not** `lib/data/` files |
+
+**Naming note:** The public-facing site name rendered in the UI is **`TheRadarHub`** (defined in `lib/brand.ts`). The repository and this guide use “AI Finder” as the project name. Do not confuse repo/project naming with the live brand string in code.
+
+**Typical workflow:** Feature work happens on a branch (e.g. `production-readiness-fixes`), is tested locally, committed, pushed, then deployed by the host pulling the new commit and rebuilding.
 
 ---
 
-## Owner workflows (step-by-step)
+## 2. Architecture overview
 
-### How I add an AI tool
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  Public website (Next.js pages in app/, components/)           │
+│  Homepage, tool pages, categories, personas, comparisons, etc.   │
+└────────────────────────────┬────────────────────────────────────┘
+                             │ reads via lib/services → lib/dbRepository
+┌────────────────────────────▼────────────────────────────────────┐
+│  Admin CMS (/admin)                                              │
+│  Tool CRUD, review moderation, manual monitoring checks          │
+└────────────────────────────┬────────────────────────────────────┘
+                             │ writes via app/api/* (auth required)
+┌────────────────────────────▼────────────────────────────────────┐
+│  PostgreSQL (DATABASE_URL)                                        │
+│  Tools, reviews, categories, personas, monitoring checks, etc.    │
+└───────────────────────────────────────────────────────────────────┘
 
-1. Go to **`/admin/login`** and sign in
-2. Click **Add New AI Tool**
-3. Fill in **Basic Information** (name, slug, logo URL, website)
-4. Write **Content** (tagline ≥ 10 chars, description ≥ 50 chars)
-5. Pick **Category** and **Pricing**
-6. Add **Tags, Features, Pros/Cons** for search and tool page
-7. Check **Target Personas** and **Alternative Tools** if applicable
-8. Set **Badges** (Featured, Verified, etc.) and **Editorial Rating** if desired
-9. Add **Verification** info and **Source JSON** when you have verified pricing/features
-10. Click **Save as Draft** — fix any validation errors shown
-11. When complete, click **Save & Publish** (or set Published + Save)
-12. Optionally: edit tool → **Run Website Check**
-13. Open **Preview public page** link to verify `/tools/[slug]`
+lib/data/seedData.ts + lib/data/tools/*.ts  →  bootstrap ONLY (npm run db:seed)
+lib/seo/*                                   →  metadata, sitemap, JSON-LD, indexability
+lib/monitoring/*                            →  manual website health checks
+lib/utils/toolOutboundLink.ts               →  official vs affiliate outbound routing
+```
 
-### How I edit an AI tool
+### Key architectural facts
 
-1. `/admin` → find tool in table (use search)
-2. Click **pencil icon**
-3. Change any section
-4. **Save as Draft**, **Save Tool**, or **Save & Publish**
-5. Public site updates from database (may cache up to ~1 hour)
-
-### How I publish an AI tool
-
-1. Ensure logo URL, tagline (≥10 chars), description (≥50 chars), website, category are filled
-2. Watch the **indexability preview** in the Publish section — it should say “Ready for public indexing”
-3. Click **Save & Publish** (recommended) or set Publish Status to Published and click Save
-4. If validation fails, field-level errors appear in red under the relevant inputs
-
-### How I manage reviews
-
-1. `/admin` → **Review Moderation** (above tools table)
-2. Default view shows **Pending** reviews
-3. Click a review → **View details**
-4. Read comment; check **Email (admin only)** if provided
-5. Add optional **Moderation notes**
-6. Click **Approve**, **Reject**, **Flag**, or **Delete**
-7. Approved reviews appear in the tool page **User Reviews** section (not the hero rating)
-
-### What I can do entirely from Admin
-
-- Add, edit, delete AI tools (all Tool fields except schema-level relations below)
-- Assign category, personas (target users), alternatives
-- Manage pricing, features, pros/cons, tags, platforms, screenshots
-- Manage sources, verification metadata, editorial review state
-- Set draft / published / archived
-- Set featured, verified, trending, API/mobile/extension flags
-- Set editorial rating & review count (separate from visitor reviews)
-- Moderate visitor reviews (approve/reject/flag/delete)
-- Run manual website monitoring checks
-- View monitoring signals in tools table
-
-### What requires VS Code / Cursor
-
-See [Appendix A](#appendix-a--what-still-requires-vs-code--developer-work).
-
----
-
-## 1. What is managed from Admin?
-
-### How to access Admin
-
-1. Go to **`/admin/login`**
-2. Sign in with **`ADMIN_USERNAME`** and **`ADMIN_PASSWORD`** from your environment (`.env.local` locally, host env vars in production)
-3. Session lasts **1 hour**, then you must sign in again
-4. Sign out via **Sign Out** in the top bar
-
-All write actions (save tool, delete tool, moderate review, run monitoring check) require this session. If it expires, you are redirected back to login.
-
----
-
-### Admin dashboard layout
-
-After login, `/admin` shows:
-
-1. **Header** — signed-in user, session expiry, Sign Out, **Add New AI Tool**
-2. **Stats cards** — read-only counts (tools, categories, personas, comparisons, reviews, verified, featured, pending reviews)
-3. **Review Moderation** — approve/reject/flag/delete visitor reviews
-4. **Manage Tool Listings** — searchable/filterable table of all tools with edit/delete
-
-**NOT CURRENTLY IMPLEMENTED in Admin UI:**
-
-- Category create/edit/delete (select existing category only)
-- Persona create/edit/delete (link tools to existing personas only)
-- Comparison create/edit/delete
-- Article/blog management
-- Bulk CSV import of tools
-- Scheduled/automatic monitoring runs
-- PersonaTopTool ordered picks (separate from target-user links; seed-only today)
-
-**Fully manageable from Admin for each Tool:**
-
-- All core fields: name, slug, logo, website, tagline, description, company
-- Category assignment, pricing model, monthly price, pricing tiers (JSON)
-- Tags, features, pros, cons, platforms, screenshots
-- Target personas (`targetUsers`), alternative tool links
-- Badges: verified, featured, trending, has API/mobile/extension
-- Editorial listing rating & review count (separate from visitor reviews)
-- Verification: sources JSON, pricing/feature source URLs, review state, dates, notes
-- Publish status: draft / published / archived
-- Manual website monitoring check (edit mode)
-
----
-
-### A. AI tools (add / edit / delete)
-
-#### Where to find it
-
-- **Add:** top-right **Add New AI Tool**
-- **Edit:** table row → pencil icon → modal **Edit Tool**
-- **Delete:** table row → trash icon → browser confirm dialog
-
-#### What you can edit (Admin Tool form sections)
-
-| Section | Fields |
+| Fact | Detail |
 |---|---|
-| **Basic Information** | Tool Name*, URL Slug*, Logo URL, Official Website URL*, Company Name |
-| **Content** | Tagline* (min 10 chars to publish), Full Description* (min 50 chars to publish) |
-| **Category & Pricing** | Category*, Pricing Model*, Monthly Cost, Pricing Tiers (JSON) |
-| **Lists & Details** | Tags, Features, Pros, Cons, Platforms (comma-separated), Screenshot URLs (one per line) |
-| **Personas & Alternatives** | Target Personas (checkboxes), Alternative Tools (checkboxes) |
-| **Badges & Listing Flags** | Verified, Featured, Trending, Has API/Mobile/Extension, Editorial Rating, Editorial Review Count |
-| **Verification & Sources** | Pricing/Feature Source URLs, Verified By, Reviewed Date, Review State, Review Requested/Assigned, Review Notes, Source Metadata (JSON) |
-| **Website Monitoring** (edit only) | Run Website Check + results |
-| **Publish** | Publish Status + indexability preview |
+| **Database is runtime source of truth** | Public pages and Admin read/write PostgreSQL through `lib/dbRepository.ts`. |
+| **`lib/data/` is seed/bootstrap only** | TypeScript files under `lib/data/` are loaded by `prisma/seed.ts` when you run `npm run db:seed`. They are **not** read on each page request after seeding. |
+| **Admin CMS** | Full Tool CRUD, review moderation, manual monitoring — no redeploy needed for data changes. |
+| **Public website** | Server-rendered Next.js pages with ISR caching (`revalidate = 3600` on many routes = up to 1 hour cache). |
+| **Authentication** | Cookie-based admin session (`lib/auth/`), gated by `middleware.ts`. Session lasts **1 hour**. |
 
-\* Required to save. Publishing additionally requires logo URL, valid tagline/description lengths, and other indexability rules (shown in form when status = Published).
+### Request flow (simplified)
+
+```
+Browser → Next.js page or API route → Service (optional) → dbRepository → Prisma → PostgreSQL
+```
+
+Admin write routes (`POST/PUT/DELETE` on `/api/tools`, `/api/admin/*`, etc.) require an authenticated admin session. Public review submission (`POST /api/reviews`) and finder (`POST /api/finder`) are explicitly allowed without admin auth.
+
+---
+
+## 3. How you operate the website
+
+### Quick reference
+
+| Task | Where |
+|---|---|
+| Add/edit/delete AI tools | `/admin` → Add New AI Tool / pencil / trash |
+| Configure affiliate links | `/admin` → edit tool → **Monetization & Links** |
+| Moderate visitor reviews | `/admin` → **Review Moderation** |
+| Run website health check | `/admin` → edit tool → **Website Monitoring** → Run Website Check |
+| Change homepage layout/copy | **VS Code** — `app/page.tsx`, `components/home/` |
+| Add categories/personas/comparisons | **VS Code + seed/DB** — not in Admin |
+| Deploy code changes | Git push + host rebuild |
+| Change live tool data | **Admin** — no redeploy needed |
+
+---
+
+### How to add a tool
+
+1. Go to **`/admin/login`** and sign in.
+2. Click **Add New AI Tool**.
+3. Fill **Basic Information** (name, slug, logo URL, company).
+4. Fill **Monetization & Links** — official website URL (required); affiliate fields if applicable.
+5. Write **Content** (tagline ≥ 10 chars, description ≥ 50 chars for publishing).
+6. Pick **Category & Pricing**.
+7. Add **Lists & Details** (tags, features, pros/cons, platforms, screenshots).
+8. Set **Personas & Alternatives** if applicable.
+9. Set **Badges & Listing Flags** (featured, trending, editorial rating, etc.).
+10. Add **Verification & Sources** when you have verified pricing/features metadata.
+11. Click **Save as Draft** while building.
+12. When ready, click **Save & Publish** (or set Published + Save).
+13. Optionally run **Run Website Check** and open **Preview public page**.
+
+New tools default to **`draft`** in the Admin form.
+
+---
+
+### How to edit a tool
+
+1. `/admin` → search/find tool → **pencil icon**.
+2. Edit any section.
+3. **Save as Draft**, **Save Tool**, or **Save & Publish**.
+4. Public site reads from DB immediately; cached pages may lag up to ~1 hour.
+
+Changing the slug changes the public URL (`/tools/[slug]`). The old URL will 404 unless redirects are added in code.
+
+---
+
+### How to publish / unpublish
+
+| Publish Status | Public listings | Tool page | SEO indexing |
+|---|---|---|---|
+| `draft` | Hidden | 404 for visitors | Not indexable |
+| `published` | Visible (if fields OK) | Live at `/tools/[slug]` | Eligible if indexability rules pass |
+| `archived` | Hidden | 404 for visitors | Not indexable |
 
 **Save buttons:**
 
-| Button | What it does |
+| Button | Behavior |
 |---|---|
-| **Save as Draft** | Forces `draft` status — skips publish validation |
-| **Save Tool** | Saves with current Publish Status dropdown value |
+| **Save as Draft** | Forces `draft` — skips publish validation |
+| **Save Tool** | Saves with current Publish Status dropdown |
 | **Save & Publish** | Sets `published` and validates all publish requirements |
 
-**Preview:** When editing, click **Preview public page** to open `/tools/[slug]` in a new tab.
+The form shows an **indexability preview** when Publish Status is `published`.
 
-**Publish Status meanings:**
+---
 
-| Value | Public listings | Tool page | SEO indexing |
+### Categories, personas, comparisons
+
+| Entity | Admin today | How to change |
+|---|---|---|
+| **Categories** | Dropdown selection only when editing tools | Seed (`lib/data/seedData.ts`) + `npm run db:seed`, or direct DB/developer work |
+| **Personas** | Link tools via **Target Personas** checkboxes (`Tool.targetUsers`) | Persona records: seed/code only. `PersonaTopTool` (ordered featured picks on persona hubs) is seed-only |
+| **Comparisons** | Not in Admin | Seed/code only |
+| **Articles** | Not in Admin | Seed/code only |
+
+---
+
+### Where visitor reviews appear
+
+- **Submission:** `/tools/[slug]` → **User Reviews** section → review form
+- **Public display:** Only **approved** reviews appear in the **User Reviews** section on the tool page
+- **Hero rating / tool cards:** Show **editorial** `Tool.rating` and `Tool.reviewCount` — **not** visitor review aggregates
+
+---
+
+### How review moderation works
+
+1. Visitor submits review → stored as `pending` in PostgreSQL `Review` table.
+2. Admin → **Review Moderation** (default filter: Pending).
+3. Expand review → **Approve**, **Reject**, **Flag**, or **Delete**.
+4. Approved reviews appear publicly in the User Reviews section.
+
+See [Section 5 — Reviews](#5-reviews) for the complete flow and the critical editorial vs visitor rating distinction.
+
+---
+
+### Where monitoring is found
+
+1. **Tools table → Monitor column** — signal emoji + label per tool.
+2. **Edit tool → Website Monitoring** — latest check details + **Run Website Check**.
+
+Monitoring is **manual only** — there is no scheduled/cron automation in the codebase.
+
+---
+
+### How affiliate links are configured
+
+1. `/admin` → edit tool → **Monetization & Links**.
+2. Set **Official Website URL** (always required — used for monitoring).
+3. Optionally set **Affiliate URL** and enable **Use affiliate link for outbound CTAs**.
+4. Optionally set **Affiliate Program / Network** (admin reference label).
+5. Save.
+
+See [Section 6 — Affiliate system](#6-affiliate-system) for full behavior.
+
+---
+
+## 4. Admin CMS — all editable Tool fields
+
+Everything below is editable in **`AdminToolForm`** without VS Code.
+
+### Form sections and fields
+
+| Section | Fields | Required to save | Required to publish |
 |---|---|---|---|
-| `draft` | Hidden | 404 for visitors | Not indexable |
-| `published` | Visible (if other fields OK) | Live at `/tools/[slug]` | Eligible if indexability rules pass |
-| `archived` | Hidden | 404 for visitors | Not indexable |
+| **Basic Information** | Tool Name, URL Slug, Logo URL, Company Name | Name, slug | Logo URL (valid http/https) |
+| **Monetization & Links** | Official Website URL, Affiliate URL, Affiliate enabled toggle, Affiliate Program/Network | Official Website URL | Official Website URL (valid http/https) |
+| **Content** | Tagline, Full Description | — | Tagline ≥ 10 chars, Description ≥ 50 chars |
+| **Category & Pricing** | Category, Pricing Model, Monthly Cost, Pricing Tiers (JSON) | Category | Category assigned |
+| **Lists & Details** | Tags, Features, Pros, Cons, Platforms, Screenshot URLs | — | — |
+| **Personas & Alternatives** | Target Personas (checkboxes), Alternative Tools (checkboxes) | — | — |
+| **Badges & Listing Flags** | Verified, Featured, Trending, Has API/Mobile/Extension, Editorial Rating (0–5), Editorial Review Count | — | — |
+| **Verification & Sources** | Pricing Source URL, Feature Source URL, Verified By, Review State, Review Requested, Review Assigned To, Review Notes, Source Metadata (JSON) | — | — |
+| **Website Monitoring** (edit only) | Run Website Check + results display | — | — |
+| **Publish** | Publish Status + indexability preview | — | All publish rules (see above) |
 
-#### What happens after you save
+### Field persistence (what hits the database)
 
-1. Browser sends `POST /api/tools` (new) or `PUT /api/tools/[slug]` (edit)
-2. Request goes through **middleware** — must be logged in as admin
-3. **`lib/dbRepository.ts`** writes to **PostgreSQL** via Prisma
-4. Admin table updates immediately in your browser
-5. **Public site** reads from the same database — **no redeploy needed**
-
-**Cache note:** Tool pages and homepage use Next.js caching (`revalidate = 3600` = up to **1 hour**). Admin changes can take up to an hour to appear on some public pages unless the cache is refreshed by a new deployment or time passing.
-
-#### Database?
-
-**Yes** — tool records live in PostgreSQL `Tool` table (and related tables when seeded).
-
-#### Redeploy needed?
-
-**No** for normal Admin saves.
-
-#### SEO impact?
-
-- **Yes, indirectly:** title/description/tagline/slug/publish status affect metadata and sitemap eligibility
-- **Draft/archived** → `noindex`, excluded from public catalog logic
-- **Published** → included in sitemap **only if** indexability rules pass (see section 2)
-
-#### Public pages immediately?
-
-- **Admin:** yes, immediately
-- **Public site:** live data from DB, but cached pages may lag up to ~1 hour
-
----
-
-#### Adding a new AI tool (step-by-step)
-
-1. `/admin` → **Add New AI Tool**
-2. Enter **name** (slug auto-fills)
-3. Fill **tagline**, **description**, **category**, **pricing**, **website URL**
-4. Leave **Publish Status = draft** while drafting
-5. Click **Save Tool to Database**
-6. When ready, edit tool → set **Publish Status = published** → save
-
-**New tools default to `draft`** in the Admin form.
-
----
-
-#### Editing an existing tool
-
-Same modal, opened via pencil icon. Slug is editable but changing it changes the public URL — old URL will 404 unless you add redirects in code.
-
----
-
-#### Deleting a tool
-
-Trash icon → confirm. Sends `DELETE /api/tools/[slug]`.
-
-- Removed from PostgreSQL
-- **Also deletes** related reviews, monitoring checks, sources, pricing tiers (database cascade)
-- **No redeploy** needed
-- Public URL returns 404 after cache clears
-
----
-
-#### Verification (editorial)
-
-Verification in Admin is **manual editorial tracking**, not automatic proof.
-
-| Field | Purpose |
+| Admin field | Database location |
 |---|---|
-| **Review State** | Your internal QA state (`unverified` → `verified`) |
-| **Reviewed Date** | When you last verified content; feeds monitoring “stale” signals |
-| **Verified By** | Who verified |
-| **Review Notes** | Internal notes |
-| **Verified badge** (table column) | **Verified** checkbox in Admin form |
+| Core tool fields | `Tool` table |
+| Source Metadata JSON | `ToolSource` rows (synced on save) |
+| Pricing Tiers JSON | `PricingTier` rows (synced on save) |
+| Alternative Tools checkboxes | `ToolAlternative` rows (synced on save) |
+| Target Personas checkboxes | `Tool.targetUsers[]` array |
+| Affiliate fields | `Tool.affiliateUrl`, `Tool.affiliateEnabled`, `Tool.affiliateProgram` |
 
-Monitoring does **not** auto-verify tools. You update verification fields yourself after human review.
+### Affiliate validation (Admin)
 
----
+- Affiliate URL is optional unless **affiliate enabled** is checked.
+- If enabled, affiliate URL must be a valid `http://` or `https://` URL.
+- Affiliate fields are **never** required to publish a tool.
 
-#### Sources
-
-The **Source Metadata (JSON)** field saves to PostgreSQL `ToolSource` table on every save. Example:
+### Source Metadata JSON format
 
 ```json
 [
@@ -265,767 +244,492 @@ The **Source Metadata (JSON)** field saves to PostgreSQL `ToolSource` table on e
 
 Valid types: `pricing`, `features`, `company`, `website`, `documentation`, `changelog`, `review`, `general`.
 
-Leave empty to clear all sources. Invalid JSON is rejected before save.
+Sources are **editorial audit metadata**. They are saved to the database but are **not** rendered as public outbound CTAs on tool pages.
 
-#### Pricing / features
+### Pricing tiers JSON format
 
-| What | Admin | Database |
-|---|---|---|
-| Pricing model + monthly price | Yes | `Tool` |
-| Pricing tiers (multi-plan) | Yes — JSON field | `PricingTier` table |
-| Feature bullet list | Yes — comma-separated | `Tool.features[]` |
-| Pros / cons | Yes — comma-separated | `Tool.pros[]`, `Tool.cons[]` |
-| Pricing/feature source URLs | Yes | `Tool.pricingSource`, `Tool.featureSource` |
-
----
-
-#### Categories
-
-- Admin shows a **dropdown** of existing categories when editing tools
-- Stats card shows category **count only**
-- **NOT CURRENTLY IMPLEMENTED:** create/edit/delete categories in Admin
-- Categories live in PostgreSQL, initially loaded from `lib/data/seedData.ts` via `npm run db:seed`
-
----
-
-#### Personas
-
-- Admin form: **Target Personas** checkboxes link a tool to persona pages via `Tool.targetUsers`
-- Persona records themselves are **not** created/edited in Admin (seed/code only)
-- **PersonaTopTool** (ordered featured tools on persona hub) is still seed-only — separate from target-user links
-
----
-
-#### Reviews (moderation)
-
-See [Section 3](#3-reviews--where-do-i-find-them).
-
----
-
-#### Website monitoring
-
-See [Section 4](#4-monitoring--where-do-i-see-problems).
-
----
-
-### B. Review moderation
-
-**Where:** `/admin` → **Review Moderation** section (above the tools table)
-
-**Filter dropdown:** Pending (default), Approved, Rejected, Flagged, All
-
-**Actions per review (expand row → View details):**
-
-| Button | Effect |
-|---|---|
-| **Approve** | Status → `approved`; appears in public User Reviews section |
-| **Reject** | Status → `rejected`; hidden from public |
-| **Flag** | Status → `flagged`; hidden from public; for follow-up |
-| **Delete** | Permanently removes row from database |
-
-**Moderation notes:** optional internal text; stored in DB; **never shown to visitors**
-
-**Email:** shown only in Admin expanded view when visitor provided one
-
----
-
-### C. Stats cards (read-only)
-
-| Card | Source |
-|---|---|
-| Total Tools | All tools in DB |
-| Categories | Category count |
-| Personas | Persona count |
-| Comparisons | Comparison count |
-| Approved Reviews | Reviews with status `approved` |
-| Pending Reviews | Reviews with status `pending` |
-| Verified Tools | Tools where `verified = true` |
-| Featured Tools | Tools where `featured = true` |
-
-You cannot click these to edit — they are informational.
-
----
-
-## 2. How do I add my 100 real AI tools?
-
-### The normal workflow (today)
-
-**Primary path: Admin UI**
-
-```
-/admin → Add New AI Tool → fill form → Save → set Published when ready
+```json
+[
+  {
+    "name": "Pro",
+    "price": 20,
+    "billingPeriod": "monthly",
+    "features": ["Feature A", "Feature B"]
+  }
+]
 ```
 
-Each tool is one manual Admin entry. There is **no bulk CSV import** and **no copy-from-template** feature.
+`billingPeriod` must be `monthly`, `yearly`, or `custom`.
 
-### Do I add through Admin, database, code, or JSON files?
+### Information verification (`lastVerifiedDate`)
 
-| Method | When to use | Runtime effect |
-|---|---|---|
-| **Admin UI** | Day-to-day additions | Writes directly to PostgreSQL |
-| **PostgreSQL direct edit** | Avoid unless emergency | Works but bypasses validation — not recommended |
-| **`lib/data/tools/*.ts` + seed** | Initial bootstrap / developer bulk load | Only runs when you execute `npm run db:seed`; **not** read at runtime |
-| **Code changes** | Layout, SEO logic, new features | Requires redeploy |
+The existing database field **`Tool.lastVerifiedDate`** tracks when tool information was last verified. It is **server-managed automatically** — there is **no manual “Reviewed Date” field** in Admin.
 
-**Runtime source of truth for public pages:** PostgreSQL only (via `lib/dbRepository.ts` → services).
+**When the date is set or refreshed:**
 
-The files in `lib/data/` are **seed templates**. The site does **not** read them on each request after seeding.
+| Action | Updates `lastVerifiedDate`? |
+|---|---|
+| **Create tool** (Admin save) | Yes — set to current date/time |
+| **Edit/save tool** (any Admin update) | Yes — refreshed to current date/time |
+| **Successful website check** (Run Website Check) | Yes — refreshed to current date/time |
+| **Failed or timeout website check** | No |
+| **No action** (existing untouched tools) | No — existing values are preserved |
 
----
+**Implementation (do not duplicate):**
 
-### Required vs optional fields (validation)
+- `lib/dbRepository.ts` — stamps on `createTool` and `updateTool`
+- `lib/monitoring/monitoring.service.ts` — stamps on successful check via `touchToolLastVerifiedDate`
+- `lib/utils/formatDate.ts` — formats the public display date
 
-**Required to save through Admin (draft OK):**
+**Public display (one freshness signal only):**
 
-- Name, slug, website URL, category
+On `/tools/[slug]`, when `lastVerifiedDate` is present, the hero area shows:
 
-**Required to publish** (enforced by **Save & Publish** and when Publish Status = Published):
+> **Information verified: August 11, 2026**
 
-- Valid logo URL (`http://` or `https://`)
-- Tagline ≥ 10 characters
-- Description ≥ 50 characters
-- Valid website URL
-- Category assigned
-
-The form shows an **indexability preview** when Publish Status is Published.
-
-**All other fields are optional** but recommended for a complete listing: tags, features, pros/cons, pricing tiers, personas, alternatives, editorial rating, sources, badges.
+There is no separate “Last updated”, “Created”, or second date label. This uses the existing `lastVerifiedDate` field — not a new database column or verification system.
 
 ---
 
-### What happens when you publish/save?
+### NOT in Admin UI (requires code/seed/DB)
 
-1. Row inserted/updated in PostgreSQL `Tool`
-2. Public API and pages query DB on next request
-3. If `publishStatus = published`:
-   - Appears in directory/search/category queries
-   - Tool page live at `/tools/[slug]`
-4. Sitemap includes tool **only if** `isToolIndexable()` passes (published + valid slug + tagline ≥ 10 chars + description ≥ 50 chars + valid website + valid logo URL + category)
-
----
-
-### Slug / URL
-
-- **Auto-generated** from tool name when creating (lowercase, non-alphanumeric → hyphens)
-- **Editable** before first save
-- Public URL: **`/tools/[slug]`**
-- Slugs must be unique (save fails if duplicate)
+- Category create/edit/delete
+- Persona create/edit/delete
+- Comparison create/edit/delete
+- Article/blog management
+- Tool FAQ management (`ToolFAQ` — seed only)
+- PersonaTopTool ordered featured picks (seed only)
+- Bulk CSV import of tools
+- Scheduled/automatic monitoring runs
+- Homepage layout and marketing copy changes
 
 ---
 
-### Does it automatically appear everywhere?
+## 5. Reviews
 
-| Place | Automatic? | Condition |
-|---|---|---|
-| **Category page** (`/category/[slug]`) | Yes | `published` + matching `categoryId` |
-| **Site search** (name/tagline/description/tags) | Yes | `published` + matches query |
-| **AI Tool Finder** (`/ai-tool-finder`) | Yes | `published`; scored by category/tags/targetUsers |
-| **Homepage featured/trending sections** | No | Needs `featured=true` or `trending=true` — **not settable in Admin UI today** |
-| **Persona pages** (`/for/[slug]`) | No | Needs `targetUsers` containing persona slug or seed `PersonaTopTool` link |
-| **Sitemap / Google indexing** | Conditional | Must pass indexability rules including **valid logo URL** |
-| **Alternatives section** | Partial | Uses seed `ToolAlternative` links; else falls back to same-category tools |
-
----
-
-### Fields you MUST NOT forget (practical checklist)
-
-For each real tool you add via Admin:
-
-- [ ] **Name + slug**
-- [ ] **Logo URL** (required to publish / sitemap)
-- [ ] **Tagline** (≥ 10 chars)
-- [ ] **Description** (≥ 50 chars)
-- [ ] **Category**
-- [ ] **Website URL**
-- [ ] **Tags + features** (search and finder)
-- [ ] **Target personas** (if tool fits persona pages)
-- [ ] **Alternative tools** (related tools section)
-- [ ] **Pricing tiers JSON** (if multi-tier pricing on tool page)
-- [ ] **Reviewed Date + sources** (verification audit trail)
-- [ ] **Save as Draft** while building → **Save & Publish** when ready
-
----
-
-### Recommended workflow for 100 tools
-
-1. **Prepare a spreadsheet** with: name, slug, tagline, description, category, pricing, website, logo URL, tags, features, pros, cons
-2. **Add via Admin** one at a time (or developer bulk seed/API)
-3. Keep **`draft`** until copy is complete
-4. Set **`published`** when verified
-5. **Run Website Check** after publish
-6. Spot-check public page: `/tools/[slug]`
-7. Moderate any visitor reviews separately
-
----
-
-## 3. Reviews — where do I find them?
-
-### End-to-end flow
+### Complete flow
 
 ```
 Visitor on /tools/[slug]
-  → fills Review form (ReviewForm component)
-  → POST /api/reviews (public, rate-limited)
-  → PostgreSQL Review row, status = pending
-  → Admin / Review Moderation (default filter: Pending)
-  → You Approve / Reject / Flag / Delete
-  → If approved: appears in "User Reviews" on tool page
+  → ReviewForm submits POST /api/reviews
+  → Validation + rate limiting
+  → PostgreSQL Review row created, status = pending
+  → Admin / Review Moderation (filter: Pending)
+  → Approve / Reject / Flag / Delete
+  → If approved: visible in "User Reviews" section on tool page
 ```
 
 ### Visitor submission rules
 
 - Tool must be **published**
-- Rating: integer 1–5
-- Comment: 10–2000 characters
-- Email: optional (stored privately)
+- Rating: integer **1–5**
+- Comment: **10–2000** characters
+- Email: optional (stored privately, admin-only)
 - Duplicate guard: same email + same tool cannot submit again within **24 hours** if prior submission is pending or approved
 - Rate limit: **5 submissions per 15 minutes** per client
+- Visitors **cannot** set `status` or `verifiedUser`
 
-Visitors **cannot** set status or `verifiedUser` flag.
+### Admin moderation actions
 
----
-
-### Where you see each status
-
-| Status | Where in Admin | Public site |
+| Action | Database | Public effect |
 |---|---|---|
-| **Pending** | Review Moderation → filter **Pending** (default) | Not visible |
-| **Approved** | Filter **Approved** | Visible in **User Reviews** on `/tools/[slug]` |
-| **Rejected** | Filter **Rejected** | Not visible |
-| **Flagged** | Filter **Flagged** | Not visible |
-| **All** | Filter **All** | — |
+| **Approve** | `status = approved` + moderation metadata | Review appears in User Reviews |
+| **Reject** | `status = rejected` | Hidden |
+| **Flag** | `status = flagged` | Hidden; for follow-up |
+| **Delete** | Row removed permanently | Gone everywhere |
 
-Pending count also shown in stats card and Review Moderation header.
+**Moderation notes** (`moderationNotes`) are admin-only and never shown to visitors.
 
----
+### CRITICAL — two separate rating systems
 
-### Where email appears
+| Metric | Database fields | Where shown | Updated by visitor reviews? |
+|---|---|---|---|
+| **Editorial / listing rating** | `Tool.rating`, `Tool.reviewCount` | Tool page **hero**, tool **cards**, finder, homepage sections | **NO — NEVER** |
+| **User review aggregate** | Computed from approved `Review` rows at render time | **User Reviews** section only | Yes (computed live from approved reviews) |
 
-- **Admin only:** expand review → **Email (admin only)** field
-- **Never** on public tool pages or public API
+**Rule for future developers:** Approving, rejecting, or deleting visitor reviews must **NOT** write to `Tool.rating` or `Tool.reviewCount`. Those fields are **editorial/listing data** set manually in Admin (or from initial seed). The moderation code does not update them — keep it that way unless explicitly requested with a deliberate product decision.
 
----
-
-### Where moderation notes appear
-
-- Enter in **Moderation notes (optional)** when expanding a review
-- Stored in `Review.moderationNotes`
-- **Admin only** — not shown to visitors
-- Saved on Approve / Reject / Flag actions
-
-Also stored: `moderatedBy` (your admin username) and `moderatedAt` timestamp.
+The User Reviews section computes its own average from approved reviews (`ToolReviewsSection.tsx`) — completely separate from the hero stars.
 
 ---
 
-### What each action does
+## 6. Affiliate system
 
-| Action | Database change | Public effect |
+Implemented August 2026. Central logic: `lib/utils/toolOutboundLink.ts`. UI: `components/tool/ToolOutboundLink.tsx`.
+
+### Fields (on `Tool` table)
+
+| Field | Purpose |
+|---|---|
+| **`websiteUrl`** | Official vendor website. Used for monitoring, indexability validation, editorial reference. **Always required.** |
+| **`affiliateUrl`** | Optional monetized outbound URL (e.g. `https://example.com/?ref=your-id`). |
+| **`affiliateEnabled`** | Boolean toggle. When `true` AND `affiliateUrl` is valid, public CTAs use the affiliate URL. |
+| **`affiliateProgram`** | Optional admin label (e.g. Impact, PartnerStack). Stored but **not shown on public pages** today. |
+
+### Outbound CTA routing
+
+All public outbound clicks use **`getToolOutboundLink()`** — used by tool page hero button and ToolCard external-link icon.
+
+| Condition | Destination | Button label | `rel` attribute |
+|---|---|---|---|
+| `affiliateEnabled` + valid `affiliateUrl` | `affiliateUrl` | **Visit Website** | `sponsored nofollow noopener noreferrer` |
+| Otherwise | `websiteUrl` | **Visit Official Website** | `noopener noreferrer` |
+
+### Rules
+
+- **Never** put an affiliate/tracking URL in `websiteUrl`.
+- **Never** overwrite `websiteUrl` with an affiliate URL for monetization.
+- **Monitoring ALWAYS checks `websiteUrl`** — never `affiliateUrl` (`lib/monitoring/monitoring.service.ts`).
+- **SEO is unaffected:** canonical URLs, sitemap entries, and JSON-LD `url` point to internal `/tools/[slug]` pages — not affiliate or official external URLs.
+- If no affiliate is configured, visitors go to the official website — same as before the affiliate system existed.
+
+### Affiliate disclosure
+
+| Location | When shown |
+|---|---|
+| **Site footer** | Always (all pages) — `AffiliateDisclosure` in `Footer.tsx` |
+| **Tool page hero** | When that tool's outbound CTA uses an affiliate link |
+| **Terms / Privacy** | Legal copy references labeled affiliate links; implementation matches via footer + tool-page disclosure |
+
+### Admin workflow for affiliate
+
+```
+Admin → Edit Tool → Monetization & Links
+  → Official Website URL: https://vendor.com
+  → Affiliate URL: https://vendor.com/?ref=your-id
+  → Enable "Use affiliate link for outbound CTAs"
+  → Save
+```
+
+QA script: `npx tsx scripts/test-affiliate-links.ts`
+
+---
+
+## 7. SEO — what must NOT be changed casually
+
+SEO logic lives in **`lib/seo/`**. Changes here affect the entire site's discoverability.
+
+### Do not casually modify
+
+| Area | Key files | Why |
 |---|---|---|
-| **Approve** | `status = approved`, moderation metadata saved | Review appears under **User Reviews**; included in that section’s average rating display |
-| **Reject** | `status = rejected` | Stays hidden |
-| **Flag** | `status = flagged` | Stays hidden; use for suspicious/spam follow-up |
-| **Delete** | Row removed permanently | Gone everywhere; cannot undo |
+| **Canonical URLs** | `lib/seo/metadata.ts` | Wrong canonicals cause duplicate-content issues |
+| **Sitemap** | `lib/seo/sitemap-builder.ts`, `app/sitemap.ts` | Controls what Google crawls |
+| **Robots** | `app/robots.ts` | Controls crawl permissions |
+| **Metadata templates** | `lib/seo/metadata.ts` | Page titles, descriptions, OG tags sitewide |
+| **JSON-LD structured data** | `lib/seo/jsonld.ts` | Tool schema `url` = internal `/tools/[slug]`, not external URLs |
+| **Indexability rules** | `lib/seo/indexability.ts` | Determines sitemap inclusion and `noindex` |
+| **Internal linking** | `components/shared/InternalLinks.tsx`, page cross-links | Site architecture for crawl paths |
 
-**Important — two different “ratings” on tool pages:**
+### Tool indexability requirements (`isToolIndexable`)
 
-| Metric | Where shown | Updated by moderation? |
-|---|---|---|
-| **Hero rating** (`Tool.rating`, `Tool.reviewCount`) | Top of tool page, tool cards, finder | **No** — editorial/seed values |
-| **User Reviews average** | “User Reviews” section only | **Yes** — computed from approved `Review` rows |
+A published tool is sitemap-eligible only when ALL pass:
 
-Approving reviews does **not** change the hero star rating or card listing numbers.
+- `publishStatus = published`
+- Valid slug (lowercase alphanumeric + hyphens)
+- Tagline ≥ 10 characters
+- Description ≥ 50 characters
+- Valid `websiteUrl` (http/https) — **official URL only, not affiliate**
+- Valid logo URL (http/https)
+- Category relationship present
+
+Draft and archived tools get `noindex` metadata.
+
+### Environment dependency
+
+Set **`NEXT_PUBLIC_APP_URL`** to your production domain before deploying. Without it, canonical URLs, sitemap links, and OG URLs may be wrong. The build logs a warning if it is unset.
 
 ---
 
-## 4. Monitoring — where do I see problems?
+## 8. Monitoring
 
-### Where results appear
+### What exists
 
-1. **Tools table → Monitor column** — emoji + label per tool (loaded on Admin page load)
-2. **Edit tool modal → Website Monitoring** — latest check details + **Run Website Check** button
+| Feature | Status |
+|---|---|
+| Manual website health check per tool | **Implemented** — Admin → edit tool → Run Website Check |
+| Monitor column in Admin tools table | **Implemented** — emoji + signal label |
+| Check history in `ToolMonitoringCheck` table | **Implemented** |
+| URL validation (blocks private IPs, localhost) | **Implemented** — `lib/monitoring/url-validation.ts` |
+| Verification freshness signals | **Implemented** — based on `lastVerifiedDate` + latest check |
+| Successful check refreshes `lastVerifiedDate` | **Implemented** — failed/timeout checks do not |
+| Configurable thresholds via env vars | **Implemented** |
 
-**NOT CURRENTLY IMPLEMENTED:** automatic scheduled checks (no cron job in codebase). All checks are **manual**.
+### What does NOT exist
 
----
+| Feature | Status |
+|---|---|
+| Scheduled / cron automatic checks | **NOT implemented** |
+| Email/Slack alerts on failure | **NOT implemented** |
+| Auto-unpublish on monitoring failure | **NOT implemented** |
+| Auto-update of tool content from checks | **NOT implemented** |
+| Affiliate URL checking | **NOT implemented** (and must not be added without explicit request — monitoring uses official URL only) |
 
 ### Signal meanings
 
-Signals are computed in `lib/monitoring/freshness.service.ts` from:
+Computed in `lib/monitoring/freshness.service.ts`:
 
-- Latest website check result (`ToolMonitoringCheck`)
-- `lastVerifiedDate` on the tool (editorial verification age)
-
-| Label in Admin | Meaning |
+| Label | Meaning |
 |---|---|
-| **Healthy** 🟢 | Latest check succeeded AND verification date is recent |
-| **Stale / needs verification** 🟡 | Verification date is old (default: ≥ 60 days warning, ≥ 90 days stale) OR approaching stale |
-| **Website check failed** 🔴 | Latest HTTP check failed, timed out, or invalid URL |
-| **Verification needs attention** ⚠️ | Never verified or other attention state without a successful check pattern |
-| **Not checked yet** ⚪ | No monitoring check has been run for this tool |
+| **Healthy** | Latest check succeeded AND verification date is recent |
+| **Stale / needs verification** | Verification date is old |
+| **Website check failed** | Latest HTTP check failed, timed out, or invalid URL |
+| **Verification needs attention** | Never verified or attention state |
+| **Not checked yet** | No monitoring check has been run |
 
-Thresholds configurable via env vars: `VERIFICATION_WARNING_DAYS`, `VERIFICATION_STALE_DAYS`, `VERIFICATION_HIGH_PRIORITY_DAYS`.
+Threshold env vars: `VERIFICATION_WARNING_DAYS` (default 60), `VERIFICATION_STALE_DAYS` (default 90), `VERIFICATION_HIGH_PRIORITY_DAYS` (default 180).
 
----
+### When a tool fails monitoring
 
-### How to manually run a check
+1. Check error details in Admin → Website Monitoring.
+2. Visit the **Official Website URL** yourself.
+3. Fix `websiteUrl` in Admin if wrong → save → re-run check.
+4. A successful re-check refreshes `lastVerifiedDate` automatically; update other editorial fields (Review State, sources, etc.) manually if content is outdated.
+5. Monitoring failure does **not** auto-unpublish the tool.
 
-1. `/admin` → edit tool (pencil)
-2. Scroll to **Website Monitoring**
-3. Click **Run Website Check**
-
-Or via API (admin session required): `POST /api/admin/monitoring/check` with `{ "toolId": "..." }`.
-
-The check:
-
-- Uses **`websiteUrl` from the tool record** (never arbitrary URLs)
-- Stores result in `ToolMonitoringCheck` table
-- Does **not** change tool content, publish status, or verification fields
+QA script: `npx tsx scripts/test-monitoring.ts`
 
 ---
 
-### What monitoring does NOT do automatically
+## 9. Database & migrations
 
-- Does not update pricing, features, or descriptions
-- Does not change `reviewState` or `verified` flag
-- Does not unpublish broken tools
-- Does not email you alerts
-- Does not run on a schedule
+### Schema
 
-Admin modal explicitly states: *“Monitoring reports website reachability only. Editorial verification, pricing, and features must be updated manually after human review.”*
+- **File:** `prisma/schema.prisma`
+- **Client:** `@prisma/client` (generated by `prisma generate`)
 
----
+### Applied migrations (as of last review)
 
-### What you should do when a tool fails
-
-1. Open the tool in Admin → check monitoring details (HTTP status, error message)
-2. Visit the **Official Website URL** yourself — typo? domain dead? redirect loop?
-3. Fix **`websiteUrl`** in Admin if wrong → save
-4. **Run Website Check** again
-5. If site is fine but content is outdated, update editorial fields and set a new **Reviewed Date**
-6. Decide editorially if tool should stay published
-
----
-
-## 5. Database — what actually lives where?
-
-### Request flow
-
-```
-Admin UI (browser)
-  ↓ fetch POST/PUT/DELETE/PATCH
-API routes (app/api/...)
-  ↓
-Services (lib/services/*.service.ts) — optional layer
-  ↓
-Repository (lib/dbRepository.ts)
-  ↓
-Prisma Client (@prisma/client)
-  ↓
-PostgreSQL
-  ↓
-Public pages read same stack on GET
-```
-
----
-
-### What lives in PostgreSQL (runtime data)
-
-| Data | Table(s) | Managed via Admin? |
-|---|---|---|
-| **Tools** | `Tool` | Yes (partial fields) |
-| **Tool sources** | `ToolSource` | Seed only today — Admin JSON not saved |
-| **Pricing tiers** | `PricingTier` | Seed only |
-| **Tool FAQs** | `ToolFAQ` | Seed only |
-| **Tool alternatives** | `ToolAlternative` | Seed only |
-| **Categories** | `Category`, `CategoryFAQ` | Seed / code only |
-| **Personas** | `Persona`, `PersonaFAQ`, `PersonaTopTool` | Seed / code only |
-| **Comparisons** | `Comparison`, `ComparisonFeature` | Seed / code only |
-| **Articles** | `Article` | Seed / code only |
-| **Visitor reviews** | `Review` | Submit public / moderate Admin |
-| **Monitoring checks** | `ToolMonitoringCheck` | Created by manual checks |
-
----
-
-### What lives in code / data files (not runtime)
-
-| Data | Location | Purpose |
-|---|---|---|
-| Initial seed content | `lib/data/seedData.ts`, `lib/data/tools/*.ts` | `npm run db:seed` bootstrap |
-| SEO logic | `lib/seo/*` | Metadata, sitemap, indexability, JSON-LD |
-| Monitoring logic | `lib/monitoring/*` | Health checks, signal labels |
-| Page layouts & design | `app/**`, `components/**` | UI |
-| Auth logic | `lib/auth/*`, `middleware.ts` | Admin sessions |
-| Validation rules | `lib/validation/*` | Input checks |
-
-**After seeding, editing `lib/data/` files does nothing to production until you re-run seed (which skips existing slugs) or change code.**
-
----
-
-## 6. Code vs Admin
-
-| Thing | Change in Admin? | Change in VS Code? | Redeploy needed? |
-|---|---|---|---|
-| Add AI tool (basic fields) | Yes | Optional (seed/API) | No (Admin) / Yes (code) |
-| Edit tool description | Yes | — | No |
-| Change tool pricing model/price | Yes | — | No |
-| Set tool logo URL | Yes | — | No |
-| Edit tags/features/pros/cons | Yes | — | No |
-| Set featured/trending badges | Yes | — | No |
-| Edit pricing tiers | Yes (JSON field) | Seed (bootstrap only) | No |
-| Edit sources | Yes (JSON field) | Seed (bootstrap only) | No |
-| Link personas / alternatives | Yes | — | No |
-| Approve review | Yes | — | No |
-| Change SEO template/metadata logic | No | Yes (`lib/seo/`) | Yes |
-| Change page design/homepage | No | Yes (`app/`, `components/`) | Yes |
-| Add new database field | No | Yes (Prisma schema + migration) | Yes + migrate |
-| Change monitoring behavior | No | Yes (`lib/monitoring/`) | Yes |
-| Change validation rules | No | Yes (`lib/validation/`) | Yes |
-| Add a new feature | No | Yes | Yes |
-| Change navigation | No | Yes | Yes |
-| Add category/persona/comparison | No | Yes (seed/data) | Seed: no; code: yes |
-| Change admin password | No | Env vars on host | Restart/redeploy host |
-| Run website monitoring check | Yes | — | No |
-
----
-
-## 7. Deployment
-
-**This section documents workflow only — nothing is executed automatically by this guide.**
-
-### Admin data change (tools, reviews, moderation)
-
-| Step | Needed? |
+| Migration | Purpose |
 |---|---|
-| Redeploy | **No** |
-| Database migration | **No** |
-| Restart server | **No** (live DB read) |
-| Wait for cache | Possibly up to **1 hour** on some pages |
+| `20260808040444_init` | Initial schema |
+| `20260811043600_add_publish_status_and_indexes` | Publish status + indexes |
+| `20260811070000_add_tool_monitoring_checks` | Monitoring check table |
+| `20260811073000_add_review_moderation_fields` | Review moderation fields |
+| `20260811080000_add_tool_affiliate_fields` | Affiliate URL fields on Tool |
 
----
+### Development vs production
 
-### Code change
+| Environment | Typical `DATABASE_URL` | Notes |
+|---|---|---|
+| **Local dev** | Local Postgres or Neon dev branch | `.env.local` |
+| **Production** | Neon/host Postgres | Host secret manager — never commit |
 
-Typical local workflow:
+**The site does not read `lib/data/` at runtime.** After initial seeding, all live tool data comes from PostgreSQL.
 
-```bash
-npm install          # if dependencies changed
-npm run lint         # TypeScript check
-npm run build        # prisma generate + next build
-npm run start        # production server locally on port 3000
-```
+### Safe migration workflow
 
-**What `npm run build` does:** `prisma generate` then `next build`
-
-**Git workflow (when you choose to deploy):**
-
-1. Make changes in Cursor/VS Code
-2. Test locally (`npm run dev` or `npm run build && npm run start`)
-3. **Commit** when ready (you control when)
-4. **Push** to remote (you control when)
-5. Production host pulls/builds — depends on your hosting (README references AI Studio / Cloud Run; no `vercel.json` in repo)
-
-Production receives code changes only after your host rebuilds from the new commit.
-
----
-
-### Database schema change (migrations)
-
-When a developer changes `prisma/schema.prisma`:
-
-**Development:**
-
+**Development (schema change):**
 ```bash
 npx prisma migrate dev --name describe_change
 ```
 
 **Production:**
-
 ```bash
 npx prisma migrate deploy
 ```
+Then rebuild/restart the app (`npm run build` includes `prisma generate`).
 
-Then rebuild/restart the app so `prisma generate` runs.
+### NEVER run casually on production
 
-**Warning:** Never edit applied migration SQL files manually unless you know exactly why.
-
----
-
-### Environment variables on deploy
-
-Ensure production host has all required vars (see Section 8). Changing env vars typically requires **host restart**, not necessarily full rebuild.
-
----
-
-## 8. Environment variables / secrets
-
-**Never commit real secrets.** Configure in `.env.local` (local) or your host’s secret manager (production).
-
-| Variable | Used for | Required dev | Required production | Where to set |
-|---|---|---|---|---|
-| `DATABASE_URL` | PostgreSQL connection for Prisma | Yes | Yes | `.env.local` / host secrets |
-| `NEXT_PUBLIC_APP_URL` | Canonical site URL, sitemap, OG links | Recommended | **Yes** | `.env.local` / host |
-| `APP_URL` | Fallback for site URL | Optional | Optional fallback | `.env.local` / host |
-| `ADMIN_AUTH_SECRET` | Signs admin session cookies (≥ 32 chars prod) | Recommended | **Yes** | `.env.local` / host |
-| `ADMIN_USERNAME` | Admin login username | Optional (default `admin`) | **Yes** | `.env.local` / host |
-| `ADMIN_PASSWORD` | Admin login password (or `sha256:...` hash) | Optional (fallback dev password) | **Yes** | `.env.local` / host |
-| `GEMINI_API_KEY` | Listed in `.env.example` | — | — | **NOT CURRENTLY USED in application code** |
-| `MONITORING_REQUEST_TIMEOUT_MS` | HTTP check timeout (default 10000) | No | Optional | Host env |
-| `MONITORING_MAX_REDIRECTS` | Max redirects (default 5) | No | Optional | Host env |
-| `MONITORING_MAX_BATCH_SIZE` | Batch check limit (default 25) | No | Optional | Host env |
-| `VERIFICATION_STALE_DAYS` | Days until verification “stale” (default 90) | No | Optional | Host env |
-| `VERIFICATION_WARNING_DAYS` | Days until “approaching stale” (default 60) | No | Optional | Host env |
-| `VERIFICATION_HIGH_PRIORITY_DAYS` | High priority threshold (default 180) | No | Optional | Host env |
-| `MONITORING_USER_AGENT` | User-Agent string for checks | No | Optional | Host env (not in `.env.example`) |
-| `NEXTAUTH_SECRET` | Fallback if `ADMIN_AUTH_SECRET` unset | No | Not recommended | Avoid — set `ADMIN_AUTH_SECRET` |
-
----
-
-## 9. “Do not touch this” list
-
-Unless you know exactly what you are doing, avoid manually editing:
-
-| Item | Why |
+| Command | Risk |
 |---|---|
-| `prisma/migrations/**` | Applied migration history — breaking changes corrupt DB |
-| `node_modules/@prisma/client` | Generated — run `prisma generate` instead |
-| `.next/**` | Build output — safe to delete for clean rebuild, don’t edit |
-| Production `DATABASE_URL` credentials | Lockout / data loss risk |
-| Raw PostgreSQL tool/review rows | Bypasses validation; use Admin |
-| `middleware.ts` / `lib/auth/*` | Breaks admin login if wrong |
-| `lib/seo/*` | Breaks indexing/metadata sitewide |
-| `lib/monitoring/*` | Breaks health check behavior |
-| `.env.local` / production secrets in git | Security exposure |
-| `lib/dbRepository.ts` | Central data layer — one bug affects entire site |
-| Committing `.env` files | Secrets leak |
+| `npx prisma migrate reset` | **Wipes entire database** |
+| `npm run db:seed` | Overwrites/bootstrap behavior — only with explicit approval |
+| `npx prisma db push` | Can drift schema without migration history — avoid unless you know why |
+| Raw SQL DELETE/TRUNCATE | Data loss |
 
-**Safer clean rebuild (when dev server acts strange):**
+**Rule:** Production migrations must be deliberate, reviewed, and backed up if possible.
+
+---
+
+## 10. Deployment
+
+### Admin data changes (tools, reviews, affiliate, moderation)
+
+| Step | Needed? |
+|---|---|
+| Redeploy code | **No** |
+| Database migration | **No** (unless schema changed) |
+| Restart server | **No** |
+| Wait for cache | Possibly up to **1 hour** on some public pages |
+
+### Code changes
 
 ```bash
-# Stop the running Node/Next process first, then:
-rm -rf .next
-npm run build
+npm install          # if dependencies changed
+npm run lint         # TypeScript check (tsc --noEmit)
+npm run build        # prisma generate + next build
+npm run start        # production server on port 3000
 ```
 
-On Windows PowerShell: `Remove-Item -Recurse -Force .next`
+Local dev: `npm run dev`
+
+**Deploy workflow:**
+1. Test locally
+2. Commit (when ready)
+3. Push to remote
+4. Production host pulls and rebuilds
+
+README references AI Studio / Cloud Run deployment. There is no `vercel.json` in the repo — deployment depends on your configured host.
+
+### Environment variables
+
+Configure in `.env.local` (local) or host secrets (production). **Never commit real secrets.**
+
+| Variable | Purpose | Required production |
+|---|---|---|
+| `DATABASE_URL` | PostgreSQL connection for Prisma | **Yes** |
+| `NEXT_PUBLIC_APP_URL` | Canonical site URL, sitemap, OG links | **Yes** |
+| `APP_URL` | Fallback for site URL | Optional |
+| `ADMIN_AUTH_SECRET` | Signs admin session cookies (≥ 32 chars) | **Yes** |
+| `ADMIN_USERNAME` | Admin login username | **Yes** |
+| `ADMIN_PASSWORD` | Plaintext or `sha256:` hash | **Yes** |
+| `GEMINI_API_KEY` | In `.env.example` | **NOT used in application code** |
+| `MONITORING_REQUEST_TIMEOUT_MS` | HTTP check timeout (default 10000) | Optional |
+| `MONITORING_MAX_REDIRECTS` | Max redirects (default 5) | Optional |
+| `MONITORING_MAX_BATCH_SIZE` | Batch check limit (default 25) | Optional |
+| `VERIFICATION_STALE_DAYS` | Stale threshold (default 90) | Optional |
+| `VERIFICATION_WARNING_DAYS` | Warning threshold (default 60) | Optional |
+| `VERIFICATION_HIGH_PRIORITY_DAYS` | High priority threshold (default 180) | Optional |
+
+Changing env vars typically requires a **host restart**, not necessarily a full rebuild.
 
 ---
 
-## 10. Emergency / common problems
+## 11. Known intentional limitations
 
-### Admin login doesn’t work
+These are **not bugs**. They are deliberate scope boundaries in the current codebase.
 
-1. Confirm URL: `/admin/login`
-2. Check `ADMIN_USERNAME` / `ADMIN_PASSWORD` in environment (not the `.env.example` defaults unless you copied them)
-3. Production requires `ADMIN_AUTH_SECRET` (≥ 32 chars) and `ADMIN_PASSWORD` set — app throws on startup if missing
-4. Clear browser cookies for the site and retry
-5. Session expires after **1 hour**
-
----
-
-### Website won’t build
-
-1. Read the error in terminal
-2. Run `npm run lint` for TypeScript errors
-3. Ensure `DATABASE_URL` is set (build may need Prisma)
-4. Delete `.next` and rebuild
-5. On Windows: if `prisma generate` fails with **EPERM**, stop all Node processes and retry
-
----
-
-### Prisma generate fails
-
-- Stop dev/production Node processes locking DLL files (common on Windows)
-- Run: `npx prisma generate`
-- Verify `DATABASE_URL` format: `postgresql://...`
+| Limitation | Detail |
+|---|---|
+| No bulk tool import | One tool per Admin form entry |
+| No category/persona/comparison CRUD in Admin | Seed/code/DB only |
+| No article management UI | Seed only |
+| No Tool FAQ management in Admin | Seed only |
+| No scheduled monitoring | Manual checks only |
+| No click tracking on affiliate links | Direct outbound links; analytics can be added later |
+| `affiliateProgram` not shown publicly | Admin reference field only |
+| No partner badge UI on listings | Disclosure text exists instead |
+| `pricingSource` / `featureSource` not rendered as public links | Editorial audit fields only |
+| `ToolSource` URLs not used as public CTAs | Editorial metadata only |
+| `GEMINI_API_KEY` unused | Listed in `.env.example` but no app code reads it |
+| Public page cache up to 1 hour | `revalidate = 3600` on key routes |
+| Comparison pages link to tool profiles only | No direct vendor outbound links on comparison pages |
+| Seed skips existing slugs | Re-running seed does not update existing tools |
 
 ---
 
-### Database connection fails
+## 12. Emergency troubleshooting
 
-1. Verify `DATABASE_URL` in `.env.local` / host
-2. Confirm Postgres/Neon instance is running and IP allowlist includes your host
-3. Test with: `npx prisma db pull` (developer diagnostic)
+### Tool does not appear publicly
 
-**Dangerous (data loss risk):** `npx prisma migrate reset` — wipes database. **Do not run on production.**
+- Check Admin: is `publishStatus = published`?
+- Does it pass indexability rules (logo, tagline, description lengths, website URL)?
+- Is it in the correct category?
+- Wait up to 1 hour for page cache, or redeploy to bust cache.
+- Confirm you edited the **production** database, not local dev.
 
----
+### Review does not appear publicly
 
-### A tool disappeared
+- Must be **approved** in Admin Review Moderation.
+- Tool must be **published**.
+- Rejected/flagged/pending never show.
+- Page cache may delay up to 1 hour.
 
-- Check Admin with search — filter may hide it
-- May be **draft/archived** (`publishStatus`)
-- May have been **deleted** from Admin
-- Wrong slug in URL — check Admin table slug column
+### Admin change does not appear publicly immediately
 
----
+- Admin UI updates immediately from DB.
+- Public cached pages may lag up to **1 hour** (`revalidate = 3600`).
+- Hard refresh browser (Ctrl+Shift+R).
 
-### A review doesn’t appear publicly
+### Affiliate link does not work
 
-- Must be **approved** in Admin
-- Tool must be **published**
-- Page cache may delay up to 1 hour
-- Rejected/flagged/pending never show publicly
+- Confirm **Affiliate URL** is valid http/https.
+- Confirm **Use affiliate link for outbound CTAs** is checked.
+- Save must succeed without validation errors.
+- Check public page CTA — should say **Visit Website** (not "Visit Official Website") when affiliate is active.
+- `websiteUrl` should still be the real official site (for monitoring).
 
----
+### Monitoring fails
 
-### A review is stuck pending
+- Check **Official Website URL** — monitoring never uses affiliate URL.
+- Run check again after fixing URL.
+- Failure does not auto-unpublish.
+- See error details in Admin → Website Monitoring section.
 
-- Go Admin → Review Moderation → Pending → Approve/Reject/Flag/Delete
-- If not listed, check **All** filter
-- Visitor submit may have failed validation (rate limit, duplicate email guard)
+### Build fails
 
----
+1. Read terminal error.
+2. Run `npm run lint`.
+3. Ensure `DATABASE_URL` is set.
+4. Delete `.next` folder and rebuild.
+5. Windows: if `prisma generate` fails with **EPERM**, stop all Node processes and retry.
 
-### Tool website fails monitoring
+### Prisma migration pending
 
-- Fix `websiteUrl` if wrong
-- Run check again manually
-- Monitoring failure does **not** auto-unpublish
-
----
-
-### Production shows stale data
-
-- Next.js `revalidate = 3600` on key pages — wait or redeploy to bust cache
-- Confirm you edited **production database**, not local dev DB
-- Hard refresh browser (Ctrl+Shift+R)
-
----
-
-### Migration is pending
-
-Production needs:
-
+On production:
 ```bash
 npx prisma migrate deploy
 ```
+Then restart/rebuild app. Compare `prisma/migrations/` folders against `npx prisma migrate status`.
 
-Then restart app. Check `prisma/migrations/` for unapplied folders.
+### Admin login fails
 
----
-
-### Next.js `.next` cache corrupted
-
-Symptoms: random 500s, stale routes, build weirdness.
-
-**Fix (stop server first):**
-
-```bash
-Remove-Item -Recurse -Force .next   # PowerShell
-npm run build
-```
+1. URL: `/admin/login`
+2. Check `ADMIN_USERNAME` / `ADMIN_PASSWORD` in environment.
+3. Production requires `ADMIN_AUTH_SECRET` (≥ 32 chars).
+4. Clear cookies and retry. Session expires after 1 hour.
 
 ---
 
-## 11. Current architecture map
+## 13. Architecture map (file locations)
 
-### Frontend (public pages)
-
-- **Folder:** `app/` (Next.js App Router pages), `components/`
-- **Examples:** `app/page.tsx` (home), `app/tools/[slug]/page.tsx`, `app/category/[slug]/page.tsx`
-- Reads data via `lib/services/*.service.ts`
-
-### API
-
-- **Folder:** `app/api/`
-- Public reads: `GET /api/tools`, `GET /api/reviews?toolSlug=...`
-- Public writes: `POST /api/reviews`, `POST /api/finder`
-- Admin: `app/api/admin/*`, tool mutations `POST/PUT/DELETE /api/tools`
-
-### Admin
-
-- **Pages:** `app/admin/page.tsx`, `app/admin/login/page.tsx`
-- **UI:** `components/admin/AdminDashboard.tsx`, `components/admin/AdminReviewModeration.tsx`
-
-### Database
-
-- **PostgreSQL** (connection string `DATABASE_URL`)
-- Hosted e.g. Neon locally/production — whatever you configured
-
-### Prisma
-
-- **Schema:** `prisma/schema.prisma`
-- **Migrations:** `prisma/migrations/`
-- **Seed script:** `prisma/seed.ts` → `npm run db:seed`
-
-### SEO
-
-- **Folder:** `lib/seo/`
-- **Key files:** `metadata.ts`, `jsonld.ts`, `indexability.ts`, `sitemap-builder.ts`, `app/sitemap.ts`
-- Controls titles, canonical URLs, robots, sitemap entries, structured data
-
-### Reviews
-
-- **Public UI:** `components/review/*`, `ToolReviewsSection` on tool page
-- **API:** `app/api/reviews/route.ts`, `app/api/admin/reviews/*`
-- **Validation:** `lib/validation/review.validation.ts`
-
-### Monitoring
-
-- **Folder:** `lib/monitoring/`
-- **API:** `app/api/admin/monitoring/route.ts`, `app/api/admin/monitoring/check/route.ts`
-- **Test script:** `scripts/test-monitoring.ts` (developer QA)
-
-### Authentication
-
-- **Folder:** `lib/auth/adminSession.ts`, `lib/auth/edgeSession.ts`
-- **Gate:** `middleware.ts` protects `/admin`, `/api/admin`, and all API write methods except public review/finder submit
-
-### Data access layer
-
-- **Primary:** `lib/dbRepository.ts`
-- **Thin repos:** `lib/repositories/*.repository.ts`
-- **Services:** `lib/services/*.service.ts`
-
----
-
-## 12. “If I want to do X” cheat sheet
-
-| If I want to… | What to do |
+| System | Location |
 |---|---|
-| **Add an AI tool** | `/admin` → **Add New AI Tool** → fill all sections → **Save as Draft** → review → **Save & Publish** |
-| **Edit an AI tool** | `/admin` → pencil icon → edit sections → **Save Tool** or **Save & Publish** |
-| **Verify an AI tool (editorial)** | Edit tool → set Review State, Reviewed Date, Verified By, sources, **Verified** checkbox → save |
-| **Delete an AI tool** | `/admin` → trash icon → confirm |
-| **Approve a review** | `/admin` → Review Moderation → expand → **Approve** |
-| **Reject a review** | Same → **Reject** |
-| **Flag suspicious review** | Same → **Flag** |
-| **Remove review permanently** | Same → **Delete** |
-| **Check broken websites** | Edit tool → **Run Website Check**; read Monitor column in table |
-| **Change homepage** | Edit code: `app/page.tsx`, `components/home/HomePageClient.tsx` → commit → deploy |
-| **Change SEO behavior** | Edit `lib/seo/*` → deploy (not Admin) |
-| **Add a feature** | Code change → test → commit → deploy |
-| **Change database structure** | Developer: edit `prisma/schema.prisma` → migrate → deploy |
-| **Deploy a code change** | Test locally → commit → push → host rebuilds |
-| **Deploy a database migration** | `npx prisma migrate deploy` on production → restart app |
-| **Bulk load initial tools** | Developer: `lib/data/tools/*.ts` + `npm run db:seed` (skips existing slugs) |
-| **Add a category/persona** | **NOT in Admin** — edit `lib/data/seedData.ts` + seed, or developer DB work |
-| **Change admin password** | Update `ADMIN_PASSWORD` in host env → restart |
-| **Sign out of Admin** | **Sign Out** button |
+| Public pages | `app/`, `components/` |
+| Admin UI | `app/admin/`, `components/admin/AdminDashboard.tsx`, `AdminToolForm.tsx`, `AdminReviewModeration.tsx` |
+| API routes | `app/api/` |
+| Data access | `lib/dbRepository.ts` |
+| Services | `lib/services/*.service.ts` |
+| Validation | `lib/validation/` |
+| SEO | `lib/seo/` |
+| Monitoring | `lib/monitoring/` |
+| Affiliate routing | `lib/utils/toolOutboundLink.ts`, `components/tool/ToolOutboundLink.tsx` |
+| Verified date formatting | `lib/utils/formatDate.ts` |
+| Reviews (public) | `components/review/` |
+| Auth | `lib/auth/`, `middleware.ts` |
+| Prisma schema | `prisma/schema.prisma` |
+| Migrations | `prisma/migrations/` |
+| Seed (bootstrap) | `prisma/seed.ts`, `lib/data/` |
+| QA scripts | `scripts/test-admin-cms.ts`, `scripts/test-affiliate-links.ts`, `scripts/test-monitoring.ts`, `scripts/test-verified-date.ts` |
 
 ---
 
-## Appendix A — What still requires VS Code / developer work
+## 14. RULES FOR FUTURE AI DEVELOPERS
 
-| Item | Why not in Admin |
-|---|---|
-| Create/edit **categories** | No category CRUD UI — only selection of existing categories |
-| Create/edit **personas** | No persona CRUD UI — only link tools via Target Personas checkboxes |
-| Create/edit **comparisons** | Comparison model has no Admin UI |
-| Create/edit **articles** | Article model has no Admin UI |
-| **PersonaTopTool** ordering | Seed-only join table for ordered persona featured picks |
-| **Bulk import** (100 tools CSV) | No bulk import feature — one tool per Admin form |
-| Homepage layout/design | React components in `app/` and `components/` |
-| SEO engine logic | `lib/seo/*` code |
-| Monitoring thresholds/behavior | `lib/monitoring/*` + env vars |
-| Database schema changes | Prisma migrations |
-| Scheduled monitoring | Not implemented |
+**Read this section before every task.**
 
-Everything in the **Tool form sections** table (Section 1) is manageable entirely from Admin without VS Code.
+1. **Inspect before changing.** Read this guide, grep the codebase, and understand existing behavior before editing.
+2. **Do not redesign working systems unnecessarily.** The site is functional. Fix the requested problem with the smallest correct change.
+3. **Do not modify seed/content data** (`lib/data/`, `prisma/seed.ts`) unless explicitly requested.
+4. **Do not change SEO architecture** (`lib/seo/`) unless explicitly requested.
+5. **Do not change reviews/moderation** unless explicitly requested. Never auto-sync visitor reviews into `Tool.rating` / `Tool.reviewCount`.
+6. **Do not change monitoring behavior** unless explicitly requested. Monitoring must keep using official `websiteUrl` only.
+7. **Do not change affiliate behavior** unless explicitly requested. Keep centralized routing in `toolOutboundLink.ts`.
+8. **Do not run destructive DB commands** — no `migrate reset`, no blind `db push`, no seed on production.
+9. **Never overwrite existing production data during testing.** Use dedicated test slugs; delete test records after QA (see `scripts/test-*.ts` patterns).
+10. **Never commit `.env`, `.env.local`, or secrets.**
+11. **Never commit `tsconfig.tsbuildinfo`** (build artifact).
+12. **Before committing:** inspect `git diff`, `git status`, and every changed file. Keep unrelated changes out of commits.
+13. **If asked to fix one feature, don't silently refactor unrelated systems.**
+14. **If you discover a potential architectural issue, explain it to the owner before changing architecture.**
+15. **Database is runtime source of truth.** Admin changes do not require redeploy. Code changes do.
+16. **Do not add tools or content** unless explicitly asked — infrastructure tasks should not mutate the tool catalog.
 
 ---
 
-## Appendix B — Useful URLs
+## Appendix — Useful URLs
 
 | URL | Purpose |
 |---|---|
@@ -1033,10 +737,32 @@ Everything in the **Tool form sections** table (Section 1) is manageable entirel
 | `/admin/login` | Sign in |
 | `/tools/[slug]` | Public tool page |
 | `/category/[slug]` | Category listing |
+| `/for/[slug]` | Persona page |
 | `/ai-tools` | Main directory |
+| `/ai-tool-finder` | Interactive finder |
 | `/sitemap.xml` | SEO sitemap index |
-| `/api/tools` | JSON tool list (GET) |
+| `/robots.txt` | Crawl rules |
+| `/terms` | Terms of Service (affiliate disclosure reference) |
+| `/privacy` | Privacy Policy |
 
 ---
 
-*End of Owner Guide*
+## Appendix — “If I want to…” cheat sheet
+
+| If I want to… | What to do |
+|---|---|
+| Add an AI tool | `/admin` → Add New AI Tool → fill sections → Save as Draft → Save & Publish |
+| Edit a tool | `/admin` → pencil → edit → Save |
+| Set affiliate link | Edit tool → Monetization & Links → affiliate URL + enable toggle → Save |
+| Approve a review | `/admin` → Review Moderation → Approve |
+| Check a website | Edit tool → Run Website Check |
+| Change homepage | Edit `app/page.tsx`, `components/home/` → deploy |
+| Change SEO | Edit `lib/seo/*` → deploy (not Admin) |
+| Add a category | Edit seed/data + developer DB work (not Admin) |
+| Deploy code | Test → commit → push → host rebuild |
+| Deploy migration | `npx prisma migrate deploy` on production → restart |
+| Change admin password | Update `ADMIN_PASSWORD` in host env → restart |
+
+---
+
+*End of Owner & Developer Handoff Guide*

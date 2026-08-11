@@ -112,6 +112,10 @@ export class MonitoringService {
       requestedUrl: health.requestedUrl,
     });
 
+    if (health.status === 'success') {
+      await dbRepository.touchToolLastVerifiedDate(tool.id);
+    }
+
     const summary = await MonitoringService.getSummaryForTool(toolId);
     return { summary: summary!, check };
   }

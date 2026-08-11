@@ -13,8 +13,9 @@ import { InternalLinks } from '../../../components/shared/InternalLinks';
 import { JsonLd } from '../../../components/shared/JsonLd';
 import { generateToolMetadata, generateNotFoundMetadata } from '../../../lib/seo/metadata';
 import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
-import { Star, CheckCircle2, Check, X, ArrowRight, Layers, Users, Building2, Monitor, Clock } from 'lucide-react';
+import { Star, CheckCircle2, Check, X, ArrowRight, Layers, Users, Building2, Monitor } from 'lucide-react';
 import { ToolReviewsSection } from '../../../components/review/ToolReviewsSection';
+import { formatInformationVerifiedDate } from '../../../lib/utils/formatDate';
 
 import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
 
@@ -132,6 +133,12 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
                   <span className="text-slate-400 font-normal">({tool.reviewCount} reviews)</span>
                 </div>
               </div>
+
+              {tool.lastVerifiedDate && (
+                <p className="text-xs text-slate-500 pt-1">
+                  Information verified: {formatInformationVerifiedDate(tool.lastVerifiedDate)}
+                </p>
+              )}
             </div>
           </div>
 
@@ -348,13 +355,6 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
                   {tool.hasExtension ? 'Available' : 'No'}
                 </span>
               </div>
-
-              {tool.lastVerifiedDate && (
-                <div className="flex justify-between py-1">
-                  <span className="text-slate-500 font-medium flex items-center gap-1"><Clock className="w-3.5 h-3.5" />Last Verified</span>
-                  <span className="font-bold text-slate-900">{tool.lastVerifiedDate}</span>
-                </div>
-              )}
             </div>
           </div>
 
