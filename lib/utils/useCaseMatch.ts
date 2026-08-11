@@ -25,6 +25,20 @@ export function toolMatchesUseCase(tool: Tool, useCase: string): boolean {
     );
   }
 
+  if (uc === 'researchers') {
+    return (
+      tool.targetUsers.includes('researchers') ||
+      tool.tags.some((tag) => tag.toLowerCase().includes('research'))
+    );
+  }
+
+  if (uc === 'real-estate') {
+    return (
+      tool.targetUsers.includes('real-estate-agents') ||
+      tool.tags.some((tag) => tag.toLowerCase().includes('real estate'))
+    );
+  }
+
   const normalized = uc.replace(/-/g, ' ');
   const slug = (tool.categorySlug ?? '').toLowerCase();
   const id = tool.categoryId.toLowerCase();

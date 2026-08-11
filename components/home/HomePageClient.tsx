@@ -72,6 +72,10 @@ export function HomePageClient({
     if (b.slug === 'teachers') return 1;
     if (a.slug === 'small-business') return -1;
     if (b.slug === 'small-business') return 1;
+    if (a.slug === 'researchers') return -1;
+    if (b.slug === 'researchers') return 1;
+    if (a.slug === 'real-estate-agents') return -1;
+    if (b.slug === 'real-estate-agents') return 1;
     return 0;
   });
 

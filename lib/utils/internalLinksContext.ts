@@ -19,6 +19,8 @@ export function getContextualInternalLinks(
   const isMarketerTool = targetUsers.includes('marketers');
   const isTeacherTool = targetUsers.includes('teachers');
   const isSmallBusinessTool = targetUsers.includes('small-business');
+  const isResearcherTool = targetUsers.includes('researchers');
+  const isRealEstateTool = targetUsers.includes('real-estate-agents');
 
   if (isPmTool) {
     return {
@@ -59,6 +61,22 @@ export function getContextualInternalLinks(
     return {
       categories: prioritizePmLinks(categories, 'productivity'),
       personas: prioritizePmLinks(personas, 'small-business'),
+      comparisons,
+    };
+  }
+
+  if (isResearcherTool) {
+    return {
+      categories: prioritizePmLinks(categories, 'study-education'),
+      personas: prioritizePmLinks(personas, 'researchers'),
+      comparisons,
+    };
+  }
+
+  if (isRealEstateTool) {
+    return {
+      categories: prioritizePmLinks(categories, 'image'),
+      personas: prioritizePmLinks(personas, 'real-estate-agents'),
       comparisons,
     };
   }

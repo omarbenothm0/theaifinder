@@ -199,7 +199,7 @@ export const PM_TOOLS: Tool[] = [
     pros: ['Strong PM meeting capture', 'Official integrations'],
     cons: ['Minute caps on free tier'],
     alternatives: ['fireflies-ai', 'fathom', 'tldv'],
-    targetUsers: ['project-managers', 'students', 'teachers'],
+    targetUsers: ['project-managers', 'students', 'teachers', 'real-estate-agents'],
   }),
   pmTool({
     name: 'Fireflies.ai',
@@ -244,7 +244,7 @@ export const PM_TOOLS: Tool[] = [
     features: ['Unlimited free recordings', 'AI summaries', 'CRM sync'],
     pros: ['Generous free tier for individuals'],
     cons: ['Team features require paid seats'],
-    targetUsers: ['project-managers'],
+    targetUsers: ['project-managers', 'real-estate-agents'],
   }),
   pmTool({
     name: 'tl;dv',
@@ -398,7 +398,7 @@ export const PM_TOOLS: Tool[] = [
     features: ['Smart Slides', 'Report templates', 'PPTX export'],
     pros: ['Polished deck output'],
     cons: ['No structured PM status-report schema on official pages'],
-    targetUsers: ['project-managers'],
+    targetUsers: ['project-managers', 'real-estate-agents'],
   }),
   pmTool({
     name: 'ClickUp Brain',

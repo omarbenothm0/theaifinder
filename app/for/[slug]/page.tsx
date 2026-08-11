@@ -15,18 +15,20 @@ import { isPersonaIndexable } from '../../../lib/seo/indexability';
 import { dbRepository } from '../../../lib/dbRepository';
 import { generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
 import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
-import { Users, CheckCircle2, Compass, ArrowRight, Layers, GraduationCap, TrendingUp, Store } from 'lucide-react';
+import { Users, CheckCircle2, Compass, ArrowRight, Layers, GraduationCap, TrendingUp, Store, Microscope, Home } from 'lucide-react';
 import Link from 'next/link';
 
 export const revalidate = 3600;
 
-const HUB_PERSONA_SLUGS = new Set(['students', 'marketers', 'teachers', 'small-business']);
+const HUB_PERSONA_SLUGS = new Set(['students', 'marketers', 'teachers', 'small-business', 'researchers', 'real-estate-agents']);
 
 const HUB_SECTION_HEADINGS: Record<string, string> = {
   students: 'Student Workflows',
   marketers: 'Marketing Workflows',
   teachers: 'Teaching Workflows',
   'small-business': 'Small Business Workflows',
+  researchers: 'Researcher Workflows',
+  'real-estate-agents': 'Real Estate Workflows',
 };
 
 export async function generateStaticParams() {
@@ -150,6 +152,32 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
           >
             <Store className="w-4 h-4" />
             Browse Productivity &amp; Search category tools
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      )}
+
+      {persona.slug === 'researchers' && (
+        <div className="max-w-4xl mx-auto">
+          <Link
+            href="/category/study-education"
+            className="inline-flex items-center gap-2 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-4 py-2.5 rounded-xl hover:bg-indigo-100 transition-colors"
+          >
+            <Microscope className="w-4 h-4" />
+            Browse Study &amp; Education category tools
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      )}
+
+      {persona.slug === 'real-estate-agents' && (
+        <div className="max-w-4xl mx-auto">
+          <Link
+            href="/category/image"
+            className="inline-flex items-center gap-2 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-4 py-2.5 rounded-xl hover:bg-indigo-100 transition-colors"
+          >
+            <Home className="w-4 h-4" />
+            Browse Image &amp; Design category tools
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>

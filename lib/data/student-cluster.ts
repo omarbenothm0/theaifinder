@@ -255,7 +255,7 @@ export const STUDENT_TOOLS: Tool[] = [
     pros: ['Answers restricted to uploaded sources', 'Free tier with source caps'],
     cons: ['No general web generation unless enabled', '50 sources/notebook cap on free tier cited on official site'],
     alternatives: ['remnote', 'quizlet'],
-    targetUsers: ['students', 'teachers'],
+    targetUsers: ['students', 'teachers', 'researchers'],
   }),
   studentTool({
     name: 'RemNote',
@@ -279,7 +279,7 @@ export const STUDENT_TOOLS: Tool[] = [
     pros: ['Strong notes + flashcards in one tool'],
     cons: ['Steep learning curve cited on official pricing', 'AI features consume credits on lower tiers'],
     alternatives: ['notebooklm', 'quizlet', 'anki'],
-    targetUsers: ['students'],
+    targetUsers: ['students', 'researchers'],
   }),
   studentTool({
     name: 'Quizlet',
@@ -376,7 +376,7 @@ export const STUDENT_TOOLS: Tool[] = [
     features: ['Grammar & spelling', 'Clarity suggestions', 'Tone detection', 'Browser extension'],
     pros: ['Broad writing surface coverage'],
     cons: ['Full rewrites and plagiarism check on Pro tier', 'Institutions may regulate AI usage'],
-    targetUsers: ['students', 'writers', 'teachers'],
+    targetUsers: ['students', 'writers', 'teachers', 'researchers', 'real-estate-agents'],
   }),
   studentTool({
     name: 'Consensus',
@@ -399,7 +399,7 @@ export const STUDENT_TOOLS: Tool[] = [
     pros: ['Scientific literature focus with citations'],
     cons: ['Focused on scientific/academic lit — not general homework'],
     alternatives: ['elicit', 'scite-ai'],
-    targetUsers: ['students', 'teachers'],
+    targetUsers: ['students', 'teachers', 'researchers'],
   }),
   studentTool({
     name: 'Elicit',
@@ -422,7 +422,7 @@ export const STUDENT_TOOLS: Tool[] = [
     pros: ['Strong literature review automation'],
     cons: ['Pro tier cost-prohibitive for casual undergrads per official pricing'],
     alternatives: ['consensus', 'scite-ai'],
-    targetUsers: ['students'],
+    targetUsers: ['students', 'researchers'],
   }),
   studentTool({
     name: 'Scite.ai',
@@ -445,7 +445,7 @@ export const STUDENT_TOOLS: Tool[] = [
     pros: ['Unique citation context analysis'],
     cons: ['No permanent free tier — 7-day trial only per official pricing'],
     alternatives: ['consensus', 'elicit'],
-    targetUsers: ['students'],
+    targetUsers: ['students', 'researchers'],
   }),
   studentTool({
     name: 'NoteGPT',

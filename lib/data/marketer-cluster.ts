@@ -268,7 +268,7 @@ export const MARKETER_TOOLS: Tool[] = [
     pros: ['Visual + copy in one design platform'],
     cons: ['Advanced AI features on Pro tier per official pricing'],
     alternatives: ['gamma'],
-    targetUsers: ['marketers', 'content-creators', 'teachers', 'small-business'],
+    targetUsers: ['marketers', 'content-creators', 'teachers', 'small-business', 'real-estate-agents'],
   }),
   marketerTool({
     name: 'Semrush',
@@ -294,7 +294,7 @@ export const MARKETER_TOOLS: Tool[] = [
     pros: ['Deep SEO and competitive data'],
     cons: ['Premium pricing for full toolkit per official pricing'],
     alternatives: [],
-    targetUsers: ['marketers', 'small-business'],
+    targetUsers: ['marketers', 'small-business', 'real-estate-agents'],
   }),
   marketerTool({
     name: 'HubSpot',

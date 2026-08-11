@@ -16,6 +16,8 @@ import { StudentWorkflowLinks } from '../../../components/persona/StudentWorkflo
 import { MarketerWorkflowLinks } from '../../../components/persona/MarketerWorkflowLinks';
 import { TeacherWorkflowLinks } from '../../../components/persona/TeacherWorkflowLinks';
 import { SmallBusinessWorkflowLinks } from '../../../components/persona/SmallBusinessWorkflowLinks';
+import { ResearcherWorkflowLinks } from '../../../components/persona/ResearcherWorkflowLinks';
+import { RealEstateWorkflowLinks } from '../../../components/persona/RealEstateWorkflowLinks';
 
 const BASE_URL = getBaseUrl();
 
@@ -80,6 +82,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         <>
           <StudentWorkflowLinks variant="category" />
           <TeacherWorkflowLinks variant="category" />
+          <ResearcherWorkflowLinks variant="category" />
         </>
       )}
       {(category.slug === 'writing' || category.slug === 'seo') && (
@@ -87,6 +90,12 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
       )}
       {(category.slug === 'productivity' || category.slug === 'writing') && (
         <SmallBusinessWorkflowLinks variant="category" />
+      )}
+      {(category.slug === 'seo' || category.slug === 'writing') && (
+        <ResearcherWorkflowLinks variant="category" />
+      )}
+      {(category.slug === 'image' || category.slug === 'writing' || category.slug === 'presentations') && (
+        <RealEstateWorkflowLinks variant="category" />
       )}
 
       {/* Tools Grid */}

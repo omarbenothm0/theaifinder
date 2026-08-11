@@ -170,7 +170,9 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
                 { id: 'study-education', name: 'Study & Education', desc: 'Flashcards, homework help, research, writing, and lecture notes' },
                 { id: 'marketing', name: 'Marketing & Growth', desc: 'Content, SEO, social, email campaigns, ads, and analytics' },
                 { id: 'teaching', name: 'Teaching & Classroom', desc: 'Lesson plans, worksheets, quizzes, grading, and classroom support' },
-                { id: 'small-business', name: 'Small Business', desc: 'Marketing, sales, support, research, operations, and admin' }
+                { id: 'small-business', name: 'Small Business', desc: 'Marketing, sales, support, research, operations, and admin' },
+                { id: 'researchers', name: 'Academic Research', desc: 'Literature discovery, paper reading, evidence synthesis, and academic writing' },
+                { id: 'real-estate', name: 'Real Estate', desc: 'Listing copy, property visuals, client decks, market research, and client meetings' }
               ].map((item) => (
                 <button
                   key={item.id}
@@ -223,7 +225,8 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
                 { id: 'marketers', name: 'Marketer & Growth Strategist' },
                 { id: 'teachers', name: 'Teacher, Educator & Tutor' },
                 { id: 'small-business', name: 'Small Business Owner' },
-                { id: 'real-estate-agents', name: 'Real Estate Broker & Agent' },
+                { id: 'researchers', name: 'Researcher & Academic' },
+                { id: 'real-estate-agents', name: 'Real Estate Agent & Broker' },
                 { id: 'entrepreneurs', name: 'Startup Founder & Entrepreneur' },
                 { id: 'project-managers', name: 'Project Manager' },
                 { id: 'students', name: 'Student' }
