@@ -12,6 +12,7 @@ import { generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
 import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
 import { Layers, Sparkles } from 'lucide-react';
 import { PmWorkflowLinks } from '../../../components/persona/PmWorkflowLinks';
+import { StudentWorkflowLinks } from '../../../components/persona/StudentWorkflowLinks';
 
 const BASE_URL = getBaseUrl();
 
@@ -72,6 +73,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
       </div>
 
       {category.slug === 'project-management' && <PmWorkflowLinks variant="category" />}
+      {category.slug === 'study-education' && <StudentWorkflowLinks variant="category" />}
 
       {/* Tools Grid */}
       <div className="space-y-6">

@@ -15,15 +15,30 @@ export function getContextualInternalLinks(
   comparisons: Comparison[]
 ) {
   const isPmTool = targetUsers.includes('project-managers');
+  const isStudentTool = targetUsers.includes('students');
+
+  if (isPmTool) {
+    return {
+      categories: prioritizePmLinks(categories, 'project-management'),
+      personas: prioritizePmLinks(personas, 'project-managers'),
+      comparisons: [
+        ...comparisons.filter((c) => c.tool1Slug === toolSlug || c.tool2Slug === toolSlug),
+        ...comparisons.filter((c) => c.tool1Slug !== toolSlug && c.tool2Slug !== toolSlug),
+      ],
+    };
+  }
+
+  if (isStudentTool) {
+    return {
+      categories: prioritizePmLinks(categories, 'study-education'),
+      personas: prioritizePmLinks(personas, 'students'),
+      comparisons,
+    };
+  }
 
   return {
-    categories: isPmTool ? prioritizePmLinks(categories, 'project-management') : categories,
-    personas: isPmTool ? prioritizePmLinks(personas, 'project-managers') : personas,
-    comparisons: isPmTool
-      ? [
-          ...comparisons.filter((c) => c.tool1Slug === toolSlug || c.tool2Slug === toolSlug),
-          ...comparisons.filter((c) => c.tool1Slug !== toolSlug && c.tool2Slug !== toolSlug),
-        ]
-      : comparisons,
+    categories,
+    personas,
+    comparisons,
   };
 }

@@ -16,6 +16,7 @@ import {
   PersonaUseCasePage,
   UseCaseFitTier,
   ToolUseCaseLink,
+  PersonaHubSection,
 } from '../types/tool';
 import { ToolMonitoringCheck, MonitoringCheckStatus } from '../types/monitoring';
 import { prisma } from './prisma';
@@ -706,6 +707,46 @@ class DBRepository {
     }));
   }
 
+  public async getPersonaHubSections(personaSlug: string): Promise<PersonaHubSection[]> {
+    const links = await prisma.personaUseCase.findMany({
+      where: {
+        persona: {
+          slug: { equals: personaSlug, mode: 'insensitive' },
+          publishStatus: 'published',
+        },
+      },
+      include: { useCase: true },
+      orderBy: { order: 'asc' },
+    });
+
+    const sections: PersonaHubSection[] = [];
+
+    for (const link of links) {
+      const toolLinks = await prisma.toolUseCase.findMany({
+        where: {
+          useCaseId: link.useCaseId,
+          fitTier: { not: 'exclude' },
+          tool: PUBLISHED_TOOL_WHERE,
+        },
+        include: { tool: { include: TOOL_INCLUDE } },
+        orderBy: { displayOrder: 'asc' },
+      });
+
+      sections.push({
+        useCase: mapUseCase(link.useCase),
+        link: {
+          order: link.order,
+          isPrimary: link.isPrimary,
+          pageEnabled: link.pageEnabled,
+          hubNote: link.hubNote ?? undefined,
+        },
+        tools: toolLinks.map(mapToolUseCaseFit),
+      });
+    }
+
+    return sections;
+  }
+
   public async getPersonaUseCasePage(
     personaSlug: string,
     useCaseSlug: string
@@ -820,7 +861,9 @@ class DBRepository {
         useCase: {
           include: {
             personaLinks: {
-              where: { pageEnabled: true },
+              where: {
+                persona: { publishStatus: 'published' },
+              },
               include: { persona: { select: { slug: true, title: true } } },
             },
           },
@@ -844,6 +887,7 @@ class DBRepository {
           useCaseTitle: mapping.useCase.title,
           fitTier: mapping.fitTier as UseCaseFitTier,
           section: mapping.section,
+          pageEnabled: personaLink.pageEnabled,
         });
       }
     }

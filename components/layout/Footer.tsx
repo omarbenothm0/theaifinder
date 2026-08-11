@@ -74,6 +74,7 @@ export function Footer() {
             <ul className="space-y-2.5 text-xs text-slate-400">
               {[
                 { name: 'Project Management', slug: 'project-management' },
+                { name: 'Study & Education', slug: 'study-education' },
                 { name: 'Writing & Copywriting', slug: 'writing' },
                 { name: 'Coding & IDEs', slug: 'coding' },
                 { name: 'Image Generation', slug: 'image' },
@@ -101,6 +102,7 @@ export function Footer() {
             <ul className="space-y-2.5 text-xs text-slate-400">
               {[
                 { name: 'AI for Project Managers', slug: 'project-managers' },
+                { name: 'AI for Students', slug: 'students' },
                 { name: 'AI for YouTubers', slug: 'youtubers' },
                 { name: 'AI for Content Creators', slug: 'content-creators' },
                 { name: 'AI for Writers', slug: 'writers' },

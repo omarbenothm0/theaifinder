@@ -1,9 +1,13 @@
 import { dbRepository } from '../dbRepository';
-import { PersonaUseCaseLink, PersonaUseCasePage } from '../../types/tool';
+import { PersonaUseCaseLink, PersonaUseCasePage, PersonaHubSection } from '../../types/tool';
 
 export class UseCaseRepository {
   static async getPersonaUseCases(personaSlug: string): Promise<PersonaUseCaseLink[]> {
     return dbRepository.getPersonaUseCases(personaSlug);
+  }
+
+  static async getPersonaHubSections(personaSlug: string): Promise<PersonaHubSection[]> {
+    return dbRepository.getPersonaHubSections(personaSlug);
   }
 
   static async getPersonaUseCasePage(

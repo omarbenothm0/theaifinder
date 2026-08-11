@@ -167,6 +167,13 @@ export interface ToolUseCaseLink {
   useCaseTitle: string;
   fitTier: UseCaseFitTier;
   section: string;
+  pageEnabled: boolean;
+}
+
+export interface PersonaHubSection {
+  useCase: UseCase;
+  link: Omit<PersonaUseCaseLink, 'useCase'>;
+  tools: ToolWithUseCaseFit[];
 }
 
 export interface ComparisonFeatureRow {

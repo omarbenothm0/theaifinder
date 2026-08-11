@@ -64,6 +64,8 @@ export function HomePageClient({
   const heroPersonas = [...personas].sort((a, b) => {
     if (a.slug === 'project-managers') return -1;
     if (b.slug === 'project-managers') return 1;
+    if (a.slug === 'students') return -1;
+    if (b.slug === 'students') return 1;
     return 0;
   });
 
@@ -110,6 +112,7 @@ export function HomePageClient({
             <span className="font-semibold text-slate-300">Popular Searches:</span>
             {[
               { name: 'Project Management', slug: 'project-management' },
+              { name: 'Study & Education', slug: 'study-education' },
               { name: 'Coding IDEs', slug: 'coding' },
               { name: 'Prose Writing', slug: 'writing' },
               { name: 'Generative Images', slug: 'image' },

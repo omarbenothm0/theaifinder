@@ -8,6 +8,7 @@ import { SITE_NAME } from '../../lib/brand';
 
 const ROLE_LINKS = [
   { name: 'Project Managers', slug: 'project-managers' },
+  { name: 'Students', slug: 'students' },
   { name: 'Content Creators', slug: 'content-creators' },
   { name: 'Developers', slug: 'developers' },
   { name: 'YouTubers', slug: 'youtubers' },
@@ -19,6 +20,7 @@ const ROLE_LINKS = [
 
 const CATEGORY_LINKS = [
   { name: 'Project Management', slug: 'project-management' },
+  { name: 'Study & Education', slug: 'study-education' },
   { name: 'Writing & Copywriting', slug: 'writing' },
   { name: 'Coding & Development', slug: 'coding' },
   { name: 'Image Generation', slug: 'image' },

@@ -7,6 +7,7 @@ import { UseCaseService } from '../../../lib/services/use-case.service';
 import { ComparisonService } from '../../../lib/services/comparison.service';
 import { PersonaToolsFilter } from '../../../components/tool/PersonaToolsFilter';
 import { PersonaUseCaseCards } from '../../../components/persona/PersonaUseCaseCards';
+import { StudentHubSections } from '../../../components/persona/StudentHubSections';
 import { InternalLinks } from '../../../components/shared/InternalLinks';
 import { JsonLd } from '../../../components/shared/JsonLd';
 import { generatePersonaMetadata, generateNotFoundMetadata } from '../../../lib/seo/metadata';
@@ -14,7 +15,7 @@ import { isPersonaIndexable } from '../../../lib/seo/indexability';
 import { dbRepository } from '../../../lib/dbRepository';
 import { generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
 import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
-import { Users, CheckCircle2, Compass, ArrowRight, Layers } from 'lucide-react';
+import { Users, CheckCircle2, Compass, ArrowRight, Layers, GraduationCap } from 'lucide-react';
 import Link from 'next/link';
 
 export const revalidate = 3600;
@@ -45,12 +46,13 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
     notFound();
   }
 
-  const [toolsRes, categories, personas, useCases, comparisons] = await Promise.all([
+  const [toolsRes, categories, personas, useCases, comparisons, hubSections] = await Promise.all([
     ToolService.getToolsByPersona(persona.slug),
     CategoryService.getCategories(),
     PersonaService.getPersonas(),
     UseCaseService.getPersonaUseCases(persona.slug),
     ComparisonService.getComparisons(),
+    persona.slug === 'students' ? UseCaseService.getPersonaHubSections(persona.slug) : Promise.resolve([]),
   ]);
 
   const breadcrumbSchema = generateBreadcrumbSchema([
@@ -90,7 +92,24 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
         </div>
       )}
 
-      {useCases.length > 0 && (
+      {persona.slug === 'students' && (
+        <div className="max-w-4xl mx-auto">
+          <Link
+            href="/category/study-education"
+            className="inline-flex items-center gap-2 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-4 py-2.5 rounded-xl hover:bg-indigo-100 transition-colors"
+          >
+            <GraduationCap className="w-4 h-4" />
+            Browse all Study &amp; Education category tools
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      )}
+
+      {persona.slug === 'students' && hubSections.length > 0 && (
+        <StudentHubSections sections={hubSections} />
+      )}
+
+      {persona.slug === 'project-managers' && useCases.length > 0 && (
         <PersonaUseCaseCards personaSlug={persona.slug} useCases={useCases} />
       )}
 

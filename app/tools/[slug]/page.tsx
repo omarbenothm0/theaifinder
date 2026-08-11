@@ -323,7 +323,11 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
                 {useCaseLinks.map((link) => (
                   <Link
                     key={`${link.personaSlug}-${link.useCaseSlug}-${link.section}`}
-                    href={`/for/${link.personaSlug}/${link.useCaseSlug}`}
+                    href={
+                      link.pageEnabled
+                        ? `/for/${link.personaSlug}/${link.useCaseSlug}`
+                        : `/for/${link.personaSlug}#${link.useCaseSlug}`
+                    }
                     className="text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-full hover:bg-indigo-100 transition-colors"
                   >
                     {link.personaTitle}: {link.useCaseTitle}

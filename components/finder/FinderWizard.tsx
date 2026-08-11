@@ -166,7 +166,8 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
                 { id: 'seo', name: 'SEO & Research', desc: 'Live search research, keyword analysis, and citations' },
                 { id: 'presentations', name: 'Presentations', desc: 'Slide decks, pitch presentations, and visual reports' },
                 { id: 'productivity', name: 'Productivity', desc: 'Knowledge assistants and workflow tools' },
-                { id: 'project-management', name: 'Project Management', desc: 'Meeting notes, tasks, plans, and status reports for PMs' }
+                { id: 'project-management', name: 'Project Management', desc: 'Meeting notes, tasks, plans, and status reports for PMs' },
+                { id: 'study-education', name: 'Study & Education', desc: 'Flashcards, homework help, research, writing, and lecture notes' }
               ].map((item) => (
                 <button
                   key={item.id}
@@ -220,7 +221,8 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
                 { id: 'teachers', name: 'Teacher, Educator & Tutor' },
                 { id: 'real-estate-agents', name: 'Real Estate Broker & Agent' },
                 { id: 'entrepreneurs', name: 'Startup Founder & Entrepreneur' },
-                { id: 'project-managers', name: 'Project Manager' }
+                { id: 'project-managers', name: 'Project Manager' },
+                { id: 'students', name: 'Student' }
               ].map((item) => (
                 <button
                   key={item.id}
