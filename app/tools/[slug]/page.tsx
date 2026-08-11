@@ -12,6 +12,7 @@ import { JsonLd } from '../../../components/shared/JsonLd';
 import { generateToolMetadata, generateNotFoundMetadata } from '../../../lib/seo/metadata';
 import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
 import { Star, CheckCircle2, ExternalLink, Check, X, ArrowRight, Layers, Users, Building2, Monitor, Clock } from 'lucide-react';
+import { ToolReviewsSection } from '../../../components/review/ToolReviewsSection';
 
 import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
 
@@ -375,6 +376,9 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
         </div>
 
       </div>
+
+      {/* User Reviews */}
+      <ToolReviewsSection toolSlug={tool.slug} toolName={tool.name} />
 
       {/* Alternative Tools Section */}
       {filteredAlternatives.length > 0 && (

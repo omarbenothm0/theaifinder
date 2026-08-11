@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { dbRepository } from '../../../lib/dbRepository';
 import {
   validateReviewInput,
+  normalizeReviewInput,
 } from '../../../lib/validation/review.validation';
 import {
   checkRateLimit,
@@ -17,7 +18,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'toolSlug query param is required' }, { status: 400 });
   }
 
-  const reviews = await dbRepository.getReviewsForTool(toolSlug);
+  const reviews = await dbRepository.getApprovedReviewsForTool(toolSlug);
   return NextResponse.json(reviews);
 }
 
@@ -46,9 +47,19 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const review = await dbRepository.addReview(body);
-    return NextResponse.json(review, { status: 201 });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message || 'Failed to submit review' }, { status: 400 });
+    const normalized = normalizeReviewInput(body);
+    const review = await dbRepository.addReview(normalized);
+
+    return NextResponse.json(
+      {
+        id: review.id,
+        status: review.status,
+        message: 'Review submitted and pending moderation.',
+      },
+      { status: 201 }
+    );
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Failed to submit review';
+    return NextResponse.json({ error: message }, { status: 400 });
   }
 }

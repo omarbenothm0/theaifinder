@@ -136,15 +136,26 @@ export interface Comparison {
   publishStatus?: PublishStatus;
 }
 
+export type ReviewStatus = 'pending' | 'approved' | 'rejected' | 'flagged';
+
 export interface Review {
   id: string;
   toolSlug: string;
+  toolName?: string;
   authorName: string;
   authorRole: string;
   rating: number;
   comment: string;
   date: string;
   verifiedUser: boolean;
+  status: ReviewStatus;
+  /** Admin-only; never expose on public API responses */
+  email?: string;
+  moderatedAt?: string;
+  moderatedBy?: string;
+  moderationNotes?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Article {

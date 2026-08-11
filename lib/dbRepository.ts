@@ -6,7 +6,8 @@ import {
   Review,
   Article,
   ToolFilterOptions,
-  FinderAnswer
+  FinderAnswer,
+  ReviewStatus,
 } from '../types/tool';
 import { ToolMonitoringCheck, MonitoringCheckStatus } from '../types/monitoring';
 import { prisma } from './prisma';
@@ -147,17 +148,32 @@ function mapComparison(c: any): Comparison {
   };
 }
 
-function mapReview(r: any): Review {
-  return {
+function mapReview(r: any, options: { includePrivate?: boolean } = {}): Review {
+  const review: Review = {
     id: r.id,
     toolSlug: r.tool?.slug ?? '',
     authorName: r.authorName,
-    authorRole: r.authorRole,
+    authorRole: r.authorRole ?? '',
     rating: r.rating,
     comment: r.comment,
     date: r.date.toISOString().split('T')[0],
     verifiedUser: r.verifiedUser,
+    status: r.status ?? 'approved',
   };
+
+  if (options.includePrivate) {
+    review.toolName = r.tool?.name ?? undefined;
+    review.moderatedAt = r.moderatedAt ? r.moderatedAt.toISOString() : undefined;
+    review.moderatedBy = r.moderatedBy ?? undefined;
+    review.moderationNotes = r.moderationNotes ?? undefined;
+    review.createdAt = r.createdAt ? r.createdAt.toISOString() : undefined;
+    review.updatedAt = r.updatedAt ? r.updatedAt.toISOString() : undefined;
+    if (r.email) {
+      review.email = r.email;
+    }
+  }
+
+  return review;
 }
 
 function mapArticle(a: any): Article {
@@ -556,51 +572,150 @@ class DBRepository {
   }
 
   // --- Reviews ---
-  public async getReviewsForTool(toolSlug: string): Promise<Review[]> {
+  public async getApprovedReviewsForTool(toolSlug: string): Promise<Review[]> {
     const reviews = await prisma.review.findMany({
-      where: { tool: { slug: { equals: toolSlug, mode: 'insensitive' } } },
+      where: {
+        status: 'approved',
+        tool: { slug: { equals: toolSlug, mode: 'insensitive' }, ...PUBLISHED_TOOL_WHERE },
+      },
       include: { tool: true },
       orderBy: { createdAt: 'desc' },
     });
-    return reviews.map(mapReview);
+    return reviews.map((r) => mapReview(r));
   }
 
-  public async addReview(review: Omit<Review, 'id' | 'date'>): Promise<Review> {
+  /** @deprecated Use getApprovedReviewsForTool for public reads */
+  public async getReviewsForTool(toolSlug: string): Promise<Review[]> {
+    return this.getApprovedReviewsForTool(toolSlug);
+  }
+
+  public async getReviewsForModeration(options: {
+    status?: ReviewStatus | 'all';
+    limit?: number;
+  } = {}): Promise<Review[]> {
+    const where =
+      options.status && options.status !== 'all' ? { status: options.status } : {};
+
+    const reviews = await prisma.review.findMany({
+      where,
+      include: { tool: true },
+      orderBy: [{ status: 'asc' }, { createdAt: 'desc' }],
+      take: options.limit ?? 200,
+    });
+
+    return reviews.map((r) => mapReview(r, { includePrivate: true }));
+  }
+
+  public async getReviewById(id: string): Promise<Review | undefined> {
+    const review = await prisma.review.findUnique({
+      where: { id },
+      include: { tool: true },
+    });
+    return review ? mapReview(review, { includePrivate: true }) : undefined;
+  }
+
+  public async getPendingReviewCount(): Promise<number> {
+    return prisma.review.count({ where: { status: 'pending' } });
+  }
+
+  /**
+   * Approved visitor-review aggregates from the Review table.
+   *
+   * NOTE: Tool.rating / Tool.reviewCount are editorial listing metrics (seed/CMS)
+   * used by hero, cards, finder, and JSON-LD. They are intentionally separate from
+   * moderated visitor reviews and must NOT be overwritten by moderation actions.
+   */
+  public async getApprovedReviewAggregates(toolId: string): Promise<{ rating: number; count: number }> {
+    const agg = await prisma.review.aggregate({
+      where: { toolId, status: 'approved' },
+      _avg: { rating: true },
+      _count: { rating: true },
+    });
+    return {
+      count: agg._count.rating,
+      rating:
+        agg._count.rating > 0 && agg._avg.rating
+          ? parseFloat(agg._avg.rating.toFixed(1))
+          : 0,
+    };
+  }
+
+  public async addReview(input: {
+    toolSlug: string;
+    authorName: string;
+    authorRole?: string;
+    rating: number;
+    comment: string;
+    email?: string;
+  }): Promise<Review> {
     const tool = await prisma.tool.findFirst({
-      where: { slug: { equals: review.toolSlug, mode: 'insensitive' } },
+      where: { slug: { equals: input.toolSlug, mode: 'insensitive' }, ...PUBLISHED_TOOL_WHERE },
     });
     if (!tool) {
-      throw new Error(`Tool not found: ${review.toolSlug}`);
+      throw new Error(`Tool not found: ${input.toolSlug}`);
+    }
+
+    if (input.email) {
+      const duplicate = await prisma.review.findFirst({
+        where: {
+          toolId: tool.id,
+          email: input.email,
+          status: { in: ['pending', 'approved'] },
+          createdAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+        },
+      });
+      if (duplicate) {
+        throw new Error('A review for this tool was already submitted recently.');
+      }
     }
 
     const created = await prisma.review.create({
       data: {
         toolId: tool.id,
-        authorName: review.authorName,
-        authorRole: review.authorRole,
-        rating: review.rating,
-        comment: review.comment,
+        authorName: input.authorName,
+        authorRole: input.authorRole ?? '',
+        rating: input.rating,
+        comment: input.comment,
+        email: input.email ?? null,
+        status: 'pending',
         date: new Date(),
-        verifiedUser: review.verifiedUser,
+        verifiedUser: false,
       },
       include: { tool: true },
     });
 
-    const agg = await prisma.review.aggregate({
-      where: { toolId: tool.id },
-      _avg: { rating: true },
-      _count: { rating: true },
-    });
-
-    await prisma.tool.update({
-      where: { id: tool.id },
-      data: {
-        rating: agg._avg.rating ? parseFloat(agg._avg.rating.toFixed(1)) : tool.rating,
-        reviewCount: agg._count.rating,
-      },
-    });
-
     return mapReview(created);
+  }
+
+  public async moderateReview(
+    id: string,
+    status: ReviewStatus,
+    moderatedBy: string,
+    moderationNotes?: string
+  ): Promise<Review | undefined> {
+    const existing = await prisma.review.findUnique({ where: { id } });
+    if (!existing) return undefined;
+
+    const updated = await prisma.review.update({
+      where: { id },
+      data: {
+        status,
+        moderatedAt: new Date(),
+        moderatedBy,
+        moderationNotes: moderationNotes?.trim() || null,
+      },
+      include: { tool: true },
+    });
+
+    return mapReview(updated, { includePrivate: true });
+  }
+
+  public async deleteReview(id: string): Promise<boolean> {
+    const existing = await prisma.review.findUnique({ where: { id } });
+    if (!existing) return false;
+
+    await prisma.review.delete({ where: { id } });
+    return true;
   }
 
   // --- Interactive Finder Evaluator ---
@@ -651,16 +766,25 @@ class DBRepository {
 
   // --- Admin Stats ---
   public async getAdminStats() {
-    const [totalTools, totalCategories, totalPersonas, totalComparisons, totalReviews, verifiedTools, featuredTools] =
-      await Promise.all([
-        prisma.tool.count(),
-        prisma.category.count(),
-        prisma.persona.count(),
-        prisma.comparison.count(),
-        prisma.review.count(),
-        prisma.tool.count({ where: { verified: true } }),
-        prisma.tool.count({ where: { featured: true } }),
-      ]);
+    const [
+      totalTools,
+      totalCategories,
+      totalPersonas,
+      totalComparisons,
+      totalReviews,
+      pendingReviews,
+      verifiedTools,
+      featuredTools,
+    ] = await Promise.all([
+      prisma.tool.count(),
+      prisma.category.count(),
+      prisma.persona.count(),
+      prisma.comparison.count(),
+      prisma.review.count({ where: { status: 'approved' } }),
+      prisma.review.count({ where: { status: 'pending' } }),
+      prisma.tool.count({ where: { verified: true } }),
+      prisma.tool.count({ where: { featured: true } }),
+    ]);
 
     return {
       totalTools,
@@ -668,6 +792,7 @@ class DBRepository {
       totalPersonas,
       totalComparisons,
       totalReviews,
+      pendingReviews,
       verifiedTools,
       featuredTools,
     };

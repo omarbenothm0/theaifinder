@@ -33,6 +33,13 @@ enum MonitoringCheckStatusEnum {
   invalid_url
 }
 
+enum ReviewStatusEnum {
+  pending
+  approved
+  rejected
+  flagged
+}
+
 model Category {
   id              String   @id @default(cuid())
   name            String   @unique
@@ -233,19 +240,27 @@ model PersonaFAQ {
 }
 
 model Review {
-  id           String   @id @default(cuid())
-  toolId       String
-  authorName   String
-  authorRole   String
-  rating       Int
-  comment      String   @db.Text
-  date         DateTime
-  verifiedUser Boolean  @default(false)
-  createdAt    DateTime @default(now())
+  id              String           @id @default(cuid())
+  toolId          String
+  authorName      String
+  authorRole      String           @default("")
+  rating          Int
+  comment         String           @db.Text
+  email           String?
+  status          ReviewStatusEnum @default(pending)
+  date            DateTime
+  verifiedUser    Boolean          @default(false)
+  moderatedAt     DateTime?
+  moderatedBy     String?
+  moderationNotes String?          @db.Text
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 
   tool Tool @relation(fields: [toolId], references: [id], onDelete: Cascade)
 
   @@index([toolId])
+  @@index([status])
+  @@index([toolId, status])
 }
 
 model Comparison {

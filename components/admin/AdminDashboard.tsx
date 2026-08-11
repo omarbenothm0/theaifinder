@@ -24,6 +24,7 @@ import {
   Activity,
   RefreshCw,
 } from 'lucide-react';
+import { AdminReviewModeration } from './AdminReviewModeration';
 
 interface AdminDashboardProps {
   initialTools: Tool[];
@@ -35,6 +36,7 @@ interface AdminDashboardProps {
     totalPersonas: number;
     totalComparisons: number;
     totalReviews: number;
+    pendingReviews?: number;
     verifiedTools: number;
     featuredTools: number;
   };
@@ -483,11 +485,22 @@ export function AdminDashboard({
 
         <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-2xs">
           <span className="text-slate-400 font-bold uppercase block text-[10px]">
-            User Reviews
+            Approved Reviews
           </span>
           <span className="text-2xl font-extrabold text-indigo-600">{stats.totalReviews}</span>
         </div>
+
+        <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-2xs">
+          <span className="text-slate-400 font-bold uppercase block text-[10px]">
+            Pending Reviews
+          </span>
+          <span className="text-2xl font-extrabold text-amber-600">
+            {stats.pendingReviews ?? 0}
+          </span>
+        </div>
       </div>
+
+      <AdminReviewModeration initialPendingCount={stats.pendingReviews ?? 0} />
 
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs overflow-hidden space-y-4 p-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-2">
