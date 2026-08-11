@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { SITE_NAME } from '../../lib/brand';
+import { isDeprecatedPersonaNavSlug } from '../../lib/seo/persona-visibility';
 import { AffiliateDisclosure } from '../tool/AffiliateDisclosure';
 import { Sparkles, ArrowRight, CheckCircle2, ShieldCheck, Database, FileText } from 'lucide-react';
 
@@ -103,17 +104,15 @@ export function Footer() {
               {[
                 { name: 'AI for Project Managers', slug: 'project-managers' },
                 { name: 'AI for Students', slug: 'students' },
-                { name: 'AI for YouTubers', slug: 'youtubers' },
-                { name: 'AI for Content Creators', slug: 'content-creators' },
                 { name: 'AI for Writers', slug: 'writers' },
-                { name: 'AI for Developers', slug: 'developers' },
                 { name: 'AI for Marketers', slug: 'marketers' },
                 { name: 'AI for Teachers', slug: 'teachers' },
                 { name: 'AI for Small Business', slug: 'small-business' },
                 { name: 'AI for Researchers', slug: 'researchers' },
                 { name: 'AI for Real Estate Agents', slug: 'real-estate-agents' },
-                { name: 'AI for Entrepreneurs', slug: 'entrepreneurs' }
-              ].map((p) => (
+              ]
+                .filter((p) => !isDeprecatedPersonaNavSlug(p.slug))
+                .map((p) => (
                 <li key={p.slug}>
                   <Link
                     href={`/for/${p.slug}`}

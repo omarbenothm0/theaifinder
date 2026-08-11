@@ -6,6 +6,7 @@ import {
   Article,
   PublishStatus,
 } from '../../types/tool';
+import { PERSONA_NOINDEX_SLUGS, PERSONA_REDIRECTS } from './persona-visibility';
 
 export type IndexabilityResult = {
   indexable: boolean;
@@ -101,6 +102,20 @@ export function isPersonaIndexable(
   persona: Persona,
   linkedToolCount = 0
 ): IndexabilityResult {
+  if (persona.slug in PERSONA_REDIRECTS) {
+    return {
+      indexable: false,
+      reason: `Persona redirects to ${PERSONA_REDIRECTS[persona.slug]}`,
+    };
+  }
+
+  if (PERSONA_NOINDEX_SLUGS.has(persona.slug)) {
+    return {
+      indexable: false,
+      reason: 'Seed persona de-indexed (thin hub — see research/PERSONAS.md)',
+    };
+  }
+
   if (!isPublished(persona.publishStatus)) {
     return { indexable: false, reason: 'Persona not published' };
   }

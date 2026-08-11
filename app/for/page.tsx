@@ -6,6 +6,7 @@ import { generatePageMetadata } from '../../lib/seo/metadata';
 import { generateBreadcrumbSchema } from '../../lib/seo/jsonld';
 import { getBaseUrl, absoluteUrl } from '../../lib/seo/base-url';
 import { sitePageTitle } from '../../lib/brand';
+import { isDeprecatedPersonaNavSlug } from '../../lib/seo/persona-visibility';
 import { Users, ArrowRight } from 'lucide-react';
 
 export const revalidate = 3600;
@@ -13,13 +14,14 @@ export const revalidate = 3600;
 export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
     title: sitePageTitle('Browse AI Tools by Role & Profession'),
-    description: 'Find the best AI tools curated for your role — developers, marketers, content creators, teachers, and more.',
+    description: 'Find the best AI tools curated for your role — project managers, marketers, writers, teachers, small business owners, and more.',
     canonicalUrl: '/for'
   });
 }
 
 export default async function ForIndexPage() {
-  const personas = await PersonaService.getPersonas();
+  const allPersonas = await PersonaService.getPersonas();
+  const personas = allPersonas.filter((p) => !isDeprecatedPersonaNavSlug(p.slug));
   const baseUrl = getBaseUrl();
 
   const breadcrumbSchema = generateBreadcrumbSchema([

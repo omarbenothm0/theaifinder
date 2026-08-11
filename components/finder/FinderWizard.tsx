@@ -5,6 +5,18 @@ import { Tool } from '../../types/tool';
 import { ToolCard } from '../tool/ToolCard';
 import { Compass, CheckCircle2, RotateCcw, ArrowRight, Sparkles, Layers, DollarSign, Users } from 'lucide-react';
 import { toolMatchesUseCase } from '../../lib/utils/useCaseMatch';
+import { isDeprecatedPersonaNavSlug } from '../../lib/seo/persona-visibility';
+
+const FINDER_ROLES = [
+  { id: 'writers', name: 'Writer, Blogger & Journalist' },
+  { id: 'marketers', name: 'Marketer & Growth Strategist' },
+  { id: 'teachers', name: 'Teacher, Educator & Tutor' },
+  { id: 'small-business', name: 'Small Business Owner' },
+  { id: 'researchers', name: 'Researcher & Academic' },
+  { id: 'real-estate-agents', name: 'Real Estate Agent & Broker' },
+  { id: 'project-managers', name: 'Project Manager' },
+  { id: 'students', name: 'Student' },
+].filter((item) => !isDeprecatedPersonaNavSlug(item.id));
 
 interface FinderWizardProps {
   initialTools: Tool[];
@@ -13,7 +25,7 @@ interface FinderWizardProps {
 export function FinderWizard({ initialTools }: FinderWizardProps) {
   const [step, setStep] = useState(1);
   const [useCase, setUseCase] = useState('writing');
-  const [role, setRole] = useState('content-creators');
+  const [role, setRole] = useState('marketers');
   const [budgetPreference, setBudgetPreference] = useState('freemium');
 
   const [evaluating, setEvaluating] = useState(false);
@@ -217,20 +229,7 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {[
-                { id: 'content-creators', name: 'Content Creator / Streamer' },
-                { id: 'youtubers', name: 'YouTuber & Video Producer' },
-                { id: 'writers', name: 'Writer, Blogger & Journalist' },
-                { id: 'developers', name: 'Software Engineer & Developer' },
-                { id: 'marketers', name: 'Marketer & Growth Strategist' },
-                { id: 'teachers', name: 'Teacher, Educator & Tutor' },
-                { id: 'small-business', name: 'Small Business Owner' },
-                { id: 'researchers', name: 'Researcher & Academic' },
-                { id: 'real-estate-agents', name: 'Real Estate Agent & Broker' },
-                { id: 'entrepreneurs', name: 'Startup Founder & Entrepreneur' },
-                { id: 'project-managers', name: 'Project Manager' },
-                { id: 'students', name: 'Student' }
-              ].map((item) => (
+              {FINDER_ROLES.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => setRole(item.id)}

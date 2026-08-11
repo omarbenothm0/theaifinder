@@ -5,21 +5,18 @@ import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { Search, Sparkles, Compass, Layers, Settings, ChevronDown, Users, ArrowRight } from 'lucide-react';
 import { SITE_NAME } from '../../lib/brand';
+import { isDeprecatedPersonaNavSlug } from '../../lib/seo/persona-visibility';
 
 const ROLE_LINKS = [
   { name: 'Project Managers', slug: 'project-managers' },
   { name: 'Students', slug: 'students' },
-  { name: 'Content Creators', slug: 'content-creators' },
-  { name: 'Developers', slug: 'developers' },
-  { name: 'YouTubers', slug: 'youtubers' },
   { name: 'Writers', slug: 'writers' },
   { name: 'Marketers', slug: 'marketers' },
   { name: 'Teachers', slug: 'teachers' },
   { name: 'Small Business', slug: 'small-business' },
   { name: 'Researchers', slug: 'researchers' },
   { name: 'Real Estate', slug: 'real-estate-agents' },
-  { name: 'Entrepreneurs', slug: 'entrepreneurs' }
-];
+].filter((link) => !isDeprecatedPersonaNavSlug(link.slug));
 
 const CATEGORY_LINKS = [
   { name: 'Project Management', slug: 'project-management' },

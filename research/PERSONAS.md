@@ -35,6 +35,21 @@ Public URL pattern: `/for/[slug]`
 
 ---
 
+## Seed persona cleanup (2026-08-12)
+
+Decisions applied in code — **seed/DB records kept** for reversibility; tool `targetUsers` unchanged.
+
+| Slug | Decision | Rationale |
+|---|---|---|
+| `content-creators` | **301 redirect** → `/for/marketers` | Overlaps Marketers audience; no standalone hub |
+| `entrepreneurs` | **301 redirect** → `/for/small-business` | Redundant with Small Business persona |
+| `youtubers` | **NOINDEX** (`noindex, follow`) | Demand rejected — see `REJECTED.md` (`ai tools for youtubers`, 0% YoY Trends) |
+| `developers` | **NOINDEX** (`noindex, follow`) | Persona SERP is HARD; coding intent served by `/category/coding`, tool pages, and comparisons |
+
+Removed from: Header/Footer role nav, Finder role options, `/for` persona grid, persona sitemap. Pages remain reachable where not redirected (youtubers, developers).
+
+---
+
 ## Entry template
 
 ```markdown

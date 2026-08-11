@@ -12,6 +12,20 @@ const nextConfig = {
   experimental: {
     cpus: 1,
   },
+  async redirects() {
+    return [
+      {
+        source: '/for/content-creators',
+        destination: '/for/marketers',
+        statusCode: 301,
+      },
+      {
+        source: '/for/entrepreneurs',
+        destination: '/for/small-business',
+        statusCode: 301,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
