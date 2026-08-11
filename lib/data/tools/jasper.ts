@@ -61,7 +61,7 @@ export const jasperTool: Tool = {
   reviewCount: 1490,
   screenshots: ['https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=800&q=500'],
   alternatives: ['chatgpt', 'claude'],
-  targetUsers: ['marketers', 'content-creators', 'entrepreneurs', 'writers'],
+  targetUsers: ['marketers', 'content-creators', 'entrepreneurs', 'writers', 'small-business'],
   verified: true,
   featured: false,
   trending: false,

@@ -109,6 +109,7 @@ export function Footer() {
                 { name: 'AI for Developers', slug: 'developers' },
                 { name: 'AI for Marketers', slug: 'marketers' },
                 { name: 'AI for Teachers', slug: 'teachers' },
+                { name: 'AI for Small Business', slug: 'small-business' },
                 { name: 'AI for Real Estate Agents', slug: 'real-estate-agents' },
                 { name: 'AI for Entrepreneurs', slug: 'entrepreneurs' }
               ].map((p) => (

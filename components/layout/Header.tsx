@@ -15,6 +15,7 @@ const ROLE_LINKS = [
   { name: 'Writers', slug: 'writers' },
   { name: 'Marketers', slug: 'marketers' },
   { name: 'Teachers', slug: 'teachers' },
+  { name: 'Small Business', slug: 'small-business' },
   { name: 'Entrepreneurs', slug: 'entrepreneurs' }
 ];
 

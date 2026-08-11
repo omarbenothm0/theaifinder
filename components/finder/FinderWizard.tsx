@@ -169,7 +169,8 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
                 { id: 'project-management', name: 'Project Management', desc: 'Meeting notes, tasks, plans, and status reports for PMs' },
                 { id: 'study-education', name: 'Study & Education', desc: 'Flashcards, homework help, research, writing, and lecture notes' },
                 { id: 'marketing', name: 'Marketing & Growth', desc: 'Content, SEO, social, email campaigns, ads, and analytics' },
-                { id: 'teaching', name: 'Teaching & Classroom', desc: 'Lesson plans, worksheets, quizzes, grading, and classroom support' }
+                { id: 'teaching', name: 'Teaching & Classroom', desc: 'Lesson plans, worksheets, quizzes, grading, and classroom support' },
+                { id: 'small-business', name: 'Small Business', desc: 'Marketing, sales, support, research, operations, and admin' }
               ].map((item) => (
                 <button
                   key={item.id}
@@ -221,6 +222,7 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
                 { id: 'developers', name: 'Software Engineer & Developer' },
                 { id: 'marketers', name: 'Marketer & Growth Strategist' },
                 { id: 'teachers', name: 'Teacher, Educator & Tutor' },
+                { id: 'small-business', name: 'Small Business Owner' },
                 { id: 'real-estate-agents', name: 'Real Estate Broker & Agent' },
                 { id: 'entrepreneurs', name: 'Startup Founder & Entrepreneur' },
                 { id: 'project-managers', name: 'Project Manager' },

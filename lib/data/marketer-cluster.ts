@@ -242,7 +242,7 @@ export const MARKETER_TOOLS: Tool[] = [
     pros: ['GTM-focused workflow templates'],
     cons: ['Advanced workflows on paid tiers per official pricing'],
     alternatives: ['jasper'],
-    targetUsers: ['marketers', 'entrepreneurs'],
+    targetUsers: ['marketers', 'entrepreneurs', 'small-business'],
   }),
   marketerTool({
     name: 'Canva',
@@ -268,7 +268,7 @@ export const MARKETER_TOOLS: Tool[] = [
     pros: ['Visual + copy in one design platform'],
     cons: ['Advanced AI features on Pro tier per official pricing'],
     alternatives: ['gamma'],
-    targetUsers: ['marketers', 'content-creators', 'teachers'],
+    targetUsers: ['marketers', 'content-creators', 'teachers', 'small-business'],
   }),
   marketerTool({
     name: 'Semrush',
@@ -294,7 +294,7 @@ export const MARKETER_TOOLS: Tool[] = [
     pros: ['Deep SEO and competitive data'],
     cons: ['Premium pricing for full toolkit per official pricing'],
     alternatives: [],
-    targetUsers: ['marketers'],
+    targetUsers: ['marketers', 'small-business'],
   }),
   marketerTool({
     name: 'HubSpot',
@@ -320,7 +320,7 @@ export const MARKETER_TOOLS: Tool[] = [
     pros: ['Unified marketing CRM with AI'],
     cons: ['Advanced AI and automation on higher tiers per official pricing'],
     alternatives: [],
-    targetUsers: ['marketers', 'entrepreneurs'],
+    targetUsers: ['marketers', 'entrepreneurs', 'small-business'],
   }),
   marketerTool({
     name: 'Hootsuite',

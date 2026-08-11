@@ -18,6 +18,13 @@ export function toolMatchesUseCase(tool: Tool, useCase: string): boolean {
     );
   }
 
+  if (uc === 'small-business') {
+    return (
+      tool.targetUsers.includes('small-business') ||
+      tool.tags.some((tag) => tag.toLowerCase().includes('small business'))
+    );
+  }
+
   const normalized = uc.replace(/-/g, ' ');
   const slug = (tool.categorySlug ?? '').toLowerCase();
   const id = tool.categoryId.toLowerCase();

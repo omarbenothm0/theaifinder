@@ -61,7 +61,7 @@ export const perplexityTool: Tool = {
   reviewCount: 1840,
   screenshots: ['https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=500'],
   alternatives: ['chatgpt', 'gemini'],
-  targetUsers: ['writers', 'teachers', 'developers', 'marketers'],
+  targetUsers: ['writers', 'teachers', 'developers', 'marketers', 'small-business'],
   verified: true,
   featured: true,
   trending: true,

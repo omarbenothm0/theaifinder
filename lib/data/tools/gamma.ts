@@ -61,7 +61,7 @@ export const gammaTool: Tool = {
   reviewCount: 1120,
   screenshots: ['https://images.unsplash.com/photo-1542744094-3a317272018a?auto=format&fit=crop&w=800&q=500'],
   alternatives: ['chatgpt', 'claude'],
-  targetUsers: ['entrepreneurs', 'teachers', 'marketers', 'real-estate-agents', 'project-managers', 'students'],
+  targetUsers: ['entrepreneurs', 'teachers', 'marketers', 'real-estate-agents', 'project-managers', 'students', 'small-business'],
   verified: true,
   featured: false,
   trending: true,

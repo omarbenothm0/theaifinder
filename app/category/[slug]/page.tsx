@@ -15,6 +15,7 @@ import { PmWorkflowLinks } from '../../../components/persona/PmWorkflowLinks';
 import { StudentWorkflowLinks } from '../../../components/persona/StudentWorkflowLinks';
 import { MarketerWorkflowLinks } from '../../../components/persona/MarketerWorkflowLinks';
 import { TeacherWorkflowLinks } from '../../../components/persona/TeacherWorkflowLinks';
+import { SmallBusinessWorkflowLinks } from '../../../components/persona/SmallBusinessWorkflowLinks';
 
 const BASE_URL = getBaseUrl();
 
@@ -83,6 +84,9 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
       )}
       {(category.slug === 'writing' || category.slug === 'seo') && (
         <MarketerWorkflowLinks variant="category" />
+      )}
+      {(category.slug === 'productivity' || category.slug === 'writing') && (
+        <SmallBusinessWorkflowLinks variant="category" />
       )}
 
       {/* Tools Grid */}

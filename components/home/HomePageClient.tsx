@@ -70,6 +70,8 @@ export function HomePageClient({
     if (b.slug === 'marketers') return 1;
     if (a.slug === 'teachers') return -1;
     if (b.slug === 'teachers') return 1;
+    if (a.slug === 'small-business') return -1;
+    if (b.slug === 'small-business') return 1;
     return 0;
   });
 

@@ -23,6 +23,11 @@ import {
   TEACHER_TOOL_USE_CASES,
   TEACHER_VERIFIED_AT,
   TEACHER_PERSONA,
+  SMALL_BUSINESS_USE_CASES,
+  SMALL_BUSINESS_PERSONA_USE_CASES,
+  SMALL_BUSINESS_TOOL_USE_CASES,
+  SMALL_BUSINESS_VERIFIED_AT,
+  SMALL_BUSINESS_PERSONA,
 } from '../lib/data';
 
 const prisma = new PrismaClient();
@@ -357,7 +362,7 @@ async function main() {
 
   // 9. Use cases (PM + Students clusters)
   const useCaseSlugToId = new Map<string, string>();
-  const allUseCases = [...PM_USE_CASES, ...STUDENT_USE_CASES, ...MARKETER_USE_CASES, ...TEACHER_USE_CASES];
+  const allUseCases = [...PM_USE_CASES, ...STUDENT_USE_CASES, ...MARKETER_USE_CASES, ...TEACHER_USE_CASES, ...SMALL_BUSINESS_USE_CASES];
   for (const uc of allUseCases) {
     const existing = await prisma.useCase.findUnique({ where: { slug: uc.slug } });
     if (existing) {
@@ -387,6 +392,7 @@ async function main() {
     { personaSlug: 'students', links: STUDENT_PERSONA_USE_CASES },
     { personaSlug: 'marketers', links: MARKETER_PERSONA_USE_CASES },
     { personaSlug: 'teachers', links: TEACHER_PERSONA_USE_CASES },
+    { personaSlug: 'small-business', links: SMALL_BUSINESS_PERSONA_USE_CASES },
   ];
 
   let personaUseCaseCount = 0;
@@ -421,7 +427,7 @@ async function main() {
   console.log(`Seeded ${personaUseCaseCount} persona-use-case links.`);
 
   // Sync verified cluster persona records (replace seed placeholders where applicable)
-  for (const clusterPersona of [MARKETER_PERSONA, TEACHER_PERSONA]) {
+  for (const clusterPersona of [MARKETER_PERSONA, TEACHER_PERSONA, SMALL_BUSINESS_PERSONA]) {
     const personaId = personaSlugToId.get(clusterPersona.slug);
     if (!personaId) continue;
     await prisma.persona.update({
@@ -471,6 +477,7 @@ async function main() {
     ...STUDENT_TOOL_USE_CASES.map((m) => ({ ...m, verifiedAt: STUDENT_VERIFIED_AT })),
     ...MARKETER_TOOL_USE_CASES.map((m) => ({ ...m, verifiedAt: MARKETER_VERIFIED_AT })),
     ...TEACHER_TOOL_USE_CASES.map((m) => ({ ...m, verifiedAt: TEACHER_VERIFIED_AT })),
+    ...SMALL_BUSINESS_TOOL_USE_CASES.map((m) => ({ ...m, verifiedAt: SMALL_BUSINESS_VERIFIED_AT })),
   ];
 
   let toolUseCaseCount = 0;

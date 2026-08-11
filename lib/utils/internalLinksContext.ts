@@ -18,6 +18,7 @@ export function getContextualInternalLinks(
   const isStudentTool = targetUsers.includes('students');
   const isMarketerTool = targetUsers.includes('marketers');
   const isTeacherTool = targetUsers.includes('teachers');
+  const isSmallBusinessTool = targetUsers.includes('small-business');
 
   if (isPmTool) {
     return {
@@ -50,6 +51,14 @@ export function getContextualInternalLinks(
     return {
       categories: prioritizePmLinks(categories, 'study-education'),
       personas: prioritizePmLinks(personas, 'teachers'),
+      comparisons,
+    };
+  }
+
+  if (isSmallBusinessTool) {
+    return {
+      categories: prioritizePmLinks(categories, 'productivity'),
+      personas: prioritizePmLinks(personas, 'small-business'),
       comparisons,
     };
   }

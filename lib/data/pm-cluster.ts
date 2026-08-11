@@ -423,7 +423,7 @@ export const PM_TOOLS: Tool[] = [
     pros: ['Full PM platform + Brain AI'],
     cons: ['Brain AI on paid add-on tiers'],
     alternatives: ['asana-ai', 'monday-ai', 'motion'],
-    targetUsers: ['project-managers', 'entrepreneurs'],
+    targetUsers: ['project-managers', 'entrepreneurs', 'small-business'],
   }),
   pmTool({
     name: 'Asana AI',
@@ -518,7 +518,7 @@ export const PM_TOOLS: Tool[] = [
     features: ['Task Assist', 'Filter Assist', 'Email Assist', 'Ramble voice tasks'],
     pros: ['Lightweight individual task AI'],
     cons: ['Not a full PM platform — no Gantt/portfolio'],
-    targetUsers: ['project-managers', 'entrepreneurs'],
+    targetUsers: ['project-managers', 'entrepreneurs', 'small-business'],
   }),
   pmTool({
     name: 'Wrike AI',
