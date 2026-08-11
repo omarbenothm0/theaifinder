@@ -66,6 +66,8 @@ export function HomePageClient({
     if (b.slug === 'project-managers') return 1;
     if (a.slug === 'students') return -1;
     if (b.slug === 'students') return 1;
+    if (a.slug === 'marketers') return -1;
+    if (b.slug === 'marketers') return 1;
     return 0;
   });
 
@@ -113,8 +115,8 @@ export function HomePageClient({
             {[
               { name: 'Project Management', slug: 'project-management' },
               { name: 'Study & Education', slug: 'study-education' },
+              { name: 'Writing & Copywriting', slug: 'writing' },
               { name: 'Coding IDEs', slug: 'coding' },
-              { name: 'Prose Writing', slug: 'writing' },
               { name: 'Generative Images', slug: 'image' },
               { name: 'Text to Speech', slug: 'voice' },
             ].map((tag) => (

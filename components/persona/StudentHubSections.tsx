@@ -4,9 +4,10 @@ import { Layers } from 'lucide-react';
 
 interface StudentHubSectionsProps {
   sections: PersonaHubSection[];
+  heading?: string;
 }
 
-export function StudentHubSections({ sections }: StudentHubSectionsProps) {
+export function StudentHubSections({ sections, heading = 'Student Workflows' }: StudentHubSectionsProps) {
   if (sections.length === 0) return null;
 
   return (
@@ -14,7 +15,7 @@ export function StudentHubSections({ sections }: StudentHubSectionsProps) {
       <div className="flex items-center justify-between border-b border-slate-200 pb-3">
         <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
           <Layers className="w-5 h-5 text-indigo-600" />
-          Student Workflows
+          {heading}
         </h2>
       </div>
 

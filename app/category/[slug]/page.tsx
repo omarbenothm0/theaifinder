@@ -13,6 +13,7 @@ import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
 import { Layers, Sparkles } from 'lucide-react';
 import { PmWorkflowLinks } from '../../../components/persona/PmWorkflowLinks';
 import { StudentWorkflowLinks } from '../../../components/persona/StudentWorkflowLinks';
+import { MarketerWorkflowLinks } from '../../../components/persona/MarketerWorkflowLinks';
 
 const BASE_URL = getBaseUrl();
 
@@ -74,6 +75,9 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
 
       {category.slug === 'project-management' && <PmWorkflowLinks variant="category" />}
       {category.slug === 'study-education' && <StudentWorkflowLinks variant="category" />}
+      {(category.slug === 'writing' || category.slug === 'seo') && (
+        <MarketerWorkflowLinks variant="category" />
+      )}
 
       {/* Tools Grid */}
       <div className="space-y-6">

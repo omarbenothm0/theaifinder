@@ -15,10 +15,17 @@ import { isPersonaIndexable } from '../../../lib/seo/indexability';
 import { dbRepository } from '../../../lib/dbRepository';
 import { generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
 import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
-import { Users, CheckCircle2, Compass, ArrowRight, Layers, GraduationCap } from 'lucide-react';
+import { Users, CheckCircle2, Compass, ArrowRight, Layers, GraduationCap, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 
 export const revalidate = 3600;
+
+const HUB_PERSONA_SLUGS = new Set(['students', 'marketers']);
+
+const HUB_SECTION_HEADINGS: Record<string, string> = {
+  students: 'Student Workflows',
+  marketers: 'Marketing Workflows',
+};
 
 export async function generateStaticParams() {
   const personas = await PersonaService.getPersonas();
@@ -52,7 +59,9 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
     PersonaService.getPersonas(),
     UseCaseService.getPersonaUseCases(persona.slug),
     ComparisonService.getComparisons(),
-    persona.slug === 'students' ? UseCaseService.getPersonaHubSections(persona.slug) : Promise.resolve([]),
+    HUB_PERSONA_SLUGS.has(persona.slug)
+      ? UseCaseService.getPersonaHubSections(persona.slug)
+      : Promise.resolve([]),
   ]);
 
   const breadcrumbSchema = generateBreadcrumbSchema([
@@ -105,8 +114,24 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
         </div>
       )}
 
-      {persona.slug === 'students' && hubSections.length > 0 && (
-        <StudentHubSections sections={hubSections} />
+      {persona.slug === 'marketers' && (
+        <div className="max-w-4xl mx-auto">
+          <Link
+            href="/category/writing"
+            className="inline-flex items-center gap-2 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-4 py-2.5 rounded-xl hover:bg-indigo-100 transition-colors"
+          >
+            <TrendingUp className="w-4 h-4" />
+            Browse Writing &amp; Copywriting category tools
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      )}
+
+      {HUB_PERSONA_SLUGS.has(persona.slug) && hubSections.length > 0 && (
+        <StudentHubSections
+          sections={hubSections}
+          heading={HUB_SECTION_HEADINGS[persona.slug] ?? 'Workflows'}
+        />
       )}
 
       {persona.slug === 'project-managers' && useCases.length > 0 && (

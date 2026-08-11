@@ -13,6 +13,11 @@ import {
   STUDENT_PERSONA_USE_CASES,
   STUDENT_TOOL_USE_CASES,
   STUDENT_VERIFIED_AT,
+  MARKETER_USE_CASES,
+  MARKETER_PERSONA_USE_CASES,
+  MARKETER_TOOL_USE_CASES,
+  MARKETER_VERIFIED_AT,
+  MARKETER_PERSONA,
 } from '../lib/data';
 
 const prisma = new PrismaClient();
@@ -347,7 +352,7 @@ async function main() {
 
   // 9. Use cases (PM + Students clusters)
   const useCaseSlugToId = new Map<string, string>();
-  const allUseCases = [...PM_USE_CASES, ...STUDENT_USE_CASES];
+  const allUseCases = [...PM_USE_CASES, ...STUDENT_USE_CASES, ...MARKETER_USE_CASES];
   for (const uc of allUseCases) {
     const existing = await prisma.useCase.findUnique({ where: { slug: uc.slug } });
     if (existing) {
@@ -375,6 +380,7 @@ async function main() {
   }> = [
     { personaSlug: 'project-managers', links: PM_PERSONA_USE_CASES },
     { personaSlug: 'students', links: STUDENT_PERSONA_USE_CASES },
+    { personaSlug: 'marketers', links: MARKETER_PERSONA_USE_CASES },
   ];
 
   let personaUseCaseCount = 0;
@@ -408,6 +414,33 @@ async function main() {
   }
   console.log(`Seeded ${personaUseCaseCount} persona-use-case links.`);
 
+  // Sync verified cluster persona records (replace seed placeholders where applicable)
+  for (const clusterPersona of [MARKETER_PERSONA]) {
+    const personaId = personaSlugToId.get(clusterPersona.slug);
+    if (!personaId) continue;
+    await prisma.persona.update({
+      where: { id: personaId },
+      data: {
+        title: clusterPersona.title,
+        subtitle: clusterPersona.subtitle,
+        description: clusterPersona.description,
+        targetRole: clusterPersona.targetRole,
+        iconName: clusterPersona.iconName,
+        keyBenefits: clusterPersona.keyBenefits,
+      },
+    });
+    await prisma.personaFAQ.deleteMany({ where: { personaId } });
+    if (clusterPersona.faqs.length > 0) {
+      await prisma.personaFAQ.createMany({
+        data: clusterPersona.faqs.map((faq) => ({
+          personaId,
+          question: faq.question,
+          answer: faq.answer,
+        })),
+      });
+    }
+  }
+
   // Persona top tools (upsert even if persona already existed)
   for (const persona of INITIAL_PERSONAS) {
     if (!persona.topToolSlugs?.length) continue;
@@ -430,6 +463,7 @@ async function main() {
   const allToolUseCases = [
     ...PM_TOOL_USE_CASES.map((m) => ({ ...m, verifiedAt: PM_VERIFIED_AT })),
     ...STUDENT_TOOL_USE_CASES.map((m) => ({ ...m, verifiedAt: STUDENT_VERIFIED_AT })),
+    ...MARKETER_TOOL_USE_CASES.map((m) => ({ ...m, verifiedAt: MARKETER_VERIFIED_AT })),
   ];
 
   let toolUseCaseCount = 0;

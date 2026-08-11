@@ -167,7 +167,8 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
                 { id: 'presentations', name: 'Presentations', desc: 'Slide decks, pitch presentations, and visual reports' },
                 { id: 'productivity', name: 'Productivity', desc: 'Knowledge assistants and workflow tools' },
                 { id: 'project-management', name: 'Project Management', desc: 'Meeting notes, tasks, plans, and status reports for PMs' },
-                { id: 'study-education', name: 'Study & Education', desc: 'Flashcards, homework help, research, writing, and lecture notes' }
+                { id: 'study-education', name: 'Study & Education', desc: 'Flashcards, homework help, research, writing, and lecture notes' },
+                { id: 'marketing', name: 'Marketing & Growth', desc: 'Content, SEO, social, email campaigns, ads, and analytics' }
               ].map((item) => (
                 <button
                   key={item.id}
