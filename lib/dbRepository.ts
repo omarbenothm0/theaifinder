@@ -8,6 +8,8 @@ import {
   ToolFilterOptions,
   FinderAnswer,
   ReviewStatus,
+  ToolSource,
+  PricingTier,
 } from '../types/tool';
 import { ToolMonitoringCheck, MonitoringCheckStatus } from '../types/monitoring';
 import { prisma } from './prisma';
@@ -200,6 +202,62 @@ const TOOL_INCLUDE = {
   pricingTiers: true,
   alternativesFrom: { include: { targetTool: true } },
 };
+
+function mapSourcesForDb(sources: ToolSource[]) {
+  return sources.map((s) => ({
+    type: s.type,
+    url: s.url,
+    verifiedAt: new Date(s.verifiedAt),
+    notes: s.notes ?? null,
+  }));
+}
+
+function mapPricingTiersForDb(tiers: PricingTier[]) {
+  return tiers.map((tier) => ({
+    name: tier.name,
+    price: tier.price ?? null,
+    billingPeriod: tier.billingPeriod,
+    features: tier.features ?? [],
+  }));
+}
+
+async function syncToolSources(toolId: string, sources: ToolSource[] | undefined) {
+  if (sources === undefined) return;
+  await prisma.toolSource.deleteMany({ where: { toolId } });
+  if (sources.length === 0) return;
+  await prisma.toolSource.createMany({
+    data: mapSourcesForDb(sources).map((row) => ({ ...row, toolId })),
+  });
+}
+
+async function syncToolPricingTiers(toolId: string, tiers: PricingTier[] | undefined) {
+  if (tiers === undefined) return;
+  await prisma.pricingTier.deleteMany({ where: { toolId } });
+  if (tiers.length === 0) return;
+  await prisma.pricingTier.createMany({
+    data: mapPricingTiersForDb(tiers).map((row) => ({ ...row, toolId })),
+  });
+}
+
+async function syncToolAlternatives(sourceToolId: string, altSlugs: string[] | undefined) {
+  if (altSlugs === undefined) return;
+  await prisma.toolAlternative.deleteMany({ where: { sourceToolId } });
+  if (altSlugs.length === 0) return;
+
+  const normalized = [...new Set(altSlugs.map((s) => s.trim().toLowerCase()).filter(Boolean))];
+  const targets = await prisma.tool.findMany({
+    where: { slug: { in: normalized, mode: 'insensitive' } },
+    select: { id: true, slug: true },
+  });
+
+  const rows = normalized
+    .map((slug) => targets.find((t) => t.slug.toLowerCase() === slug))
+    .filter((t): t is { id: string; slug: string } => Boolean(t && t.id !== sourceToolId))
+    .map((t) => ({ sourceToolId, targetToolId: t.id }));
+
+  if (rows.length === 0) return;
+  await prisma.toolAlternative.createMany({ data: rows, skipDuplicates: true });
+}
 
 class DBRepository {
   // --- Tools CRUD & Querying ---
@@ -399,7 +457,16 @@ class DBRepository {
       },
       include: TOOL_INCLUDE,
     });
-    return mapTool(created);
+
+    await syncToolSources(created.id, data.sources);
+    await syncToolPricingTiers(created.id, data.pricingTiers);
+    await syncToolAlternatives(created.id, data.alternatives);
+
+    const withRelations = await prisma.tool.findUnique({
+      where: { id: created.id },
+      include: TOOL_INCLUDE,
+    });
+    return mapTool(withRelations!);
   }
 
   public async updateTool(slug: string, updates: Partial<Tool>): Promise<Tool | undefined> {
@@ -444,13 +511,23 @@ class DBRepository {
     if (updates.screenshots !== undefined) data.screenshots = updates.screenshots;
     if (updates.platforms !== undefined) data.platforms = updates.platforms;
     if (updates.targetUsers !== undefined) data.targetUsers = updates.targetUsers;
+    if (updates.rating !== undefined) data.rating = updates.rating;
+    if (updates.reviewCount !== undefined) data.reviewCount = updates.reviewCount;
 
-    const updated = await prisma.tool.update({
+    await prisma.tool.update({
       where: { id: existing.id },
       data,
+    });
+
+    await syncToolSources(existing.id, updates.sources);
+    await syncToolPricingTiers(existing.id, updates.pricingTiers);
+    await syncToolAlternatives(existing.id, updates.alternatives);
+
+    const updated = await prisma.tool.findUnique({
+      where: { id: existing.id },
       include: TOOL_INCLUDE,
     });
-    return mapTool(updated);
+    return updated ? mapTool(updated) : undefined;
   }
 
   public async deleteTool(slug: string): Promise<boolean> {

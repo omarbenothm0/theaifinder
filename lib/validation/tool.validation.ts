@@ -1,9 +1,77 @@
-import { Tool, PricingModel } from '../../types/tool';
-import { isValidHttpUrl, isValidSlug } from '../seo/indexability';
+import { Tool, PricingModel, ToolSource, PricingTier } from '../../types/tool';
+import { isValidHttpUrl, isValidSlug, isToolIndexable } from '../seo/indexability';
 
 export type ValidationError = { field: string; message: string };
 
 const PRICING_MODELS: PricingModel[] = ['Free', 'Freemium', 'Paid'];
+const BILLING_PERIODS = new Set(['monthly', 'yearly', 'custom']);
+const SOURCE_TYPES = new Set([
+  'pricing',
+  'features',
+  'company',
+  'website',
+  'documentation',
+  'changelog',
+  'review',
+  'general',
+]);
+
+function splitCsv(value: string): string[] {
+  return value
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+export function parseCsvField(value: string): string[] {
+  return splitCsv(value);
+}
+
+export function validateSources(sources: ToolSource[] | undefined): ValidationError[] {
+  const errors: ValidationError[] = [];
+  if (!sources) return errors;
+
+  sources.forEach((source, index) => {
+    const prefix = `sources[${index}]`;
+    if (!source.type || !SOURCE_TYPES.has(source.type)) {
+      errors.push({ field: prefix, message: 'Invalid or missing source type' });
+    }
+    if (!source.url?.trim() || !isValidHttpUrl(source.url.trim())) {
+      errors.push({ field: prefix, message: 'Source URL must be a valid http(s) URL' });
+    }
+    if (!source.verifiedAt || Number.isNaN(Date.parse(source.verifiedAt))) {
+      errors.push({ field: prefix, message: 'verifiedAt must be a valid date' });
+    }
+  });
+
+  return errors;
+}
+
+export function validatePricingTiers(tiers: PricingTier[] | undefined): ValidationError[] {
+  const errors: ValidationError[] = [];
+  if (!tiers) return errors;
+
+  tiers.forEach((tier, index) => {
+    const prefix = `pricingTiers[${index}]`;
+    if (!tier.name?.trim()) {
+      errors.push({ field: prefix, message: 'Tier name is required' });
+    }
+    if (!tier.billingPeriod || !BILLING_PERIODS.has(tier.billingPeriod)) {
+      errors.push({
+        field: prefix,
+        message: 'billingPeriod must be monthly, yearly, or custom',
+      });
+    }
+    if (tier.price !== null && tier.price !== undefined) {
+      const price = Number(tier.price);
+      if (Number.isNaN(price) || price < 0) {
+        errors.push({ field: prefix, message: 'Tier price must be a non-negative number' });
+      }
+    }
+  });
+
+  return errors;
+}
 
 export function validateToolInput(
   input: Partial<Tool>,
@@ -73,9 +141,111 @@ export function validateToolInput(
     errors.push({ field: 'categoryId', message: 'Category is required' });
   }
 
+  if (input.tagline !== undefined && input.tagline.trim() && input.tagline.trim().length < 10) {
+    errors.push({ field: 'tagline', message: 'Tagline must be at least 10 characters' });
+  }
+
+  if (
+    input.description !== undefined &&
+    input.description.trim() &&
+    input.description.trim().length < 50
+  ) {
+    errors.push({ field: 'description', message: 'Description must be at least 50 characters' });
+  }
+
+  if (input.pricingSource?.trim() && !isValidHttpUrl(input.pricingSource.trim())) {
+    errors.push({ field: 'pricingSource', message: 'Pricing source must be a valid http(s) URL' });
+  }
+
+  if (input.featureSource?.trim() && !isValidHttpUrl(input.featureSource.trim())) {
+    errors.push({ field: 'featureSource', message: 'Feature source must be a valid http(s) URL' });
+  }
+
+  errors.push(...validateSources(input.sources));
+  errors.push(...validatePricingTiers(input.pricingTiers));
+
+  if (input.alternatives?.length) {
+    input.alternatives.forEach((alt, index) => {
+      if (!isValidSlug(alt)) {
+        errors.push({
+          field: `alternatives[${index}]`,
+          message: `Invalid alternative slug "${alt}"`,
+        });
+      }
+    });
+  }
+
+  if (input.screenshots?.length) {
+    input.screenshots.forEach((url, index) => {
+      if (url.trim() && !isValidHttpUrl(url.trim())) {
+        errors.push({
+          field: `screenshots[${index}]`,
+          message: 'Screenshot URL must be a valid http(s) URL',
+        });
+      }
+    });
+  }
+
+  return errors;
+}
+
+/** Validates requirements for publishing (uses existing indexability rules). */
+export function validateToolForPublish(input: Partial<Tool>): ValidationError[] {
+  if (input.publishStatus !== 'published') return [];
+
+  const errors: ValidationError[] = [];
+
+  if (!input.logo?.trim()) {
+    errors.push({ field: 'logo', message: 'Logo URL is required to publish' });
+  }
+
+  if (!input.tagline?.trim()) {
+    errors.push({ field: 'tagline', message: 'Tagline is required to publish' });
+  } else if (input.tagline.trim().length < 10) {
+    errors.push({
+      field: 'tagline',
+      message: 'Tagline must be at least 10 characters to publish',
+    });
+  }
+
+  if (!input.description?.trim()) {
+    errors.push({ field: 'description', message: 'Description is required to publish' });
+  } else if (input.description.trim().length < 50) {
+    errors.push({
+      field: 'description',
+      message: 'Description must be at least 50 characters to publish',
+    });
+  }
+
+  if (!input.websiteUrl?.trim()) {
+    errors.push({ field: 'websiteUrl', message: 'Website URL is required to publish' });
+  }
+
+  if (!input.categoryId?.trim()) {
+    errors.push({ field: 'categoryId', message: 'Category is required to publish' });
+  }
+
+  const indexResult = isToolIndexable(input as Tool);
+  if (!indexResult.indexable && indexResult.reason) {
+    const knownFields = new Set(errors.map((e) => e.field));
+    if (!knownFields.has('publishStatus')) {
+      errors.push({ field: 'publishStatus', message: indexResult.reason });
+    }
+  }
+
   return errors;
 }
 
 export function formatValidationErrors(errors: ValidationError[]): string {
   return errors.map((e) => `${e.field}: ${e.message}`).join('; ');
+}
+
+export function groupValidationErrors(errors: ValidationError[]): Record<string, string> {
+  const grouped: Record<string, string> = {};
+  for (const err of errors) {
+    grouped[err.field] = grouped[err.field]
+      ? `${grouped[err.field]}; ${err.message}`
+      : err.message;
+  }
+  return grouped;
 }

@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { PersonaService } from '../../lib/services/persona.service';
 import { CategoryService } from '../../lib/services/category.service';
 import { ToolService } from '../../lib/services/tool.service';
 import { dbRepository } from '../../lib/dbRepository';
@@ -44,10 +45,11 @@ export default async function AdminPage() {
     sessionInfo = null;
   }
 
-  const [categories, toolsRes, adminStats] = await Promise.all([
+  const [categories, toolsRes, adminStats, personas] = await Promise.all([
     CategoryService.getCategories({ includeUnpublished: true }),
     ToolService.getTools({ limit: 500, includeUnpublished: true }),
     dbRepository.getAdminStats(),
+    PersonaService.getPersonas(),
   ]);
 
   const monitoringSummaries = await MonitoringService.getSummariesForTools(toolsRes.tools);
@@ -57,6 +59,7 @@ export default async function AdminPage() {
       <AdminDashboard
         initialTools={toolsRes.tools}
         initialCategories={categories}
+        initialPersonas={personas}
         initialStats={adminStats}
         initialMonitoringSummaries={monitoringSummaries}
         adminUser={sessionInfo?.sub}

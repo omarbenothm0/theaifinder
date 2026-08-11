@@ -1,14 +1,10 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Tool, Category, PricingModel, ReviewState, PublishStatus } from '../../types/tool';
-import { ToolMonitoringSummary } from '../../types/monitoring';
-import {
-  getMonitoringSignalEmoji,
-  getMonitoringSignalLabel,
-} from '../../lib/monitoring/freshness.service';
-import { validateToolInput, formatValidationErrors } from '../../lib/validation/tool.validation';
+import { Tool, Category, Persona, ReviewState } from '../../types/tool';
 import { getReviewState } from '../../lib/utils/reviewHelper';
+import { ToolMonitoringSummary } from '../../types/monitoring';
+import { getMonitoringSignalEmoji, getMonitoringSignalLabel } from '../../lib/monitoring/freshness.service';
 import {
   Settings,
   Plus,
@@ -21,14 +17,14 @@ import {
   ShieldCheck,
   User,
   Clock,
-  Activity,
-  RefreshCw,
 } from 'lucide-react';
 import { AdminReviewModeration } from './AdminReviewModeration';
+import { AdminToolForm } from './AdminToolForm';
 
 interface AdminDashboardProps {
   initialTools: Tool[];
   initialCategories: Category[];
+  initialPersonas?: Persona[];
   initialMonitoringSummaries?: ToolMonitoringSummary[];
   initialStats?: {
     totalTools: number;
@@ -47,12 +43,14 @@ interface AdminDashboardProps {
 export function AdminDashboard({
   initialTools,
   initialCategories,
+  initialPersonas = [],
   initialMonitoringSummaries = [],
   initialStats,
   adminUser = 'admin',
   sessionExpiresAtEpoch,
 }: AdminDashboardProps) {
   const [categories] = useState<Category[]>(initialCategories);
+  const [personas] = useState<Persona[]>(initialPersonas);
   const [tools, setTools] = useState<Tool[]>(initialTools);
   const [monitoringByToolId, setMonitoringByToolId] = useState<Record<string, ToolMonitoringSummary>>(
     () =>
@@ -64,39 +62,7 @@ export function AdminDashboard({
   const [reviewFilter, setReviewFilter] = useState<'all' | ReviewState>('all');
 
   const [showModal, setShowModal] = useState(false);
-  const [editingToolSlug, setEditingToolSlug] = useState<string | null>(null);
-
-  const [name, setName] = useState('');
-  const [slug, setSlug] = useState('');
-  const [logo, setLogo] = useState('');
-  const [tagline, setTagline] = useState('');
-  const [description, setDescription] = useState('');
-  const [categoryId, setCategoryId] = useState(categories[0]?.id || 'cat-writing');
-  const [pricingModel, setPricingModel] = useState<PricingModel>('Freemium');
-  const [monthlyPrice, setMonthlyPrice] = useState<number | ''>(20);
-  const [websiteUrl, setWebsiteUrl] = useState('');
-  const [pricingSource, setPricingSource] = useState('');
-  const [featureSource, setFeatureSource] = useState('');
-  const [verifiedBy, setVerifiedBy] = useState('AI Find Editorial Team');
-  const [lastVerifiedDate, setLastVerifiedDate] = useState('');
-  const [reviewState, setReviewState] = useState<ReviewState>('unverified');
-  const [reviewRequestedAt, setReviewRequestedAt] = useState('');
-  const [reviewAssignedTo, setReviewAssignedTo] = useState('');
-  const [reviewNotes, setReviewNotes] = useState('');
-  const [sourcesJson, setSourcesJson] = useState('');
-  const [tagsStr, setTagsStr] = useState('AI Assistant, Writing');
-  const [featuresStr, setFeaturesStr] = useState('Natural language drafting, Fast execution');
-  const [prosStr, setProsStr] = useState('Clean output, Highly accessible');
-  const [consStr, setConsStr] = useState('');
-  const [verified, setVerified] = useState(false);
-  const [publishStatus, setPublishStatus] = useState<PublishStatus>('draft');
-  const [featured, setFeatured] = useState(false);
-  const [trending, setTrending] = useState(false);
-  const [hasApi, setHasApi] = useState(true);
-  const [hasMobileApp, setHasMobileApp] = useState(false);
-  const [hasExtension, setHasExtension] = useState(false);
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'success' | 'error'>('idle');
-  const [saveMessage, setSaveMessage] = useState('');
+  const [editingTool, setEditingTool] = useState<Tool | null>(null);
 
   const stats = useMemo(
     () =>
@@ -157,191 +123,25 @@ export function AdminDashboard({
   };
 
   const handleOpenAddModal = () => {
-    setEditingToolSlug(null);
-    setName('');
-    setSlug('');
-    setLogo('');
-    setTagline('');
-    setDescription('');
-    setCategoryId(categories[0]?.id || '');
-    setPricingModel('Freemium');
-    setMonthlyPrice('');
-    setWebsiteUrl('');
-    setPricingSource('');
-    setFeatureSource('');
-    setVerifiedBy('');
-    setLastVerifiedDate('');
-    setReviewState('unverified');
-    setReviewRequestedAt('');
-    setReviewAssignedTo('');
-    setReviewNotes('');
-    setSourcesJson('');
-    setTagsStr('');
-    setFeaturesStr('');
-    setProsStr('');
-    setConsStr('');
-    setVerified(false);
-    setPublishStatus('draft');
-    setFeatured(false);
-    setTrending(false);
-    setHasApi(false);
-    setHasMobileApp(false);
-    setHasExtension(false);
-    setSaveStatus('idle');
-    setSaveMessage('');
+    setEditingTool(null);
     setShowModal(true);
   };
 
   const handleOpenEditModal = (tool: Tool) => {
-    setEditingToolSlug(tool.slug);
-    setName(tool.name);
-    setSlug(tool.slug);
-    setLogo(tool.logo);
-    setTagline(tool.tagline);
-    setDescription(tool.description);
-    setCategoryId(tool.categoryId);
-    setPricingModel(tool.pricingModel);
-    setMonthlyPrice(tool.monthlyPrice ?? '');
-    setWebsiteUrl(tool.websiteUrl);
-    setTagsStr(tool.tags.join(', '));
-    setFeaturesStr(tool.features.join(', '));
-    setProsStr(tool.pros.join(', '));
-    setConsStr(tool.cons.join(', '));
-    setVerified(tool.verified);
-    setReviewState(tool.reviewState ?? 'unverified');
-    setReviewRequestedAt(tool.reviewRequestedAt ?? '');
-    setReviewAssignedTo(tool.reviewAssignedTo ?? '');
-    setReviewNotes(tool.reviewNotes ?? '');
-    setLastVerifiedDate(tool.lastVerifiedDate ?? '');
-    setVerifiedBy(tool.verifiedBy ?? 'AI Find Editorial Team');
-    setPricingSource(tool.pricingSource ?? '');
-    setFeatureSource(tool.featureSource ?? '');
-    setSourcesJson(tool.sources ? JSON.stringify(tool.sources, null, 2) : '');
-    setFeatured(tool.featured);
-    setTrending(tool.trending);
-    setHasApi(tool.hasApi);
-    setHasMobileApp(tool.hasMobileApp);
-    setHasExtension(tool.hasExtension);
-    setPublishStatus(tool.publishStatus ?? 'published');
-    setSaveStatus('idle');
-    setSaveMessage('');
+    setEditingTool(tool);
     setShowModal(true);
   };
 
-  const handleSaveTool = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name.trim() || !slug.trim()) return;
-
-    const selectedCat = categories.find((c) => c.id === categoryId) || categories[0];
-    const existingTool = tools.find((t) => t.slug === editingToolSlug);
-
-    let parsedSources = existingTool?.sources;
-    if (sourcesJson.trim()) {
-      try {
-        parsedSources = JSON.parse(sourcesJson);
-      } catch (error) {
-        alert('Source metadata must be valid JSON. Please correct the input.');
-        return;
-      }
+  const handleToolSaved = (savedTool: Tool) => {
+    if (editingTool) {
+      setTools((prev) =>
+        prev.map((t) => (t.id === savedTool.id || t.slug === editingTool.slug ? savedTool : t))
+      );
+    } else {
+      setTools((prev) => [savedTool, ...prev]);
     }
-
-    const toolPayload: Tool = {
-      ...existingTool,
-      id: existingTool?.id ?? `tool-${Date.now()}`,
-      name: name.trim(),
-      slug: slug.trim().toLowerCase(),
-      logo: logo.trim(),
-      tagline: tagline.trim(),
-      description: description.trim(),
-      categoryId: selectedCat ? selectedCat.id : categories[0]?.id ?? '',
-      categoryName: selectedCat ? selectedCat.name : '',
-      categorySlug: selectedCat ? selectedCat.slug : '',
-      tags: tagsStr.split(',').map((s) => s.trim()).filter(Boolean),
-      pricingModel,
-      monthlyPrice: monthlyPrice === '' ? undefined : Number(monthlyPrice),
-      hasFreeTrial: pricingModel === 'Freemium' || pricingModel === 'Free',
-      websiteUrl: websiteUrl.trim(),
-      pricingSource: pricingSource || existingTool?.pricingSource,
-      featureSource: featureSource || existingTool?.featureSource,
-      sources: parsedSources,
-      features: featuresStr.split(',').map((s) => s.trim()).filter(Boolean),
-      pros: prosStr.split(',').map((s) => s.trim()).filter(Boolean),
-      cons: consStr.split(',').map((s) => s.trim()).filter(Boolean),
-      rating: existingTool?.rating ?? 0,
-      reviewCount: existingTool?.reviewCount ?? 0,
-      screenshots: existingTool?.screenshots ?? (logo.trim() ? [logo.trim()] : []),
-      alternatives: existingTool?.alternatives ?? [],
-      targetUsers: existingTool?.targetUsers ?? [],
-      verified,
-      publishStatus,
-      reviewState,
-      reviewRequestedAt: reviewRequestedAt || existingTool?.reviewRequestedAt,
-      reviewAssignedTo: reviewAssignedTo || existingTool?.reviewAssignedTo,
-      reviewNotes: reviewNotes || existingTool?.reviewNotes,
-      lastVerifiedDate: lastVerifiedDate || existingTool?.lastVerifiedDate,
-      verifiedBy: verifiedBy || existingTool?.verifiedBy,
-      featured,
-      trending,
-      hasApi,
-      hasMobileApp,
-      hasExtension,
-    };
-
-    const clientErrors = validateToolInput(toolPayload, { isCreate: !editingToolSlug });
-    if (clientErrors.length > 0) {
-      setSaveStatus('error');
-      setSaveMessage(formatValidationErrors(clientErrors));
-      return;
-    }
-
-    const apiUrl = editingToolSlug
-      ? `/api/tools/${encodeURIComponent(editingToolSlug)}`
-      : '/api/tools';
-    const apiMethod = editingToolSlug ? 'PUT' : 'POST';
-
-    setSaveStatus('saving');
-    setSaveMessage('Saving tool data...');
-
-    try {
-      const response = await fetch(apiUrl, {
-        method: apiMethod,
-        credentials: 'same-origin',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(toolPayload),
-      });
-
-      if (response.status === 401) {
-        setSaveStatus('error');
-        setSaveMessage('Session expired. Redirecting to sign in...');
-        window.location.assign('/admin/login?err=unauthorized&from=/admin');
-        return;
-      }
-
-      const result = await response.json();
-      if (!response.ok) {
-        setSaveStatus('error');
-        setSaveMessage(result?.error || 'Unable to save tool data.');
-        return;
-      }
-
-      const savedTool: Tool = result;
-      if (editingToolSlug) {
-        setTools((prev) =>
-          prev.map((t) => (t.slug === editingToolSlug ? savedTool : t))
-        );
-      } else {
-        setTools((prev) => [savedTool, ...prev]);
-      }
-
-      setSaveStatus('success');
-      setSaveMessage('Tool saved successfully.');
-      setShowModal(false);
-    } catch (error: any) {
-      setSaveStatus('error');
-      setSaveMessage(error?.message || 'Unexpected error while saving.');
-    }
+    setShowModal(false);
+    setEditingTool(null);
   };
 
   const handleDeleteTool = async (toolSlug: string) => {
@@ -649,342 +449,25 @@ export function AdminDashboard({
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative my-8">
-            <button
-              onClick={() => setShowModal(false)}
-              className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <h2 className="text-xl font-extrabold text-slate-900 mb-1">
-              {editingToolSlug ? `Edit Tool: ${name}` : 'Add New AI Tool to Database'}
-            </h2>
-            <p className="text-xs text-slate-500 mb-6">
-              Complete metadata for scalable directory search indexing.
-            </p>
-
-            <form onSubmit={handleSaveTool} className="space-y-4 text-xs">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Tool Name *</label>
-                  <input
-                    type="text"
-                    required
-                    value={name}
-                    onChange={(e) => {
-                      setName(e.target.value);
-                      if (!editingToolSlug) {
-                        setSlug(
-                          e.target.value
-                            .toLowerCase()
-                            .replace(/[^a-z0-9]+/g, '-')
-                            .replace(/(^-|-$)/g, '')
-                        );
-                      }
-                    }}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-900 focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">URL Slug *</label>
-                  <input
-                    type="text"
-                    required
-                    value={slug}
-                    onChange={(e) => setSlug(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono text-slate-900 focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">
-                  Tagline (Short Summary) *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={tagline}
-                  onChange={(e) => setTagline(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none"
-                />
-              </div>
-
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Full Description *</label>
-                <textarea
-                  required
-                  rows={3}
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none resize-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Category *</label>
-                  <select
-                    value={categoryId}
-                    onChange={(e) => setCategoryId(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-900 focus:outline-none"
-                  >
-                    {categories.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Pricing Model *</label>
-                  <select
-                    value={pricingModel}
-                    onChange={(e) => setPricingModel(e.target.value as PricingModel)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-900 focus:outline-none"
-                  >
-                    <option value="Free">Free</option>
-                    <option value="Freemium">Freemium</option>
-                    <option value="Paid">Paid</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Monthly Cost ($ USD)</label>
-                  <input
-                    type="number"
-                    value={monthlyPrice}
-                    onChange={(e) =>
-                      setMonthlyPrice(e.target.value === '' ? '' : Number(e.target.value))
-                    }
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-900 focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Official Website URL *</label>
-                <input
-                  type="url"
-                  required
-                  value={websiteUrl}
-                  onChange={(e) => setWebsiteUrl(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono text-slate-900 focus:outline-none"
-                />
-              </div>
-
-              {editingToolSlug && (() => {
-                const editingTool = tools.find((t) => t.slug === editingToolSlug);
-                const summary = editingTool ? getMonitoringSummary(editingTool) : undefined;
-                const latest = summary?.latestCheck;
-
-                return (
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 space-y-3">
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="flex items-center gap-2">
-                        <Activity className="w-4 h-4 text-emerald-600" />
-                        <span className="font-bold text-slate-900">Website Monitoring</span>
-                      </div>
-                      {editingTool && (
-                        <button
-                          type="button"
-                          onClick={() => handleRunMonitoringCheck(editingTool)}
-                          disabled={monitoringStatus === 'running'}
-                          className="inline-flex items-center gap-1.5 bg-slate-900 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg disabled:opacity-60"
-                        >
-                          <RefreshCw className={`w-3.5 h-3.5 ${monitoringStatus === 'running' ? 'animate-spin' : ''}`} />
-                          Run Website Check
-                        </button>
-                      )}
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px] text-slate-600">
-                      <div>
-                        <span className="font-bold text-slate-700 block">Signal</span>
-                        {summary
-                          ? `${getMonitoringSignalEmoji(summary.signal)} ${getMonitoringSignalLabel(summary.signal)}`
-                          : '⚪ Not checked yet'}
-                      </div>
-                      <div>
-                        <span className="font-bold text-slate-700 block">Verification Freshness</span>
-                        {summary?.freshness ?? 'unknown'}
-                        {summary?.daysSinceVerification != null
-                          ? ` (${summary.daysSinceVerification} days since last editorial verification)`
-                          : ''}
-                      </div>
-                      <div>
-                        <span className="font-bold text-slate-700 block">Last Checked</span>
-                        {summary?.lastCheckedAt
-                          ? new Date(summary.lastCheckedAt).toLocaleString()
-                          : 'Never'}
-                      </div>
-                      <div>
-                        <span className="font-bold text-slate-700 block">Last Successful Check</span>
-                        {summary?.lastSuccessfulCheckAt
-                          ? new Date(summary.lastSuccessfulCheckAt).toLocaleString()
-                          : 'None recorded'}
-                      </div>
-                      {latest && (
-                        <>
-                          <div>
-                            <span className="font-bold text-slate-700 block">HTTP Status</span>
-                            {latest.httpStatus ?? 'N/A'}
-                          </div>
-                          <div>
-                            <span className="font-bold text-slate-700 block">Response Time</span>
-                            {latest.responseTimeMs != null ? `${latest.responseTimeMs} ms` : 'N/A'}
-                          </div>
-                          <div className="sm:col-span-2">
-                            <span className="font-bold text-slate-700 block">Final URL</span>
-                            <span className="font-mono break-all">{latest.finalUrl ?? latest.requestedUrl}</span>
-                          </div>
-                          {latest.errorMessage && (
-                            <div className="sm:col-span-2 text-rose-700">
-                              <span className="font-bold block">Error</span>
-                              {latest.errorCode ? `${latest.errorCode}: ` : ''}
-                              {latest.errorMessage}
-                            </div>
-                          )}
-                        </>
-                      )}
-                    </div>
-
-                    {monitoringMessage && (
-                      <p className={`text-[11px] ${monitoringStatus === 'error' ? 'text-rose-600' : 'text-slate-500'}`}>
-                        {monitoringMessage}
-                      </p>
-                    )}
-
-                    <p className="text-[10px] text-slate-500">
-                      Monitoring reports website reachability only. Editorial verification, pricing, and features must be updated manually after human review.
-                    </p>
-                  </div>
-                );
-              })()}
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Pricing Source URL</label>
-                  <input
-                    type="url"
-                    value={pricingSource}
-                    onChange={(e) => setPricingSource(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono text-slate-900 focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Feature Source URL</label>
-                  <input
-                    type="url"
-                    value={featureSource}
-                    onChange={(e) => setFeatureSource(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono text-slate-900 focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Verified By</label>
-                  <input
-                    type="text"
-                    value={verifiedBy}
-                    onChange={(e) => setVerifiedBy(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Publish Status</label>
-                  <select
-                    value={publishStatus}
-                    onChange={(e) => setPublishStatus(e.target.value as PublishStatus)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none"
-                  >
-                    <option value="draft">Draft (noindex, hidden from public listings)</option>
-                    <option value="published">Published (eligible for indexing when complete)</option>
-                    <option value="archived">Archived (noindex, hidden)</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Reviewed Date</label>
-                  <input
-                    type="date"
-                    value={lastVerifiedDate}
-                    onChange={(e) => setLastVerifiedDate(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono text-slate-900 focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Review State</label>
-                  <select
-                    value={reviewState}
-                    onChange={(e) => setReviewState(e.target.value as ReviewState)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none"
-                  >
-                    <option value="unverified">Unverified</option>
-                    <option value="needsReview">Needs Review</option>
-                    <option value="inReview">In Review</option>
-                    <option value="verified">Verified</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Review Notes</label>
-                  <input
-                    type="text"
-                    value={reviewNotes}
-                    onChange={(e) => setReviewNotes(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">
-                  Source Metadata (JSON)
-                </label>
-                <textarea
-                  rows={4}
-                  value={sourcesJson}
-                  onChange={(e) => setSourcesJson(e.target.value)}
-                  placeholder='[ { "type": "pricing", "url": "https://...", "verifiedAt": "2026-08-07", "notes": "Pricing page" } ]'
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none resize-none font-mono"
-                />
-              </div>
-
-              {saveStatus !== 'idle' && (
-                <div
-                  className={`text-xs ${
-                    saveStatus === 'error' ? 'text-rose-600' : 'text-emerald-600'
-                  } mb-2`}
-                >
-                  {saveMessage}
-                </div>
-              )}
-              <div className="pt-4 flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 font-semibold cursor-pointer hover:bg-slate-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={saveStatus === 'saving'}
-                  className={`px-6 py-2 rounded-xl text-white font-bold cursor-pointer transition-colors shadow-xs ${
-                    saveStatus === 'saving' ? 'bg-slate-400 cursor-wait' : 'bg-emerald-600 hover:bg-emerald-500'
-                  }`}
-                >
-                  {saveStatus === 'saving' ? 'Saving...' : 'Save Tool Listing'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <AdminToolForm
+          editingTool={editingTool}
+          categories={categories}
+          personas={personas}
+          allTools={tools}
+          onClose={() => {
+            setShowModal(false);
+            setEditingTool(null);
+          }}
+          onSaved={handleToolSaved}
+          monitoringSummary={
+            editingTool ? getMonitoringSummary(editingTool) : undefined
+          }
+          onRunMonitoringCheck={
+            editingTool ? () => handleRunMonitoringCheck(editingTool) : undefined
+          }
+          monitoringStatus={monitoringStatus}
+          monitoringMessage={monitoringMessage}
+        />
       )}
     </div>
   );

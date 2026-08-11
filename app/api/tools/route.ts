@@ -3,6 +3,7 @@ import { dbRepository } from '../../../lib/dbRepository';
 import { ToolFilterOptions } from '../../../types/tool';
 import {
   validateToolInput,
+  validateToolForPublish,
   formatValidationErrors,
 } from '../../../lib/validation/tool.validation';
 
@@ -32,7 +33,10 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const errors = validateToolInput(body, { isCreate: true });
+    const errors = [
+      ...validateToolInput(body, { isCreate: true }),
+      ...validateToolForPublish(body),
+    ];
     if (errors.length > 0) {
       return NextResponse.json(
         { error: formatValidationErrors(errors), validationErrors: errors },

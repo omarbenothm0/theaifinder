@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { dbRepository } from '../../../../lib/dbRepository';
 import {
   validateToolInput,
+  validateToolForPublish,
   formatValidationErrors,
 } from '../../../../lib/validation/tool.validation';
 
@@ -25,7 +26,10 @@ export async function PUT(
 ) {
   const { slug } = await params;
   const body = await req.json();
-  const errors = validateToolInput(body);
+  const errors = [
+    ...validateToolInput(body),
+    ...validateToolForPublish(body),
+  ];
   if (errors.length > 0) {
     return NextResponse.json(
       { error: formatValidationErrors(errors), validationErrors: errors },
