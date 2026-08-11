@@ -199,7 +199,7 @@ export const PM_TOOLS: Tool[] = [
     pros: ['Strong PM meeting capture', 'Official integrations'],
     cons: ['Minute caps on free tier'],
     alternatives: ['fireflies-ai', 'fathom', 'tldv'],
-    targetUsers: ['project-managers'],
+    targetUsers: ['project-managers', 'students', 'teachers'],
   }),
   pmTool({
     name: 'Fireflies.ai',

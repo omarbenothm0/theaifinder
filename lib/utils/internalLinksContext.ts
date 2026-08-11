@@ -17,6 +17,7 @@ export function getContextualInternalLinks(
   const isPmTool = targetUsers.includes('project-managers');
   const isStudentTool = targetUsers.includes('students');
   const isMarketerTool = targetUsers.includes('marketers');
+  const isTeacherTool = targetUsers.includes('teachers');
 
   if (isPmTool) {
     return {
@@ -41,6 +42,14 @@ export function getContextualInternalLinks(
     return {
       categories: prioritizePmLinks(categories, 'writing'),
       personas: prioritizePmLinks(personas, 'marketers'),
+      comparisons,
+    };
+  }
+
+  if (isTeacherTool) {
+    return {
+      categories: prioritizePmLinks(categories, 'study-education'),
+      personas: prioritizePmLinks(personas, 'teachers'),
       comparisons,
     };
   }

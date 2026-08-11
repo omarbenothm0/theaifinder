@@ -11,6 +11,13 @@ export function toolMatchesUseCase(tool: Tool, useCase: string): boolean {
     );
   }
 
+  if (uc === 'teaching') {
+    return (
+      tool.targetUsers.includes('teachers') ||
+      tool.tags.some((tag) => tag.toLowerCase().includes('education'))
+    );
+  }
+
   const normalized = uc.replace(/-/g, ' ');
   const slug = (tool.categorySlug ?? '').toLowerCase();
   const id = tool.categoryId.toLowerCase();

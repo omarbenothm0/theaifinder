@@ -20,11 +20,12 @@ import Link from 'next/link';
 
 export const revalidate = 3600;
 
-const HUB_PERSONA_SLUGS = new Set(['students', 'marketers']);
+const HUB_PERSONA_SLUGS = new Set(['students', 'marketers', 'teachers']);
 
 const HUB_SECTION_HEADINGS: Record<string, string> = {
   students: 'Student Workflows',
   marketers: 'Marketing Workflows',
+  teachers: 'Teaching Workflows',
 };
 
 export async function generateStaticParams() {
@@ -122,6 +123,19 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
           >
             <TrendingUp className="w-4 h-4" />
             Browse Writing &amp; Copywriting category tools
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      )}
+
+      {persona.slug === 'teachers' && (
+        <div className="max-w-4xl mx-auto">
+          <Link
+            href="/category/study-education"
+            className="inline-flex items-center gap-2 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-4 py-2.5 rounded-xl hover:bg-indigo-100 transition-colors"
+          >
+            <GraduationCap className="w-4 h-4" />
+            Browse Study &amp; Education category tools
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>

@@ -45,6 +45,13 @@ import {
   MARKETER_TOOL_USE_CASES,
   MARKETER_VERIFIED_AT,
 } from './marketer-cluster';
+import {
+  TEACHER_PERSONA,
+  TEACHER_USE_CASES,
+  TEACHER_PERSONA_USE_CASES,
+  TEACHER_TOOL_USE_CASES,
+  TEACHER_VERIFIED_AT,
+} from './teacher-cluster';
 
 export const INITIAL_TOOLS = [
   chatgptTool,
@@ -68,10 +75,11 @@ export const INITIAL_TOOLS = [
 
 export const INITIAL_CATEGORIES = [...SEED_CATEGORIES, PM_CATEGORY, STUDENT_CATEGORY];
 export const INITIAL_PERSONAS = [
-  ...SEED_PERSONAS.filter((p) => p.slug !== 'marketers'),
+  ...SEED_PERSONAS.filter((p) => p.slug !== 'marketers' && p.slug !== 'teachers'),
   PM_PERSONA,
   STUDENT_PERSONA,
   MARKETER_PERSONA,
+  TEACHER_PERSONA,
 ];
 
 export const INITIAL_COMPARISONS = [...SEED_COMPARISONS, ...PM_COMPARISONS];
@@ -92,4 +100,9 @@ export {
   MARKETER_TOOL_USE_CASES,
   MARKETER_VERIFIED_AT,
   MARKETER_PERSONA,
+  TEACHER_USE_CASES,
+  TEACHER_PERSONA_USE_CASES,
+  TEACHER_TOOL_USE_CASES,
+  TEACHER_VERIFIED_AT,
+  TEACHER_PERSONA,
 };

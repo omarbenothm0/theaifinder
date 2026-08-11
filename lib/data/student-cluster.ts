@@ -255,7 +255,7 @@ export const STUDENT_TOOLS: Tool[] = [
     pros: ['Answers restricted to uploaded sources', 'Free tier with source caps'],
     cons: ['No general web generation unless enabled', '50 sources/notebook cap on free tier cited on official site'],
     alternatives: ['remnote', 'quizlet'],
-    targetUsers: ['students'],
+    targetUsers: ['students', 'teachers'],
   }),
   studentTool({
     name: 'RemNote',
@@ -303,7 +303,7 @@ export const STUDENT_TOOLS: Tool[] = [
     pros: ['Large study-set ecosystem'],
     cons: ['Advanced AI and unlimited study modes paywalled on Plus tier'],
     alternatives: ['anki', 'remnote', 'monic-ai'],
-    targetUsers: ['students'],
+    targetUsers: ['students', 'teachers'],
   }),
   studentTool({
     name: 'Anki',
@@ -376,7 +376,7 @@ export const STUDENT_TOOLS: Tool[] = [
     features: ['Grammar & spelling', 'Clarity suggestions', 'Tone detection', 'Browser extension'],
     pros: ['Broad writing surface coverage'],
     cons: ['Full rewrites and plagiarism check on Pro tier', 'Institutions may regulate AI usage'],
-    targetUsers: ['students', 'writers'],
+    targetUsers: ['students', 'writers', 'teachers'],
   }),
   studentTool({
     name: 'Consensus',
@@ -399,7 +399,7 @@ export const STUDENT_TOOLS: Tool[] = [
     pros: ['Scientific literature focus with citations'],
     cons: ['Focused on scientific/academic lit — not general homework'],
     alternatives: ['elicit', 'scite-ai'],
-    targetUsers: ['students'],
+    targetUsers: ['students', 'teachers'],
   }),
   studentTool({
     name: 'Elicit',
@@ -491,7 +491,7 @@ export const STUDENT_TOOLS: Tool[] = [
     pros: ['All-in-one course-material conversion'],
     cons: ['Token-based free tier restricts high-volume use'],
     alternatives: ['quizlet', 'remnote'],
-    targetUsers: ['students'],
+    targetUsers: ['students', 'teachers'],
   }),
 ];
 
