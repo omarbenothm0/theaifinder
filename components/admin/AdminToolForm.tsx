@@ -72,6 +72,13 @@ export function AdminToolForm({
   const [slug, setSlug] = useState(editingTool?.slug ?? '');
   const [logo, setLogo] = useState(editingTool?.logo ?? '');
   const [websiteUrl, setWebsiteUrl] = useState(editingTool?.websiteUrl ?? '');
+  const [affiliateUrl, setAffiliateUrl] = useState(editingTool?.affiliateUrl ?? '');
+  const [affiliateEnabled, setAffiliateEnabled] = useState(
+    editingTool?.affiliateEnabled ?? false
+  );
+  const [affiliateProgram, setAffiliateProgram] = useState(
+    editingTool?.affiliateProgram ?? ''
+  );
   const [companyName, setCompanyName] = useState(editingTool?.companyName ?? '');
   const [tagline, setTagline] = useState(editingTool?.tagline ?? '');
   const [description, setDescription] = useState(editingTool?.description ?? '');
@@ -204,6 +211,9 @@ export function AdminToolForm({
       hasFreeTrial: pricingModel === 'Freemium' || pricingModel === 'Free',
       companyName: companyName.trim() || undefined,
       websiteUrl: websiteUrl.trim(),
+      affiliateUrl: affiliateUrl.trim() || undefined,
+      affiliateEnabled,
+      affiliateProgram: affiliateProgram.trim() || undefined,
       pricingSource: pricingSource.trim() || undefined,
       featureSource: featureSource.trim() || undefined,
       sources: parsedSources,
@@ -244,6 +254,9 @@ export function AdminToolForm({
     tagline,
     description,
     websiteUrl,
+    affiliateUrl,
+    affiliateEnabled,
+    affiliateProgram,
     categoryId,
     publishStatus,
     categories,
@@ -447,25 +460,83 @@ export function AdminToolForm({
               <FieldError field="logo" />
             </div>
 
+            <div>
+              <label className="block font-bold text-slate-700 mb-1">Company Name</label>
+              <input
+                type="text"
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+                placeholder="OpenAI"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none"
+              />
+            </div>
+          </Section>
+
+          <Section title="Monetization & Links">
+            <p className="text-[11px] text-slate-500 leading-relaxed -mt-2 mb-3">
+              The <strong className="font-semibold text-slate-600">official website URL</strong> is
+              used for monitoring, editorial reference, and validation. The optional{' '}
+              <strong className="font-semibold text-slate-600">affiliate URL</strong> is used only
+              for public outbound clicks when affiliate links are enabled.
+            </p>
+
+            <div>
+              <label className="block font-bold text-slate-700 mb-1">
+                Official Website URL *
+              </label>
+              <input
+                type="url"
+                required
+                value={websiteUrl}
+                onChange={(e) => setWebsiteUrl(e.target.value)}
+                placeholder="https://example.com"
+                className={`w-full border rounded-xl px-3 py-2 text-xs font-mono text-slate-900 focus:outline-none focus:ring-2 ${fieldClass('websiteUrl')}`}
+              />
+              <p className="text-[10px] text-slate-400 mt-1">
+                Used for website monitoring and as the canonical vendor destination. Never use an
+                affiliate tracking link here.
+              </p>
+              <FieldError field="websiteUrl" />
+            </div>
+
+            <div>
+              <label className="block font-bold text-slate-700 mb-1">
+                Affiliate URL <span className="font-normal text-slate-400">(optional)</span>
+              </label>
+              <input
+                type="url"
+                value={affiliateUrl}
+                onChange={(e) => setAffiliateUrl(e.target.value)}
+                placeholder="https://example.com/?ref=your-id"
+                className={`w-full border rounded-xl px-3 py-2 text-xs font-mono text-slate-900 focus:outline-none focus:ring-2 ${fieldClass('affiliateUrl')}`}
+              />
+              <p className="text-[10px] text-slate-400 mt-1">
+                Monetized outbound link shown to visitors when affiliate links are enabled below.
+              </p>
+              <FieldError field="affiliateUrl" />
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Official Website URL *</label>
+              <label className="flex items-center gap-2 cursor-pointer">
                 <input
-                  type="url"
-                  required
-                  value={websiteUrl}
-                  onChange={(e) => setWebsiteUrl(e.target.value)}
-                  className={`w-full border rounded-xl px-3 py-2 text-xs font-mono text-slate-900 focus:outline-none focus:ring-2 ${fieldClass('websiteUrl')}`}
+                  type="checkbox"
+                  checked={affiliateEnabled}
+                  onChange={(e) => setAffiliateEnabled(e.target.checked)}
+                  className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
                 />
-                <FieldError field="websiteUrl" />
-              </div>
+                <span className="text-xs font-bold text-slate-700">Use affiliate link for outbound CTAs</span>
+              </label>
+
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Company Name</label>
+                <label className="block font-bold text-slate-700 mb-1">
+                  Affiliate Program / Network{' '}
+                  <span className="font-normal text-slate-400">(optional)</span>
+                </label>
                 <input
                   type="text"
-                  value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
-                  placeholder="OpenAI"
+                  value={affiliateProgram}
+                  onChange={(e) => setAffiliateProgram(e.target.value)}
+                  placeholder="e.g. Impact, PartnerStack, direct"
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none"
                 />
               </div>

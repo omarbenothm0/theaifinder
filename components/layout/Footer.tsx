@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { SITE_NAME } from '../../lib/brand';
+import { AffiliateDisclosure } from '../tool/AffiliateDisclosure';
 import { Sparkles, ArrowRight, CheckCircle2, ShieldCheck, Database, FileText } from 'lucide-react';
 
 export function Footer() {
@@ -176,6 +177,11 @@ export function Footer() {
             </ul>
           </div>
 
+        </div>
+
+        {/* Affiliate disclosure (site-wide expectation per Terms) */}
+        <div className="pt-4 pb-2 border-b border-slate-800">
+          <AffiliateDisclosure variant="footer" />
         </div>
 
         {/* Legal Row */}

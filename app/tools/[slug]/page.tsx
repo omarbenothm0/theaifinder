@@ -7,11 +7,13 @@ import { CategoryService } from '../../../lib/services/category.service';
 import { PersonaService } from '../../../lib/services/persona.service';
 import { ComparisonService } from '../../../lib/services/comparison.service';
 import { ToolCard } from '../../../components/tool/ToolCard';
+import { ToolOutboundLink, toolUsesAffiliateLink } from '../../../components/tool/ToolOutboundLink';
+import { AffiliateDisclosure } from '../../../components/tool/AffiliateDisclosure';
 import { InternalLinks } from '../../../components/shared/InternalLinks';
 import { JsonLd } from '../../../components/shared/JsonLd';
 import { generateToolMetadata, generateNotFoundMetadata } from '../../../lib/seo/metadata';
 import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
-import { Star, CheckCircle2, ExternalLink, Check, X, ArrowRight, Layers, Users, Building2, Monitor, Clock } from 'lucide-react';
+import { Star, CheckCircle2, Check, X, ArrowRight, Layers, Users, Building2, Monitor, Clock } from 'lucide-react';
 import { ToolReviewsSection } from '../../../components/review/ToolReviewsSection';
 
 import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
@@ -134,15 +136,10 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
           </div>
 
           <div className="flex flex-col sm:flex-row md:flex-col items-stretch gap-3 shrink-0">
-            <a
-              href={tool.websiteUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm px-6 py-3.5 rounded-2xl transition-all cursor-pointer shadow-md flex items-center justify-center gap-2"
-            >
-              <span>Visit Official Website</span>
-              <ExternalLink className="w-4 h-4" />
-            </a>
+            <div className="flex flex-col gap-2">
+              <ToolOutboundLink tool={tool} variant="button" />
+              {toolUsesAffiliateLink(tool) && <AffiliateDisclosure variant="inline" />}
+            </div>
 
             <div className="text-center text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
               <span className="font-bold text-slate-900 block">{tool.pricingModel}</span>

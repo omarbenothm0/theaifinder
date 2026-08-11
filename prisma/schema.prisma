@@ -91,6 +91,9 @@ model Tool {
   reviewAssignedTo  String?
   reviewNotes       String?           @db.Text
   websiteUrl        String
+  affiliateUrl      String?
+  affiliateEnabled  Boolean           @default(false)
+  affiliateProgram  String?
   rating            Float             @default(0)
   reviewCount       Int               @default(0)
   verified          Boolean           @default(false)

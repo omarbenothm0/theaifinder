@@ -65,6 +65,11 @@ export interface Tool {
   pricingTiers?: PricingTier[];
   platforms?: string[];
   websiteUrl: string;
+  /** Optional monetized outbound URL; used only when affiliateEnabled is true */
+  affiliateUrl?: string;
+  affiliateEnabled?: boolean;
+  /** Optional label for the affiliate program or network (e.g. Impact, PartnerStack) */
+  affiliateProgram?: string;
   features: string[];
   pros: string[];
   cons: string[];

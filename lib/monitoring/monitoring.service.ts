@@ -71,7 +71,8 @@ export class MonitoringService {
 
   /**
    * Run a website health check for a tool already in the database.
-   * URL is always loaded from the tool record — never from user-supplied URLs.
+   * URL is always loaded from the tool record's official websiteUrl — never affiliateUrl,
+   * and never from user-supplied URLs.
    */
   static async runWebsiteCheckForTool(toolId: string): Promise<{
     summary: ToolMonitoringSummary;

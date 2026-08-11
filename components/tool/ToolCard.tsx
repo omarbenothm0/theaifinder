@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Tool } from '../../types/tool';
-import { Star, CheckCircle2, ExternalLink, ArrowRight, Sparkles, Smartphone, Code, Puzzle } from 'lucide-react';
+import { Star, CheckCircle2, ArrowRight, Sparkles, Smartphone, Code, Puzzle } from 'lucide-react';
+import { ToolOutboundLink } from './ToolOutboundLink';
 
 interface ToolCardProps {
   tool: Tool;
@@ -122,15 +123,7 @@ export function ToolCard({ tool, layout = 'grid' }: ToolCardProps) {
           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
         </Link>
 
-        <a
-          href={tool.websiteUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="p-1.5 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
-          title={`Visit ${tool.name} Official Website`}
-        >
-          <ExternalLink className="w-4 h-4" />
-        </a>
+        <ToolOutboundLink tool={tool} variant="icon" />
       </div>
     </div>
   );

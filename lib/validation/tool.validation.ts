@@ -161,6 +161,29 @@ export function validateToolInput(
     errors.push({ field: 'featureSource', message: 'Feature source must be a valid http(s) URL' });
   }
 
+  if (input.affiliateUrl !== undefined && input.affiliateUrl.trim()) {
+    if (!isValidHttpUrl(input.affiliateUrl.trim())) {
+      errors.push({
+        field: 'affiliateUrl',
+        message: 'Affiliate URL must be a valid http(s) URL',
+      });
+    }
+  }
+
+  if (input.affiliateEnabled) {
+    if (!input.affiliateUrl?.trim()) {
+      errors.push({
+        field: 'affiliateUrl',
+        message: 'Affiliate URL is required when affiliate links are enabled',
+      });
+    } else if (!isValidHttpUrl(input.affiliateUrl.trim())) {
+      errors.push({
+        field: 'affiliateUrl',
+        message: 'Affiliate URL must be a valid http(s) URL when affiliate links are enabled',
+      });
+    }
+  }
+
   errors.push(...validateSources(input.sources));
   errors.push(...validatePricingTiers(input.pricingTiers));
 

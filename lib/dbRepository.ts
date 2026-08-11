@@ -62,6 +62,9 @@ function mapTool(t: any): Tool {
       : undefined,
     platforms: t.platforms ?? [],
     websiteUrl: t.websiteUrl,
+    affiliateUrl: t.affiliateUrl ?? undefined,
+    affiliateEnabled: t.affiliateEnabled ?? false,
+    affiliateProgram: t.affiliateProgram ?? undefined,
     features: t.features ?? [],
     pros: t.pros ?? [],
     cons: t.cons ?? [],
@@ -438,6 +441,9 @@ class DBRepository {
         reviewAssignedTo: data.reviewAssignedTo ?? null,
         reviewNotes: data.reviewNotes ?? null,
         websiteUrl: data.websiteUrl,
+        affiliateUrl: data.affiliateUrl?.trim() || null,
+        affiliateEnabled: data.affiliateEnabled ?? false,
+        affiliateProgram: data.affiliateProgram?.trim() || null,
         rating: data.rating ?? 0,
         reviewCount: data.reviewCount ?? 0,
         verified: data.verified,
@@ -497,6 +503,11 @@ class DBRepository {
     if (updates.reviewAssignedTo !== undefined) data.reviewAssignedTo = updates.reviewAssignedTo;
     if (updates.reviewNotes !== undefined) data.reviewNotes = updates.reviewNotes;
     if (updates.websiteUrl !== undefined) data.websiteUrl = updates.websiteUrl;
+    if (updates.affiliateUrl !== undefined)
+      data.affiliateUrl = updates.affiliateUrl?.trim() || null;
+    if (updates.affiliateEnabled !== undefined) data.affiliateEnabled = updates.affiliateEnabled;
+    if (updates.affiliateProgram !== undefined)
+      data.affiliateProgram = updates.affiliateProgram?.trim() || null;
     if (updates.verified !== undefined) data.verified = updates.verified;
     if (updates.featured !== undefined) data.featured = updates.featured;
     if (updates.trending !== undefined) data.trending = updates.trending;
