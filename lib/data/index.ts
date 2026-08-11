@@ -1,8 +1,7 @@
 import {
-  INITIAL_TOOLS as SEED_TOOLS,
-  INITIAL_CATEGORIES,
-  INITIAL_PERSONAS,
-  INITIAL_COMPARISONS,
+  INITIAL_CATEGORIES as SEED_CATEGORIES,
+  INITIAL_PERSONAS as SEED_PERSONAS,
+  INITIAL_COMPARISONS as SEED_COMPARISONS,
   INITIAL_ARTICLES
 } from './seedData';
 import { chatgptTool } from './tools/chatgpt';
@@ -19,11 +18,45 @@ import { jasperTool } from './tools/jasper';
 import { descriptTool } from './tools/descript';
 import { sunoAiTool } from './tools/suno-ai';
 import { notionAiTool } from './tools/notion-ai';
+import {
+  PM_CATEGORY,
+  PM_PERSONA,
+  PM_TOOLS,
+  PM_USE_CASES,
+  PM_PERSONA_USE_CASES,
+  PM_TOOL_USE_CASES,
+  PM_VERIFIED_AT,
+} from './pm-cluster';
+import { PM_COMPARISONS } from './pm-comparisons';
 
-export const INITIAL_TOOLS = [chatgptTool, claudeTool, cursorTool, v0Tool, midjourneyTool, dallE3Tool, runwayTool, elevenlabsTool, perplexityTool, gammaTool, jasperTool, descriptTool, sunoAiTool, notionAiTool];
+export const INITIAL_TOOLS = [
+  chatgptTool,
+  claudeTool,
+  cursorTool,
+  v0Tool,
+  midjourneyTool,
+  dallE3Tool,
+  runwayTool,
+  elevenlabsTool,
+  perplexityTool,
+  gammaTool,
+  jasperTool,
+  descriptTool,
+  sunoAiTool,
+  notionAiTool,
+  ...PM_TOOLS,
+];
+
+export const INITIAL_CATEGORIES = [...SEED_CATEGORIES, PM_CATEGORY];
+export const INITIAL_PERSONAS = [...SEED_PERSONAS, PM_PERSONA];
+
+export const INITIAL_COMPARISONS = [...SEED_COMPARISONS, ...PM_COMPARISONS];
+
 export {
-  INITIAL_CATEGORIES,
-  INITIAL_PERSONAS,
-  INITIAL_COMPARISONS,
-  INITIAL_ARTICLES
+  INITIAL_ARTICLES,
+  PM_USE_CASES,
+  PM_PERSONA_USE_CASES,
+  PM_TOOL_USE_CASES,
+  PM_VERIFIED_AT,
+  PM_COMPARISONS,
 };

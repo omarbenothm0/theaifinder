@@ -7,6 +7,7 @@ import {
   buildCategorySitemapEntries,
   buildPersonaSitemapEntries,
   buildComparisonSitemapEntries,
+  buildUseCaseSitemapEntries,
   getSitemapBaseUrl,
 } from '../lib/seo/sitemap-builder';
 
@@ -26,17 +27,19 @@ export default async function sitemap(props: {
   const baseUrl = getSitemapBaseUrl();
 
   if (id === 'static') {
-    const [categories, personas, comparisons, personaToolCounts] = await Promise.all([
+    const [categories, personas, comparisons, personaToolCounts, useCasePages] = await Promise.all([
       dbRepository.getCategories(),
       dbRepository.getPersonas(),
       dbRepository.getComparisons(),
       dbRepository.getPersonaLinkedToolCounts(),
+      dbRepository.getIndexablePersonaUseCasePages(),
     ]);
 
     return [
       ...buildStaticSitemapEntries(baseUrl),
       ...buildCategorySitemapEntries(categories, baseUrl),
       ...buildPersonaSitemapEntries(personas, baseUrl, personaToolCounts),
+      ...buildUseCaseSitemapEntries(useCasePages, baseUrl),
       ...buildComparisonSitemapEntries(comparisons, baseUrl),
     ];
   }

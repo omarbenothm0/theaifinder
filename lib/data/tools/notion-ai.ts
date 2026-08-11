@@ -61,7 +61,7 @@ export const notionAiTool: Tool = {
   reviewCount: 1980,
   screenshots: ['https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=800&q=500'],
   alternatives: ['chatgpt', 'claude'],
-  targetUsers: ['entrepreneurs', 'developers', 'writers', 'marketers'],
+  targetUsers: ['entrepreneurs', 'developers', 'writers', 'marketers', 'project-managers'],
   verified: true,
   featured: true,
   trending: false,

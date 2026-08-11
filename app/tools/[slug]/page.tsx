@@ -6,6 +6,7 @@ import { ToolService } from '../../../lib/services/tool.service';
 import { CategoryService } from '../../../lib/services/category.service';
 import { PersonaService } from '../../../lib/services/persona.service';
 import { ComparisonService } from '../../../lib/services/comparison.service';
+import { UseCaseService } from '../../../lib/services/use-case.service';
 import { ToolCard } from '../../../components/tool/ToolCard';
 import { ToolOutboundLink, toolUsesAffiliateLink } from '../../../components/tool/ToolOutboundLink';
 import { AffiliateDisclosure } from '../../../components/tool/AffiliateDisclosure';
@@ -16,6 +17,7 @@ import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../
 import { Star, CheckCircle2, Check, X, ArrowRight, Layers, Users, Building2, Monitor } from 'lucide-react';
 import { ToolReviewsSection } from '../../../components/review/ToolReviewsSection';
 import { formatInformationVerifiedDate } from '../../../lib/utils/formatDate';
+import { getContextualInternalLinks } from '../../../lib/utils/internalLinksContext';
 
 import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
 
@@ -41,11 +43,12 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
     notFound();
   }
 
-  const [categories, personas, comparisons, categoryToolsRes] = await Promise.all([
+  const [categories, personas, comparisons, categoryToolsRes, useCaseLinks] = await Promise.all([
     CategoryService.getCategories(),
     PersonaService.getPersonas(),
     ComparisonService.getComparisons(),
-    ToolService.getTools({ category: tool.categorySlug || tool.categoryId, limit: 4 })
+    ToolService.getTools({ category: tool.categorySlug || tool.categoryId, limit: 4 }),
+    UseCaseService.getToolUseCaseLinks(tool.slug),
   ]);
 
   // Alternatives: prefer explicit tool.alternatives slugs; fall back to same-category tools if empty
@@ -70,6 +73,14 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
   const compareHref = curatedComparison
     ? `/compare/${curatedComparison.slug}`
     : '/ai-tools-directory';
+
+  const internalLinks = getContextualInternalLinks(
+    tool.slug,
+    tool.targetUsers ?? [],
+    categories,
+    personas,
+    comparisons
+  );
 
   const softwareSchema = generateSoftwareApplicationSchema(tool);
   const breadcrumbSchema = generateBreadcrumbSchema([
@@ -301,6 +312,27 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
             </div>
           )}
 
+          {/* PM use-case guides — when tool is mapped to persona use cases */}
+          {useCaseLinks.length > 0 && (
+            <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-2xs space-y-4">
+              <h2 className="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
+                <Layers className="w-5 h-5 text-indigo-600" />
+                Featured In Workflow Guides
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {useCaseLinks.map((link) => (
+                  <Link
+                    key={`${link.personaSlug}-${link.useCaseSlug}-${link.section}`}
+                    href={`/for/${link.personaSlug}/${link.useCaseSlug}`}
+                    className="text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-full hover:bg-indigo-100 transition-colors"
+                  >
+                    {link.personaTitle}: {link.useCaseTitle}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
         </div>
 
         {/* Right Sidebar: Quick Spec Highlights */}
@@ -391,9 +423,9 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
 
       {/* Internal SEO Linking Block */}
       <InternalLinks
-        categories={categories}
-        personas={personas}
-        comparisons={comparisons}
+        categories={internalLinks.categories}
+        personas={internalLinks.personas}
+        comparisons={internalLinks.comparisons}
       />
     </div>
   );

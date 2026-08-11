@@ -61,6 +61,12 @@ export function HomePageClient({
       ? trendingTools
       : apiTools;
 
+  const heroPersonas = [...personas].sort((a, b) => {
+    if (a.slug === 'project-managers') return -1;
+    if (b.slug === 'project-managers') return 1;
+    return 0;
+  });
+
   return (
     <div className="space-y-16">
       {/* 1. Hero Banner */}
@@ -103,11 +109,11 @@ export function HomePageClient({
           <div className="flex items-center gap-2 text-xs text-slate-400 flex-wrap pt-1">
             <span className="font-semibold text-slate-300">Popular Searches:</span>
             {[
+              { name: 'Project Management', slug: 'project-management' },
               { name: 'Coding IDEs', slug: 'coding' },
               { name: 'Prose Writing', slug: 'writing' },
               { name: 'Generative Images', slug: 'image' },
               { name: 'Text to Speech', slug: 'voice' },
-              { name: 'Search Engines', slug: 'seo' }
             ].map((tag) => (
               <Link
                 key={tag.slug}
@@ -125,7 +131,7 @@ export function HomePageClient({
               <Users className="w-3.5 h-3.5" />
               I am a...
             </span>
-            {personas.slice(0, 6).map((p) => (
+            {heroPersonas.slice(0, 6).map((p) => (
               <Link
                 key={p.slug}
                 href={`/for/${p.slug}`}
@@ -152,11 +158,11 @@ export function HomePageClient({
           <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Curated AI Tools</span>
         </div>
         <div className="text-center space-y-1">
-          <span className="text-2xl sm:text-3xl font-extrabold text-emerald-600 block">8 Categories</span>
+          <span className="text-2xl sm:text-3xl font-extrabold text-emerald-600 block">{categories.length} Categories</span>
           <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Taxonomy Map</span>
         </div>
         <div className="text-center space-y-1">
-          <span className="text-2xl sm:text-3xl font-extrabold text-indigo-600 block">8 Workflows</span>
+          <span className="text-2xl sm:text-3xl font-extrabold text-indigo-600 block">{personas.length} Workflows</span>
           <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Persona Guides</span>
         </div>
         <div className="text-center space-y-1">

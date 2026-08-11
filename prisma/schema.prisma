@@ -40,6 +40,14 @@ enum ReviewStatusEnum {
   flagged
 }
 
+enum UseCaseFitTierEnum {
+  primary
+  strong
+  partial
+  listed
+  exclude
+}
+
 model Category {
   id              String   @id @default(cuid())
   name            String   @unique
@@ -120,6 +128,7 @@ model Tool {
   reviews      Review[]
   faqs         ToolFAQ[]
   topForPersonas PersonaTopTool[]
+  useCaseLinks   ToolUseCase[]
 
   alternativesFrom ToolAlternative[] @relation("AltSource")
   alternativesTo   ToolAlternative[] @relation("AltTarget")
@@ -215,6 +224,7 @@ model Persona {
 
   faqs     PersonaFAQ[]
   topTools PersonaTopTool[]
+  useCases PersonaUseCase[]
 
   @@index([slug])
   @@index([publishStatus])
@@ -230,6 +240,61 @@ model PersonaTopTool {
 
   @@unique([personaId, toolId])
   @@index([personaId])
+}
+
+model UseCase {
+  id               String            @id @default(cuid())
+  title            String
+  slug             String            @unique
+  description      String            @db.Text
+  primaryKeyword   String
+  seoTitle         String
+  seoDescription   String
+  publishStatus    PublishStatusEnum @default(published)
+  createdAt        DateTime          @default(now())
+
+  personaLinks PersonaUseCase[]
+  toolLinks    ToolUseCase[]
+
+  @@index([slug])
+  @@index([publishStatus])
+}
+
+model PersonaUseCase {
+  id          String  @id @default(cuid())
+  personaId   String
+  useCaseId   String
+  order       Int     @default(0)
+  isPrimary   Boolean @default(false)
+  pageEnabled Boolean @default(true)
+  hubNote     String? @db.Text
+
+  persona Persona @relation(fields: [personaId], references: [id], onDelete: Cascade)
+  useCase UseCase @relation(fields: [useCaseId], references: [id], onDelete: Cascade)
+
+  @@unique([personaId, useCaseId])
+  @@index([personaId])
+  @@index([useCaseId])
+}
+
+model ToolUseCase {
+  id           String             @id @default(cuid())
+  toolId       String
+  useCaseId    String
+  fitTier      UseCaseFitTierEnum
+  capabilities String             @db.Text
+  limitation   String?            @db.Text
+  evidenceUrl  String
+  verifiedAt   DateTime
+  displayOrder Int                @default(0)
+  section      String             @default("")
+
+  tool    Tool    @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  useCase UseCase @relation(fields: [useCaseId], references: [id], onDelete: Cascade)
+
+  @@unique([toolId, useCaseId, section])
+  @@index([useCaseId])
+  @@index([toolId])
 }
 
 model PersonaFAQ {

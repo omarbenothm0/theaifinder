@@ -1,7 +1,7 @@
 # Keyword & Search Opportunity Inventory
 
 **Last updated:** 2026-08-11  
-**Entries:** 44
+**Entries:** 72
 
 Master inventory of keywords, queries, and search-intent opportunities. **No invented search volume, CPC, or traffic numbers.**
 
@@ -178,6 +178,108 @@ Notes: Source: Round 5 keyword research batch | Evidence type: OBSERVATION | Int
 
 KEYWORD: ai tools for bloggers | Demand: R1–6 OBSERVATION (2026-08-11): Isolated; raw volume/CPC NOT VERIFIED | Competition: HARD | Destination: none | Status: RESEARCHED | Date: 2026-08-11
 Notes: Source: Round 5 keyword research batch | Evidence type: OBSERVATION | Intent: Commercial / informational | Tools: NOT VERIFIED | Existing: none | REJECTED: same spike-artifact pattern as "ai tools for podcast editing" — insufficient durable demand evidence. | Evidence: Round 5 (Google Trends, US, 2026-08-11): Isolated spike to 100 in October, then zero long-term interest. REJECTED, insufficient durable demand. Raw search volume: NOT VERIFIED. CPC: NOT VERIFIED.
+
+---
+
+## Project Managers cluster (Phase 0–1 — 2026-08-11)
+
+*Keyword class: **A** = persona hub | **B** = use-case page | **C** = synonym/section | **D** = FAQ | **E** = reject/no page*
+
+### Persona-level (maps to `/for/project-managers`)
+
+KEYWORD: ai tools for project managers | Demand: Owner-reported (2026-08-11): 880 US monthly vol, +7% trend, $5.19 CPC — **NOT independently verified** via third-party export this session | Competition: MODERATE (Phase 1 SERP OBSERVATION 2026-08-11) | Destination: `/for/project-managers` | Cluster: **A** | Status: RESEARCHED | Date: 2026-08-11
+Notes: PRIORITY #1 persona | SERP: workspace.google.com, projectskillsmentor.com, projectmanagementformula.com, enji.ai, comng.ai observed | See PM_CLUSTER.md | Phase 1 complete
+
+KEYWORD: best ai tools for project managers | Demand: Owner-reported context only; NOT VERIFIED | Competition: NOT CHECKED separately | Destination: section + FAQ on `/for/project-managers` | Cluster: **C** | Status: RESEARCHED | Date: 2026-08-11
+Notes: Not a separate URL — fold into persona hub
+
+KEYWORD: free ai tools for project managers | Demand: Owner-reported context only; NOT VERIFIED | Competition: NOT CHECKED | Destination: filter section + FAQ on `/for/project-managers`; link `/free-ai-tools` | Cluster: **C** | Status: RESEARCHED | Date: 2026-08-11
+
+KEYWORD: ai for project management | Demand: Owner-reported context only; NOT VERIFIED | Competition: NOT CHECKED | Destination: persona intro synonym on `/for/project-managers` | Cluster: **C** | Status: RESEARCHED | Date: 2026-08-11
+
+KEYWORD: ai project management software | Demand: Owner-reported context only; NOT VERIFIED | Competition: NOT CHECKED | Destination: section H2 on `/for/project-managers` | Cluster: **C** | Status: RESEARCHED | Date: 2026-08-11
+
+KEYWORD: ai for program managers | Demand: NOT VERIFIED | Competition: NOT CHECKED | Destination: FAQ on `/for/project-managers` | Cluster: **D** | Status: RESEARCHED | Date: 2026-08-11
+Notes: Defer separate persona until research supports
+
+KEYWORD: ai tools for project teams | Demand: NOT VERIFIED | Competition: NOT CHECKED | Destination: FAQ on `/for/project-managers` | Cluster: **D** | Status: RESEARCHED | Date: 2026-08-11
+
+KEYWORD: what is the best ai for project managers | Demand: NOT VERIFIED | Competition: NOT CHECKED | Destination: FAQ on `/for/project-managers` | Cluster: **D** | Status: RESEARCHED | Date: 2026-08-11
+
+KEYWORD: how to use ai for project management | Demand: NOT VERIFIED | Competition: NOT CHECKED | Destination: editorial/FAQ block on `/for/project-managers` | Cluster: **D** | Status: RESEARCHED | Date: 2026-08-11
+
+### Use-case level (maps to `/for/project-managers/[use-case]`)
+
+KEYWORD: ai meeting notes | Demand: NOT VERIFIED | Competition: **MODERATE** (Phase 2 SERP OBSERVATION 2026-08-11) | Destination: `/for/project-managers/meeting-notes` | Cluster: **B** | Status: RESEARCHED | Date: 2026-08-11
+Notes: MVP primary | Use case slug: meeting-notes | SERP: Zoom, Fireflies, Otter, Notion + simular.ai listicle | **Page justified**
+
+KEYWORD: ai task management | Demand: NOT VERIFIED | Competition: **MODERATE** (Phase 2 SERP OBSERVATION 2026-08-11) | Destination: `/for/project-managers/task-management` | Cluster: **B** | Status: RESEARCHED | Date: 2026-08-11
+Notes: MVP primary | SERP: Teamwork, Kuse, Motion blog, TaskAI, Subtask | **Page justified** | MERGE WATCH with project-planning
+
+KEYWORD: ai project planning | Demand: NOT VERIFIED | Competition: **MODERATE** (Phase 2 SERP OBSERVATION 2026-08-11) | Destination: `/for/project-managers/project-planning` | Cluster: **B** | Status: RESEARCHED | Date: 2026-08-11
+Notes: MVP primary | SERP: projectplanner.ai, Google Workspace, Atlassian, MileStack, PM Molly | **Page justified (conditional)** | MERGE WATCH with task-management
+
+KEYWORD: ai project scheduling | Demand: NOT VERIFIED | Competition: NOT CHECKED (Phase 2) | Destination: `/for/project-managers/project-scheduling` | Cluster: **B** | Status: RESEARCHED | Date: 2026-08-11
+Notes: Conditional page
+
+KEYWORD: ai project reporting | Demand: NOT VERIFIED | Competition: **WEAK–MODERATE** (Phase 2 SERP OBSERVATION 2026-08-11) | Destination: `/for/project-managers/project-reporting` | Cluster: **B** | Status: RESEARCHED | Date: 2026-08-11
+Notes: MVP primary | SERP: Bricks (×2), Taskade, Gixo, agentic-pm | **Page justified** — prioritize Phase 3
+
+KEYWORD: ai project documentation | Demand: NOT VERIFIED | Competition: **FRAGMENTED** (Phase 2 SERP OBSERVATION 2026-08-11) | Destination: **defer standalone** — persona-hub section until B keyword reframed | Cluster: **B** | Status: RESEARCHED | Date: 2026-08-11
+Notes: MVP primary → **Phase 2 downgrade**: standalone page NOT justified on current keyword | SERP: Medium/Swimm (code docs), IBM, Taskade agent, GitHub | Follow-up keywords: ai project wiki, ai team wiki
+
+KEYWORD: ai project assistant | Demand: NOT VERIFIED | Competition: NOT CHECKED (Phase 2) | Destination: `/for/project-managers/project-assistant` | Cluster: **B** | Status: RESEARCHED | Date: 2026-08-11
+Notes: Conditional — narrow PM-native gate
+
+KEYWORD: ai project risk management | Demand: NOT VERIFIED | Competition: NOT CHECKED | Destination: defer — no page unless ≥3 verified tools | Cluster: **B** (deferred) | Status: RESEARCHED | Date: 2026-08-11
+Notes: Class E for MVP effort unless discovery surprises
+
+---
+
+## Persona expansion pool (owner-reported — 2026-08-11)
+
+*Future personas — **not** current build. Metrics owner-reported pending third-party verification unless noted.*
+
+KEYWORD: ai tools for marketers | Demand: Owner-reported: 4,400 vol, -35% trend, $10.83 CPC — NOT VERIFIED | Competition: MODERATE (Round 1–6 OBSERVATION exists — see earlier entry `ai for marketers`) | Destination: `/for/marketers` (seed placeholder) | Persona pool: **Strong** | Status: RESEARCHED | Date: 2026-08-11
+Notes: Fold `ai tools for social media managers` into this persona
+
+KEYWORD: ai tools for social media managers | Demand: Owner-reported: 70 vol, +126% trend, $9.46 CPC — NOT VERIFIED | Competition: NOT CHECKED | Destination: **fold into Marketers** — not standalone persona | Cluster: **C** | Status: RESEARCHED | Date: 2026-08-11
+
+KEYWORD: ai tools for small business | Demand: Owner-reported: 880 vol, +167% trend, $6.14 CPC — NOT VERIFIED | Competition: NOT CHECKED | Destination: `/for/small-business` (NEW persona candidate) | Persona pool: **Strong** | Status: RESEARCHED | Date: 2026-08-11
+Notes: Distinct from rejected `best ai for small business` keyword (different query)
+
+KEYWORD: ai tools for teachers | Demand: Owner-reported: 1,600 vol, -47% trend, $2.11 CPC — NOT VERIFIED | Competition: NOT CHECKED | Destination: `/for/teachers` (seed placeholder) | Persona pool: **Keep** | Status: RESEARCHED | Date: 2026-08-11
+Notes: Merge Educators into Teachers
+
+KEYWORD: ai tools for educators | Demand: Owner-reported: ~2,900 vol, -86% trend, $3.00 CPC — NOT VERIFIED; Oct spike 33,100 unreliable | Competition: NOT CHECKED | Destination: **merge with Teachers** — not standalone persona | Cluster: **C** | Status: RESEARCHED | Date: 2026-08-11
+
+KEYWORD: ai tools for researchers | Demand: Owner-reported: 880 vol, -11% trend, $2.84 CPC — NOT VERIFIED | Competition: NOT CHECKED | Destination: `/for/researchers` (NEW persona candidate) | Persona pool: **Keep** | Status: RESEARCHED | Date: 2026-08-11
+
+KEYWORD: ai tools for accountants | Demand: Owner-reported: 590 vol, +8% trend, $9.80 CPC — NOT VERIFIED | Competition: NOT CHECKED | Destination: `/for/accountants` (NEW) | Persona pool: **Keep** | Status: RESEARCHED | Date: 2026-08-11
+
+KEYWORD: ai tools for real estate agents | Demand: Owner-reported: 260 vol, +12% trend, $5.80 CPC — NOT VERIFIED | Competition: NOT CHECKED | Destination: `/for/real-estate-agents` (seed placeholder) | Persona pool: **Keep** | Status: RESEARCHED | Date: 2026-08-11
+
+KEYWORD: ai tools for lawyers | Demand: Owner-reported: 260 vol, +29% trend, $13.73 CPC — NOT VERIFIED | Competition: NOT CHECKED | Destination: `/for/lawyers` (NEW) | Persona pool: **Keep** | Status: RESEARCHED | Date: 2026-08-11
+
+KEYWORD: ai tools for consultants | Demand: Owner-reported: 90 vol, +67% trend, $5.33 CPC — NOT VERIFIED | Competition: NOT CHECKED | Destination: `/for/consultants` (NEW) | Persona pool: **Keep** | Status: RESEARCHED | Date: 2026-08-11
+
+KEYWORD: ai tools for customer service | Demand: Owner-reported: 170 vol, +31% trend, $20.97 CPC — NOT VERIFIED | Competition: NOT CHECKED | Destination: `/for/customer-service` (NEW) | Persona pool: **Keep/Test** | Status: RESEARCHED | Date: 2026-08-11
+
+---
+
+## Persona expansion pool — not first priority (owner-reported 2026-08-11)
+
+KEYWORD: ai tools for sales | Demand: Owner-reported: 260 vol, -25% — NOT VERIFIED | Competition: NOT CHECKED | Destination: future pool | Status: RESEARCHED | Date: 2026-08-11
+KEYWORD: ai tools for designers | Demand: Owner-reported: 210 vol, -3% — NOT VERIFIED | Competition: NOT CHECKED | Destination: future pool | Status: RESEARCHED | Date: 2026-08-11
+KEYWORD: ai tools for developers | Demand: Owner-reported: 720 vol, -30% — NOT VERIFIED | Competition: NOT CHECKED | Destination: `/for/developers` (seed); overlaps Round 1 entry | Status: RESEARCHED | Date: 2026-08-11
+Notes: See also earlier `ai tools for developers` Round 1 entry in this file
+KEYWORD: ai tools for recruiters | Demand: Owner-reported: 70 vol, +75% — NOT VERIFIED | Competition: NOT CHECKED | Destination: future pool | Status: RESEARCHED | Date: 2026-08-11
+KEYWORD: ai tools for entrepreneurs | Demand: Owner-reported: 110 vol, +25% — NOT VERIFIED | Competition: NOT CHECKED | Destination: `/for/entrepreneurs` (seed) | Status: RESEARCHED | Date: 2026-08-11
+KEYWORD: ai tools for freelancers | Demand: Owner-reported: 70 vol, -42% — NOT VERIFIED | Competition: NOT CHECKED | Destination: future pool | Status: RESEARCHED | Date: 2026-08-11
+KEYWORD: ai tools for photographers | Demand: Owner-reported: 30 vol, -62% — NOT VERIFIED | Competition: NOT CHECKED | Destination: future pool | Status: RESEARCHED | Date: 2026-08-11
+KEYWORD: ai tools for video editors | Demand: Owner-reported: 10 vol, -21% — NOT VERIFIED | Competition: NOT CHECKED (owner: high competition) | Destination: future pool | Status: RESEARCHED | Date: 2026-08-11
+KEYWORD: ai tools for job seekers | Demand: Owner-reported: 140 vol, -72% — NOT VERIFIED | Competition: NOT CHECKED | Destination: future pool | Status: RESEARCHED | Date: 2026-08-11
+
 ---
 
 ## Existing public routes (for destination mapping)

@@ -120,6 +120,24 @@ export function isPersonaIndexable(
   return { indexable: true };
 }
 
+export function isUseCasePageIndexable(
+  strongPlusCount: number,
+  pageEnabled = true
+): IndexabilityResult {
+  if (!pageEnabled) {
+    return { indexable: false, reason: 'Use-case page not enabled for this persona' };
+  }
+
+  if (strongPlusCount < 3) {
+    return {
+      indexable: false,
+      reason: `Fewer than 3 primary/strong tools (${strongPlusCount})`,
+    };
+  }
+
+  return { indexable: true };
+}
+
 export function isComparisonIndexable(comparison: Comparison): IndexabilityResult {
   if (comparison.isCurated === false) {
     return { indexable: false, reason: 'Auto-generated comparison (not editorially curated)' };

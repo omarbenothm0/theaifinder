@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Tool } from '../../types/tool';
 import { ToolCard } from '../tool/ToolCard';
 import { Compass, CheckCircle2, RotateCcw, ArrowRight, Sparkles, Layers, DollarSign, Users } from 'lucide-react';
+import { toolMatchesUseCase } from '../../lib/utils/useCaseMatch';
 
 interface FinderWizardProps {
   initialTools: Tool[];
@@ -21,15 +22,33 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
   const handleEvaluate = async () => {
     setEvaluating(true);
     try {
-      const tools = initialTools;
+      const response = await fetch('/api/finder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ useCase, role, budgetPreference }),
+      });
 
+      if (response.ok) {
+        const data = await response.json();
+        setResults(data.recommendations ?? []);
+        setStep(4);
+        return;
+      }
+
+      // Fallback: client-side scoring if API unavailable
+      const tools = initialTools;
       const scored = tools.map((tool) => {
         let score = 70;
         const matchReasons: string[] = [];
 
-        if (tool.categoryId.toLowerCase().includes(useCase) || tool.categoryName.toLowerCase().includes(useCase)) {
+        if (toolMatchesUseCase(tool, useCase)) {
           score += 20;
-          matchReasons.push(`Directly matches your primary use case: ${useCase}`);
+          matchReasons.push(`Directly matches your primary use case: ${useCase.replace(/-/g, ' ')}`);
+        }
+
+        if (tool.targetUsers.includes(role)) {
+          score += 20;
+          matchReasons.push(`Optimized for ${role.replace(/-/g, ' ')} workflows`);
         }
 
         if (budgetPreference === 'free-only') {
@@ -146,7 +165,8 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
                 { id: 'voice', name: 'Voice & Speech', desc: 'Voiceover synthesis, audio dubbing, and cleanup' },
                 { id: 'seo', name: 'SEO & Research', desc: 'Live search research, keyword analysis, and citations' },
                 { id: 'presentations', name: 'Presentations', desc: 'Slide decks, pitch presentations, and visual reports' },
-                { id: 'productivity', name: 'Productivity', desc: 'Knowledge assistants and workflow tools' }
+                { id: 'productivity', name: 'Productivity', desc: 'Knowledge assistants and workflow tools' },
+                { id: 'project-management', name: 'Project Management', desc: 'Meeting notes, tasks, plans, and status reports for PMs' }
               ].map((item) => (
                 <button
                   key={item.id}
@@ -199,7 +219,8 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
                 { id: 'marketers', name: 'Marketer & Growth Strategist' },
                 { id: 'teachers', name: 'Teacher, Educator & Tutor' },
                 { id: 'real-estate-agents', name: 'Real Estate Broker & Agent' },
-                { id: 'entrepreneurs', name: 'Startup Founder & Entrepreneur' }
+                { id: 'entrepreneurs', name: 'Startup Founder & Entrepreneur' },
+                { id: 'project-managers', name: 'Project Manager' }
               ].map((item) => (
                 <button
                   key={item.id}

@@ -1,11 +1,12 @@
 import { Metadata } from 'next';
-import { Tool, Category, Persona, Comparison } from '../../types/tool';
+import { Tool, Category, Persona, Comparison, UseCase } from '../../types/tool';
 import { getBaseUrl, absoluteUrl } from './base-url';
 import {
   isToolIndexable,
   isCategoryIndexable,
   isPersonaIndexable,
   isComparisonIndexable,
+  isUseCasePageIndexable,
 } from './indexability';
 import {
   SITE_NAME,
@@ -129,6 +130,26 @@ export function generatePersonaMetadata(
     title: sitePageTitle(`Top AI Tools for ${persona.title} (2026)`),
     description: persona.description,
     canonicalUrl: `/for/${persona.slug}`,
+    ogImage,
+    noIndex: !indexResult.indexable,
+  });
+}
+
+export function generateUseCaseMetadata(
+  persona: Persona,
+  useCase: UseCase,
+  strongPlusCount: number,
+  pageEnabled = true
+): Metadata {
+  const indexResult = isUseCasePageIndexable(strongPlusCount, pageEnabled);
+  const ogTitle = useCase.seoTitle;
+  const ogDescription = useCase.seoDescription;
+  const ogImage = `${BASE_URL}/api/og?title=${encodeURIComponent(ogTitle)}&description=${encodeURIComponent(ogDescription)}&badge=${encodeURIComponent('AI USE CASE GUIDE')}&type=persona`;
+
+  return constructMetadata({
+    title: sitePageTitle(useCase.seoTitle),
+    description: useCase.seoDescription,
+    canonicalUrl: `/for/${persona.slug}/${useCase.slug}`,
     ogImage,
     noIndex: !indexResult.indexable,
   });

@@ -73,6 +73,7 @@ export function Footer() {
             <h4 className="text-xs font-bold uppercase tracking-wider text-white mb-4">Categories</h4>
             <ul className="space-y-2.5 text-xs text-slate-400">
               {[
+                { name: 'Project Management', slug: 'project-management' },
                 { name: 'Writing & Copywriting', slug: 'writing' },
                 { name: 'Coding & IDEs', slug: 'coding' },
                 { name: 'Image Generation', slug: 'image' },
@@ -99,6 +100,7 @@ export function Footer() {
             <h4 className="text-xs font-bold uppercase tracking-wider text-white mb-4">By Role</h4>
             <ul className="space-y-2.5 text-xs text-slate-400">
               {[
+                { name: 'AI for Project Managers', slug: 'project-managers' },
                 { name: 'AI for YouTubers', slug: 'youtubers' },
                 { name: 'AI for Content Creators', slug: 'content-creators' },
                 { name: 'AI for Writers', slug: 'writers' },
@@ -147,6 +149,16 @@ export function Footer() {
               <li>
                 <Link href="/ai-tools-directory" className="hover:text-emerald-400 transition-colors cursor-pointer">
                   Full Category Taxonomy
+                </Link>
+              </li>
+              <li>
+                <Link href="/compare/otter-ai-vs-fireflies-ai" className="hover:text-emerald-400 transition-colors cursor-pointer">
+                  Otter.ai vs Fireflies.ai
+                </Link>
+              </li>
+              <li>
+                <Link href="/compare/clickup-brain-vs-asana-ai" className="hover:text-emerald-400 transition-colors cursor-pointer">
+                  ClickUp Brain vs Asana AI
                 </Link>
               </li>
               <li>

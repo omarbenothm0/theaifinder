@@ -10,9 +10,16 @@ import {
   ReviewStatus,
   ToolSource,
   PricingTier,
+  UseCase,
+  PersonaUseCaseLink,
+  ToolWithUseCaseFit,
+  PersonaUseCasePage,
+  UseCaseFitTier,
+  ToolUseCaseLink,
 } from '../types/tool';
 import { ToolMonitoringCheck, MonitoringCheckStatus } from '../types/monitoring';
 import { prisma } from './prisma';
+import { toolMatchesUseCase } from './utils/useCaseMatch';
 
 // --- Mapping helpers: Prisma model -> app-facing Tool/Category/etc shape ---
 
@@ -125,6 +132,38 @@ function mapPersona(p: any): Persona {
       ? p.faqs.map((f: any) => ({ question: f.question, answer: f.answer }))
       : [],
     publishStatus: p.publishStatus ?? 'published',
+  };
+}
+
+function mapUseCase(uc: any): UseCase {
+  return {
+    id: uc.id,
+    title: uc.title,
+    slug: uc.slug,
+    description: uc.description,
+    primaryKeyword: uc.primaryKeyword,
+    seoTitle: uc.seoTitle,
+    seoDescription: uc.seoDescription,
+    publishStatus: uc.publishStatus ?? 'published',
+  };
+}
+
+export function isStrongPlusFitTier(fitTier: UseCaseFitTier): boolean {
+  return fitTier === 'primary' || fitTier === 'strong';
+}
+
+function mapToolUseCaseFit(link: any): ToolWithUseCaseFit {
+  return {
+    ...mapTool(link.tool),
+    useCaseFit: {
+      fitTier: link.fitTier,
+      capabilities: link.capabilities,
+      limitation: link.limitation ?? undefined,
+      evidenceUrl: link.evidenceUrl,
+      verifiedAt: link.verifiedAt.toISOString().split('T')[0],
+      displayOrder: link.displayOrder,
+      section: link.section ?? '',
+    },
   };
 }
 
@@ -645,6 +684,173 @@ class DBRepository {
     });
   }
 
+  // --- Use cases (persona × use-case pages) ---
+  public async getPersonaUseCases(personaSlug: string): Promise<PersonaUseCaseLink[]> {
+    const links = await prisma.personaUseCase.findMany({
+      where: {
+        persona: {
+          slug: { equals: personaSlug, mode: 'insensitive' },
+          publishStatus: 'published',
+        },
+      },
+      include: { useCase: true },
+      orderBy: { order: 'asc' },
+    });
+
+    return links.map((link) => ({
+      order: link.order,
+      isPrimary: link.isPrimary,
+      pageEnabled: link.pageEnabled,
+      hubNote: link.hubNote ?? undefined,
+      useCase: mapUseCase(link.useCase),
+    }));
+  }
+
+  public async getPersonaUseCasePage(
+    personaSlug: string,
+    useCaseSlug: string
+  ): Promise<PersonaUseCasePage | undefined> {
+    const link = await prisma.personaUseCase.findFirst({
+      where: {
+        pageEnabled: true,
+        persona: {
+          slug: { equals: personaSlug, mode: 'insensitive' },
+          publishStatus: 'published',
+        },
+        useCase: {
+          slug: { equals: useCaseSlug, mode: 'insensitive' },
+          publishStatus: 'published',
+        },
+      },
+      include: {
+        persona: { include: { faqs: true, topTools: { include: { tool: true } } } },
+        useCase: true,
+      },
+    });
+
+    if (!link) return undefined;
+
+    const toolLinks = await prisma.toolUseCase.findMany({
+      where: {
+        useCaseId: link.useCaseId,
+        fitTier: { not: 'exclude' },
+        tool: PUBLISHED_TOOL_WHERE,
+      },
+      include: { tool: { include: TOOL_INCLUDE } },
+      orderBy: { displayOrder: 'asc' },
+    });
+
+    const tools = toolLinks.map(mapToolUseCaseFit);
+    const strongPlusToolIds = new Set<string>();
+    for (const tl of toolLinks) {
+      if (isStrongPlusFitTier(tl.fitTier as UseCaseFitTier)) {
+        strongPlusToolIds.add(tl.toolId);
+      }
+    }
+
+    return {
+      persona: mapPersona(link.persona),
+      useCase: mapUseCase(link.useCase),
+      link: {
+        order: link.order,
+        isPrimary: link.isPrimary,
+        pageEnabled: link.pageEnabled,
+        hubNote: link.hubNote ?? undefined,
+      },
+      tools,
+      strongPlusCount: strongPlusToolIds.size,
+    };
+  }
+
+  public async getIndexablePersonaUseCasePages(): Promise<
+    Array<{ personaSlug: string; useCaseSlug: string; strongPlusCount: number }>
+  > {
+    const links = await prisma.personaUseCase.findMany({
+      where: {
+        pageEnabled: true,
+        persona: { publishStatus: 'published' },
+        useCase: { publishStatus: 'published' },
+      },
+      include: {
+        persona: { select: { slug: true } },
+        useCase: { select: { slug: true, id: true } },
+      },
+    });
+
+    const results: Array<{ personaSlug: string; useCaseSlug: string; strongPlusCount: number }> = [];
+
+    for (const link of links) {
+      const strongLinks = await prisma.toolUseCase.findMany({
+        where: {
+          useCaseId: link.useCaseId,
+          fitTier: { in: ['primary', 'strong'] },
+          tool: PUBLISHED_TOOL_WHERE,
+        },
+        select: { toolId: true },
+      });
+      const strongPlusCount = new Set(strongLinks.map((sl) => sl.toolId)).size;
+      if (strongPlusCount >= 3) {
+        results.push({
+          personaSlug: link.persona.slug,
+          useCaseSlug: link.useCase.slug,
+          strongPlusCount,
+        });
+      }
+    }
+
+    return results;
+  }
+
+  public async getToolUseCaseLinks(toolSlug: string): Promise<ToolUseCaseLink[]> {
+    const tool = await prisma.tool.findFirst({
+      where: {
+        slug: { equals: toolSlug, mode: 'insensitive' },
+        ...PUBLISHED_TOOL_WHERE,
+      },
+      select: { id: true },
+    });
+    if (!tool) return [];
+
+    const mappings = await prisma.toolUseCase.findMany({
+      where: {
+        toolId: tool.id,
+        fitTier: { not: 'exclude' },
+      },
+      include: {
+        useCase: {
+          include: {
+            personaLinks: {
+              where: { pageEnabled: true },
+              include: { persona: { select: { slug: true, title: true } } },
+            },
+          },
+        },
+      },
+      orderBy: { displayOrder: 'asc' },
+    });
+
+    const seen = new Set<string>();
+    const links: ToolUseCaseLink[] = [];
+
+    for (const mapping of mappings) {
+      for (const personaLink of mapping.useCase.personaLinks) {
+        const key = `${personaLink.persona.slug}:${mapping.useCase.slug}:${mapping.section}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        links.push({
+          personaSlug: personaLink.persona.slug,
+          personaTitle: personaLink.persona.title,
+          useCaseSlug: mapping.useCase.slug,
+          useCaseTitle: mapping.useCase.title,
+          fitTier: mapping.fitTier as UseCaseFitTier,
+          section: mapping.section,
+        });
+      }
+    }
+
+    return links;
+  }
+
   // --- Comparisons ---
   public async getComparisons(options: { includeUnpublished?: boolean } = {}): Promise<Comparison[]> {
     const comparisons = await prisma.comparison.findMany({
@@ -828,18 +1034,14 @@ class DBRepository {
       let score = 50;
       const matchReasons: string[] = [];
 
-      if (
-        tool.categoryId.includes(useCase) ||
-        tool.categoryName.toLowerCase().includes(useCase) ||
-        tool.tags.some((t) => t.toLowerCase().includes(useCase))
-      ) {
+      if (toolMatchesUseCase(tool, useCase)) {
         score += 35;
-        matchReasons.push(`Direct match for ${useCase} workflows`);
+        matchReasons.push(`Direct match for ${useCase.replace(/-/g, ' ')} workflows`);
       }
 
       if (tool.targetUsers.includes(role)) {
         score += 25;
-        matchReasons.push(`Optimized specifically for ${role.replace('-', ' ')}`);
+        matchReasons.push(`Optimized for ${role.replace(/-/g, ' ')} workflows`);
       }
 
       if (budgetPreference === 'free-only' && (tool.pricingModel === 'Free' || tool.monthlyPrice === 0)) {
@@ -850,7 +1052,12 @@ class DBRepository {
         matchReasons.push('Includes free trial or freemium tier');
       }
 
-      if (tool.verified) score += 5;
+      if (tool.verified) {
+        score += 5;
+        if (tool.rating === 0) {
+          matchReasons.push('Verified listing from official sources');
+        }
+      }
       if (tool.rating >= 4.8) score += 10;
 
       return { tool, score: Math.min(100, score), matchReasons };

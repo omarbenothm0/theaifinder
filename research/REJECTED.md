@@ -1,7 +1,7 @@
 # Rejected Research Inventory
 
 **Last updated:** 2026-08-11  
-**Entries:** 12 (9 rejected + 3 deprioritized)
+**Entries:** 14 (9 rejected + 3 deprioritized + 2 dropped from active pool)
 
 Ideas deliberately **rejected** during research. Future AIs must read this file **before** proposing the same idea again.
 
@@ -35,6 +35,10 @@ Without a rejection log, future sessions rediscover the same weak ideas and pres
 ---
 
 ## Rejected items
+
+REJECTED: Clockwise (project-scheduling candidate) | Type: Tool | Reason: Official site (getclockwise.com) shows product shutdown / thank-you page only (2026-08-11) — no active AI scheduling product to verify. | Reopen: Official product relaunch with verifiable features on primary domain | Related: TOOLS.md, TOOL_USE_CASES.md | Date: 2026-08-11
+
+REJECTED: Tome (project-reporting candidate) | Type: Tool | Reason: **Dropped from active PM candidate pool** — https://tome.app/ returned **404** during Phase 3 verification (2026-08-11); cannot verify product features, pricing, or PM reporting fit from official primary source. Prior inventory notes may be stale. | Reopen: Official site restores with verifiable product/pricing pages re-fetched | Related: TOOLS.md, TOOL_USE_CASES.md, USE_CASES.md | Date: 2026-08-11
 
 REJECTED: ai tools for youtubers | Type: Keyword | Reason: Round 1 competition read was MODERATE, but Round 2 Google Trends showed 0% YoY, flat, minimal search interest (US), zero related/rising queries — real search demand for this exact phrase appears negligible. | Reopen: New Trends data showing sustained non-zero demand for this exact phrase, or owner-directed retest with third-party keyword tool | Date: 2026-08-11
 

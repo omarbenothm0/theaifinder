@@ -117,6 +117,58 @@ export interface Persona {
   publishStatus?: PublishStatus;
 }
 
+export type UseCaseFitTier = 'primary' | 'strong' | 'partial' | 'listed' | 'exclude';
+
+export interface UseCase {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  primaryKeyword: string;
+  seoTitle: string;
+  seoDescription: string;
+  publishStatus?: PublishStatus;
+}
+
+export interface PersonaUseCaseLink {
+  order: number;
+  isPrimary: boolean;
+  pageEnabled: boolean;
+  hubNote?: string;
+  useCase: UseCase;
+}
+
+export interface ToolUseCaseFit {
+  fitTier: UseCaseFitTier;
+  capabilities: string;
+  limitation?: string;
+  evidenceUrl: string;
+  verifiedAt: string;
+  displayOrder: number;
+  section: string;
+}
+
+export interface ToolWithUseCaseFit extends Tool {
+  useCaseFit: ToolUseCaseFit;
+}
+
+export interface PersonaUseCasePage {
+  persona: Persona;
+  useCase: UseCase;
+  link: Omit<PersonaUseCaseLink, 'useCase'>;
+  tools: ToolWithUseCaseFit[];
+  strongPlusCount: number;
+}
+
+export interface ToolUseCaseLink {
+  personaSlug: string;
+  personaTitle: string;
+  useCaseSlug: string;
+  useCaseTitle: string;
+  fitTier: UseCaseFitTier;
+  section: string;
+}
+
 export interface ComparisonFeatureRow {
   feature: string;
   tool1Value: string;

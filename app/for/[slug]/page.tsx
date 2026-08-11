@@ -3,7 +3,10 @@ import { notFound } from 'next/navigation';
 import { PersonaService } from '../../../lib/services/persona.service';
 import { ToolService } from '../../../lib/services/tool.service';
 import { CategoryService } from '../../../lib/services/category.service';
+import { UseCaseService } from '../../../lib/services/use-case.service';
+import { ComparisonService } from '../../../lib/services/comparison.service';
 import { PersonaToolsFilter } from '../../../components/tool/PersonaToolsFilter';
+import { PersonaUseCaseCards } from '../../../components/persona/PersonaUseCaseCards';
 import { InternalLinks } from '../../../components/shared/InternalLinks';
 import { JsonLd } from '../../../components/shared/JsonLd';
 import { generatePersonaMetadata, generateNotFoundMetadata } from '../../../lib/seo/metadata';
@@ -11,7 +14,7 @@ import { isPersonaIndexable } from '../../../lib/seo/indexability';
 import { dbRepository } from '../../../lib/dbRepository';
 import { generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
 import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
-import { Users, CheckCircle2, Compass, ArrowRight } from 'lucide-react';
+import { Users, CheckCircle2, Compass, ArrowRight, Layers } from 'lucide-react';
 import Link from 'next/link';
 
 export const revalidate = 3600;
@@ -42,10 +45,12 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
     notFound();
   }
 
-  const [toolsRes, categories, personas] = await Promise.all([
+  const [toolsRes, categories, personas, useCases, comparisons] = await Promise.all([
     ToolService.getToolsByPersona(persona.slug),
     CategoryService.getCategories(),
-    PersonaService.getPersonas()
+    PersonaService.getPersonas(),
+    UseCaseService.getPersonaUseCases(persona.slug),
+    ComparisonService.getComparisons(),
   ]);
 
   const breadcrumbSchema = generateBreadcrumbSchema([
@@ -71,6 +76,23 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
           {persona.description}
         </p>
       </div>
+
+      {persona.slug === 'project-managers' && (
+        <div className="max-w-4xl mx-auto">
+          <Link
+            href="/category/project-management"
+            className="inline-flex items-center gap-2 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-4 py-2.5 rounded-xl hover:bg-indigo-100 transition-colors"
+          >
+            <Layers className="w-4 h-4" />
+            Browse all Project Management category tools
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      )}
+
+      {useCases.length > 0 && (
+        <PersonaUseCaseCards personaSlug={persona.slug} useCases={useCases} />
+      )}
 
       {/* Recommended Tools List */}
       <div className="space-y-6">
@@ -102,7 +124,7 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
         </Link>
       </div>
 
-      <InternalLinks categories={categories} personas={personas} />
+      <InternalLinks categories={categories} personas={personas} comparisons={comparisons} />
     </div>
   );
 }

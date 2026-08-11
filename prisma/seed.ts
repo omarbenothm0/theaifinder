@@ -5,6 +5,10 @@ import {
   INITIAL_PERSONAS,
   INITIAL_COMPARISONS,
   INITIAL_ARTICLES,
+  PM_USE_CASES,
+  PM_PERSONA_USE_CASES,
+  PM_TOOL_USE_CASES,
+  PM_VERIFIED_AT,
 } from '../lib/data';
 
 const prisma = new PrismaClient();
@@ -180,8 +184,12 @@ async function main() {
         );
         continue;
       }
-      await prisma.toolAlternative.create({
-        data: { sourceToolId: sourceId, targetToolId: targetId },
+      await prisma.toolAlternative.upsert({
+        where: {
+          sourceToolId_targetToolId: { sourceToolId: sourceId, targetToolId: targetId },
+        },
+        create: { sourceToolId: sourceId, targetToolId: targetId },
+        update: {},
       });
       altCount++;
     }
@@ -203,8 +211,10 @@ async function main() {
         );
         continue;
       }
-      await prisma.personaTopTool.create({
-        data: { personaId, toolId, order: i },
+      await prisma.personaTopTool.upsert({
+        where: { personaId_toolId: { personaId, toolId } },
+        create: { personaId, toolId, order: i },
+        update: { order: i },
       });
       topToolCount++;
     }
@@ -330,6 +340,143 @@ async function main() {
     articleCount++;
   }
   console.log(`Seeded ${articleCount} articles.`);
+
+  // 9. Use cases (PM cluster)
+  const useCaseSlugToId = new Map<string, string>();
+  for (const uc of PM_USE_CASES) {
+    const existing = await prisma.useCase.findUnique({ where: { slug: uc.slug } });
+    if (existing) {
+      useCaseSlugToId.set(uc.slug, existing.id);
+      continue;
+    }
+    const created = await prisma.useCase.create({
+      data: {
+        title: uc.title,
+        slug: uc.slug,
+        description: uc.description,
+        primaryKeyword: uc.primaryKeyword,
+        seoTitle: uc.seoTitle,
+        seoDescription: uc.seoDescription,
+      },
+    });
+    useCaseSlugToId.set(uc.slug, created.id);
+  }
+  console.log(`Seeded ${useCaseSlugToId.size} use cases.`);
+
+  // 10. Persona ↔ use-case links
+  let personaUseCaseCount = 0;
+  for (const link of PM_PERSONA_USE_CASES) {
+    const personaId = personaSlugToId.get('project-managers');
+    const useCaseId = useCaseSlugToId.get(link.useCaseSlug);
+    if (!personaId || !useCaseId) continue;
+
+    await prisma.personaUseCase.upsert({
+      where: { personaId_useCaseId: { personaId, useCaseId } },
+      create: {
+        personaId,
+        useCaseId,
+        order: link.order,
+        isPrimary: link.isPrimary,
+        pageEnabled: link.pageEnabled,
+        hubNote: link.hubNote ?? null,
+      },
+      update: {
+        order: link.order,
+        isPrimary: link.isPrimary,
+        pageEnabled: link.pageEnabled,
+        hubNote: link.hubNote ?? null,
+      },
+    });
+    personaUseCaseCount++;
+  }
+  console.log(`Seeded ${personaUseCaseCount} persona-use-case links.`);
+
+  // PM persona top tools (upsert even if persona already existed)
+  const pmPersona = INITIAL_PERSONAS.find((p) => p.slug === 'project-managers');
+  const pmPersonaId = personaSlugToId.get('project-managers');
+  if (pmPersona && pmPersonaId && pmPersona.topToolSlugs) {
+    for (let i = 0; i < pmPersona.topToolSlugs.length; i++) {
+      const toolSlug = pmPersona.topToolSlugs[i];
+      const toolId = toolSlugToId.get(toolSlug);
+      if (!toolId) continue;
+      await prisma.personaTopTool.upsert({
+        where: { personaId_toolId: { personaId: pmPersonaId, toolId } },
+        create: { personaId: pmPersonaId, toolId, order: i },
+        update: { order: i },
+      });
+    }
+  }
+
+  // 11. Tool ↔ use-case mappings
+  let toolUseCaseCount = 0;
+  for (const mapping of PM_TOOL_USE_CASES) {
+    const toolId = toolSlugToId.get(mapping.toolSlug);
+    const useCaseId = useCaseSlugToId.get(mapping.useCaseSlug);
+    if (!toolId || !useCaseId) {
+      console.warn(
+        `Skipping tool-use-case "${mapping.toolSlug}" → "${mapping.useCaseSlug}" — missing tool or use case`
+      );
+      continue;
+    }
+
+    const section = mapping.section ?? '';
+    await prisma.toolUseCase.upsert({
+      where: {
+        toolId_useCaseId_section: { toolId, useCaseId, section },
+      },
+      create: {
+        toolId,
+        useCaseId,
+        fitTier: mapping.fitTier,
+        capabilities: mapping.capabilities,
+        limitation: mapping.limitation ?? null,
+        evidenceUrl: mapping.evidenceUrl,
+        verifiedAt: new Date(PM_VERIFIED_AT),
+        displayOrder: mapping.displayOrder,
+        section,
+      },
+      update: {
+        fitTier: mapping.fitTier,
+        capabilities: mapping.capabilities,
+        limitation: mapping.limitation ?? null,
+        evidenceUrl: mapping.evidenceUrl,
+        verifiedAt: new Date(PM_VERIFIED_AT),
+        displayOrder: mapping.displayOrder,
+      },
+    });
+    toolUseCaseCount++;
+  }
+  console.log(`Seeded ${toolUseCaseCount} tool-use-case mappings.`);
+
+  // 12. Ensure gamma + notion-ai include project-managers in targetUsers
+  for (const slug of ['gamma', 'notion-ai']) {
+    const tool = await prisma.tool.findUnique({ where: { slug } });
+    if (!tool) continue;
+    if (!tool.targetUsers.includes('project-managers')) {
+      await prisma.tool.update({
+        where: { slug },
+        data: { targetUsers: [...tool.targetUsers, 'project-managers'] },
+      });
+    }
+  }
+
+  // 13. Sync tool alternatives for tools with explicit alternatives (incl. PM rivals)
+  for (const tool of INITIAL_TOOLS) {
+    if (!tool.alternatives?.length) continue;
+    const sourceId = toolSlugToId.get(tool.slug);
+    if (!sourceId) continue;
+    for (const altSlug of tool.alternatives) {
+      const targetId = toolSlugToId.get(altSlug);
+      if (!targetId) continue;
+      await prisma.toolAlternative.upsert({
+        where: {
+          sourceToolId_targetToolId: { sourceToolId: sourceId, targetToolId: targetId },
+        },
+        create: { sourceToolId: sourceId, targetToolId: targetId },
+        update: {},
+      });
+    }
+  }
 
   console.log('Seed complete.');
 }

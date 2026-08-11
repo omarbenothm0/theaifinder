@@ -1,7 +1,7 @@
 # Tool Research Inventory
 
 **Last updated:** 2026-08-11  
-**Entries:** 13
+**Entries:** 34 (13 student + 21 PM Phase 3)
 
 Master inventory of **real AI tools** discovered through research. Demo/seed tools (chatgpt, claude, etc.) are **not** listed here — they are placeholder implementation data only.
 
@@ -55,7 +55,7 @@ Master inventory of **real AI tools** discovered through research. Demo/seed too
 TOOL: NotebookLM | https://notebooklm.google.com | Category: NEW — pending category decision, see CATEGORIES.md | Persona: students | Status: RESEARCHED | Evidence: Google AI research/note-taking assistant; analyzes uploaded docs/PDFs/URLs; generates study guides, flashcards, quizzes, Audio Overviews with grounded citations. Active: upgraded June 2026 w/ Gemini 3.5. Source: https://notebooklm.google.com (official site, Gemini live verification 2026-08-11) | Date: 2026-08-11
 Notes: Pricing: Free (capped 50 sources/notebook); advanced features via Google AI subscriptions | Limitation: answers restricted to uploaded sources only, no general web generation unless enabled | Evidence type: VERIFIED FACT (official site) | Confidence: HIGH
 
-TOOL: Otter.ai | https://otter.ai | Category: NEW — pending category decision, see CATEGORIES.md | Persona: students | Status: RESEARCHED | Evidence: Meeting/lecture transcription; real-time audio-to-text, speaker ID, slide capture, AI summaries, chat against transcripts. Active: 2026 pricing verified, LTI/meeting integrations. Source: https://otter.ai (official site, Gemini live verification 2026-08-11) | Date: 2026-08-11
+TOOL: Otter.ai | https://otter.ai | Category: NEW — pending category decision, see CATEGORIES.md | Persona: students, project-managers | Status: RESEARCHED | Evidence: Meeting/lecture transcription; real-time audio-to-text, speaker ID, slide capture, AI summaries, chat against transcripts. **PM Phase 3 (2026-08-11):** VERIFIED for `meeting-notes` — primary fit; official pricing + integrations on otter.ai/pricing. Source: https://otter.ai , https://otter.ai/pricing | Date: 2026-08-11
 Notes: Pricing: Free (300 min/mo, 30 min max/session, 3 lifetime uploads); Pro $16.99/mo ($8.33 annual); Business $30/mo ($19.99 annual) | Limitation: 30-min free session cap forces splitting/upgrading | Evidence type: VERIFIED FACT (official site + pricing page) | Confidence: HIGH
 
 TOOL: RemNote | https://remnote.com | Category: NEW — pending category decision, see CATEGORIES.md | Persona: students | Status: RESEARCHED | Evidence: All-in-one workspace — hierarchical notes, PDF annotation, flashcard generation, spaced-repetition scheduling. Active: ongoing feature releases. Source: https://remnote.com (official site, Gemini live verification 2026-08-11) | Date: 2026-08-11
@@ -88,8 +88,50 @@ Notes: Pricing: No permanent free tier — 7-day trial only; Basic $20/mo ($144/
 TOOL: Monic.ai | https://monic.ai | Category: NEW — pending category decision, see CATEGORIES.md | Persona: students | Status: RESEARCHED | Evidence: Converts course materials (PDFs, YouTube, slides) into flashcards, quizzes, AI tutor sessions, exam simulation. Active: directory listings and platform updates. Source: https://monic.ai (official site, Gemini live verification 2026-08-11) | Date: 2026-08-11
 Notes: Pricing: Free (2,500 one-time AI tokens, 20 daily AI chats, 500MB storage); paid tiers from $4.99/mo | Limitation: token-based free tier restricts high-volume use | Evidence type: VERIFIED FACT (official site) + OBSERVATION (directory listings) | Confidence: LOW — weaker evidence than other entries in this batch; flag for re-verification before VERIFIED promotion
 
-TOOL: Gamma App | https://gamma.app | Category: presentations | Persona: students | Status: RESEARCHED | Evidence: AI presentation/document builder — generates slide decks from prompts or imported files. Active: verified official pricing page. Source: https://gamma.app (official site, Gemini live verification 2026-08-11) | Date: 2026-08-11
-Notes: Pricing: Free (400 signup credits, max 10 slides/prompt, Gamma branding on exports); Plus $10/mo ($9 annual); Pro $20/mo ($18 annual) | Limitation: free credits don't replenish once spent | Evidence type: VERIFIED FACT (official site + pricing page) | Confidence: HIGH | Seed category fit: `presentations`
+TOOL: Gamma App | https://gamma.app | Category: presentations | Persona: students, project-managers | Status: RESEARCHED | Evidence: AI presentation/document builder — generates slide decks from prompts or imported files. **PM Phase 3 (2026-08-11):** VERIFIED for `project-reporting` — **partial** fit (decks/docs, not PM status-report schema). Source: https://gamma.app/pricing , https://help.gamma.app/ | Date: 2026-08-11
+
+TOOL: Fireflies.ai | https://fireflies.ai | Category: NEW — pending category decision | Persona: project-managers | Status: RESEARCHED | Evidence: AI meeting assistant — transcription, summaries, action items, 100+ languages, CRM/PM integrations, MCP. **PM Phase 3:** VERIFIED `meeting-notes` primary. Pricing: free tier; Pro $10/seat/mo annual. Source: https://fireflies.ai , https://fireflies.ai/pricing | Date: 2026-08-11
+
+TOOL: Fathom | https://www.fathom.video | Category: NEW — pending category decision | Persona: project-managers | Status: RESEARCHED | Evidence: AI notetaker — unlimited free tier recordings; summaries, action items, Ask Fathom, CRM sync. **PM Phase 3:** VERIFIED `meeting-notes` primary. Source: https://www.fathom.video , https://www.fathom.video/pricing | Date: 2026-08-11
+
+TOOL: tl;dv | https://tldv.io | Category: NEW — pending category decision | Persona: project-managers | Status: RESEARCHED | Evidence: AI meeting notetaker for Zoom/Meet/Teams; customizable AI minutes; CRM sync. **PM Phase 3:** VERIFIED `meeting-notes` primary. Free forever tier; Pro €18/seat/mo annual. Source: https://tldv.io , https://tldv.io/app/pricing | Date: 2026-08-11
+
+TOOL: Sembly AI | https://www.sembly.ai | Category: NEW — pending category decision | Persona: project-managers | Status: RESEARCHED | Evidence: Agentic meeting intelligence — transcription, notes, action items, AI-generated documents including project status reports. **PM Phase 3:** VERIFIED `meeting-notes` primary + `project-reporting` **primary** (active pool). Source: https://www.sembly.ai , https://www.sembly.ai/pricing , https://www.sembly.ai/ai-report-generator/ | Date: 2026-08-11
+
+TOOL: Zoom AI My Notes | https://www.zoom.com/en/products/ai-assistant/features/ai-note-taking/ | Category: NEW — platform feature, not standalone tool | Persona: project-managers | Status: RESEARCHED | Evidence: Zoom Workplace AI note-taking — transcription, summaries, action items, third-party meeting capture. **PM Phase 3:** VERIFIED `meeting-notes` strong. Source: https://www.zoom.com/en/products/ai-assistant/features/ai-note-taking/ | Date: 2026-08-11
+
+TOOL: Google Gemini in Google Meet | https://workspace.google.com/products/meet/ | Category: NEW — platform feature (Workspace) | Persona: project-managers | Status: RESEARCHED | Evidence: Gemini automates Meet notes, summaries, action items; Docs integration for minutes. **PM Phase 3:** VERIFIED `meeting-notes` strong; Workspace plan pricing NOT VERIFIED this session. Source: https://workspace.google.com/products/meet/ | Date: 2026-08-11
+
+TOOL: Microsoft 365 Copilot | https://www.microsoft.com/en-us/microsoft-365/copilot/ | Category: NEW — platform / suite | Persona: project-managers | Status: RESEARCHED | Evidence: Copilot in Teams meetings (transcript Q&A, recap); Copilot in PowerPoint (project status update deck prompt official). **PM Phase 3:** VERIFIED `meeting-notes` strong + `project-reporting` primary (PowerPoint). Source: learn.microsoft.com Copilot overview; microsoft.com PowerPoint AI page; copilot/pricing | Date: 2026-08-11
+
+TOOL: Beautiful.ai | https://www.beautiful.ai | Category: presentations | Persona: project-managers | Status: RESEARCHED | Evidence: AI presentation maker; Reports & Reviews templates; export PPTX/PDF. **PM Phase 3:** VERIFIED `project-reporting` **partial**. Pro $12/mo annual. Source: https://www.beautiful.ai , https://www.beautiful.ai/pricing | Date: 2026-08-11
+
+TOOL: Notion AI | https://www.notion.com/product/ai | Category: NEW — pending category decision | Persona: project-managers | Status: RESEARCHED | Evidence: Research Mode project reports; weekly reporting; Custom Agents route tasks; brainstorm→roadmap use case. **PM Phase 3:** VERIFIED `project-reporting` **partial** + `task-management` **strong** + `project-planning` **partial**. Source: https://www.notion.com/product/ai , https://www.notion.com/help/research-mode | Date: 2026-08-11
+
+TOOL: Onplana | https://onplana.com | Category: NEW — pending category decision | Persona: project-managers | Status: RESEARCHED | Evidence: AI-native PM platform + free Status Report Writer (RAG status reports from pasted updates). **PM Phase 3:** VERIFIED `project-reporting` **primary** (active pool). Source: https://onplana.com/tools/status-report-writer | Date: 2026-08-11
+
+TOOL: ClickUp Brain² | https://clickup.com/brain | Category: NEW — pending category decision | Persona: project-managers | Status: RESEARCHED | Evidence: Brain² AI — AI Tasks, Projects, Assign & Prioritize, multi-model chat, MCP. **PM Phase 3:** VERIFIED `task-management` primary + `project-planning` primary. Brain AI $9/user/mo; Everything AI $28/user/mo. Source: https://clickup.com/brain , https://clickup.com/pricing | Date: 2026-08-11
+
+TOOL: Asana AI | https://asana.com/product/ai | Category: NEW — pending category decision | Persona: project-managers | Status: RESEARCHED | Evidence: AI Teammates, AI Studio, Asana Dash, AI project plan template. **PM Phase 3:** VERIFIED `task-management` primary + `project-planning` primary. Source: https://asana.com/product/ai , https://asana.com/templates/ai-project-plan | Date: 2026-08-11
+
+TOOL: Monday.com AI | https://monday.com/w/ai | Category: NEW — pending category decision | Persona: project-managers | Status: RESEARCHED | Evidence: AI agents (Sprint Planner, Status Reporter, Sidekick); AI credits on Basic+ ($9/seat/mo annual). **PM Phase 3:** VERIFIED `task-management` primary + `project-planning` primary. Source: https://monday.com/w/ai , https://monday.com/pricing | Date: 2026-08-11
+
+TOOL: Motion | https://www.usemotion.com | Category: NEW — pending category decision | Persona: project-managers | Status: RESEARCHED | Evidence: AI Task Planner + AI Project Manager; Pro AI $19/seat/mo; Business AI $29/seat/mo. **PM Phase 3:** VERIFIED `task-management` primary + `project-planning` primary. Source: https://www.usemotion.com/ , https://www.usemotion.com/pricing | Date: 2026-08-11
+
+TOOL: Todoist Assist | https://www.todoist.com/todoist-assist | Category: NEW — pending category decision | Persona: project-managers, entrepreneurs | Status: RESEARCHED | Evidence: Task Assist, Filter Assist, Email Assist, Ramble. **PM Phase 3:** VERIFIED `task-management` **strong**. Pro/Business for advanced Assist. Source: https://www.todoist.com/todoist-assist , https://todoist.com/pricing | Date: 2026-08-11
+
+TOOL: Wrike AI | https://www.wrike.com/ai | Category: NEW — pending category decision | Persona: project-managers | Status: RESEARCHED | Evidence: Wrike AI agents, Copilot, Board AI task creation; AI Essentials on Business $25/user/mo. **PM Phase 3:** VERIFIED `task-management` primary. Source: https://www.wrike.com/ai , https://www.wrike.com/price/ | Date: 2026-08-11
+
+TOOL: Microsoft Planner + Copilot | https://www.microsoft.com/en-us/microsoft-365/planner/microsoft-planner | Category: NEW — platform feature | Persona: project-managers | Status: RESEARCHED | Evidence: Planner Agent automates plan creation; premium Gantt/dependencies; requires M365 Copilot license. **PM Phase 3:** VERIFIED `project-planning` **strong**. Source: https://learn.microsoft.com/en-us/planner/turn-off-planner-agent | Date: 2026-08-11
+
+TOOL: ProjectManager.com | https://www.projectmanager.com | Category: NEW — pending category decision | Persona: project-managers | Status: RESEARCHED | Evidence: Traditional PM (Gantt, portfolios, reports). **No official AI features verified** — /ai 404. **Excluded** from project-planning active pool. Source: https://www.projectmanager.com/ | Date: 2026-08-11
+
+TOOL: Tome | https://tome.app | Category: presentations (candidate) | Persona: project-managers | Status: **REJECTED** (active pool) | Evidence: **Dropped from project-reporting pool** — tome.app returned 404 (2026-08-11). See REJECTED.md. Prior partial pricing notes may be stale. | Date: 2026-08-11
+Notes: Revisit only if official site restores verifiable product pages.
+
+TOOL: Reclaim.ai | https://www.reclaim.ai | Category: NEW — pending category decision | Persona: project-managers | Status: RESEARCHED | Evidence: AI calendar — AI Tasks, AI Planner, AI Smart Meetings, AI Focus Time. **PM Phase 3:** VERIFIED `project-scheduling` **strong** (page deferred — hub cross-link). Lite free; Starter $10–12/user/mo. Source: https://www.reclaim.ai/ , https://www.reclaim.ai/pricing | Date: 2026-08-11
+
+TOOL: Clockwise | https://www.getclockwise.com | Category: NEW — pending | Persona: project-managers | Status: **REJECTED** | Evidence: Official site shows product shutdown (2026-08-11). Excluded from project-scheduling. See REJECTED.md. | Date: 2026-08-11
 
 ---
 

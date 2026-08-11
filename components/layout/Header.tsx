@@ -7,6 +7,7 @@ import { Search, Sparkles, Compass, Layers, Settings, ChevronDown, Users, ArrowR
 import { SITE_NAME } from '../../lib/brand';
 
 const ROLE_LINKS = [
+  { name: 'Project Managers', slug: 'project-managers' },
   { name: 'Content Creators', slug: 'content-creators' },
   { name: 'Developers', slug: 'developers' },
   { name: 'YouTubers', slug: 'youtubers' },
@@ -17,6 +18,7 @@ const ROLE_LINKS = [
 ];
 
 const CATEGORY_LINKS = [
+  { name: 'Project Management', slug: 'project-management' },
   { name: 'Writing & Copywriting', slug: 'writing' },
   { name: 'Coding & Development', slug: 'coding' },
   { name: 'Image Generation', slug: 'image' },
@@ -209,7 +211,7 @@ export function Header() {
               </div>
 
               <Link
-                href="/compare/chatgpt-vs-claude"
+                href="/compare"
                 className={`px-3.5 py-2 rounded-lg transition-colors cursor-pointer text-sm ${
                   pathname.startsWith('/compare')
                     ? 'text-slate-900 bg-slate-100 font-semibold'

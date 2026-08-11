@@ -66,6 +66,36 @@ DEPRIORITIZED: [item title] | Type: Keyword | Reason: [data-quality / insufficie
 
 ---
 
+## Use Case
+
+```
+USE_CASE: [title] | Slug: [slug] | Primary keyword: [phrase] | Intent: [commercial/informational/…] | Page: [yes / conditional / defer] | Personas: [slug(s)] | Status: RESEARCHED | Date: YYYY-MM-DD
+```
+
+**Maps to:** `USE_CASES.md` — title, slug, primary keyword, search intent, page justification, related personas, status, date researched
+
+---
+
+## Persona ↔ Use Case
+
+```
+PERSONA_USE_CASE: [persona slug] → [use-case slug] | Order: [N] | Primary: [yes/no] | Page path: /for/[persona]/[use-case] | Status: RESEARCHED | Date: YYYY-MM-DD
+```
+
+**Maps to:** `PERSONA_USE_CASES.md` — persona slug, use case slug, display order, isPrimary flag, proposed URL, status, date
+
+---
+
+## Tool ↔ Use Case (fit evidence)
+
+```
+TOOL_USE_CASE: [tool name] × [use-case slug] | Fit: [primary/strong/partial/listed/exclude] | Evidence: [official feature/pricing URL + 1-line proof] | Limitation: [1 line] | Status: DISCOVERED/RESEARCHED/VERIFIED | Date: YYYY-MM-DD
+```
+
+**Maps to:** `TOOL_USE_CASES.md` — tool slug/name, use case slug, fit tier, verified capabilities, limitations, sources, evidence quality, status, date
+
+---
+
 ## Scaling beyond markdown
 
 As the tool inventory grows toward **~100+ entries**, markdown blocks in `TOOLS.md` become harder to scan, sort, filter, and batch-edit. Markdown works well for the first research phase (roughly **up to ~40–50 tool entries**) where each tool needs narrative notes, evidence citations, and status commentary alongside structured fields.

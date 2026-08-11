@@ -55,7 +55,7 @@ export default async function ComparisonPage({ params }: { params: Promise<{ slu
 
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: 'Home', url: BASE_URL },
-    { name: 'Comparisons', url: absoluteUrl('/ai-tools-directory') },
+    { name: 'Comparisons', url: absoluteUrl('/compare') },
     { name: comp.title, url: absoluteUrl(`/compare/${comp.slug}`) },
   ]);
 

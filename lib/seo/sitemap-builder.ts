@@ -21,6 +21,7 @@ export function buildStaticSitemapEntries(baseUrl: string): MetadataRoute.Sitema
     { path: '/ai-tool-finder', priority: 0.8, changeFrequency: 'monthly' as const },
     { path: '/ai-tools-directory', priority: 0.8, changeFrequency: 'weekly' as const },
     { path: '/for', priority: 0.8, changeFrequency: 'weekly' as const },
+    { path: '/compare', priority: 0.8, changeFrequency: 'weekly' as const },
     { path: '/about', priority: 0.5, changeFrequency: 'yearly' as const },
     { path: '/contact', priority: 0.5, changeFrequency: 'yearly' as const },
     { path: '/privacy', priority: 0.3, changeFrequency: 'yearly' as const },
@@ -79,6 +80,19 @@ export function buildPersonaSitemapEntries(
       changeFrequency: 'weekly' as const,
       priority: 0.7,
     }));
+}
+
+export function buildUseCaseSitemapEntries(
+  pages: Array<{ personaSlug: string; useCaseSlug: string }>,
+  baseUrl: string
+): MetadataRoute.Sitemap {
+  const now = new Date();
+  return pages.map((page) => ({
+    url: `${baseUrl}/for/${page.personaSlug}/${page.useCaseSlug}`,
+    lastModified: now,
+    changeFrequency: 'weekly' as const,
+    priority: 0.65,
+  }));
 }
 
 export function buildComparisonSitemapEntries(

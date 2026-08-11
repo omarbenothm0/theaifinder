@@ -55,9 +55,18 @@ export function ToolCatalogClient({
 
     if (filters.category && filters.category !== 'all') {
       const cat = categories.find((c) => c.slug === filters.category || c.id === filters.category);
-      if (cat && t.categoryId !== cat.id && t.categoryName !== cat.name) {
+      if (
+        cat &&
+        t.categorySlug !== cat.slug &&
+        t.categoryId !== cat.id &&
+        t.categoryName !== cat.name
+      ) {
         return false;
       }
+    }
+
+    if (filters.persona && filters.persona !== 'all') {
+      if (!t.targetUsers.includes(filters.persona)) return false;
     }
 
     if (filters.pricing && filters.pricing !== 'all') {
