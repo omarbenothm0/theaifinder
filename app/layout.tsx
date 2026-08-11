@@ -3,36 +3,38 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
+import { getBaseUrl } from '../lib/seo/base-url';
+import { SITE_NAME, SITE_OG_NAME, siteRootTitle, SITE_HERO_TITLE } from '../lib/brand';
 
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'https://aifind.io';
+const BASE_URL = getBaseUrl();
 
 export const metadata: Metadata = {
-  title: 'AIFind - Discover, Compare & Choose the Best AI Tools (2026)',
-  description: 'Find the right AI tool for any task. Search, compare, and filter 100+ top-rated AI software for writing, coding, video, images, and productivity.',
+  title: siteRootTitle(),
+  description:
+    'Find the right AI tool for any task. Search, compare, and filter 100+ top-rated AI software for writing, coding, video, images, and productivity.',
   metadataBase: new URL(BASE_URL),
-  alternates: {
-    canonical: BASE_URL,
-  },
   openGraph: {
-    title: 'AIFind - Discover, Compare & Choose the Best AI Tools',
-    description: 'Find the right AI tool for any task. Search, compare, and filter 100+ top-rated AI software for writing, coding, video, images, and productivity.',
+    title: `${SITE_NAME} - ${SITE_HERO_TITLE}`,
+    description:
+      'Find the right AI tool for any task. Search, compare, and filter 100+ top-rated AI software for writing, coding, video, images, and productivity.',
     url: BASE_URL,
-    siteName: 'AIFind Discovery Platform',
+    siteName: SITE_OG_NAME,
     images: [
       {
-        url: `${BASE_URL}/api/og?title=Discover,%20Compare%20%26%20Choose%20the%20Best%20AI%20Tools&type=default`,
+        url: `${BASE_URL}/api/og?title=${encodeURIComponent(SITE_HERO_TITLE)}&type=default`,
         width: 1200,
         height: 630,
-        alt: 'AIFind - Discover, Compare & Choose the Best AI Tools',
+        alt: siteRootTitle(false),
       },
     ],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AIFind - Discover, Compare & Choose the Best AI Tools',
-    description: 'Find the right AI tool for any task. Search, compare, and filter 100+ top-rated AI software.',
-    images: [`${BASE_URL}/api/og?title=Discover,%20Compare%20%26%20Choose%20the%20Best%20AI%20Tools&type=default`],
+    title: `${SITE_NAME} - ${SITE_HERO_TITLE}`,
+    description:
+      'Find the right AI tool for any task. Search, compare, and filter 100+ top-rated AI software.',
+    images: [`${BASE_URL}/api/og?title=${encodeURIComponent(SITE_HERO_TITLE)}&type=default`],
   },
   robots: {
     index: true,

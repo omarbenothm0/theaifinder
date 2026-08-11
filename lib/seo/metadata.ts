@@ -1,7 +1,20 @@
 import { Metadata } from 'next';
 import { Tool, Category, Persona, Comparison } from '../../types/tool';
+import { getBaseUrl, absoluteUrl } from './base-url';
+import {
+  isToolIndexable,
+  isCategoryIndexable,
+  isPersonaIndexable,
+  isComparisonIndexable,
+} from './indexability';
+import {
+  SITE_NAME,
+  SITE_OG_NAME,
+  SITE_OG_BADGE_DEFAULT,
+  sitePageTitle,
+} from '../brand';
 
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://aifind.io';
+const BASE_URL = getBaseUrl();
 
 export interface SEOConfig {
   title: string;
@@ -18,10 +31,13 @@ export function constructMetadata({
   ogImage,
   noIndex = false,
 }: SEOConfig): Metadata {
-  const fullCanonical = canonicalUrl ? (canonicalUrl.startsWith('http') ? canonicalUrl : `${BASE_URL}${canonicalUrl}`) : BASE_URL;
+  const fullCanonical = canonicalUrl
+    ? absoluteUrl(canonicalUrl)
+    : BASE_URL;
 
-  // Set the default ogImage fallback using our branded /api/og dynamic generation endpoint
-  const finalOgImage = ogImage || `${BASE_URL}/api/og?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}&badge=${encodeURIComponent('AI DISCOVERY')}&type=default`;
+  const finalOgImage =
+    ogImage ||
+    `${BASE_URL}/api/og?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}&badge=${encodeURIComponent(SITE_OG_BADGE_DEFAULT)}&type=default`;
 
   return {
     title,
@@ -34,7 +50,7 @@ export function constructMetadata({
       title,
       description,
       url: fullCanonical,
-      siteName: 'AIFind Discovery Platform',
+      siteName: SITE_OG_NAME,
       images: [
         {
           url: finalOgImage,
@@ -57,58 +73,78 @@ export function constructMetadata({
   };
 }
 
+export function generateNotFoundMetadata(title = 'Page Not Found'): Metadata {
+  return {
+    title,
+    robots: { index: false, follow: false },
+  };
+}
+
 export function generatePageMetadata(config: SEOConfig): Metadata {
   return constructMetadata(config);
 }
 
 export function generateToolMetadata(tool: Tool): Metadata {
+  const indexResult = isToolIndexable(tool);
   const ogTitle = `${tool.name} Review, Pricing & Features (2026)`;
-  const ogDescription = tool.tagline || `Read reviews, pricing options, and alternatives for ${tool.name}.`;
+  const ogDescription = tool.tagline;
   const ogImage = `${BASE_URL}/api/og?title=${encodeURIComponent(ogTitle)}&description=${encodeURIComponent(ogDescription)}&badge=${encodeURIComponent('AI TOOL PROFILE')}&type=tool`;
 
   return constructMetadata({
-    title: `${tool.name} Review, Pricing & Features (2026) | AIFind`,
-    description: `${tool.tagline} Read verified user reviews, pricing options, API availability, and top alternatives for ${tool.name}.`,
+    title: sitePageTitle(`${tool.name} Review, Pricing & Features (2026)`),
+    description: tool.tagline
+      ? `${tool.tagline} Read verified user reviews, pricing options, API availability, and top alternatives for ${tool.name}.`
+      : `Read verified user reviews, pricing options, API availability, and top alternatives for ${tool.name}.`,
     canonicalUrl: `/tools/${tool.slug}`,
-    ogImage
+    ogImage,
+    noIndex: !indexResult.indexable,
   });
 }
 
 export function generateCategoryMetadata(category: Category): Metadata {
+  const indexResult = isCategoryIndexable(category);
   const ogTitle = `Best ${category.name} AI Tools (2026)`;
-  const ogDescription = category.description || `Compare top artificial intelligence software for ${category.name.toLowerCase()}.`;
+  const ogDescription = category.description;
   const ogImage = `${BASE_URL}/api/og?title=${encodeURIComponent(ogTitle)}&description=${encodeURIComponent(ogDescription)}&badge=${encodeURIComponent('AI CATEGORY HUB')}&type=category`;
 
   return constructMetadata({
-    title: `Best ${category.name} AI Tools (2026) | AIFind`,
-    description: `${category.description} Compare top artificial intelligence software for ${category.name.toLowerCase()}.`,
+    title: sitePageTitle(`Best ${category.name} AI Tools (2026)`),
+    description: category.description,
     canonicalUrl: `/category/${category.slug}`,
-    ogImage
+    ogImage,
+    noIndex: !indexResult.indexable,
   });
 }
 
-export function generatePersonaMetadata(persona: Persona): Metadata {
+export function generatePersonaMetadata(
+  persona: Persona,
+  linkedToolCount = 0
+): Metadata {
+  const indexResult = isPersonaIndexable(persona, linkedToolCount);
   const ogTitle = `Top AI Tools for ${persona.title} (2026)`;
-  const ogDescription = persona.description || `Browse custom artificial intelligence software matched for ${persona.title}.`;
+  const ogDescription = persona.description;
   const ogImage = `${BASE_URL}/api/og?title=${encodeURIComponent(ogTitle)}&description=${encodeURIComponent(ogDescription)}&badge=${encodeURIComponent('AI WORKFLOW GUIDE')}&type=persona`;
 
   return constructMetadata({
-    title: `Top AI Tools for ${persona.title} (2026) | AIFind`,
+    title: sitePageTitle(`Top AI Tools for ${persona.title} (2026)`),
     description: persona.description,
     canonicalUrl: `/for/${persona.slug}`,
-    ogImage
+    ogImage,
+    noIndex: !indexResult.indexable,
   });
 }
 
 export function generateComparisonMetadata(comparison: Comparison): Metadata {
-  const ogTitle = `${comparison.title}`;
-  const ogDescription = comparison.verdict || `Comprehensive feature and pricing matrix side-by-side.`;
+  const indexResult = isComparisonIndexable(comparison);
+  const ogTitle = comparison.title;
+  const ogDescription = comparison.verdict;
   const ogImage = `${BASE_URL}/api/og?title=${encodeURIComponent(ogTitle)}&description=${encodeURIComponent(ogDescription)}&badge=${encodeURIComponent('HEAD-TO-HEAD')}&type=comparison`;
 
   return constructMetadata({
-    title: `${comparison.title}: Head-to-Head Comparison (2026) | AIFind`,
+    title: sitePageTitle(`${comparison.title}: Head-to-Head Comparison (2026)`),
     description: comparison.verdict,
     canonicalUrl: `/compare/${comparison.slug}`,
-    ogImage
+    ogImage,
+    noIndex: !indexResult.indexable,
   });
 }

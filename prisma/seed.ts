@@ -15,6 +15,12 @@ async function main() {
   // 1. Categories first (Tools depend on them)
   const categorySlugToId = new Map<string, string>();
   for (const cat of INITIAL_CATEGORIES) {
+    const existing = await prisma.category.findUnique({ where: { slug: cat.slug } });
+    if (existing) {
+      categorySlugToId.set(cat.slug, existing.id);
+      continue;
+    }
+
     const created = await prisma.category.create({
       data: {
         name: cat.name,
@@ -39,6 +45,12 @@ async function main() {
   // 2. Personas (independent of tools for now, topTools linked later)
   const personaSlugToId = new Map<string, string>();
   for (const persona of INITIAL_PERSONAS) {
+    const existing = await prisma.persona.findUnique({ where: { slug: persona.slug } });
+    if (existing) {
+      personaSlugToId.set(persona.slug, existing.id);
+      continue;
+    }
+
     const created = await prisma.persona.create({
       data: {
         title: persona.title,
@@ -77,6 +89,12 @@ async function main() {
       console.warn(
         `Skipping tool "${tool.slug}" — could not resolve categoryId "${tool.categoryId}"`
       );
+      continue;
+    }
+
+    const existingTool = await prisma.tool.findUnique({ where: { slug: tool.slug } });
+    if (existingTool) {
+      toolSlugToId.set(tool.slug, existingTool.id);
       continue;
     }
 
@@ -258,6 +276,11 @@ async function main() {
       console.warn(`Skipping comparison "${comp.slug}" — one or both tools not found`);
       continue;
     }
+    const existingComparison = await prisma.comparison.findUnique({ where: { slug: comp.slug } });
+    if (existingComparison) {
+      comparisonCount++;
+      continue;
+    }
     await prisma.comparison.create({
       data: {
         slug: comp.slug,
@@ -286,6 +309,11 @@ async function main() {
   // 8. Articles
   let articleCount = 0;
   for (const article of INITIAL_ARTICLES) {
+    const existingArticle = await prisma.article.findUnique({ where: { slug: article.slug } });
+    if (existingArticle) {
+      articleCount++;
+      continue;
+    }
     await prisma.article.create({
       data: {
         title: article.title,

@@ -56,14 +56,6 @@ export async function POST(req: NextRequest) {
 
     const passwordOk = verifyAdminPassword(password);
 
-    console.log('[ADMIN LOGIN DEBUG]', {
-  usernameReceived: username,
-  usernameExpected: expectedCreds.username,
-  usernameOk,
-  passwordLength: password.length,
-  passwordOk,
-});
-
     if (!usernameOk || !passwordOk) {
       await new Promise((resolve) => setTimeout(resolve, 650));
 

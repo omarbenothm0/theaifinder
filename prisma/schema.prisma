@@ -20,6 +20,12 @@ enum ReviewStateEnum {
   inReview
 }
 
+enum PublishStatusEnum {
+  draft
+  published
+  archived
+}
+
 model Category {
   id              String   @id @default(cuid())
   name            String   @unique
@@ -29,6 +35,7 @@ model Category {
   longDescription String   @db.Text
   seoTitle        String
   seoDescription  String
+  publishStatus   PublishStatusEnum @default(published)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -36,6 +43,7 @@ model Category {
   faqs  CategoryFAQ[]
 
   @@index([slug])
+  @@index([publishStatus])
 }
 
 model CategoryFAQ {
@@ -77,6 +85,7 @@ model Tool {
   hasApi            Boolean           @default(false)
   hasMobileApp      Boolean           @default(false)
   hasExtension      Boolean           @default(false)
+  publishStatus     PublishStatusEnum @default(published)
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
 
@@ -103,6 +112,9 @@ model Tool {
 
   @@index([slug])
   @@index([categoryId])
+  @@index([featured])
+  @@index([trending])
+  @@index([publishStatus])
 }
 
 model ToolSource {
@@ -159,12 +171,14 @@ model Persona {
   description String   @db.Text
   targetRole  String
   keyBenefits String[]
+  publishStatus PublishStatusEnum @default(published)
   createdAt   DateTime @default(now())
 
   faqs     PersonaFAQ[]
   topTools PersonaTopTool[]
 
   @@index([slug])
+  @@index([publishStatus])
 }
 
 model PersonaTopTool {
@@ -216,6 +230,7 @@ model Comparison {
   bestFor2   String   @db.Text
   verdict    String   @db.Text
   winnerSlug String
+  publishStatus PublishStatusEnum @default(published)
   createdAt  DateTime @default(now())
 
   tool1    Tool                @relation("Tool1Comparisons", fields: [tool1Id], references: [id])
@@ -223,6 +238,7 @@ model Comparison {
   features ComparisonFeature[]
 
   @@index([slug])
+  @@index([publishStatus])
 }
 
 model ComparisonFeature {
@@ -248,7 +264,9 @@ model Article {
   publishedAt         DateTime
   relatedCategorySlug String?
   relatedToolSlugs    String[]
+  publishStatus       PublishStatusEnum @default(published)
   createdAt           DateTime @default(now())
 
   @@index([slug])
+  @@index([publishStatus])
 }

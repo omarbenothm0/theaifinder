@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { SITE_NAME } from '../../lib/brand';
 import { Sparkles, ArrowRight, CheckCircle2, ShieldCheck, Database, FileText } from 'lucide-react';
 
 export function Footer() {
@@ -28,7 +29,7 @@ export function Footer() {
               <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center text-slate-900 font-bold">
                 <Sparkles className="w-4 h-4 text-slate-900" />
               </div>
-              <span className="font-bold text-xl text-white tracking-tight">AIFind</span>
+              <span className="font-bold text-xl text-white tracking-tight">{SITE_NAME}</span>
             </div>
             <p className="text-sm text-slate-400 max-w-sm leading-relaxed">
               Find the right AI tool for any task. An independent AI tools directory and discovery engine built for professionals, creators, and engineering teams.
@@ -159,7 +160,7 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/about" className="hover:text-emerald-400 transition-colors cursor-pointer">
-                  About AIFind
+                  About {SITE_NAME}
                 </Link>
               </li>
               <li>
@@ -203,7 +204,7 @@ export function Footer() {
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
               <span className="font-medium text-slate-300">Platform Curation Live</span>
             </div>
-            <span>&copy; 2026 AIFind Platform. All rights reserved.</span>
+            <span>&copy; 2026 {SITE_NAME}. All rights reserved.</span>
           </div>
 
           <div className="flex items-center gap-4">

@@ -18,7 +18,18 @@ const getAuthSecret = (): string => {
     process.env.NEXTAUTH_SECRET ||
     'fallback-dev-secret-change-immediately-9780e2';
 
-  if (secret.length < 16) {
+  if (process.env.NODE_ENV === 'production') {
+    if (
+      !process.env.ADMIN_AUTH_SECRET ||
+      secret.length < 32 ||
+      secret.includes('fallback-dev') ||
+      secret.includes('change-me')
+    ) {
+      throw new Error(
+        '[ADMIN AUTH] ADMIN_AUTH_SECRET must be set to a strong random value (>= 32 chars) in production.'
+      );
+    }
+  } else if (secret.length < 16) {
     console.warn(
       '[ADMIN AUTH] ADMIN_AUTH_SECRET is too short. Please set a strong secret in env.'
     );
@@ -57,6 +68,8 @@ export const getAdminCredentials = (): {
       .createHash('sha256')
       .update(envPassword + getAuthSecret().slice(0, 8))
       .digest('hex');
+  } else if (process.env.NODE_ENV === 'production') {
+    throw new Error('[ADMIN AUTH] ADMIN_PASSWORD must be set in production.');
   } else {
     passwordHash = crypto
       .createHash('sha256')
@@ -120,17 +133,14 @@ const signToken = async (payload: Record<string, any>): Promise<string> => {
 const verifyToken = async (token: string): Promise<Record<string, any> | null> => {
   try {
     const parts = token.split('.');
-    console.log('[VERIFY DEBUG] parts count:', parts.length);
 
     const [encoded, signature] = parts;
     if (!encoded || !signature) {
-      console.log('[VERIFY DEBUG] missing encoded or signature');
       return null;
     }
 
     const key = await getHmacKey();
 
-    // Decode the received base64url signature back into raw bytes
     const signatureBytes = Buffer.from(signature, 'base64url');
 
     const sigOk = await globalThis.crypto.subtle.verify(
@@ -140,21 +150,16 @@ const verifyToken = async (token: string): Promise<Record<string, any> | null> =
       new TextEncoder().encode(encoded)
     );
 
-    console.log('[VERIFY DEBUG] sigOk:', sigOk);
-
     if (!sigOk) {
-      console.log('[VERIFY DEBUG] sigOk false, returning null');
       return null;
     }
 
     const payload = JSON.parse(
       Buffer.from(encoded, 'base64url').toString('utf-8')
     );
-    console.log('[VERIFY DEBUG] payload parsed:', payload);
 
     return payload;
-  } catch (e) {
-    console.log('[VERIFY DEBUG] verifyToken exception:', (e as Error).message);
+  } catch {
     return null;
   }
 };
@@ -215,7 +220,6 @@ export const getSessionFromRequest = async (
 } | null> => {
   try {
     const raw = request.cookies.get(SESSION_COOKIE_NAME)?.value;
-    console.log('[VERIFY DEBUG] cookie present:', !!raw);
 
     if (!raw) return null;
 
@@ -223,8 +227,6 @@ export const getSessionFromRequest = async (
     if (!payload) return null;
 
     const now = Math.floor(Date.now() / 1000);
-    console.log('[VERIFY DEBUG] role check:', payload.role === 'admin');
-    console.log('[VERIFY DEBUG] exp check:', payload.exp > now);
 
     const valid = payload.role === 'admin' && payload.exp > now;
 
@@ -234,8 +236,7 @@ export const getSessionFromRequest = async (
       exp: payload.exp,
       valid,
     };
-  } catch (e) {
-    console.log('[VERIFY DEBUG] getSessionFromRequest exception:', (e as Error).message);
+  } catch {
     return null;
   }
 };

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Tool, Category, Persona, Comparison } from '../../types/tool';
+import { SITE_NAME } from '../../lib/brand';
 import { ToolCard } from '../tool/ToolCard';
 import { CategoryCard } from '../category/CategoryCard';
 import {
@@ -388,7 +389,7 @@ export function HomePageClient({
             How We Evaluate &amp; Index Artificial Intelligence Software
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            At AIFind, our objective is to simplify the rapidly evolving landscape of generative artificial intelligence software. We maintain strict evaluation standards, verifying developer capabilities, pricing transparently, testing API availability, and analyzing real-world workflow suitability.
+            At {SITE_NAME}, our objective is to simplify the rapidly evolving landscape of generative artificial intelligence software. We maintain strict evaluation standards, verifying developer capabilities, pricing transparently, testing API availability, and analyzing real-world workflow suitability.
           </p>
         </div>
 

@@ -5,15 +5,16 @@ import { PersonaService } from '../../lib/services/persona.service';
 import { ToolCard } from '../../components/tool/ToolCard';
 import { InternalLinks } from '../../components/shared/InternalLinks';
 import { generatePageMetadata } from '../../lib/seo/metadata';
+import { sitePageTitle } from '../../lib/brand';
 import { Sparkles, Trophy, Star } from 'lucide-react';
 
 export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
-    title: 'Top 50 Best AI Tools & Software of 2026 (Curated Rankings)',
+    title: sitePageTitle('Best AI Tools & Software Rankings'),
     description: 'Expert-curated rankings of the best AI software across writing, coding, video generation, image creation, and business productivity.',
-    canonicalUrl: 'https://aifind.io/best-ai-tools'
+    canonicalUrl: '/best-ai-tools'
   });
 }
 

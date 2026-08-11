@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { generatePageMetadata } from '../../lib/seo/metadata';
+import { SITE_NAME, sitePageTitle } from '../../lib/brand';
 import {
   ShieldCheck,
   Database,
@@ -17,9 +18,9 @@ export const revalidate = 86400;
 
 export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
-    title: 'Privacy Policy | AIFind (Updated 2026)',
+    title: sitePageTitle(`Privacy Policy (${SITE_NAME}, Updated 2026)`),
     description:
-      'Read the AIFind privacy policy: what personal data we collect, how cookies are used, third-party analytics, your rights under GDPR and CCPA, and how to contact our data protection officer.',
+      `Read the ${SITE_NAME} privacy policy: what personal data we collect, how cookies are used, third-party analytics, your rights under GDPR and CCPA, and how to contact our data protection officer.`,
     canonicalUrl: '/privacy',
   });
 }
@@ -35,7 +36,7 @@ const SECTIONS: Array<{
     Icon: Eye,
     title: '1. Information We Collect',
     body: [
-      'AIFind collects a minimal amount of personal data necessary to operate, improve and secure our AI tools directory.',
+      'TheRadarHub collects a minimal amount of personal data necessary to operate, improve and secure our AI tools directory.',
       'Voluntary submissions: when you email us, submit a listing suggestion, or sign up to the weekly digest we capture your name, email address and any message content you provide.',
       'Product usage: server logs (IP address, user agent, referrer, timestamp) and anonymized analytics events are retained for up to 30 days for abuse prevention and site reliability.',
       'User reviews: any author name, rating, comment or role you submit via the reviews feature is stored alongside the applicable tool listing.',
@@ -74,7 +75,7 @@ const SECTIONS: Array<{
     Icon: Lock,
     title: '5. Security & Retention',
     body: [
-      'In transit: all traffic to AIFind is served over HTTPS with HSTS enabled and TLS 1.2+ enforced.',
+      'In transit: all traffic to TheRadarHub is served over HTTPS with HSTS enabled and TLS 1.2+ enforced.',
       'At rest: application databases are encrypted, credentials are stored in environment-managed secrets, and admin sessions use signed, short-lived tokens.',
       'Retention: logs and pseudonymized analytics data are deleted on a rolling 30-365 day schedule depending on category. Subscriber emails are retained until unsubscribe.',
     ],
@@ -94,7 +95,7 @@ const SECTIONS: Array<{
     Icon: ShieldAlert,
     title: '7. Children and Minors',
     body: [
-      'AIFind is a professional directory and is not directed to children under the age of 16.',
+      'TheRadarHub is a professional directory and is not directed to children under the age of 16.',
       'We do not knowingly collect personal information from children. If you believe a child has submitted data to us, contact privacy@aifind.io and we will delete it promptly.',
     ],
   },
@@ -126,11 +127,11 @@ export default function PrivacyPage() {
           Privacy Policy
         </div>
         <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900">
-          How AIFind Protects Your Privacy
+          How TheRadarHub Protects Your Privacy
         </h1>
         <p className="text-sm text-slate-600 max-w-2xl mx-auto leading-relaxed">
           Last updated <span className="font-semibold text-slate-900">{LAST_UPDATED}</span>. This
-          policy explains what information the AIFind directory collects, why it is processed, and
+          policy explains what information the TheRadarHub directory collects, why it is processed, and
           the concrete controls you have over your data.
         </p>
       </header>
@@ -163,7 +164,7 @@ export default function PrivacyPage() {
       </div>
 
       <div className="text-center text-xs text-slate-500 pt-2">
-        &copy; {new Date().getFullYear()} AIFind Platform &middot; Policy document hash updated at
+        &copy; {new Date().getFullYear()} TheRadarHub Platform &middot; Policy document hash updated at
         publication.
       </div>
     </div>

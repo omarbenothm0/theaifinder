@@ -1,14 +1,15 @@
 import { Metadata } from 'next';
 import { generatePageMetadata } from '../../lib/seo/metadata';
+import { SITE_NAME, sitePageTitle } from '../../lib/brand';
 import { Sparkles, Target, Users, Award, Heart, ShieldCheck, Lightbulb, TrendingUp } from 'lucide-react';
 
 export const revalidate = 86400;
 
 export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
-    title: 'About AIFind - Our Mission, Story & Team (2026)',
+    title: sitePageTitle(`About ${SITE_NAME} - Our Mission, Story & Team`),
     description:
-      "Learn about AIFind - the independent AI tools discovery platform built by engineers, researchers and AI practitioners. Discover our mission, editorial principles and how we curate software listings.",
+      `Learn about ${SITE_NAME} - the independent AI tools discovery platform built by engineers, researchers and AI practitioners. Discover our mission, editorial principles and how we curate software listings.`,
     canonicalUrl: '/about',
   });
 }
@@ -19,7 +20,7 @@ export default function AboutPage() {
       <section className="bg-slate-900 text-white rounded-3xl p-8 sm:p-12 shadow-lg max-w-5xl mx-auto text-center space-y-5">
         <div className="inline-flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
           <Sparkles className="w-4 h-4 text-emerald-400" />
-          About AIFind
+          About {SITE_NAME}
         </div>
         <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
           Independent AI Tools Discovery,
@@ -27,7 +28,7 @@ export default function AboutPage() {
           <span className="text-emerald-400">Built by Practitioners</span>
         </h1>
         <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
-          AIFind is a curated directory of the world's best artificial intelligence software. We
+          {SITE_NAME} is a curated directory of the world's best artificial intelligence software. We
           help professionals, creators and teams discover the right AI tools for their workflow -
           with honest reviews, head-to-head comparisons and verified pricing data.
         </p>
@@ -43,7 +44,7 @@ export default function AboutPage() {
           {
             Icon: Users,
             title: 'Who We Serve',
-            text: 'From indie developers to Fortune-500 engineering teams, from solo creators to marketing agencies - AIFind helps decision-makers shortlist software with confidence.',
+            text: `From indie developers to Fortune-500 engineering teams, from solo creators to marketing agencies - ${SITE_NAME} helps decision-makers shortlist software with confidence.`,
           },
           {
             Icon: Lightbulb,
@@ -101,7 +102,7 @@ export default function AboutPage() {
           <ShieldCheck className="w-4 h-4 text-emerald-600" />
         </div>
         <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">
-          Thank you for trusting AIFind
+          Thank you for trusting {SITE_NAME}
         </h2>
         <p className="text-sm text-slate-600 leading-relaxed">
           Questions about our methodology, want to suggest a tool, or interested in partnering?{' '}

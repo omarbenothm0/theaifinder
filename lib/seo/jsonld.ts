@@ -1,41 +1,52 @@
 import { Tool, Category } from '../../types/tool';
+import { getBaseUrl, absoluteUrl } from './base-url';
+import { SITE_NAME } from '../brand';
 
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://aifind.io';
+const BASE_URL = getBaseUrl();
 
 export function getWebsiteSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'AIFind Discovery Platform',
+    name: SITE_NAME,
     url: BASE_URL,
     potentialAction: {
       '@type': 'SearchAction',
-      target: `${BASE_URL}/ai-tools?search={search_term_string}`,
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${BASE_URL}/ai-tools?search={search_term_string}`,
+      },
       'query-input': 'required name=search_term_string',
     },
   };
 }
 
 export function generateSoftwareApplicationSchema(tool: Tool) {
-  return {
+  const schema: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
     name: tool.name,
-    operatingSystem: 'All Web Platforms, iOS, Android',
+    url: absoluteUrl(`/tools/${tool.slug}`),
+    description: tool.tagline,
     applicationCategory: tool.categoryName,
     offers: {
       '@type': 'Offer',
       price: tool.monthlyPrice ? tool.monthlyPrice.toString() : '0.00',
       priceCurrency: 'USD',
     },
-    aggregateRating: {
+  };
+
+  if (tool.reviewCount > 0 && tool.rating > 0) {
+    schema.aggregateRating = {
       '@type': 'AggregateRating',
       ratingValue: tool.rating.toString(),
       reviewCount: tool.reviewCount.toString(),
       bestRating: '5',
       worstRating: '1',
-    },
-  };
+    };
+  }
+
+  return schema;
 }
 
 export function generateBreadcrumbSchema(items: { name: string; url: string }[]) {

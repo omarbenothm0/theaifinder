@@ -6,8 +6,11 @@ import { CategoryService } from '../../../lib/services/category.service';
 import { PersonaToolsFilter } from '../../../components/tool/PersonaToolsFilter';
 import { InternalLinks } from '../../../components/shared/InternalLinks';
 import { JsonLd } from '../../../components/shared/JsonLd';
-import { generatePersonaMetadata } from '../../../lib/seo/metadata';
+import { generatePersonaMetadata, generateNotFoundMetadata } from '../../../lib/seo/metadata';
+import { isPersonaIndexable } from '../../../lib/seo/indexability';
+import { dbRepository } from '../../../lib/dbRepository';
 import { generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
+import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
 import { Users, CheckCircle2, Compass, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
@@ -15,16 +18,20 @@ export const revalidate = 3600;
 
 export async function generateStaticParams() {
   const personas = await PersonaService.getPersonas();
-  return personas.map((p) => ({
-    slug: p.slug
-  }));
+  const linkedToolCounts = await dbRepository.getPersonaLinkedToolCounts();
+  return personas
+    .filter((p) => isPersonaIndexable(p, linkedToolCounts[p.slug] ?? 0).indexable)
+    .map((p) => ({
+      slug: p.slug,
+    }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const persona = await PersonaService.getPersonaBySlug(slug);
-  if (!persona) return { title: 'Persona Not Found' };
-  return generatePersonaMetadata(persona);
+  if (!persona) return generateNotFoundMetadata('Persona Not Found');
+  const linkedToolCount = await dbRepository.getPersonaLinkedToolCount(slug);
+  return generatePersonaMetadata(persona, linkedToolCount);
 }
 
 export default async function PersonaPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -42,9 +49,9 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
   ]);
 
   const breadcrumbSchema = generateBreadcrumbSchema([
-    { name: 'Home', url: 'https://aifind.io' },
-    { name: 'Workflows', url: 'https://aifind.io/ai-tools-directory' },
-    { name: persona.title, url: `https://aifind.io/for/${persona.slug}` }
+    { name: 'Home', url: getBaseUrl() },
+    { name: 'Workflows', url: absoluteUrl('/ai-tools-directory') },
+    { name: persona.title, url: absoluteUrl(`/for/${persona.slug}`) }
   ]);
 
   return (

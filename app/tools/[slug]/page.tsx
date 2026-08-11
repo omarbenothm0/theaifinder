@@ -9,26 +9,22 @@ import { ComparisonService } from '../../../lib/services/comparison.service';
 import { ToolCard } from '../../../components/tool/ToolCard';
 import { InternalLinks } from '../../../components/shared/InternalLinks';
 import { JsonLd } from '../../../components/shared/JsonLd';
-import { generateToolMetadata } from '../../../lib/seo/metadata';
+import { generateToolMetadata, generateNotFoundMetadata } from '../../../lib/seo/metadata';
 import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
 import { Star, CheckCircle2, ExternalLink, Check, X, ArrowRight, Layers, Users, Building2, Monitor, Clock } from 'lucide-react';
 
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://aifind.io';
+import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
+
+const BASE_URL = getBaseUrl();
 
 export const revalidate = 3600;
-
-export async function generateStaticParams() {
-  const toolsRes = await ToolService.getTools({ limit: 10 });
-  return toolsRes.tools.map((tool) => ({
-    slug: tool.slug
-  }));
-}
+export const dynamicParams = true;
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const tool = await ToolService.getToolBySlug(slug);
   if (!tool) {
-    return { title: 'Tool Not Found' };
+    return generateNotFoundMetadata('Tool Not Found');
   }
   return generateToolMetadata(tool);
 }
@@ -45,7 +41,7 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
     CategoryService.getCategories(),
     PersonaService.getPersonas(),
     ComparisonService.getComparisons(),
-    ToolService.getTools({ category: tool.categoryId, limit: 4 })
+    ToolService.getTools({ category: tool.categorySlug || tool.categoryId, limit: 4 })
   ]);
 
   // Alternatives: prefer explicit tool.alternatives slugs; fall back to same-category tools if empty
@@ -61,14 +57,21 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
   }
   const filteredAlternatives = alternativeTools.slice(0, 3);
 
-  // Find first available alternative for a dynamic compare link, if any
-  const compareTargetSlug = filteredAlternatives.length > 0 ? filteredAlternatives[0].slug : null;
+  // Find a curated comparison involving this tool (avoid linking to auto-generated compare URLs)
+  const curatedComparison = comparisons.find(
+    (c) =>
+      c.isCurated !== false &&
+      (c.tool1Slug === tool.slug || c.tool2Slug === tool.slug)
+  );
+  const compareHref = curatedComparison
+    ? `/compare/${curatedComparison.slug}`
+    : '/ai-tools-directory';
 
   const softwareSchema = generateSoftwareApplicationSchema(tool);
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: 'Home', url: `${BASE_URL}` },
     { name: 'AI Tools', url: `${BASE_URL}/ai-tools` },
-    { name: tool.categoryName, url: `${BASE_URL}/category/${tool.categoryId}` },
+    { name: tool.categoryName, url: `${BASE_URL}/category/${tool.categorySlug || tool.categoryId}` },
     { name: tool.name, url: `${BASE_URL}/tools/${tool.slug}` }
   ]);
 
@@ -83,7 +86,7 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
         <span>/</span>
         <Link href="/ai-tools" className="hover:text-slate-900 transition-colors">Tools</Link>
         <span>/</span>
-        <Link href={`/category/${tool.categoryId}`} className="hover:text-slate-900 transition-colors">{tool.categoryName}</Link>
+        <Link href={`/category/${tool.categorySlug || tool.categoryId}`} className="hover:text-slate-900 transition-colors">{tool.categoryName}</Link>
         <span>/</span>
         <span className="font-bold text-slate-900">{tool.name}</span>
       </nav>
@@ -115,7 +118,7 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
               <p className="text-sm text-slate-600 max-w-xl font-medium leading-relaxed">{tool.tagline}</p>
 
               <div className="flex items-center gap-3 text-xs text-slate-500 pt-1 flex-wrap">
-                <Link href={`/category/${tool.categoryId}`} className="font-bold text-slate-700 hover:text-emerald-600 flex items-center gap-1 bg-slate-100 px-2.5 py-1 rounded-md">
+                <Link href={`/category/${tool.categorySlug || tool.categoryId}`} className="font-bold text-slate-700 hover:text-emerald-600 flex items-center gap-1 bg-slate-100 px-2.5 py-1 rounded-md">
                   <Layers className="w-3.5 h-3.5" />
                   {tool.categoryName}
                 </Link>
@@ -363,7 +366,7 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
             <h4 className="font-bold text-base">Compare {tool.name}</h4>
             <p className="text-xs text-slate-300">Evaluate against market rivals side by side in feature matrix.</p>
             <Link
-              href={compareTargetSlug ? `/compare/${tool.slug}-vs-${compareTargetSlug}` : '/ai-tools-directory'}
+              href={compareHref}
               className="inline-flex items-center gap-1 text-xs font-bold text-emerald-400 hover:text-emerald-300"
             >
               View Head-to-Head Comparisons &rarr;

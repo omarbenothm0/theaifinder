@@ -7,23 +7,29 @@ import { PersonaService } from '../../../lib/services/persona.service';
 import { ComparisonTable } from '../../../components/comparison/ComparisonTable';
 import { InternalLinks } from '../../../components/shared/InternalLinks';
 import { JsonLd } from '../../../components/shared/JsonLd';
-import { generateComparisonMetadata } from '../../../lib/seo/metadata';
+import { generateComparisonMetadata, generateNotFoundMetadata } from '../../../lib/seo/metadata';
+import { isComparisonIndexable } from '../../../lib/seo/indexability';
 import { generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
+import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
 import { Zap } from 'lucide-react';
+
+const BASE_URL = getBaseUrl();
 
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
   const comparisons = await ComparisonService.getComparisons();
-  return comparisons.map((comp) => ({
-    slug: comp.slug
-  }));
+  return comparisons
+    .filter((comp) => isComparisonIndexable(comp).indexable)
+    .map((comp) => ({
+      slug: comp.slug,
+    }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const comp = await ComparisonService.getComparisonBySlug(slug);
-  if (!comp) return { title: 'Comparison Not Found' };
+  if (!comp) return generateNotFoundMetadata('Comparison Not Found');
   return generateComparisonMetadata(comp);
 }
 
@@ -48,9 +54,9 @@ export default async function ComparisonPage({ params }: { params: Promise<{ slu
   }
 
   const breadcrumbSchema = generateBreadcrumbSchema([
-    { name: 'Home', url: 'https://aifind.io' },
-    { name: 'Comparisons', url: 'https://aifind.io/ai-tools-directory' },
-    { name: comp.title, url: `https://aifind.io/compare/${comp.slug}` }
+    { name: 'Home', url: BASE_URL },
+    { name: 'Comparisons', url: absoluteUrl('/ai-tools-directory') },
+    { name: comp.title, url: absoluteUrl(`/compare/${comp.slug}`) },
   ]);
 
   return (

@@ -3,8 +3,10 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { CategoryService } from '../../lib/services/category.service';
 import { ToolService } from '../../lib/services/tool.service';
+import { dbRepository } from '../../lib/dbRepository';
 import { AdminDashboard } from '../../components/admin/AdminDashboard';
 import { generatePageMetadata } from '../../lib/seo/metadata';
+import { sitePageTitle } from '../../lib/brand';
 import {
   SESSION_COOKIE_NAME,
   getSessionFromCookie,
@@ -16,7 +18,7 @@ export const dynamic = 'force-dynamic';
 
 export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
-    title: 'Admin Management Dashboard | AIFind',
+    title: sitePageTitle('Admin Management Dashboard'),
     description: 'Manage tools, categories, and database listings.',
     canonicalUrl: '/admin',
     noIndex: true,
@@ -41,9 +43,10 @@ export default async function AdminPage() {
     sessionInfo = null;
   }
 
-  const [categories, toolsRes] = await Promise.all([
-    CategoryService.getCategories(),
-    ToolService.getTools({ limit: 100 }),
+  const [categories, toolsRes, adminStats] = await Promise.all([
+    CategoryService.getCategories({ includeUnpublished: true }),
+    ToolService.getTools({ limit: 500, includeUnpublished: true }),
+    dbRepository.getAdminStats(),
   ]);
 
   return (
@@ -51,6 +54,7 @@ export default async function AdminPage() {
       <AdminDashboard
         initialTools={toolsRes.tools}
         initialCategories={categories}
+        initialStats={adminStats}
         adminUser={sessionInfo?.sub}
         sessionExpiresAtEpoch={sessionInfo?.exp}
       />

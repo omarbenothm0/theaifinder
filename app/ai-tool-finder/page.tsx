@@ -2,14 +2,15 @@ import { Metadata } from 'next';
 import { ToolService } from '../../lib/services/tool.service';
 import { FinderWizard } from '../../components/finder/FinderWizard';
 import { generatePageMetadata } from '../../lib/seo/metadata';
+import { sitePageTitle } from '../../lib/brand';
 
 export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
-    title: 'Interactive AI Tool Finder & Match Recommendation Quiz | AIFind',
+    title: sitePageTitle('Interactive AI Tool Finder & Match Recommendation Quiz'),
     description: 'Answer 3 quick questions about your task and workflow to get personalized AI tool recommendations with score breakdowns.',
-    canonicalUrl: 'https://aifind.io/ai-tool-finder'
+    canonicalUrl: '/ai-tool-finder'
   });
 }
 

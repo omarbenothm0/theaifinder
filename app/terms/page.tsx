@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { generatePageMetadata } from '../../lib/seo/metadata';
+import { SITE_NAME, sitePageTitle } from '../../lib/brand';
 import {
   Scale,
   CheckCircle2,
@@ -17,9 +18,9 @@ export const revalidate = 86400;
 
 export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
-    title: 'Terms of Service | AIFind (Updated 2026)',
+    title: sitePageTitle(`Terms of Service (${SITE_NAME}, Updated 2026)`),
     description:
-      'Terms of Service for the AIFind AI tools discovery platform: acceptable use policy, directory listing guidelines, user reviews, disclaimers of warranty, limitation of liability, and applicable law.',
+      `Terms of Service for the ${SITE_NAME} AI tools discovery platform: acceptable use policy, directory listing guidelines, user reviews, disclaimers of warranty, limitation of liability, and applicable law.`,
     canonicalUrl: '/terms',
   });
 }
@@ -35,7 +36,7 @@ const SECTIONS: Array<{
     Icon: FileText,
     title: '1. Acceptance of Terms',
     body: [
-      'By accessing or using https://aifind.io or any associated subdomains, APIs or branded directory tools (collectively, the "Service"), you agree to be bound by these Terms of Service and our Privacy Policy.',
+      'By accessing or using this website or any associated subdomains, APIs or branded directory tools (collectively, the "Service"), you agree to be bound by these Terms of Service and our Privacy Policy.',
       'If you do not agree with any part of these terms, you must discontinue use of the Service immediately.',
       'These terms apply to all visitors, registered users, subscribers, paying customers and business partners.',
     ],
@@ -44,7 +45,7 @@ const SECTIONS: Array<{
     Icon: Gavel,
     title: '2. Description of the Service',
     body: [
-      'AIFind provides a curated directory, comparison engine and discovery resource for commercially available artificial intelligence software products ("Tool Listings").',
+      'TheRadarHub provides a curated directory, comparison engine and discovery resource for commercially available artificial intelligence software products ("Tool Listings").',
       'Tool Listings contain metadata, feature flags, pricing summaries, third-party review extracts and editorial commentary. They are provided for informational purposes only.',
       'We do not operate, resell or license the underlying AI products themselves; pricing and availability shown on our pages may differ from the vendor offer at the moment of purchase.',
     ],
@@ -72,7 +73,7 @@ const SECTIONS: Array<{
     Icon: MessagesSquare,
     title: '5. User-Generated Content (Reviews, Comments)',
     body: [
-      'You retain ownership of content you submit to the Service (reviews, comments, listing suggestions). By submitting it, you grant AIFind a non-exclusive, royalty-free, worldwide license to host, display, moderate and republish that content in connection with directory listings.',
+      'You retain ownership of content you submit to the Service (reviews, comments, listing suggestions). By submitting it, you grant TheRadarHub a non-exclusive, royalty-free, worldwide license to host, display, moderate and republish that content in connection with directory listings.',
       'We may remove or edit user content for violations of this policy, legal risk or quality reasons without prior notice.',
       'You are solely responsible for the content you submit and the consequences of publishing it.',
     ],
@@ -92,7 +93,7 @@ const SECTIONS: Array<{
     title: '7. Disclaimers of Warranties',
     body: [
       'THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY OR OTHERWISE.',
-      'AIFind expressly disclaims all warranties of merchantability, fitness for a particular purpose, title, non-infringement, accuracy, completeness and currency of Tool Listings.',
+      'TheRadarHub expressly disclaims all warranties of merchantability, fitness for a particular purpose, title, non-infringement, accuracy, completeness and currency of Tool Listings.',
       'We do not guarantee that the Service will be uninterrupted, error-free, secure or free of harmful components.',
     ],
   },
@@ -100,8 +101,8 @@ const SECTIONS: Array<{
     Icon: Scale,
     title: '8. Limitation of Liability',
     body: [
-      'TO THE FULLEST EXTENT PERMITTED BY LAW, AIFind, its officers, employees, partners and affiliates SHALL NOT BE LIABLE for any indirect, incidental, special, consequential or punitive damages, including lost revenue, lost savings, loss of data or business interruption, arising from your use of the Service.',
-      'In no event shall total aggregate liability under these terms exceed the greater of (a) fees paid by you to AIFind in the prior twelve months, or (b) one hundred USD ($100.00).',
+      'TO THE FULLEST EXTENT PERMITTED BY LAW, TheRadarHub, its officers, employees, partners and affiliates SHALL NOT BE LIABLE for any indirect, incidental, special, consequential or punitive damages, including lost revenue, lost savings, loss of data or business interruption, arising from your use of the Service.',
+      'In no event shall total aggregate liability under these terms exceed the greater of (a) fees paid by you to TheRadarHub in the prior twelve months, or (b) one hundred USD ($100.00).',
       'This section applies regardless of the legal theory under which liability is asserted.',
     ],
   },
@@ -109,7 +110,7 @@ const SECTIONS: Array<{
     Icon: ShieldAlert,
     title: '9. Indemnification',
     body: [
-      'You agree to defend, indemnify and hold harmless AIFind from and against any and all claims, damages, costs, losses and expenses (including reasonable legal fees) arising out of your use of the Service, your violation of these Terms, or any content you submit.',
+      'You agree to defend, indemnify and hold harmless TheRadarHub from and against any and all claims, damages, costs, losses and expenses (including reasonable legal fees) arising out of your use of the Service, your violation of these Terms, or any content you submit.',
       'We will notify you promptly of any indemnifiable claim and reasonably cooperate with your defense at your expense.',
     ],
   },
@@ -119,7 +120,7 @@ const SECTIONS: Array<{
     body: [
       'We may modify the Service or these Terms at any time, with a refreshed "Last Updated" date and site notice for material changes.',
       'Continued use of the Service after changes are published constitutes your acceptance of the revised Terms.',
-      'These Terms are governed by and construed in accordance with the laws of the jurisdiction in which AIFind\'s principal business is registered, without regard to conflict of law principles. Disputes shall first be resolved through good-faith negotiation before any formal proceeding.',
+      'These Terms are governed by and construed in accordance with the laws of the jurisdiction in which TheRadarHub\'s principal business is registered, without regard to conflict of law principles. Disputes shall first be resolved through good-faith negotiation before any formal proceeding.',
     ],
   },
 ];
@@ -133,11 +134,11 @@ export default function TermsPage() {
           Terms of Service
         </div>
         <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900">
-          AIFind Terms of Service
+          TheRadarHub Terms of Service
         </h1>
         <p className="text-sm text-slate-600 max-w-2xl mx-auto leading-relaxed">
           Last updated <span className="font-semibold text-slate-900">{LAST_UPDATED}</span>. Please
-          read these terms carefully before using the AIFind directory. They explain the rules for
+          read these terms carefully before using the TheRadarHub directory. They explain the rules for
           using our Service and the scope of what we provide.
         </p>
       </header>
@@ -187,7 +188,7 @@ export default function TermsPage() {
           </a>
           .
         </div>
-        <div>&copy; {new Date().getFullYear()} AIFind Platform. All rights reserved.</div>
+        <div>&copy; {new Date().getFullYear()} TheRadarHub Platform. All rights reserved.</div>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 {
-  "name": "AIFind - AI Tools Discovery Platform",
+  "name": "TheRadarHub - AI Tools Discovery Platform",
   "description": "Production-ready AI tools directory and discovery engine for finding, comparing, and filtering AI tools.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]

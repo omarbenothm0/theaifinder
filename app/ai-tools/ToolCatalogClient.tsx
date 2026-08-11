@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Tool, Category, Persona, ToolFilterOptions } from '../../types/tool';
 import { ToolCard } from '../../components/tool/ToolCard';
 import { ToolFilterSidebar } from '../../components/tool/ToolFilterSidebar';
@@ -31,6 +32,14 @@ export function ToolCatalogClient({
   });
 
   const [searchQuery, setSearchQuery] = useState('');
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const query = searchParams.get('search');
+    if (query) {
+      setSearchQuery(query);
+    }
+  }, [searchParams]);
 
   // Local filtering for fast client response
   const filteredTools = tools.filter((t) => {
@@ -83,7 +92,7 @@ export function ToolCatalogClient({
         <div className="max-w-2xl space-y-4 relative z-10">
           <div className="inline-flex items-center gap-1.5 bg-emerald-950 border border-emerald-800 text-emerald-300 px-3 py-1 rounded-full text-xs font-semibold">
             <Sparkles className="w-3 h-3 text-emerald-400" />
-            Taxonomy Catalog &bull; {totalCount}+ AI Tools
+            Taxonomy Catalog &bull; {totalCount} AI Tools
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
             Explore All AI Tools

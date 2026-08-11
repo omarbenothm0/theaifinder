@@ -36,6 +36,8 @@ export interface ToolSource {
 
 export type ReviewState = 'unverified' | 'verified' | 'needsReview' | 'inReview';
 
+export type PublishStatus = 'draft' | 'published' | 'archived';
+
 export interface Tool {
   id: string;
   name: string;
@@ -44,6 +46,7 @@ export interface Tool {
   tagline: string;
   description: string;
   categoryId: string;
+  categorySlug?: string;
   categoryName: string;
   tags: string[];
   pricingModel: PricingModel;
@@ -76,6 +79,7 @@ export interface Tool {
   hasApi: boolean;
   hasMobileApp: boolean;
   hasExtension: boolean;
+  publishStatus?: PublishStatus;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -91,6 +95,7 @@ export interface Category {
   faqs: FAQItem[];
   seoTitle: string;
   seoDescription: string;
+  publishStatus?: PublishStatus;
 }
 
 export interface Persona {
@@ -104,6 +109,7 @@ export interface Persona {
   keyBenefits: string[];
   topToolSlugs: string[];
   faqs: FAQItem[];
+  publishStatus?: PublishStatus;
 }
 
 export interface ComparisonFeatureRow {
@@ -125,6 +131,9 @@ export interface Comparison {
   verdict: string;
   winnerSlug: string | 'tie';
   featureBreakdown: ComparisonFeatureRow[];
+  /** True when stored in DB; false for runtime-generated fallback pages */
+  isCurated?: boolean;
+  publishStatus?: PublishStatus;
 }
 
 export interface Review {
@@ -149,6 +158,7 @@ export interface Article {
   publishedAt: string;
   relatedCategorySlug?: string;
   relatedToolSlugs?: string[];
+  publishStatus?: PublishStatus;
 }
 
 export interface ToolFilterOptions {
@@ -164,6 +174,8 @@ export interface ToolFilterOptions {
   sortBy?: 'popular' | 'rating' | 'newest' | 'price-asc' | 'price-desc';
   page?: number;
   limit?: number;
+  /** Admin-only: include draft/archived records */
+  includeUnpublished?: boolean;
 }
 
 export interface FinderAnswer {

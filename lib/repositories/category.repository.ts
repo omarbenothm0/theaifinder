@@ -1,13 +1,16 @@
 import { dbRepository } from '../dbRepository';
-import { Category } from '../../types/tool';
+import { Category, ToolFilterOptions } from '../../types/tool';
 
 export class CategoryRepository {
-  static async getAll(): Promise<Category[]> {
-    return dbRepository.getCategories();
+  static async getAll(options?: { includeUnpublished?: boolean }): Promise<Category[]> {
+    return dbRepository.getCategories(options);
   }
 
-  static async getBySlug(slug: string): Promise<Category | null> {
-    const category = dbRepository.getCategoryBySlug(slug);
+  static async getBySlug(
+    slug: string,
+    options?: { includeUnpublished?: boolean }
+  ): Promise<Category | null> {
+    const category = await dbRepository.getCategoryBySlug(slug, options);
     return category || null;
   }
 }

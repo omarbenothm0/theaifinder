@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { generatePageMetadata } from '../../lib/seo/metadata';
+import { SITE_NAME, sitePageTitle } from '../../lib/brand';
 import {
   Mail,
   MessageSquare,
@@ -16,9 +17,9 @@ export const revalidate = 86400;
 
 export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
-    title: 'Contact AIFind - Editorial, Press, Listings & Support (2026)',
+    title: sitePageTitle(`Contact ${SITE_NAME} - Editorial, Press, Listings & Support`),
     description:
-      'Contact the AIFind team for new tool submissions, listing corrections, press and media requests, partnerships, research studies, or bug reports from our public directory.',
+      `Contact the ${SITE_NAME} team for new tool submissions, listing corrections, press and media requests, partnerships, research studies, or bug reports from our public directory.`,
     canonicalUrl: '/contact',
   });
 }
@@ -83,7 +84,7 @@ export default function ContactPage() {
           Contact
         </div>
         <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
-          Get In Touch With The AIFind Team
+          Get In Touch With The {SITE_NAME} Team
         </h1>
         <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
           Pick the topic that matches best and we will get back to you within one business day. We
@@ -95,7 +96,7 @@ export default function ContactPage() {
         {REASONS.map(({ key, Icon, label, email, detail }) => (
           <a
             key={key}
-            href={`mailto:${email}?subject=AIFind%20-%20${encodeURIComponent(label)}`}
+            href={`mailto:${email}?subject=${encodeURIComponent(SITE_NAME)}%20-%20${encodeURIComponent(label)}`}
             className="group bg-white rounded-2xl border border-slate-200 hover:border-emerald-300 shadow-sm hover:shadow-md p-6 space-y-3 transition-all"
           >
             <div className="flex items-center justify-between">

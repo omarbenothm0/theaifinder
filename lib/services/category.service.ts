@@ -2,11 +2,14 @@ import { CategoryRepository } from '../repositories/category.repository';
 import { Category } from '../../types/tool';
 
 export class CategoryService {
-  static async getCategories(): Promise<Category[]> {
-    return CategoryRepository.getAll();
+  static async getCategories(options?: { includeUnpublished?: boolean }): Promise<Category[]> {
+    return CategoryRepository.getAll(options);
   }
 
-  static async getCategoryBySlug(slug: string): Promise<Category | null> {
-    return CategoryRepository.getBySlug(slug);
+  static async getCategoryBySlug(
+    slug: string,
+    options?: { includeUnpublished?: boolean }
+  ): Promise<Category | null> {
+    return CategoryRepository.getBySlug(slug, options);
   }
 }

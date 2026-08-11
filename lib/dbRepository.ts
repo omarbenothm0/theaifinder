@@ -1,4 +1,3 @@
-import { PrismaClient } from '@prisma/client';
 import {
   Tool,
   Category,
@@ -9,16 +8,7 @@ import {
   ToolFilterOptions,
   FinderAnswer
 } from '../types/tool';
-
-const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
-
-const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient();
-
-if (process.env.NODE_ENV !== 'production') {
-  globalForPrisma.prisma = prisma;
-}
+import { prisma } from './prisma';
 
 // --- Mapping helpers: Prisma model -> app-facing Tool/Category/etc shape ---
 
@@ -31,6 +21,7 @@ function mapTool(t: any): Tool {
     tagline: t.tagline,
     description: t.description,
     categoryId: t.categoryId,
+    categorySlug: t.category?.slug ?? '',
     categoryName: t.category?.name ?? '',
     tags: t.tags ?? [],
     pricingModel: t.pricingModel,
@@ -83,6 +74,7 @@ function mapTool(t: any): Tool {
     hasApi: t.hasApi,
     hasMobileApp: t.hasMobileApp,
     hasExtension: t.hasExtension,
+    publishStatus: t.publishStatus ?? 'published',
     createdAt: t.createdAt ? t.createdAt.toISOString() : undefined,
     updatedAt: t.updatedAt ? t.updatedAt.toISOString() : undefined,
   };
@@ -102,6 +94,7 @@ function mapCategory(c: any, toolCount = 0): Category {
       : [],
     seoTitle: c.seoTitle,
     seoDescription: c.seoDescription,
+    publishStatus: c.publishStatus ?? 'published',
   };
 }
 
@@ -124,6 +117,7 @@ function mapPersona(p: any): Persona {
     faqs: p.faqs
       ? p.faqs.map((f: any) => ({ question: f.question, answer: f.answer }))
       : [],
+    publishStatus: p.publishStatus ?? 'published',
   };
 }
 
@@ -147,6 +141,8 @@ function mapComparison(c: any): Comparison {
           winnerSlug: f.winnerSlug,
         }))
       : [],
+    isCurated: true,
+    publishStatus: c.publishStatus ?? 'published',
   };
 }
 
@@ -175,8 +171,11 @@ function mapArticle(a: any): Article {
     publishedAt: a.publishedAt.toISOString(),
     relatedCategorySlug: a.relatedCategorySlug ?? undefined,
     relatedToolSlugs: a.relatedToolSlugs ?? [],
+    publishStatus: a.publishStatus ?? 'published',
   };
 }
+
+const PUBLISHED_TOOL_WHERE = { publishStatus: 'published' as const };
 
 const TOOL_INCLUDE = {
   category: true,
@@ -189,6 +188,10 @@ class DBRepository {
   // --- Tools CRUD & Querying ---
   public async getTools(options: ToolFilterOptions = {}) {
     const where: any = {};
+
+    if (!options.includeUnpublished) {
+      where.publishStatus = 'published';
+    }
 
     if (options.search && options.search.trim()) {
       const q = options.search.trim();
@@ -279,15 +282,66 @@ class DBRepository {
     };
   }
 
-  public async getToolBySlug(slug: string): Promise<Tool | undefined> {
+  public async getToolBySlug(
+    slug: string,
+    options: { includeUnpublished?: boolean } = {}
+  ): Promise<Tool | undefined> {
     const tool = await prisma.tool.findFirst({
-      where: { slug: { equals: slug, mode: 'insensitive' } },
+      where: {
+        slug: { equals: slug, mode: 'insensitive' },
+        ...(options.includeUnpublished ? {} : PUBLISHED_TOOL_WHERE),
+      },
       include: TOOL_INCLUDE,
     });
     return tool ? mapTool(tool) : undefined;
   }
 
+  public async getFeaturedTools(limit = 12): Promise<Tool[]> {
+    const results = await prisma.tool.findMany({
+      where: { ...PUBLISHED_TOOL_WHERE, featured: true },
+      orderBy: [{ reviewCount: 'desc' }, { rating: 'desc' }],
+      take: limit,
+      include: TOOL_INCLUDE,
+    });
+    return results.map(mapTool);
+  }
+
+  public async getTrendingTools(limit = 12): Promise<Tool[]> {
+    const results = await prisma.tool.findMany({
+      where: { ...PUBLISHED_TOOL_WHERE, trending: true },
+      orderBy: [{ reviewCount: 'desc' }, { rating: 'desc' }],
+      take: limit,
+      include: TOOL_INCLUDE,
+    });
+    return results.map(mapTool);
+  }
+
+  public async getToolsPageForSitemap(page: number, limit: number) {
+    const where = PUBLISHED_TOOL_WHERE;
+    const total = await prisma.tool.count({ where });
+    const results = await prisma.tool.findMany({
+      where,
+      orderBy: { slug: 'asc' },
+      skip: (page - 1) * limit,
+      take: limit,
+      include: { category: true },
+    });
+    return {
+      tools: results.map(mapTool),
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
+
   public async createTool(data: Omit<Tool, 'id' | 'createdAt' | 'updatedAt'>): Promise<Tool> {
+    const existingSlug = await prisma.tool.findFirst({
+      where: { slug: { equals: data.slug, mode: 'insensitive' } },
+    });
+    if (existingSlug) {
+      throw new Error(`A tool with slug "${data.slug}" already exists`);
+    }
+
     const created = await prisma.tool.create({
       data: {
         name: data.name,
@@ -317,6 +371,7 @@ class DBRepository {
         hasApi: data.hasApi,
         hasMobileApp: data.hasMobileApp,
         hasExtension: data.hasExtension,
+        publishStatus: data.publishStatus ?? 'published',
         tags: data.tags ?? [],
         features: data.features ?? [],
         pros: data.pros ?? [],
@@ -364,6 +419,7 @@ class DBRepository {
     if (updates.hasApi !== undefined) data.hasApi = updates.hasApi;
     if (updates.hasMobileApp !== undefined) data.hasMobileApp = updates.hasMobileApp;
     if (updates.hasExtension !== undefined) data.hasExtension = updates.hasExtension;
+    if (updates.publishStatus !== undefined) data.publishStatus = updates.publishStatus;
     if (updates.tags !== undefined) data.tags = updates.tags;
     if (updates.features !== undefined) data.features = updates.features;
     if (updates.pros !== undefined) data.pros = updates.pros;
@@ -390,40 +446,96 @@ class DBRepository {
   }
 
   // --- Categories ---
-  public async getCategories(): Promise<Category[]> {
+  public async getCategories(options: { includeUnpublished?: boolean } = {}): Promise<Category[]> {
     const categories = await prisma.category.findMany({
-      include: { faqs: true, _count: { select: { tools: true } } },
+      where: options.includeUnpublished ? {} : { publishStatus: 'published' },
+      include: {
+        faqs: true,
+        _count: {
+          select: {
+            tools: {
+              where: PUBLISHED_TOOL_WHERE,
+            },
+          },
+        },
+      },
     });
     return categories.map((c: any) => mapCategory(c, c._count.tools));
   }
 
-  public async getCategoryBySlug(slug: string): Promise<Category | undefined> {
+  public async getCategoryBySlug(
+    slug: string,
+    options: { includeUnpublished?: boolean } = {}
+  ): Promise<Category | undefined> {
     const cat = await prisma.category.findFirst({
-      where: { slug: { equals: slug, mode: 'insensitive' } },
-      include: { faqs: true, _count: { select: { tools: true } } },
+      where: {
+        slug: { equals: slug, mode: 'insensitive' },
+        ...(options.includeUnpublished ? {} : { publishStatus: 'published' }),
+      },
+      include: {
+        faqs: true,
+        _count: {
+          select: {
+            tools: {
+              where: PUBLISHED_TOOL_WHERE,
+            },
+          },
+        },
+      },
     });
     return cat ? mapCategory(cat, (cat as any)._count.tools) : undefined;
   }
 
   // --- Personas ---
-  public async getPersonas(): Promise<Persona[]> {
+  public async getPersonas(options: { includeUnpublished?: boolean } = {}): Promise<Persona[]> {
     const personas = await prisma.persona.findMany({
+      where: options.includeUnpublished ? {} : { publishStatus: 'published' },
       include: { faqs: true, topTools: { include: { tool: true } } },
     });
     return personas.map(mapPersona);
   }
 
-  public async getPersonaBySlug(slug: string): Promise<Persona | undefined> {
+  public async getPersonaBySlug(
+    slug: string,
+    options: { includeUnpublished?: boolean } = {}
+  ): Promise<Persona | undefined> {
     const persona = await prisma.persona.findFirst({
-      where: { slug: { equals: slug, mode: 'insensitive' } },
+      where: {
+        slug: { equals: slug, mode: 'insensitive' },
+        ...(options.includeUnpublished ? {} : { publishStatus: 'published' }),
+      },
       include: { faqs: true, topTools: { include: { tool: true } } },
     });
     return persona ? mapPersona(persona) : undefined;
   }
 
+  public async getPersonaLinkedToolCounts(): Promise<Record<string, number>> {
+    const tools = await prisma.tool.findMany({
+      where: PUBLISHED_TOOL_WHERE,
+      select: { targetUsers: true },
+    });
+    const counts: Record<string, number> = {};
+    for (const tool of tools) {
+      for (const slug of tool.targetUsers) {
+        counts[slug] = (counts[slug] ?? 0) + 1;
+      }
+    }
+    return counts;
+  }
+
+  public async getPersonaLinkedToolCount(slug: string): Promise<number> {
+    return prisma.tool.count({
+      where: {
+        ...PUBLISHED_TOOL_WHERE,
+        targetUsers: { has: slug },
+      },
+    });
+  }
+
   // --- Comparisons ---
-  public async getComparisons(): Promise<Comparison[]> {
+  public async getComparisons(options: { includeUnpublished?: boolean } = {}): Promise<Comparison[]> {
     const comparisons = await prisma.comparison.findMany({
+      where: options.includeUnpublished ? {} : { publishStatus: 'published' },
       include: { tool1: true, tool2: true, features: true },
     });
     return comparisons.map(mapComparison);
@@ -431,61 +543,15 @@ class DBRepository {
 
   public async getComparisonBySlug(slug: string): Promise<Comparison | undefined> {
     const existing = await prisma.comparison.findFirst({
-      where: { slug: { equals: slug, mode: 'insensitive' } },
+      where: {
+        slug: { equals: slug, mode: 'insensitive' },
+        publishStatus: 'published',
+      },
       include: { tool1: true, tool2: true, features: true },
     });
     if (existing) return mapComparison(existing);
 
-    const parts = slug.split('-vs-');
-    if (parts.length === 2) {
-      const tool1 = await this.getToolBySlug(parts[0]);
-      const tool2 = await this.getToolBySlug(parts[1]);
-      if (tool1 && tool2) {
-        return this.generateDynamicComparison(tool1, tool2);
-      }
-    }
     return undefined;
-  }
-
-  private generateDynamicComparison(tool1: Tool, tool2: Tool): Comparison {
-    return {
-      id: `comp-${tool1.slug}-${tool2.slug}`,
-      slug: `${tool1.slug}-vs-${tool2.slug}`,
-      tool1Slug: tool1.slug,
-      tool2Slug: tool2.slug,
-      title: `${tool1.name} vs ${tool2.name}: Side-by-Side Comparison & Recommendation`,
-      overview: `Comparing ${tool1.name} and ${tool2.name} to help you decide which AI tool fits your workflow.`,
-      bestFor1: tool1.tagline,
-      bestFor2: tool2.tagline,
-      verdict: `Both ${tool1.name} and ${tool2.name} are top-tier solutions in ${tool1.categoryName}. Choose ${tool1.name} if you prefer ${tool1.pricingModel} pricing and ${tool1.tags.slice(0, 2).join(', ')}. Choose ${tool2.name} for ${tool2.tags.slice(0, 2).join(', ')}.`,
-      winnerSlug: tool1.rating >= tool2.rating ? tool1.slug : tool2.slug,
-      featureBreakdown: [
-        {
-          feature: 'Rating',
-          tool1Value: `${tool1.rating}/5 (${tool1.reviewCount} reviews)`,
-          tool2Value: `${tool2.rating}/5 (${tool2.reviewCount} reviews)`,
-          winnerSlug: tool1.rating > tool2.rating ? tool1.slug : tool1.rating < tool2.rating ? tool2.slug : 'tie',
-        },
-        {
-          feature: 'Pricing Model',
-          tool1Value: `${tool1.pricingModel} ${tool1.monthlyPrice ? `($${tool1.monthlyPrice}/mo)` : ''}`,
-          tool2Value: `${tool2.pricingModel} ${tool2.monthlyPrice ? `($${tool2.monthlyPrice}/mo)` : ''}`,
-          winnerSlug: 'tie',
-        },
-        {
-          feature: 'API Access',
-          tool1Value: tool1.hasApi ? 'Available' : 'No API',
-          tool2Value: tool2.hasApi ? 'Available' : 'No API',
-          winnerSlug: tool1.hasApi && !tool2.hasApi ? tool1.slug : !tool1.hasApi && tool2.hasApi ? tool2.slug : 'tie',
-        },
-        {
-          feature: 'Mobile App',
-          tool1Value: tool1.hasMobileApp ? 'iOS & Android' : 'Web Only',
-          tool2Value: tool2.hasMobileApp ? 'iOS & Android' : 'Web Only',
-          winnerSlug: tool1.hasMobileApp && !tool2.hasMobileApp ? tool1.slug : !tool1.hasMobileApp && tool2.hasMobileApp ? tool2.slug : 'tie',
-        },
-      ],
-    };
   }
 
   // --- Reviews ---
@@ -540,7 +606,10 @@ class DBRepository {
   public async evaluateFinder(answer: FinderAnswer) {
     const { useCase, role, budgetPreference } = answer;
 
-    const allTools = await prisma.tool.findMany({ include: TOOL_INCLUDE });
+    const allTools = await prisma.tool.findMany({
+      where: PUBLISHED_TOOL_WHERE,
+      include: TOOL_INCLUDE,
+    });
 
     const scored = allTools.map((toolRaw: any) => {
       const tool = mapTool(toolRaw);

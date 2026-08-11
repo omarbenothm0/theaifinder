@@ -1,127 +1,52 @@
 import { MetadataRoute } from 'next';
-import { ToolService } from '../lib/services/tool.service';
-import { CategoryService } from '../lib/services/category.service';
-import { PersonaService } from '../lib/services/persona.service';
-import { ComparisonService } from '../lib/services/comparison.service';
+import { dbRepository } from '../lib/dbRepository';
+import {
+  SITEMAP_PAGE_SIZE,
+  buildStaticSitemapEntries,
+  buildToolSitemapEntries,
+  buildCategorySitemapEntries,
+  buildPersonaSitemapEntries,
+  buildComparisonSitemapEntries,
+  getSitemapBaseUrl,
+} from '../lib/seo/sitemap-builder';
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://aifind.io';
+export async function generateSitemaps() {
+  const { totalPages } = await dbRepository.getToolsPageForSitemap(1, SITEMAP_PAGE_SIZE);
+  const ids = [{ id: 'static' }];
+  for (let i = 0; i < totalPages; i += 1) {
+    ids.push({ id: `tools-${i}` });
+  }
+  return ids;
+}
 
-  const [toolsRes, categories, personas, comparisons] = await Promise.all([
-    ToolService.getTools({ limit: 100 }),
-    CategoryService.getCategories(),
-    PersonaService.getPersonas(),
-    ComparisonService.getComparisons()
-  ]);
+export default async function sitemap(props: {
+  id: Promise<string>;
+}): Promise<MetadataRoute.Sitemap> {
+  const id = await props.id;
+  const baseUrl = getSitemapBaseUrl();
 
-  const staticRoutes: MetadataRoute.Sitemap = [
-    {
-      url: `${baseUrl}`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 1.0
-    },
-    {
-      url: `${baseUrl}/ai-tools`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.9
-    },
-    {
-      url: `${baseUrl}/best-ai-tools`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.9
-    },
-    {
-      url: `${baseUrl}/free-ai-tools`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8
-    },
-    {
-      url: `${baseUrl}/ai-apps`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8
-    },
-    {
-      url: `${baseUrl}/ai-tool-finder`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8
-    },
-    {
-      url: `${baseUrl}/ai-tools-directory`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8
-    },
-    {
-      url: `${baseUrl}/for`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8
-    },
-    {
-      url: `${baseUrl}/about`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.5
-    },
-    {
-      url: `${baseUrl}/contact`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.5
-    },
-    {
-      url: `${baseUrl}/privacy`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.3
-    },
-    {
-      url: `${baseUrl}/terms`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.3
-    }
-  ];
+  if (id === 'static') {
+    const [categories, personas, comparisons, personaToolCounts] = await Promise.all([
+      dbRepository.getCategories(),
+      dbRepository.getPersonas(),
+      dbRepository.getComparisons(),
+      dbRepository.getPersonaLinkedToolCounts(),
+    ]);
 
-  const toolRoutes: MetadataRoute.Sitemap = toolsRes.tools.map((tool) => ({
-    url: `${baseUrl}/tools/${tool.slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly',
-    priority: 0.8
-  }));
+    return [
+      ...buildStaticSitemapEntries(baseUrl),
+      ...buildCategorySitemapEntries(categories, baseUrl),
+      ...buildPersonaSitemapEntries(personas, baseUrl, personaToolCounts),
+      ...buildComparisonSitemapEntries(comparisons, baseUrl),
+    ];
+  }
 
-  const categoryRoutes: MetadataRoute.Sitemap = categories.map((cat) => ({
-    url: `${baseUrl}/category/${cat.slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly',
-    priority: 0.8
-  }));
+  const match = id.match(/^tools-(\d+)$/);
+  if (match) {
+    const page = Number(match[1]) + 1;
+    const { tools } = await dbRepository.getToolsPageForSitemap(page, SITEMAP_PAGE_SIZE);
+    return buildToolSitemapEntries(tools, baseUrl);
+  }
 
-  const personaRoutes: MetadataRoute.Sitemap = personas.map((p) => ({
-    url: `${baseUrl}/for/${p.slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly',
-    priority: 0.7
-  }));
-
-  const comparisonRoutes: MetadataRoute.Sitemap = comparisons.map((comp) => ({
-    url: `${baseUrl}/compare/${comp.slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly',
-    priority: 0.8
-  }));
-
-  return [
-    ...staticRoutes,
-    ...toolRoutes,
-    ...categoryRoutes,
-    ...personaRoutes,
-    ...comparisonRoutes
-  ];
+  return [];
 }

@@ -12,6 +12,6 @@ export async function GET(
     return NextResponse.json({ error: 'Category not found' }, { status: 404 });
   }
 
-  const tools = (await dbRepository.getTools({ category: cat.id })).tools;
+  const tools = (await dbRepository.getTools({ category: cat.slug })).tools;
   return NextResponse.json({ category: cat, tools });
 }

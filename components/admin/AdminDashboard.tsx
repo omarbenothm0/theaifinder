@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Tool, Category, PricingModel, ReviewState } from '../../types/tool';
+import { Tool, Category, PricingModel, ReviewState, PublishStatus } from '../../types/tool';
+import { validateToolInput, formatValidationErrors } from '../../lib/validation/tool.validation';
 import { getReviewState } from '../../lib/utils/reviewHelper';
 import {
   Settings,
@@ -20,6 +21,15 @@ import {
 interface AdminDashboardProps {
   initialTools: Tool[];
   initialCategories: Category[];
+  initialStats?: {
+    totalTools: number;
+    totalCategories: number;
+    totalPersonas: number;
+    totalComparisons: number;
+    totalReviews: number;
+    verifiedTools: number;
+    featuredTools: number;
+  };
   adminUser?: string;
   sessionExpiresAtEpoch?: number;
 }
@@ -27,6 +37,7 @@ interface AdminDashboardProps {
 export function AdminDashboard({
   initialTools,
   initialCategories,
+  initialStats,
   adminUser = 'admin',
   sessionExpiresAtEpoch,
 }: AdminDashboardProps) {
@@ -59,8 +70,9 @@ export function AdminDashboard({
   const [tagsStr, setTagsStr] = useState('AI Assistant, Writing');
   const [featuresStr, setFeaturesStr] = useState('Natural language drafting, Fast execution');
   const [prosStr, setProsStr] = useState('Clean output, Highly accessible');
-  const [consStr, setConsStr] = useState('Rate limits during peak hours');
-  const [verified, setVerified] = useState(true);
+  const [consStr, setConsStr] = useState('');
+  const [verified, setVerified] = useState(false);
+  const [publishStatus, setPublishStatus] = useState<PublishStatus>('draft');
   const [featured, setFeatured] = useState(false);
   const [trending, setTrending] = useState(false);
   const [hasApi, setHasApi] = useState(true);
@@ -70,15 +82,17 @@ export function AdminDashboard({
   const [saveMessage, setSaveMessage] = useState('');
 
   const stats = useMemo(
-    () => ({
-      totalTools: tools.length,
-      totalCategories: categories.length,
-      totalPersonas: 8,
-      totalComparisons: 6,
-      verifiedTools: tools.filter((t) => t.verified).length,
-      totalReviews: 128,
-    }),
-    [tools, categories.length]
+    () =>
+      initialStats ?? {
+        totalTools: tools.length,
+        totalCategories: categories.length,
+        totalPersonas: 0,
+        totalComparisons: 0,
+        verifiedTools: tools.filter((t) => t.verified).length,
+        totalReviews: 0,
+        featuredTools: tools.filter((t) => t.featured).length,
+      },
+    [tools, categories.length, initialStats]
   );
 
   const sessionExpiresLabel = useMemo(() => {
@@ -95,32 +109,31 @@ export function AdminDashboard({
     setEditingToolSlug(null);
     setName('');
     setSlug('');
-    setLogo(
-      'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=120&h=120&q=80'
-    );
+    setLogo('');
     setTagline('');
     setDescription('');
-    setCategoryId(categories[0]?.id || 'cat-writing');
+    setCategoryId(categories[0]?.id || '');
     setPricingModel('Freemium');
-    setMonthlyPrice(20);
-    setWebsiteUrl('https://example.com');
+    setMonthlyPrice('');
+    setWebsiteUrl('');
     setPricingSource('');
     setFeatureSource('');
-    setVerifiedBy('AI Find Editorial Team');
+    setVerifiedBy('');
     setLastVerifiedDate('');
     setReviewState('unverified');
     setReviewRequestedAt('');
     setReviewAssignedTo('');
     setReviewNotes('');
     setSourcesJson('');
-    setTagsStr('AI, Assistant, Writing');
-    setFeaturesStr('Smart generation, API access');
-    setProsStr('Fast responses, Easy interface');
-    setConsStr('Usage caps apply');
-    setVerified(true);
+    setTagsStr('');
+    setFeaturesStr('');
+    setProsStr('');
+    setConsStr('');
+    setVerified(false);
+    setPublishStatus('draft');
     setFeatured(false);
     setTrending(false);
-    setHasApi(true);
+    setHasApi(false);
     setHasMobileApp(false);
     setHasExtension(false);
     setSaveStatus('idle');
@@ -158,6 +171,7 @@ export function AdminDashboard({
     setHasApi(tool.hasApi);
     setHasMobileApp(tool.hasMobileApp);
     setHasExtension(tool.hasExtension);
+    setPublishStatus(tool.publishStatus ?? 'published');
     setSaveStatus('idle');
     setSaveMessage('');
     setShowModal(true);
@@ -185,42 +199,30 @@ export function AdminDashboard({
       id: existingTool?.id ?? `tool-${Date.now()}`,
       name: name.trim(),
       slug: slug.trim().toLowerCase(),
-      logo:
-        logo.trim() ||
-        'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=120&h=120&q=80',
+      logo: logo.trim(),
       tagline: tagline.trim(),
       description: description.trim(),
-      categoryId: selectedCat ? selectedCat.id : 'cat-writing',
-      categoryName: selectedCat ? selectedCat.name : 'Writing & Copywriting',
-      tags: tagsStr
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean),
+      categoryId: selectedCat ? selectedCat.id : categories[0]?.id ?? '',
+      categoryName: selectedCat ? selectedCat.name : '',
+      categorySlug: selectedCat ? selectedCat.slug : '',
+      tags: tagsStr.split(',').map((s) => s.trim()).filter(Boolean),
       pricingModel,
       monthlyPrice: monthlyPrice === '' ? undefined : Number(monthlyPrice),
       hasFreeTrial: pricingModel === 'Freemium' || pricingModel === 'Free',
-      websiteUrl: websiteUrl.trim() || 'https://aifind.io',
+      websiteUrl: websiteUrl.trim(),
       pricingSource: pricingSource || existingTool?.pricingSource,
       featureSource: featureSource || existingTool?.featureSource,
       sources: parsedSources,
-      features: featuresStr
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean),
-      pros: prosStr
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean),
-      cons: consStr
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean),
-      rating: existingTool?.rating ?? 4.8,
-      reviewCount: existingTool?.reviewCount ?? 1,
-      screenshots: existingTool?.screenshots ?? [logo],
-      alternatives: existingTool?.alternatives ?? ['chatgpt', 'claude'],
-      targetUsers: existingTool?.targetUsers ?? ['content-creators', 'developers'],
+      features: featuresStr.split(',').map((s) => s.trim()).filter(Boolean),
+      pros: prosStr.split(',').map((s) => s.trim()).filter(Boolean),
+      cons: consStr.split(',').map((s) => s.trim()).filter(Boolean),
+      rating: existingTool?.rating ?? 0,
+      reviewCount: existingTool?.reviewCount ?? 0,
+      screenshots: existingTool?.screenshots ?? (logo.trim() ? [logo.trim()] : []),
+      alternatives: existingTool?.alternatives ?? [],
+      targetUsers: existingTool?.targetUsers ?? [],
       verified,
+      publishStatus,
       reviewState,
       reviewRequestedAt: reviewRequestedAt || existingTool?.reviewRequestedAt,
       reviewAssignedTo: reviewAssignedTo || existingTool?.reviewAssignedTo,
@@ -233,6 +235,13 @@ export function AdminDashboard({
       hasMobileApp,
       hasExtension,
     };
+
+    const clientErrors = validateToolInput(toolPayload, { isCreate: !editingToolSlug });
+    if (clientErrors.length > 0) {
+      setSaveStatus('error');
+      setSaveMessage(formatValidationErrors(clientErrors));
+      return;
+    }
 
     const apiUrl = editingToolSlug
       ? `/api/tools/${encodeURIComponent(editingToolSlug)}`
@@ -260,7 +269,6 @@ export function AdminDashboard({
       }
 
       const result = await response.json();
-console.log('API RESPONSE:', result);
       if (!response.ok) {
         setSaveStatus('error');
         setSaveMessage(result?.error || 'Unable to save tool data.');
@@ -722,6 +730,18 @@ console.log('API RESPONSE:', result);
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Publish Status</label>
+                  <select
+                    value={publishStatus}
+                    onChange={(e) => setPublishStatus(e.target.value as PublishStatus)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none"
+                  >
+                    <option value="draft">Draft (noindex, hidden from public listings)</option>
+                    <option value="published">Published (eligible for indexing when complete)</option>
+                    <option value="archived">Archived (noindex, hidden)</option>
+                  </select>
+                </div>
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">Reviewed Date</label>
                   <input

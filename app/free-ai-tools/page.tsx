@@ -5,15 +5,16 @@ import { PersonaService } from '../../lib/services/persona.service';
 import { ToolCard } from '../../components/tool/ToolCard';
 import { InternalLinks } from '../../components/shared/InternalLinks';
 import { generatePageMetadata } from '../../lib/seo/metadata';
+import { sitePageTitle } from '../../lib/brand';
 import { DollarSign, CheckCircle2 } from 'lucide-react';
 
 export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
-    title: '100% Free AI Tools & Freemium Software Directory (2026)',
+    title: sitePageTitle('Free AI Tools & Freemium Software Directory'),
     description: 'Discover completely free AI tools and platforms with generous free tiers or trial credits across all categories.',
-    canonicalUrl: 'https://aifind.io/free-ai-tools'
+    canonicalUrl: '/free-ai-tools'
   });
 }
 

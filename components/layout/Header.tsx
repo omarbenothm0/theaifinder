@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { Search, Sparkles, Compass, Layers, Settings, ChevronDown, Users, ArrowRight } from 'lucide-react';
+import { SITE_NAME } from '../../lib/brand';
 
 const ROLE_LINKS = [
   { name: 'Content Creators', slug: 'content-creators' },
@@ -74,7 +75,7 @@ export function Header() {
                 <Sparkles className="w-4 h-4 text-emerald-400" />
               </div>
               <div className="flex items-center gap-2">
-                <span className="font-extrabold text-lg text-slate-900 tracking-tight">AIFind</span>
+                <span className="font-extrabold text-lg text-slate-900 tracking-tight">TheRadarHub</span>
                 <span className="text-[10px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">
                   Engine
                 </span>

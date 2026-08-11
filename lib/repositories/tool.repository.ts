@@ -12,13 +12,11 @@ export class ToolRepository {
   }
 
   static async getFeatured(): Promise<Tool[]> {
-    const res = await dbRepository.getTools({});
-    return res.tools.filter((t) => t.featured);
+    return dbRepository.getFeaturedTools();
   }
 
   static async getTrending(): Promise<Tool[]> {
-    const res = await dbRepository.getTools({});
-    return res.tools.filter((t) => t.trending);
+    return dbRepository.getTrendingTools();
   }
 
   static async getAlternatives(slug: string): Promise<Tool[]> {

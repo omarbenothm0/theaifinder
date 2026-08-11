@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbRepository } from '../../../../lib/dbRepository';
+import {
+  validateToolInput,
+  formatValidationErrors,
+} from '../../../../lib/validation/tool.validation';
 
 export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const tool = await dbRepository.getToolBySlug(slug);
+  const tool = await dbRepository.getToolBySlug(slug, { includeUnpublished: true });
 
   if (!tool) {
     return NextResponse.json({ error: 'Tool not found' }, { status: 404 });
@@ -21,6 +25,14 @@ export async function PUT(
 ) {
   const { slug } = await params;
   const body = await req.json();
+  const errors = validateToolInput(body);
+  if (errors.length > 0) {
+    return NextResponse.json(
+      { error: formatValidationErrors(errors), validationErrors: errors },
+      { status: 400 }
+    );
+  }
+
   const updated = await dbRepository.updateTool(slug, body);
 
   if (!updated) {

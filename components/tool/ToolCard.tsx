@@ -54,7 +54,7 @@ export function ToolCard({ tool, layout = 'grid' }: ToolCardProps) {
 
             <div className="flex items-center gap-2 text-xs text-slate-500 mt-1 flex-wrap">
               <Link
-                href={`/category/${tool.categoryId}`}
+                href={`/category/${tool.categorySlug || tool.categoryId}`}
                 className="text-[10px] font-bold text-slate-500 uppercase tracking-tight bg-slate-100 px-2 py-0.5 rounded hover:bg-slate-200 transition-colors"
               >
                 {tool.categoryName}

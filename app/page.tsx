@@ -11,11 +11,13 @@ import { generatePageMetadata } from '../lib/seo/metadata';
 
 export const revalidate = 3600;
 
+import { siteRootTitle } from '../lib/brand';
+
 export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
-    title: 'AIFind - Discover, Compare & Choose the Best AI Tools (2026)',
+    title: siteRootTitle(),
     description: 'Find the right AI tool for any task. Search, compare, and filter 100+ top-rated AI software for writing, coding, video, images, and productivity.',
-    canonicalUrl: 'https://aifind.io'
+    canonicalUrl: '/'
   });
 }
 

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Tool, Comparison } from '../../types/tool';
+import { SITE_NAME } from '../../lib/brand';
 import { CheckCircle2, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
 
 interface ComparisonTableProps {
@@ -144,7 +145,7 @@ export function ComparisonTable({ comparison, tool1, tool2 }: ComparisonTablePro
       <div className="bg-emerald-900 text-emerald-100 rounded-2xl p-6 sm:p-8 shadow-sm">
         <span className="text-emerald-400 font-bold text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
           <ShieldCheck className="w-4 h-4 text-emerald-400" />
-          AIFind Editorial Recommendation
+          {SITE_NAME} Editorial Recommendation
         </span>
         <h4 className="text-xl font-bold text-white mb-3">Final Verdict</h4>
         <p className="text-sm leading-relaxed text-emerald-100">{comparison.verdict}</p>

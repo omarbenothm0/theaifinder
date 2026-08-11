@@ -1,8 +1,10 @@
 import { ImageResponse } from 'next/og';
+import { SITE_OG_BADGE_DEFAULT, siteRootTitle, SITE_HERO_TITLE } from '../lib/brand';
+import { getDisplayDomain } from '../lib/seo/base-url';
 
 export const runtime = 'edge';
 
-export const alt = 'AIFind - Discover, Compare & Choose the Best AI Tools';
+export const alt = siteRootTitle(false);
 export const size = {
   width: 1200,
   height: 630,
@@ -10,6 +12,8 @@ export const size = {
 export const contentType = 'image/png';
 
 export default async function Image() {
+  const displayDomain = getDisplayDomain();
+
   return new ImageResponse(
     (
       <div
@@ -47,14 +51,14 @@ export default async function Image() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontWeight: 'bold',
-                fontSize: '24px',
+                fontSize: '20px',
                 color: '#FFFFFF',
               }}
             >
-              AI
+              TR
             </div>
             <span style={{ fontSize: '28px', fontWeight: '800', letterSpacing: '-0.5px' }}>
-              AIFind<span style={{ color: '#10B981' }}>.io</span>
+              TheRadar<span style={{ color: '#10B981' }}>Hub</span>
             </span>
           </div>
 
@@ -70,7 +74,7 @@ export default async function Image() {
               textTransform: 'uppercase',
             }}
           >
-            AI DISCOVERY PLATFORM
+            {SITE_OG_BADGE_DEFAULT}
           </div>
         </div>
 
@@ -84,7 +88,7 @@ export default async function Image() {
               color: '#F8FAFC',
             }}
           >
-            Discover, Compare & Choose the Best AI Tools
+            {SITE_HERO_TITLE}
           </div>
           <div
             style={{
@@ -110,7 +114,7 @@ export default async function Image() {
           }}
         >
           <span>Verified AI Software Directory &bull; 2026 Rankings</span>
-          <span style={{ color: '#10B981', fontWeight: '600' }}>aifind.io</span>
+          <span style={{ color: '#10B981', fontWeight: '600' }}>{displayDomain}</span>
         </div>
       </div>
     ),

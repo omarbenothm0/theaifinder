@@ -1,5 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbRepository } from '../../../lib/dbRepository';
+import {
+  validateReviewInput,
+} from '../../../lib/validation/review.validation';
+import {
+  checkRateLimit,
+  getClientIdentifier,
+  rateLimitResponse,
+} from '../../../lib/rate-limit';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -14,10 +22,28 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  const clientId = getClientIdentifier(req);
+  const limit = checkRateLimit(clientId, {
+    key: 'reviews',
+    limit: 5,
+    windowSec: 60 * 15,
+  });
+
+  if (!limit.allowed) {
+    return rateLimitResponse(limit.resetAt);
+  }
+
   try {
     const body = await req.json();
-    if (!body.toolSlug || !body.authorName || !body.rating || !body.comment) {
-      return NextResponse.json({ error: 'Missing required review fields' }, { status: 400 });
+    const errors = validateReviewInput(body);
+    if (errors.length > 0) {
+      return NextResponse.json(
+        {
+          error: errors.map((e) => `${e.field}: ${e.message}`).join('; '),
+          validationErrors: errors,
+        },
+        { status: 400 }
+      );
     }
 
     const review = await dbRepository.addReview(body);

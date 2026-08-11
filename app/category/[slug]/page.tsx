@@ -6,23 +6,29 @@ import { PersonaService } from '../../../lib/services/persona.service';
 import { ToolCard } from '../../../components/tool/ToolCard';
 import { InternalLinks } from '../../../components/shared/InternalLinks';
 import { JsonLd } from '../../../components/shared/JsonLd';
-import { generateCategoryMetadata } from '../../../lib/seo/metadata';
+import { generateCategoryMetadata, generateNotFoundMetadata } from '../../../lib/seo/metadata';
+import { isCategoryIndexable } from '../../../lib/seo/indexability';
 import { generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
+import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
 import { Layers, Sparkles } from 'lucide-react';
+
+const BASE_URL = getBaseUrl();
 
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
   const categories = await CategoryService.getCategories();
-  return categories.map((c) => ({
-    slug: c.slug
-  }));
+  return categories
+    .filter((c) => isCategoryIndexable(c).indexable)
+    .map((c) => ({
+      slug: c.slug,
+    }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const category = await CategoryService.getCategoryBySlug(slug);
-  if (!category) return { title: 'Category Not Found' };
+  if (!category) return generateNotFoundMetadata('Category Not Found');
   return generateCategoryMetadata(category);
 }
 
@@ -35,15 +41,15 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
   }
 
   const [toolsRes, categories, personas] = await Promise.all([
-    ToolService.getTools({ category: category.id, limit: 100 }),
+    ToolService.getTools({ category: category.slug, limit: 100 }),
     CategoryService.getCategories(),
     PersonaService.getPersonas()
   ]);
 
   const breadcrumbSchema = generateBreadcrumbSchema([
-    { name: 'Home', url: 'https://aifind.io' },
-    { name: 'Categories', url: 'https://aifind.io/ai-tools-directory' },
-    { name: category.name, url: `https://aifind.io/category/${category.slug}` }
+    { name: 'Home', url: BASE_URL },
+    { name: 'Categories', url: absoluteUrl('/ai-tools-directory') },
+    { name: category.name, url: absoluteUrl(`/category/${category.slug}`) },
   ]);
 
   return (

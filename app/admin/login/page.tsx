@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { SESSION_COOKIE_NAME, getAdminCredentials } from '../../../lib/auth/adminSession';
 import { generatePageMetadata } from '../../../lib/seo/metadata';
+import { sitePageTitle, SITE_NAME } from '../../../lib/brand';
 import { Shield, Lock, ArrowLeft } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -11,8 +12,8 @@ export const revalidate = 0;
 
 export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
-    title: 'Admin Login | AIFind',
-    description: 'Secure administrator access to the AIFind database management dashboard.',
+    title: sitePageTitle('Admin Login'),
+    description: `Secure administrator access to the ${SITE_NAME} management dashboard.`,
     canonicalUrl: '/admin/login',
     noIndex: true,
   });
