@@ -73,6 +73,13 @@ import {
   REAL_ESTATE_TOOL_USE_CASES,
   REAL_ESTATE_VERIFIED_AT,
 } from './real-estate-cluster';
+import {
+  WRITER_PERSONA,
+  WRITER_USE_CASES,
+  WRITER_PERSONA_USE_CASES,
+  WRITER_TOOL_USE_CASES,
+  WRITER_VERIFIED_AT,
+} from './writer-cluster';
 
 export const INITIAL_TOOLS = [
   chatgptTool,
@@ -97,7 +104,11 @@ export const INITIAL_TOOLS = [
 export const INITIAL_CATEGORIES = [...SEED_CATEGORIES, PM_CATEGORY, STUDENT_CATEGORY];
 export const INITIAL_PERSONAS = [
   ...SEED_PERSONAS.filter(
-    (p) => p.slug !== 'marketers' && p.slug !== 'teachers' && p.slug !== 'real-estate-agents'
+    (p) =>
+      p.slug !== 'marketers' &&
+      p.slug !== 'teachers' &&
+      p.slug !== 'real-estate-agents' &&
+      p.slug !== 'writers'
   ),
   PM_PERSONA,
   STUDENT_PERSONA,
@@ -106,6 +117,7 @@ export const INITIAL_PERSONAS = [
   SMALL_BUSINESS_PERSONA,
   RESEARCHER_PERSONA,
   REAL_ESTATE_PERSONA,
+  WRITER_PERSONA,
 ];
 
 export const INITIAL_COMPARISONS = [...SEED_COMPARISONS, ...PM_COMPARISONS];
@@ -146,4 +158,9 @@ export {
   REAL_ESTATE_TOOL_USE_CASES,
   REAL_ESTATE_VERIFIED_AT,
   REAL_ESTATE_PERSONA,
+  WRITER_USE_CASES,
+  WRITER_PERSONA_USE_CASES,
+  WRITER_TOOL_USE_CASES,
+  WRITER_VERIFIED_AT,
+  WRITER_PERSONA,
 };

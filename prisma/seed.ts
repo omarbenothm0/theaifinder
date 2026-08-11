@@ -38,6 +38,11 @@ import {
   REAL_ESTATE_TOOL_USE_CASES,
   REAL_ESTATE_VERIFIED_AT,
   REAL_ESTATE_PERSONA,
+  WRITER_USE_CASES,
+  WRITER_PERSONA_USE_CASES,
+  WRITER_TOOL_USE_CASES,
+  WRITER_VERIFIED_AT,
+  WRITER_PERSONA,
 } from '../lib/data';
 
 const prisma = new PrismaClient();
@@ -372,7 +377,7 @@ async function main() {
 
   // 9. Use cases (PM + Students clusters)
   const useCaseSlugToId = new Map<string, string>();
-  const allUseCases = [...PM_USE_CASES, ...STUDENT_USE_CASES, ...MARKETER_USE_CASES, ...TEACHER_USE_CASES, ...SMALL_BUSINESS_USE_CASES, ...RESEARCHER_USE_CASES, ...REAL_ESTATE_USE_CASES];
+  const allUseCases = [...PM_USE_CASES, ...STUDENT_USE_CASES, ...MARKETER_USE_CASES, ...TEACHER_USE_CASES, ...SMALL_BUSINESS_USE_CASES, ...RESEARCHER_USE_CASES, ...REAL_ESTATE_USE_CASES, ...WRITER_USE_CASES];
   for (const uc of allUseCases) {
     const existing = await prisma.useCase.findUnique({ where: { slug: uc.slug } });
     if (existing) {
@@ -405,6 +410,7 @@ async function main() {
     { personaSlug: 'small-business', links: SMALL_BUSINESS_PERSONA_USE_CASES },
     { personaSlug: 'researchers', links: RESEARCHER_PERSONA_USE_CASES },
     { personaSlug: 'real-estate-agents', links: REAL_ESTATE_PERSONA_USE_CASES },
+    { personaSlug: 'writers', links: WRITER_PERSONA_USE_CASES },
   ];
 
   let personaUseCaseCount = 0;
@@ -439,7 +445,7 @@ async function main() {
   console.log(`Seeded ${personaUseCaseCount} persona-use-case links.`);
 
   // Sync verified cluster persona records (replace seed placeholders where applicable)
-  for (const clusterPersona of [MARKETER_PERSONA, TEACHER_PERSONA, SMALL_BUSINESS_PERSONA, RESEARCHER_PERSONA, REAL_ESTATE_PERSONA]) {
+  for (const clusterPersona of [MARKETER_PERSONA, TEACHER_PERSONA, SMALL_BUSINESS_PERSONA, RESEARCHER_PERSONA, REAL_ESTATE_PERSONA, WRITER_PERSONA]) {
     const personaId = personaSlugToId.get(clusterPersona.slug);
     if (!personaId) continue;
     await prisma.persona.update({
@@ -492,6 +498,7 @@ async function main() {
     ...SMALL_BUSINESS_TOOL_USE_CASES.map((m) => ({ ...m, verifiedAt: SMALL_BUSINESS_VERIFIED_AT })),
     ...RESEARCHER_TOOL_USE_CASES.map((m) => ({ ...m, verifiedAt: RESEARCHER_VERIFIED_AT })),
     ...REAL_ESTATE_TOOL_USE_CASES.map((m) => ({ ...m, verifiedAt: REAL_ESTATE_VERIFIED_AT })),
+    ...WRITER_TOOL_USE_CASES.map((m) => ({ ...m, verifiedAt: WRITER_VERIFIED_AT })),
   ];
 
   let toolUseCaseCount = 0;

@@ -1,7 +1,7 @@
 # Persona Research Inventory
 
-**Last updated:** 2026-08-11  
-**Entries:** 2
+**Last updated:** 2026-08-12
+**Entries:** 3
 
 Track **proposed, verified, and approved** personas (workflow/role hubs) for AI Finder.
 
@@ -69,6 +69,9 @@ Notes: **PRIORITY #1** for current build | Destination: `/for/project-managers` 
 
 PERSONA: Students | Slug: `students` | Seed overlap: none — no seed Students persona exists (closest seed: `teachers`, different audience) | Evidence: Five independently tested, related-but-distinct keywords show real seasonal/cyclical demand tied to verifiable academic calendar events (school terms, exam periods, submission deadlines). Competition varies by sub-intent: general/study-tools/homework/flashcards show WEAK–MODERATE competition (real opportunity); academic-writing/citation-generator show HARD competition (entrenched academic tool brands). | Status: RESEARCHED | Date: 2026-08-11
 Notes: Target: K–12, undergraduate, and graduate students seeking AI tools for study, homework, flashcards, and general academic workflows | Evidence type: OBSERVATION | Tools: NotebookLM, Otter.ai, RemNote, NoteGPT — NOT VERIFIED as exhaustive list | Destination: `/for/students` | Keywords: ai tools for students (+200% YoY, WEAK-MODERATE), ai study tools (MODERATE, seasonal), ai homework helper (+30% YoY, WEAK-MODERATE), ai flashcard maker (+40% YoY, MODERATE), ai tools for academic writing (HARD, cyclical), best ai citation generator (>5000% YoY marker, HARD) | Separate track from PM cluster — not current build priority | Status is RESEARCHED, not PROPOSED — owner sign-off required per Research Bible §10 before promotion.
+
+PERSONA: Writers | Slug: `writers` | Seed overlap: **REPLACE** — replaces seed placeholder `writers` | Evidence: Category-level keyword `best ai writing tools` (+250% YoY Trends, MODERATE competition — OBSERVATION 2026-08-11); destination `/category/writing` in KEYWORDS.md; raw volume/CPC NOT VERIFIED | Status: RESEARCHED | Date: 2026-08-12
+Notes: Target: authors, editors, bloggers, newsletter/article writers, creative and long-form writers | Evidence type: OBSERVATION (category keyword) + VERIFIED FACT (Grammarly in TOOLS.md) | Persona-specific keyword `ai tools for writers` **NOT researched** — demand evidence is primarily category-level | Tools mapped: ChatGPT, Claude, Grammarly, Perplexity, Notion AI — existing repo records only | **Excluded from cluster:** Jasper, Copy.ai, Canva, Semrush, HubSpot, Hootsuite (marketing/GTM evidence) | Destination: `/for/writers` | Architecture: hub-only, 5 workflows, all `pageEnabled: false` | Boundary: author/editor craft — NOT SEO, ads, social campaigns, or marketing analytics (→ Marketers / Small Business) | Do not promote to PROPOSED/APPROVED without owner sign-off
 
 ---
 

@@ -18,6 +18,7 @@ import { TeacherWorkflowLinks } from '../../../components/persona/TeacherWorkflo
 import { SmallBusinessWorkflowLinks } from '../../../components/persona/SmallBusinessWorkflowLinks';
 import { ResearcherWorkflowLinks } from '../../../components/persona/ResearcherWorkflowLinks';
 import { RealEstateWorkflowLinks } from '../../../components/persona/RealEstateWorkflowLinks';
+import { WriterWorkflowLinks } from '../../../components/persona/WriterWorkflowLinks';
 
 const BASE_URL = getBaseUrl();
 
@@ -88,6 +89,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
       {(category.slug === 'writing' || category.slug === 'seo') && (
         <MarketerWorkflowLinks variant="category" />
       )}
+      {category.slug === 'writing' && <WriterWorkflowLinks variant="category" />}
       {(category.slug === 'productivity' || category.slug === 'writing') && (
         <SmallBusinessWorkflowLinks variant="category" />
       )}

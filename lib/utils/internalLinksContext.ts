@@ -21,6 +21,7 @@ export function getContextualInternalLinks(
   const isSmallBusinessTool = targetUsers.includes('small-business');
   const isResearcherTool = targetUsers.includes('researchers');
   const isRealEstateTool = targetUsers.includes('real-estate-agents');
+  const isWriterTool = targetUsers.includes('writers');
 
   if (isPmTool) {
     return {
@@ -77,6 +78,14 @@ export function getContextualInternalLinks(
     return {
       categories: prioritizePmLinks(categories, 'image'),
       personas: prioritizePmLinks(personas, 'real-estate-agents'),
+      comparisons,
+    };
+  }
+
+  if (isWriterTool) {
+    return {
+      categories: prioritizePmLinks(categories, 'writing'),
+      personas: prioritizePmLinks(personas, 'writers'),
       comparisons,
     };
   }

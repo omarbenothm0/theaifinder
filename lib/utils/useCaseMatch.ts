@@ -39,6 +39,13 @@ export function toolMatchesUseCase(tool: Tool, useCase: string): boolean {
     );
   }
 
+  if (uc === 'writers') {
+    return (
+      tool.targetUsers.includes('writers') ||
+      tool.tags.some((tag) => tag.toLowerCase().includes('writing'))
+    );
+  }
+
   const normalized = uc.replace(/-/g, ' ');
   const slug = (tool.categorySlug ?? '').toLowerCase();
   const id = tool.categoryId.toLowerCase();

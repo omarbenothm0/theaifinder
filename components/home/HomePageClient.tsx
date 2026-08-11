@@ -76,6 +76,8 @@ export function HomePageClient({
     if (b.slug === 'researchers') return 1;
     if (a.slug === 'real-estate-agents') return -1;
     if (b.slug === 'real-estate-agents') return 1;
+    if (a.slug === 'writers') return -1;
+    if (b.slug === 'writers') return 1;
     return 0;
   });
 
