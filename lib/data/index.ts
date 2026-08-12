@@ -30,6 +30,7 @@ import {
 } from './pm-cluster';
 import { PM_COMPARISONS } from './pm-comparisons';
 import { CODING_COMPARISONS } from './coding-comparisons';
+import { CODING_CATEGORY } from './coding-category';
 import {
   STUDENT_CATEGORY,
   STUDENT_PERSONA,
@@ -106,8 +107,9 @@ export const INITIAL_TOOLS = [
 ];
 
 export const INITIAL_CATEGORIES = [
-  ...SEED_CATEGORIES.filter((c) => c.slug !== 'writing'),
+  ...SEED_CATEGORIES.filter((c) => c.slug !== 'writing' && c.slug !== 'coding'),
   WRITING_CATEGORY,
+  CODING_CATEGORY,
   PM_CATEGORY,
   STUDENT_CATEGORY,
 ];

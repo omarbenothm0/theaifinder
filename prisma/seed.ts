@@ -81,7 +81,7 @@ async function main() {
   console.log(`Seeded ${INITIAL_CATEGORIES.length} categories.`);
 
   // Sync enriched category metadata when seed modules replace placeholders
-  const ENRICHED_CATEGORY_SLUGS = new Set(['writing', 'study-education', 'project-management']);
+  const ENRICHED_CATEGORY_SLUGS = new Set(['writing', 'coding', 'study-education', 'project-management']);
   for (const cat of INITIAL_CATEGORIES) {
     if (!ENRICHED_CATEGORY_SLUGS.has(cat.slug)) continue;
 

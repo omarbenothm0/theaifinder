@@ -10,8 +10,7 @@ import { generateCategoryMetadata, generateNotFoundMetadata } from '../../../lib
 import { isCategoryIndexable } from '../../../lib/seo/indexability';
 import { generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
 import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
-import { Layers, Sparkles, Zap, ArrowRight } from 'lucide-react';
-import Link from 'next/link';
+import { Layers, Sparkles } from 'lucide-react';
 import { PmWorkflowLinks } from '../../../components/persona/PmWorkflowLinks';
 import { StudentWorkflowLinks } from '../../../components/persona/StudentWorkflowLinks';
 import { MarketerWorkflowLinks } from '../../../components/persona/MarketerWorkflowLinks';
@@ -20,6 +19,7 @@ import { SmallBusinessWorkflowLinks } from '../../../components/persona/SmallBus
 import { ResearcherWorkflowLinks } from '../../../components/persona/ResearcherWorkflowLinks';
 import { RealEstateWorkflowLinks } from '../../../components/persona/RealEstateWorkflowLinks';
 import { WritingCategoryContent } from '../../../components/category/WritingCategoryContent';
+import { CodingCategoryContent } from '../../../components/category/CodingCategoryContent';
 
 const BASE_URL = getBaseUrl();
 
@@ -70,6 +70,15 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
     );
   }
 
+  if (category.slug === 'coding') {
+    return (
+      <>
+        <JsonLd schema={breadcrumbSchema} />
+        <CodingCategoryContent category={category} categories={categories} personas={personas} />
+      </>
+    );
+  }
+
   return (
     <div className="space-y-10">
       <JsonLd schema={breadcrumbSchema} />
@@ -105,19 +114,6 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
       {category.slug === 'seo' && <ResearcherWorkflowLinks variant="category" />}
       {(category.slug === 'image' || category.slug === 'presentations') && (
         <RealEstateWorkflowLinks variant="category" />
-      )}
-
-      {category.slug === 'coding' && (
-        <div className="max-w-4xl mx-auto">
-          <Link
-            href="/compare/claude-code-vs-cursor"
-            className="inline-flex items-center gap-2 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-4 py-2.5 rounded-xl hover:bg-indigo-100 transition-colors"
-          >
-            <Zap className="w-4 h-4 text-indigo-600" />
-            Compare Claude Code vs Cursor
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
       )}
 
       {/* Tools Grid */}
