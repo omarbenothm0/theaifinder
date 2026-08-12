@@ -11,45 +11,37 @@ import {
   getSitemapBaseUrl,
 } from '../lib/seo/sitemap-builder';
 
-export async function generateSitemaps() {
-  const { totalPages } = await dbRepository.getToolsPageForSitemap(1, SITEMAP_PAGE_SIZE);
-  const ids = [{ id: 'static' }];
-  for (let i = 0; i < totalPages; i += 1) {
-    ids.push({ id: `tools-${i}` });
+async function getAllToolsForSitemap() {
+  const { tools, totalPages } = await dbRepository.getToolsPageForSitemap(1, SITEMAP_PAGE_SIZE);
+  const allTools = [...tools];
+
+  for (let page = 2; page <= totalPages; page += 1) {
+    const pageResult = await dbRepository.getToolsPageForSitemap(page, SITEMAP_PAGE_SIZE);
+    allTools.push(...pageResult.tools);
   }
-  return ids;
+
+  return allTools;
 }
 
-export default async function sitemap(props: {
-  id: Promise<string>;
-}): Promise<MetadataRoute.Sitemap> {
-  const id = await props.id;
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = getSitemapBaseUrl();
 
-  if (id === 'static') {
-    const [categories, personas, comparisons, personaToolCounts, useCasePages] = await Promise.all([
+  const [categories, personas, comparisons, personaToolCounts, useCasePages, tools] =
+    await Promise.all([
       dbRepository.getCategories(),
       dbRepository.getPersonas(),
       dbRepository.getComparisons(),
       dbRepository.getPersonaLinkedToolCounts(),
       dbRepository.getIndexablePersonaUseCasePages(),
+      getAllToolsForSitemap(),
     ]);
 
-    return [
-      ...buildStaticSitemapEntries(baseUrl),
-      ...buildCategorySitemapEntries(categories, baseUrl),
-      ...buildPersonaSitemapEntries(personas, baseUrl, personaToolCounts),
-      ...buildUseCaseSitemapEntries(useCasePages, baseUrl),
-      ...buildComparisonSitemapEntries(comparisons, baseUrl),
-    ];
-  }
-
-  const match = id.match(/^tools-(\d+)$/);
-  if (match) {
-    const page = Number(match[1]) + 1;
-    const { tools } = await dbRepository.getToolsPageForSitemap(page, SITEMAP_PAGE_SIZE);
-    return buildToolSitemapEntries(tools, baseUrl);
-  }
-
-  return [];
+  return [
+    ...buildStaticSitemapEntries(baseUrl),
+    ...buildCategorySitemapEntries(categories, baseUrl),
+    ...buildPersonaSitemapEntries(personas, baseUrl, personaToolCounts),
+    ...buildUseCaseSitemapEntries(useCasePages, baseUrl),
+    ...buildComparisonSitemapEntries(comparisons, baseUrl),
+    ...buildToolSitemapEntries(tools, baseUrl),
+  ];
 }
