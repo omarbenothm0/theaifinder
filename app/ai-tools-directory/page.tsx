@@ -4,6 +4,7 @@ import { CategoryService } from '../../lib/services/category.service';
 import { ComparisonService } from '../../lib/services/comparison.service';
 import { CategoryCard } from '../../components/category/CategoryCard';
 import { generatePageMetadata } from '../../lib/seo/metadata';
+import { isComparisonIndexable } from '../../lib/seo/indexability';
 import { sitePageTitle } from '../../lib/brand';
 import { Layers, Zap, ArrowRight, Database } from 'lucide-react';
 
@@ -22,6 +23,7 @@ export default async function AIToolsDirectoryPage() {
     CategoryService.getCategories(),
     ComparisonService.getComparisons()
   ]);
+  const indexableComparisons = comparisons.filter((c) => isComparisonIndexable(c).indexable);
 
   return (
     <div className="space-y-12">
@@ -60,12 +62,12 @@ export default async function AIToolsDirectoryPage() {
         <div className="flex items-center justify-between border-b border-slate-200 pb-3">
           <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
             <Zap className="w-5 h-5 text-amber-500" />
-            Head-to-Head Comparisons ({comparisons.length})
+            Head-to-Head Comparisons ({indexableComparisons.length})
           </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {comparisons.map((comp) => (
+          {indexableComparisons.map((comp) => (
             <Link
               key={comp.slug}
               href={`/compare/${comp.slug}`}

@@ -165,13 +165,8 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/compare/chatgpt-vs-claude" className="hover:text-emerald-400 transition-colors cursor-pointer">
-                  ChatGPT vs Claude
-                </Link>
-              </li>
-              <li>
-                <Link href="/compare/cursor-vs-chatgpt" className="hover:text-emerald-400 transition-colors cursor-pointer">
-                  Cursor vs ChatGPT
+                <Link href="/compare/sembly-ai-vs-onplana-status-report-writer" className="hover:text-emerald-400 transition-colors cursor-pointer">
+                  Sembly AI vs OnPlana
                 </Link>
               </li>
               <li>

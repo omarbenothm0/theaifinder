@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Category, Persona, Comparison, Tool } from '../../types/tool';
 import { ArrowRight, Sparkles, Layers, Users, Zap } from 'lucide-react';
 import { filterPublicPersonas } from '../../lib/seo/persona-visibility';
+import { isComparisonIndexable } from '../../lib/seo/indexability';
 
 interface InternalLinksProps {
   categories?: Category[];
@@ -31,7 +32,9 @@ export function InternalLinks({
     (p) => !excludePersonaSlug || p.slug !== excludePersonaSlug
   );
   const visibleComparisons = comparisons.filter(
-    (comp) => !excludeComparisonSlug || comp.slug !== excludeComparisonSlug
+    (comp) =>
+      isComparisonIndexable(comp).indexable &&
+      (!excludeComparisonSlug || comp.slug !== excludeComparisonSlug)
   );
 
   if (

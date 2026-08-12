@@ -216,12 +216,6 @@ export async function WritingCategoryContent({
           </div>
           <div className="flex flex-wrap gap-3 pt-2">
             <Link
-              href="/compare/chatgpt-vs-claude"
-              className="text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-full hover:bg-indigo-100 transition-colors"
-            >
-              ChatGPT vs Claude comparison
-            </Link>
-            <Link
               href="/for/students"
               className="text-xs font-bold text-slate-700 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-full hover:bg-slate-100 transition-colors"
             >

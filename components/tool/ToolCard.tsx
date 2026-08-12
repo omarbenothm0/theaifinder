@@ -61,11 +61,15 @@ export function ToolCard({ tool, layout = 'grid' }: ToolCardProps) {
                 {tool.categoryName}
               </Link>
               <span className="text-slate-300">&bull;</span>
-              <div className="flex items-center gap-1 font-bold text-slate-800 text-xs">
-                <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                <span>{tool.rating.toFixed(1)}</span>
-                <span className="text-slate-400 font-normal text-[11px]">({tool.reviewCount})</span>
-              </div>
+              {tool.reviewCount > 0 ? (
+                <div className="flex items-center gap-1 font-bold text-slate-800 text-xs">
+                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                  <span>{tool.rating.toFixed(1)}</span>
+                  <span className="text-slate-400 font-normal text-[11px]">({tool.reviewCount})</span>
+                </div>
+              ) : (
+                <span className="text-[11px] font-medium text-slate-500">Editorial listing</span>
+              )}
             </div>
           </div>
         </div>

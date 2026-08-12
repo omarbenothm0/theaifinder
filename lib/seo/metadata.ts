@@ -87,15 +87,24 @@ export function generatePageMetadata(config: SEOConfig): Metadata {
 
 export function generateToolMetadata(tool: Tool): Metadata {
   const indexResult = isToolIndexable(tool);
-  const ogTitle = `${tool.name} Review, Pricing & Features (2026)`;
+  const hasUserReviews = tool.reviewCount > 0;
+  const ogTitle = hasUserReviews
+    ? `${tool.name} Review, Pricing & Features (2026)`
+    : `${tool.name} Pricing, Features & Alternatives (2026)`;
   const ogDescription = tool.tagline;
   const ogImage = `${BASE_URL}/api/og?title=${encodeURIComponent(ogTitle)}&description=${encodeURIComponent(ogDescription)}&badge=${encodeURIComponent('AI TOOL PROFILE')}&type=tool`;
 
-  return constructMetadata({
-    title: sitePageTitle(`${tool.name} Review, Pricing & Features (2026)`),
-    description: tool.tagline
+  const description = tool.tagline
+    ? hasUserReviews
       ? `${tool.tagline} Read verified user reviews, pricing options, API availability, and top alternatives for ${tool.name}.`
-      : `Read verified user reviews, pricing options, API availability, and top alternatives for ${tool.name}.`,
+      : `${tool.tagline} Editorial listing with pricing, features, API availability, and top alternatives for ${tool.name}.`
+    : hasUserReviews
+      ? `Read verified user reviews, pricing options, API availability, and top alternatives for ${tool.name}.`
+      : `Editorial listing with pricing, features, API availability, and top alternatives for ${tool.name}.`;
+
+  return constructMetadata({
+    title: sitePageTitle(ogTitle),
+    description,
     canonicalUrl: `/tools/${tool.slug}`,
     ogImage,
     noIndex: !indexResult.indexable,

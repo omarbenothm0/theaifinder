@@ -8,6 +8,7 @@ import { HomePageClient } from '../components/home/HomePageClient';
 import { JsonLd } from '../components/shared/JsonLd';
 import { getWebsiteSchema } from '../lib/seo/jsonld';
 import { generatePageMetadata } from '../lib/seo/metadata';
+import { isComparisonIndexable } from '../lib/seo/indexability';
 
 export const revalidate = 3600;
 
@@ -37,6 +38,8 @@ export default async function HomePage() {
 
   const websiteSchema = getWebsiteSchema();
 
+  const indexableComparisons = comparisons.filter((c) => isComparisonIndexable(c).indexable);
+
   return (
     <>
       <JsonLd schema={websiteSchema} />
@@ -47,7 +50,7 @@ export default async function HomePage() {
         apiTools={apiTools.length ? apiTools : allTools.slice(0, 6)}
         categories={categories}
         personas={personas}
-        comparisons={comparisons}
+        comparisons={indexableComparisons}
       />
     </>
   );

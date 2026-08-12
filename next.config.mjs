@@ -24,6 +24,11 @@ const nextConfig = {
         destination: '/for/small-business',
         statusCode: 301,
       },
+      {
+        source: '/compare/cursor-vs-chatgpt',
+        destination: '/compare/claude-code-vs-cursor',
+        statusCode: 301,
+      },
     ];
   },
 };

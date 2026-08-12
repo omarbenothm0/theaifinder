@@ -32,6 +32,20 @@ Public URL pattern: `/compare/[slug]`
 
 ---
 
+## Live indexation status (2026-08-12)
+
+Seed/DB records kept for reversibility. Indexation controlled via `isComparisonIndexable()` in `lib/seo/indexability.ts` and `next.config.mjs` redirects.
+
+| Slug | Live status |
+|---|---|
+| `claude-code-vs-cursor` | **Indexable** — researched/implemented coding comparison |
+| `cursor-vs-chatgpt` | **301 redirect** → `/compare/claude-code-vs-cursor`; excluded from sitemap |
+| `chatgpt-vs-claude` | **Noindex** (`noindex, follow`) — seed placeholder; research DOWNGRADED/HARD |
+| `midjourney-vs-dall-e-3` | **Noindex** (`noindex, follow`) — seed placeholder; no research validation |
+| PM comparisons (`otter-ai-vs-fireflies-ai`, `clickup-brain-vs-asana-ai`, `sembly-ai-vs-onplana-status-report-writer`) | **Indexable** — pass existing indexability gates |
+
+---
+
 ## Entry template
 
 ```markdown

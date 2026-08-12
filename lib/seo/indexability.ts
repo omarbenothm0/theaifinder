@@ -8,6 +8,16 @@ import {
 } from '../../types/tool';
 import { PERSONA_NOINDEX_SLUGS, PERSONA_REDIRECTS } from './persona-visibility';
 
+/** Seed comparisons removed from sitemap — records kept in DB for reversibility. */
+export const COMPARISON_REDIRECTS: Readonly<Record<string, string>> = {
+  'cursor-vs-chatgpt': '/compare/claude-code-vs-cursor',
+};
+
+export const COMPARISON_NOINDEX_SLUGS: ReadonlySet<string> = new Set([
+  'chatgpt-vs-claude',
+  'midjourney-vs-dall-e-3',
+]);
+
 export type IndexabilityResult = {
   indexable: boolean;
   reason?: string;
@@ -154,6 +164,20 @@ export function isUseCasePageIndexable(
 }
 
 export function isComparisonIndexable(comparison: Comparison): IndexabilityResult {
+  if (comparison.slug in COMPARISON_REDIRECTS) {
+    return {
+      indexable: false,
+      reason: `Comparison redirects to ${COMPARISON_REDIRECTS[comparison.slug]}`,
+    };
+  }
+
+  if (COMPARISON_NOINDEX_SLUGS.has(comparison.slug)) {
+    return {
+      indexable: false,
+      reason: 'Seed comparison de-indexed (placeholder — see research/COMPARISONS.md)',
+    };
+  }
+
   if (comparison.isCurated === false) {
     return { indexable: false, reason: 'Auto-generated comparison (not editorially curated)' };
   }

@@ -19,6 +19,7 @@ import { ToolReviewsSection } from '../../../components/review/ToolReviewsSectio
 import { formatInformationVerifiedDate } from '../../../lib/utils/formatDate';
 import { getContextualInternalLinks } from '../../../lib/utils/internalLinksContext';
 import { getPublicAudienceLinks } from '../../../lib/seo/persona-visibility';
+import { isComparisonIndexable } from '../../../lib/seo/indexability';
 
 import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
 
@@ -69,6 +70,7 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
   const toolComparisons = comparisons.filter(
     (c) =>
       c.isCurated !== false &&
+      isComparisonIndexable(c).indexable &&
       (c.tool1Slug === tool.slug || c.tool2Slug === tool.slug)
   );
   const curatedComparison =
@@ -151,11 +153,15 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
                   {tool.categoryName}
                 </Link>
                 <span>&bull;</span>
-                <div className="flex items-center gap-1 font-bold text-slate-900">
-                  <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                  <span>{tool.rating.toFixed(1)}</span>
-                  <span className="text-slate-400 font-normal">({tool.reviewCount} reviews)</span>
-                </div>
+                {tool.reviewCount > 0 ? (
+                  <div className="flex items-center gap-1 font-bold text-slate-900">
+                    <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+                    <span>{tool.rating.toFixed(1)}</span>
+                    <span className="text-slate-400 font-normal">({tool.reviewCount} reviews)</span>
+                  </div>
+                ) : (
+                  <span className="text-slate-500 font-medium">Editorial listing · No user reviews yet</span>
+                )}
               </div>
 
               {tool.lastVerifiedDate && (
