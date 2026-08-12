@@ -347,6 +347,51 @@ async function main() {
     toolSlugToId.set(tool.slug, existingTool.id);
   }
 
+  // Sync legacy inflated review metadata (and corrected pros) from seed modules
+  const LEGACY_REVIEW_METADATA_SYNC_SLUGS = new Set([
+    'chatgpt',
+    'claude',
+    'elevenlabs',
+    'midjourney',
+    'notion-ai',
+    'perplexity',
+    'dall-e-3',
+    'descript',
+    'v0',
+    'jasper',
+    'runway',
+    'suno-ai',
+    'gamma',
+  ]);
+  const TOOL_PROS_SYNC_SLUGS = new Set([
+    'chatgpt',
+    'elevenlabs',
+    'midjourney',
+    'dall-e-3',
+    'descript',
+    'runway',
+  ]);
+  let reviewMetadataSyncCount = 0;
+  for (const tool of INITIAL_TOOLS) {
+    if (!LEGACY_REVIEW_METADATA_SYNC_SLUGS.has(tool.slug)) continue;
+
+    const existingTool = await prisma.tool.findUnique({ where: { slug: tool.slug } });
+    if (!existingTool) continue;
+
+    await prisma.tool.update({
+      where: { slug: tool.slug },
+      data: {
+        rating: tool.rating ?? 0,
+        reviewCount: tool.reviewCount ?? 0,
+        ...(TOOL_PROS_SYNC_SLUGS.has(tool.slug) ? { pros: tool.pros } : {}),
+      },
+    });
+    reviewMetadataSyncCount++;
+  }
+  if (reviewMetadataSyncCount > 0) {
+    console.log(`Synced review metadata for ${reviewMetadataSyncCount} legacy tools.`);
+  }
+
   console.log(`Seeded ${toolSlugToId.size} tools.`);
 
   // 4. Tool alternatives (self-referential, needs all tools created first)

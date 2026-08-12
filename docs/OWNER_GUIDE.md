@@ -156,8 +156,9 @@ The form shows an **indexability preview** when Publish Status is `published`.
 ### Where visitor reviews appear
 
 - **Submission:** `/tools/[slug]` → **User Reviews** section → review form
-- **Public display:** Only **approved** reviews appear in the **User Reviews** section on the tool page
-- **Hero rating / tool cards:** Show **editorial** `Tool.rating` and `Tool.reviewCount` — **not** visitor review aggregates
+- **Public display (User Reviews section):** Only **approved** reviews appear in the list; `ToolReviewsSection.tsx` computes its own average star display from those approved rows
+- **Hero rating / tool cards / JSON-LD:** Public tool reads run through `enrichToolsWithPublicReviewSignals()` in `lib/dbRepository.ts`, which calls `applyPublicReviewSignals()` in `lib/seo/public-review-signals.ts`. That **replaces** `Tool.rating` and `Tool.reviewCount` with aggregates from **approved** `Review` rows. If a tool has zero approved reviews, public hero/cards show no star count (rating 0, reviewCount 0) and JSON-LD omits `aggregateRating`
+- **Admin / unpublished reads:** Show raw DB columns `Tool.rating` and `Tool.reviewCount` (editorial fields, typically 0 unless manually set in Admin)
 
 ---
 
@@ -168,7 +169,7 @@ The form shows an **indexability preview** when Publish Status is `published`.
 3. Expand review → **Approve**, **Reject**, **Flag**, or **Delete**.
 4. Approved reviews appear publicly in the User Reviews section.
 
-See [Section 5 — Reviews](#5-reviews) for the complete flow and the critical editorial vs visitor rating distinction.
+See [Section 5 — Reviews](#5-reviews) for the complete flow and how DB editorial fields relate to public review overlays.
 
 ---
 
@@ -340,16 +341,17 @@ Visitor on /tools/[slug]
 
 **Moderation notes** (`moderationNotes`) are admin-only and never shown to visitors.
 
-### CRITICAL — two separate rating systems
+### CRITICAL — DB editorial fields vs public review signals
 
-| Metric | Database fields | Where shown | Updated by visitor reviews? |
+| Layer | Source | Where shown | Updated by visitor review moderation? |
 |---|---|---|---|
-| **Editorial / listing rating** | `Tool.rating`, `Tool.reviewCount` | Tool page **hero**, tool **cards**, finder, homepage sections | **NO — NEVER** |
-| **User review aggregate** | Computed from approved `Review` rows at render time | **User Reviews** section only | Yes (computed live from approved reviews) |
+| **DB editorial fields** | `Tool.rating`, `Tool.reviewCount` columns | **Admin** dashboard, tool edit form, unpublished tool reads | **NO — NEVER** auto-sync from moderation |
+| **Public hero / ToolCard / finder / featured lists** | `applyPublicReviewSignals()` overlay from approved `Review` rows | Tool page hero stars, `ToolCard`, `/api/finder`, JSON-LD `aggregateRating` when count > 0 | Indirectly — approving/deleting reviews changes the aggregate at **read time**, not by writing Tool columns |
+| **User Reviews section** | Individual approved `Review` rows + section-level average | Bottom of `/tools/[slug]` | Yes (approve/reject/delete controls visibility) |
 
-**Rule for future developers:** Approving, rejecting, or deleting visitor reviews must **NOT** write to `Tool.rating` or `Tool.reviewCount`. Those fields are **editorial/listing data** set manually in Admin (or from initial seed). The moderation code does not update them — keep it that way unless explicitly requested with a deliberate product decision.
+**Rule for future developers:** Review moderation must **NOT** write to `Tool.rating` or `Tool.reviewCount`. Those DB fields are editorial/admin metadata (seed defaults to 0). Public listings derive star counts from approved reviews via `enrichToolsWithPublicReviewSignals()` — keep that overlay; do not remove it unless deliberately changing product behavior.
 
-The User Reviews section computes its own average from approved reviews (`ToolReviewsSection.tsx`) — completely separate from the hero stars.
+The User Reviews section (`ToolReviewsSection.tsx`) shows individual review text and its own average — separate from the hero star overlay, though both derive from approved `Review` rows.
 
 ---
 
@@ -714,7 +716,7 @@ Then restart/rebuild app. Compare `prisma/migrations/` folders against `npx pris
 2. **Do not redesign working systems unnecessarily.** The site is functional. Fix the requested problem with the smallest correct change.
 3. **Do not modify seed/content data** (`lib/data/`, `prisma/seed.ts`) unless explicitly requested.
 4. **Do not change SEO architecture** (`lib/seo/`) unless explicitly requested.
-5. **Do not change reviews/moderation** unless explicitly requested. Never auto-sync visitor reviews into `Tool.rating` / `Tool.reviewCount`.
+5. **Do not change reviews/moderation** unless explicitly requested. Never auto-sync visitor reviews into `Tool.rating` / `Tool.reviewCount` DB columns. Public hero/cards use `applyPublicReviewSignals()` overlays instead.
 6. **Do not change monitoring behavior** unless explicitly requested. Monitoring must keep using official `websiteUrl` only.
 7. **Do not change affiliate behavior** unless explicitly requested. Keep centralized routing in `toolOutboundLink.ts`.
 8. **Do not run destructive DB commands** — no `migrate reset`, no blind `db push`, no seed on production.
