@@ -86,6 +86,7 @@ import {
 import { WRITING_CATEGORY } from './writing-category';
 import { PRODUCTIVITY_CATEGORY } from './productivity-category';
 import { MARKETING_CATEGORY } from './marketing-category';
+import { SEO_CATEGORY } from './seo-category';
 
 export const INITIAL_TOOLS = [
   chatgptTool,
@@ -110,7 +111,11 @@ export const INITIAL_TOOLS = [
 
 export const INITIAL_CATEGORIES = [
   ...SEED_CATEGORIES.filter(
-    (c) => c.slug !== 'writing' && c.slug !== 'coding' && c.slug !== 'productivity'
+    (c) =>
+      c.slug !== 'writing' &&
+      c.slug !== 'coding' &&
+      c.slug !== 'productivity' &&
+      c.slug !== 'seo'
   ),
   WRITING_CATEGORY,
   CODING_CATEGORY,
@@ -118,6 +123,7 @@ export const INITIAL_CATEGORIES = [
   STUDY_EDUCATION_CATEGORY,
   PRODUCTIVITY_CATEGORY,
   MARKETING_CATEGORY,
+  SEO_CATEGORY,
 ];
 export const INITIAL_PERSONAS = [
   ...SEED_PERSONAS.filter(

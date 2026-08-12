@@ -88,6 +88,7 @@ async function main() {
     'project-management',
     'productivity',
     'marketing',
+    'seo',
   ]);
   for (const cat of INITIAL_CATEGORIES) {
     if (!ENRICHED_CATEGORY_SLUGS.has(cat.slug)) continue;
