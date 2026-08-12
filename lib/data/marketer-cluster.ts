@@ -1,5 +1,6 @@
 import { Persona, Tool } from '../../types/tool';
 import { UseCaseFitTier } from './pm-cluster';
+import { CAT_MARKETING } from './marketing-category';
 
 export interface MarketerUseCaseSeed {
   slug: string;
@@ -33,7 +34,6 @@ const VERIFIED_DATE = '2026-08-11';
 const CAT_WRITING = 'cat-writing';
 const CAT_IMAGE = 'cat-image';
 const CAT_SEO = 'cat-seo';
-const CAT_PRODUCTIVITY = 'cat-productivity';
 
 function favicon(domain: string): string {
   return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
@@ -299,8 +299,8 @@ export const MARKETER_TOOLS: Tool[] = [
   marketerTool({
     name: 'HubSpot',
     slug: 'hubspot',
-    categoryId: CAT_PRODUCTIVITY,
-    categoryName: 'Productivity & Search',
+    categoryId: CAT_MARKETING,
+    categoryName: 'Marketing & CRM',
     logo: favicon('hubspot.com'),
     tagline: 'Marketing CRM with Breeze AI — email, ads, social, SEO, and analytics in one hub.',
     description:
@@ -325,8 +325,8 @@ export const MARKETER_TOOLS: Tool[] = [
   marketerTool({
     name: 'Hootsuite',
     slug: 'hootsuite',
-    categoryId: CAT_PRODUCTIVITY,
-    categoryName: 'Productivity & Search',
+    categoryId: CAT_MARKETING,
+    categoryName: 'Marketing & CRM',
     logo: favicon('hootsuite.com'),
     tagline: 'Social media management with OwlyWriter AI for captions, hashtags, and content ideas.',
     description:

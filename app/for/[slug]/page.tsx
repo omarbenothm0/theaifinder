@@ -120,13 +120,20 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
       )}
 
       {persona.slug === 'marketers' && (
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto flex flex-wrap gap-3">
           <Link
-            href="/category/writing"
+            href="/category/marketing"
             className="inline-flex items-center gap-2 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-4 py-2.5 rounded-xl hover:bg-indigo-100 transition-colors"
           >
             <TrendingUp className="w-4 h-4" />
-            Browse Writing &amp; Copywriting category tools
+            Browse Marketing &amp; CRM category tools
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+          <Link
+            href="/category/writing"
+            className="inline-flex items-center gap-2 text-xs font-bold text-slate-700 bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl hover:bg-slate-100 transition-colors"
+          >
+            Browse Writing category (copy tools)
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -152,7 +159,7 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
             className="inline-flex items-center gap-2 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-4 py-2.5 rounded-xl hover:bg-indigo-100 transition-colors"
           >
             <Store className="w-4 h-4" />
-            Browse Productivity &amp; Search category tools
+            Browse Productivity &amp; Workspace category tools
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>

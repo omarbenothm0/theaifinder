@@ -8,7 +8,7 @@ export const notionAiTool: Tool = {
   tagline: 'Integrated workspace assistant for notes, project docs, Q&A synthesis, and database search.',
   description: 'Notion AI connects your personal or team wiki notes, tasks, and project docs with an AI assistant that answers workspace questions, drafts documentation, and auto-fills database properties.',
   categoryId: 'cat-productivity',
-  categoryName: 'Productivity & Search',
+  categoryName: 'Productivity & Workspace',
   tags: ['Workspace', 'Notes', 'Q&A', 'Productivity'],
   pricingModel: 'Paid',
   monthlyPrice: 10,

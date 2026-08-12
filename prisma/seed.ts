@@ -81,7 +81,14 @@ async function main() {
   console.log(`Seeded ${INITIAL_CATEGORIES.length} categories.`);
 
   // Sync enriched category metadata when seed modules replace placeholders
-  const ENRICHED_CATEGORY_SLUGS = new Set(['writing', 'coding', 'study-education', 'project-management']);
+  const ENRICHED_CATEGORY_SLUGS = new Set([
+    'writing',
+    'coding',
+    'study-education',
+    'project-management',
+    'productivity',
+    'marketing',
+  ]);
   for (const cat of INITIAL_CATEGORIES) {
     if (!ENRICHED_CATEGORY_SLUGS.has(cat.slug)) continue;
 
@@ -233,6 +240,29 @@ async function main() {
       },
     });
     toolSlugToId.set(tool.slug, created.id);
+  }
+
+  // Sync taxonomy category assignments when seed modules move tools between categories
+  const TAXONOMY_CATEGORY_SYNC_SLUGS = new Set([
+    'hubspot',
+    'hootsuite',
+    'todoist-assist',
+    'notion-ai',
+  ]);
+  for (const tool of INITIAL_TOOLS) {
+    if (!TAXONOMY_CATEGORY_SYNC_SLUGS.has(tool.slug)) continue;
+
+    const existingTool = await prisma.tool.findUnique({ where: { slug: tool.slug } });
+    if (!existingTool) continue;
+
+    const categorySlug = categoryIdToSlug.get(tool.categoryId);
+    const realCategoryId = categorySlug ? categorySlugToId.get(categorySlug) : undefined;
+    if (!realCategoryId) continue;
+
+    await prisma.tool.update({
+      where: { slug: tool.slug },
+      data: { categoryId: realCategoryId },
+    });
   }
 
   // Sync refreshed tool records when seed modules replace stale data

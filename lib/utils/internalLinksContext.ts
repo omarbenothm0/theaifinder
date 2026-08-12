@@ -66,7 +66,7 @@ export function getContextualInternalLinks(
 
   if (isMarketerTool) {
     return {
-      categories: prioritizePmLinks(categories, 'writing'),
+      categories: prioritizePmLinks(categories, 'marketing'),
       personas: prioritizePmLinks(publicPersonas, 'marketers'),
       comparisons,
     };

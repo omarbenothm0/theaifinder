@@ -500,6 +500,8 @@ export const PM_TOOLS: Tool[] = [
   pmTool({
     name: 'Todoist Assist',
     slug: 'todoist-assist',
+    categoryId: 'cat-productivity',
+    categoryName: 'Productivity & Workspace',
     logo: favicon('todoist.com'),
     tagline: 'Task Assist, Filter Assist, Email Assist, and Ramble voice-to-task for individuals.',
     description:

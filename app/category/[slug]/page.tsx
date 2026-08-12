@@ -12,13 +12,14 @@ import { generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
 import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
 import { Layers, Sparkles } from 'lucide-react';
 import { MarketerWorkflowLinks } from '../../../components/persona/MarketerWorkflowLinks';
-import { SmallBusinessWorkflowLinks } from '../../../components/persona/SmallBusinessWorkflowLinks';
 import { ResearcherWorkflowLinks } from '../../../components/persona/ResearcherWorkflowLinks';
 import { RealEstateWorkflowLinks } from '../../../components/persona/RealEstateWorkflowLinks';
 import { WritingCategoryContent } from '../../../components/category/WritingCategoryContent';
 import { CodingCategoryContent } from '../../../components/category/CodingCategoryContent';
 import { ProjectManagementCategoryContent } from '../../../components/category/ProjectManagementCategoryContent';
 import { StudyEducationCategoryContent } from '../../../components/category/StudyEducationCategoryContent';
+import { ProductivityCategoryContent } from '../../../components/category/ProductivityCategoryContent';
+import { MarketingCategoryContent } from '../../../components/category/MarketingCategoryContent';
 
 const BASE_URL = getBaseUrl();
 
@@ -104,6 +105,32 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
     );
   }
 
+  if (category.slug === 'productivity') {
+    return (
+      <>
+        <JsonLd schema={breadcrumbSchema} />
+        <ProductivityCategoryContent
+          category={category}
+          categories={categories}
+          personas={personas}
+        />
+      </>
+    );
+  }
+
+  if (category.slug === 'marketing') {
+    return (
+      <>
+        <JsonLd schema={breadcrumbSchema} />
+        <MarketingCategoryContent
+          category={category}
+          categories={categories}
+          personas={personas}
+        />
+      </>
+    );
+  }
+
   return (
     <div className="space-y-10">
       <JsonLd schema={breadcrumbSchema} />
@@ -124,9 +151,6 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
 
       {(category.slug === 'seo') && (
         <MarketerWorkflowLinks variant="category" />
-      )}
-      {(category.slug === 'productivity') && (
-        <SmallBusinessWorkflowLinks variant="category" />
       )}
       {category.slug === 'seo' && <ResearcherWorkflowLinks variant="category" />}
       {(category.slug === 'image' || category.slug === 'presentations') && (

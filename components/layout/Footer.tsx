@@ -83,7 +83,8 @@ export function Footer() {
                 { name: 'Voice & Speech', slug: 'voice' },
                 { name: 'SEO & Research', slug: 'seo' },
                 { name: 'Presentations & Decks', slug: 'presentations' },
-                { name: 'Productivity', slug: 'productivity' }
+                { name: 'Productivity & Workspace', slug: 'productivity' },
+                { name: 'Marketing & CRM', slug: 'marketing' }
               ].map((c) => (
                 <li key={c.slug}>
                   <Link

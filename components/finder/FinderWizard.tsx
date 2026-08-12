@@ -177,7 +177,7 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
                 { id: 'voice', name: 'Voice & Speech', desc: 'Voiceover synthesis, audio dubbing, and cleanup' },
                 { id: 'seo', name: 'SEO & Research', desc: 'Live search research, keyword analysis, and citations' },
                 { id: 'presentations', name: 'Presentations', desc: 'Slide decks, pitch presentations, and visual reports' },
-                { id: 'productivity', name: 'Productivity', desc: 'Knowledge assistants and workflow tools' },
+                { id: 'productivity', name: 'Productivity & Workspace', desc: 'Workspace knowledge, tasks, and meeting capture' },
                 { id: 'project-management', name: 'Project Management', desc: 'Meeting notes, tasks, plans, and status reports for PMs' },
                 { id: 'study-education', name: 'Study & Education', desc: 'Flashcards, homework help, research, writing, and lecture notes' },
                 { id: 'marketing', name: 'Marketing & Growth', desc: 'Content, SEO, social, email campaigns, ads, and analytics' },

@@ -182,18 +182,6 @@ export const INITIAL_CATEGORIES: Category[] = [
     faqs: [],
     seoTitle: 'Best AI Presentation & Slide Deck Builders (2026)',
     seoDescription: 'Transform text into stunning pitch decks and slides with AI presentation builders.'
-  },
-  {
-    id: 'cat-productivity',
-    name: 'Productivity & Search',
-    slug: 'productivity',
-    iconName: 'Zap',
-    description: 'Smart workspace copilots, automated note takers, and workflow automation engines.',
-    longDescription: 'Organize personal and team knowledge, summarize documents, and automate repetitive administrative tasks.',
-    toolCount: 7,
-    faqs: [],
-    seoTitle: 'Best AI Productivity & Workspace Tools (2026)',
-    seoDescription: 'Discover smart workspace copilots, AI note takers, and task automation software.'
   }
 ];
 

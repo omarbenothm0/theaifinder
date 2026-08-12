@@ -28,7 +28,8 @@ const CATEGORY_LINKS = [
   { name: 'Voice & Audio', slug: 'voice' },
   { name: 'SEO & Research', slug: 'seo' },
   { name: 'Presentations & Slides', slug: 'presentations' },
-  { name: 'Productivity & Search', slug: 'productivity' }
+  { name: 'Productivity & Workspace', slug: 'productivity' },
+  { name: 'Marketing & CRM', slug: 'marketing' },
 ];
 
 export function Header() {
