@@ -11,7 +11,6 @@ import { isCategoryIndexable } from '../../../lib/seo/indexability';
 import { generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
 import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
 import { Layers, Sparkles } from 'lucide-react';
-import { PmWorkflowLinks } from '../../../components/persona/PmWorkflowLinks';
 import { StudentWorkflowLinks } from '../../../components/persona/StudentWorkflowLinks';
 import { MarketerWorkflowLinks } from '../../../components/persona/MarketerWorkflowLinks';
 import { TeacherWorkflowLinks } from '../../../components/persona/TeacherWorkflowLinks';
@@ -20,6 +19,7 @@ import { ResearcherWorkflowLinks } from '../../../components/persona/ResearcherW
 import { RealEstateWorkflowLinks } from '../../../components/persona/RealEstateWorkflowLinks';
 import { WritingCategoryContent } from '../../../components/category/WritingCategoryContent';
 import { CodingCategoryContent } from '../../../components/category/CodingCategoryContent';
+import { ProjectManagementCategoryContent } from '../../../components/category/ProjectManagementCategoryContent';
 
 const BASE_URL = getBaseUrl();
 
@@ -79,6 +79,19 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
     );
   }
 
+  if (category.slug === 'project-management') {
+    return (
+      <>
+        <JsonLd schema={breadcrumbSchema} />
+        <ProjectManagementCategoryContent
+          category={category}
+          categories={categories}
+          personas={personas}
+        />
+      </>
+    );
+  }
+
   return (
     <div className="space-y-10">
       <JsonLd schema={breadcrumbSchema} />
@@ -97,7 +110,6 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         </p>
       </div>
 
-      {category.slug === 'project-management' && <PmWorkflowLinks variant="category" />}
       {category.slug === 'study-education' && (
         <>
           <StudentWorkflowLinks variant="category" />

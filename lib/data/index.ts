@@ -20,7 +20,6 @@ import { descriptTool } from './tools/descript';
 import { sunoAiTool } from './tools/suno-ai';
 import { notionAiTool } from './tools/notion-ai';
 import {
-  PM_CATEGORY,
   PM_PERSONA,
   PM_TOOLS,
   PM_USE_CASES,
@@ -31,6 +30,7 @@ import {
 import { PM_COMPARISONS } from './pm-comparisons';
 import { CODING_COMPARISONS } from './coding-comparisons';
 import { CODING_CATEGORY } from './coding-category';
+import { PROJECT_MANAGEMENT_CATEGORY } from './project-management-category';
 import {
   STUDENT_CATEGORY,
   STUDENT_PERSONA,
@@ -110,7 +110,7 @@ export const INITIAL_CATEGORIES = [
   ...SEED_CATEGORIES.filter((c) => c.slug !== 'writing' && c.slug !== 'coding'),
   WRITING_CATEGORY,
   CODING_CATEGORY,
-  PM_CATEGORY,
+  PROJECT_MANAGEMENT_CATEGORY,
   STUDENT_CATEGORY,
 ];
 export const INITIAL_PERSONAS = [
