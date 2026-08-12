@@ -95,7 +95,7 @@ export default async function AdminLoginPage(props: {
               type="text"
               autoComplete="username"
               required
-              placeholder="admin"
+              placeholder="Enter username"
               className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
           </div>
@@ -125,7 +125,6 @@ export default async function AdminLoginPage(props: {
 
           <p className="text-[11px] text-slate-400 text-center leading-relaxed">
             Sessions expire after 1 hour of inactivity. All actions are logged.
-            Configure ADMIN_USERNAME and ADMIN_PASSWORD in your environment to change defaults.
           </p>
         </form>
       </div>

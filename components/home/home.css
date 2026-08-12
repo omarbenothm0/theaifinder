@@ -1,0 +1,160 @@
+/* Homepage — Inworld-inspired design system (semantic tokens, restrained weights) */
+
+.home-page {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+.home-container {
+  max-width: 72rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.home-section {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+@media (min-width: 768px) {
+  .home-section {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+}
+
+/* Pill / badge buttons */
+.home-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+  border-radius: 9999px;
+  padding: 0.125rem 0.625rem;
+  font-size: 13px;
+  font-weight: 500;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+  cursor: pointer;
+}
+
+.home-pill-outline {
+  border: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+  color: var(--foreground);
+  background: transparent;
+}
+
+.home-pill-outline:hover {
+  background: color-mix(in srgb, var(--foreground) 5%, transparent);
+  border-color: color-mix(in srgb, var(--border) 80%, transparent);
+}
+
+.home-pill-active {
+  background: color-mix(in srgb, var(--foreground) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+  color: var(--foreground-strong);
+}
+
+/* Primary / secondary CTAs */
+.home-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  border-radius: 9999px;
+  padding: 0.625rem 1.25rem;
+  font-size: 14px;
+  font-weight: 500;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.home-btn-primary:hover {
+  background: color-mix(in srgb, var(--primary) 85%, white);
+}
+
+.home-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  border-radius: 9999px;
+  padding: 0.625rem 1.25rem;
+  font-size: 14px;
+  font-weight: 500;
+  background: transparent;
+  color: var(--foreground);
+  border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.home-btn-secondary:hover {
+  background: color-mix(in srgb, var(--foreground) 5%, transparent);
+}
+
+/* Raised cards */
+.home-card {
+  border-radius: 0.75rem;
+  background: var(--background-raised);
+  border: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.home-card:hover {
+  border-color: color-mix(in srgb, var(--border) 70%, transparent);
+}
+
+.home-card-lg {
+  border-radius: 1rem;
+}
+
+/* Logo marquee */
+.home-marquee-wrap {
+  position: relative;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+.home-marquee-track {
+  display: flex;
+  gap: 2.5rem;
+  width: max-content;
+  animation: homeMarquee 40s linear infinite;
+}
+
+@keyframes homeMarquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.home-scroll-strip {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.home-scroll-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.home-fade-in {
+  animation: homeFadeIn 0.5s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+@keyframes homeFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

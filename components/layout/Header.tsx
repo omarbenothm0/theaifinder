@@ -3,23 +3,21 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
-import { Search, Sparkles, Compass, Layers, Settings, ChevronDown, Users, ArrowRight } from 'lucide-react';
+import { Search, Sparkles, Compass, ChevronDown } from 'lucide-react';
 import { SITE_NAME } from '../../lib/brand';
-import { isDeprecatedPersonaNavSlug } from '../../lib/seo/persona-visibility';
-import { PUBLIC_CATEGORY_NAV_LINKS } from '../../lib/data/category-nav-links';
+import {
+  ROLE_MEGA_MENU_COLUMNS,
+  ROLE_MEGA_MENU_FOOTER,
+  ALL_TOOLS_MEGA_MENU_COLUMNS,
+  ALL_TOOLS_MEGA_MENU_FOOTER,
+} from '../../lib/data/nav-mega-menu';
+import { NavMegaMenu } from './NavMegaMenu';
 
-const ROLE_LINKS = [
-  { name: 'Project Managers', slug: 'project-managers' },
-  { name: 'Students', slug: 'students' },
-  { name: 'Writers', slug: 'writers' },
-  { name: 'Marketers', slug: 'marketers' },
-  { name: 'Teachers', slug: 'teachers' },
-  { name: 'Small Business', slug: 'small-business' },
-  { name: 'Researchers', slug: 'researchers' },
-  { name: 'Real Estate', slug: 'real-estate-agents' },
-].filter((link) => !isDeprecatedPersonaNavSlug(link.slug));
+const NAV_LINK_BASE =
+  'inline-flex items-center h-full px-4 text-sm font-medium text-foreground/75 hover:text-foreground hover:bg-foreground/5 transition-colors duration-200';
 
-const CATEGORY_LINKS = [...PUBLIC_CATEGORY_NAV_LINKS];
+const NAV_LINK_ACTIVE =
+  'inline-flex items-center h-full px-4 text-sm font-medium text-foreground bg-foreground/8';
 
 export function Header() {
   const router = useRouter();
@@ -53,203 +51,130 @@ export function Header() {
     return false;
   };
 
-  return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 gap-4">
-          
-          {/* Logo */}
-          <div className="flex items-center gap-8">
-            <Link
-              href="/"
-              className="flex items-center gap-2.5 group cursor-pointer text-left focus:outline-hidden"
-              id="header-logo-btn"
-            >
-              <div className="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center text-white font-bold text-xs shadow-xs group-hover:bg-slate-800 transition-colors">
-                <Sparkles className="w-4 h-4 text-emerald-400" />
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="font-extrabold text-lg text-slate-900 tracking-tight">TheRadarHub</span>
-                <span className="text-[10px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">
-                  Engine
-                </span>
-              </div>
-            </Link>
+  const allToolsActive =
+    (isActive('/ai-tools') && pathname === '/ai-tools') ||
+    pathname.startsWith('/category') ||
+    pathname === '/ai-tools-directory' ||
+    pathname === '/best-ai-tools' ||
+    pathname === '/free-ai-tools' ||
+    pathname === '/ai-apps';
 
-            {/* Desktop Navigation Links */}
-            <nav className="hidden lg:flex items-center gap-1 text-sm font-medium">
-              {/* By Role Dropdown */}
-              <div className="relative">
+  const toggleRolesMenu = () => {
+    if (showRolesMenu) {
+      setShowRolesMenu(false);
+    } else {
+      setShowCategoriesMenu(false);
+      setShowRolesMenu(true);
+    }
+  };
+
+  const toggleCategoriesMenu = () => {
+    if (showCategoriesMenu) {
+      setShowCategoriesMenu(false);
+    } else {
+      setShowRolesMenu(false);
+      setShowCategoriesMenu(true);
+    }
+  };
+
+  return (
+    <header className="sticky top-0 z-50 bg-background">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2.5 shrink-0 h-16 focus:outline-hidden group"
+            id="header-logo-btn"
+          >
+            <Sparkles
+              className="h-[22px] w-[22px] text-accent transition-opacity duration-200 group-hover:opacity-80"
+              aria-hidden
+            />
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="font-medium text-base text-foreground tracking-tight truncate">{SITE_NAME}</span>
+              <span className="hidden sm:inline text-[10px] uppercase tracking-[0.015em] font-medium px-1.5 py-0.5 rounded-md border border-border/50 text-muted-foreground">
+                Engine
+              </span>
+            </div>
+          </Link>
+
+          <div className="flex items-stretch h-16 gap-3 shrink-0">
+            <nav className="hidden lg:flex items-stretch h-16 gap-6" aria-label="Main">
+              <div className="relative h-16">
                 <button
-                  onClick={() => setShowRolesMenu(!showRolesMenu)}
-                  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg transition-colors cursor-pointer text-sm ${
-                    pathname.startsWith('/for')
-                      ? 'text-slate-900 bg-slate-100 font-semibold'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                  }`}
+                  type="button"
+                  onClick={toggleRolesMenu}
+                  className={`${pathname.startsWith('/for') ? NAV_LINK_ACTIVE : NAV_LINK_BASE} gap-1.5 cursor-pointer`}
                   id="nav-by-role-btn"
+                  aria-expanded={showRolesMenu}
+                  aria-haspopup="true"
                 >
                   By Role
-                  <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+                  <ChevronDown className="w-4 h-4 text-muted-foreground" />
                 </button>
 
-                {showRolesMenu && (
-                  <div
-                    className="absolute top-full left-0 mt-1.5 w-64 bg-white rounded-xl shadow-lg border border-slate-200 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150"
-                    onMouseLeave={() => setShowRolesMenu(false)}
-                  >
-                    <div className="px-3.5 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                      Find Tools By Role
-                    </div>
-                    {ROLE_LINKS.map((role) => (
-                      <Link
-                        key={role.slug}
-                        href={`/for/${role.slug}`}
-                        onClick={() => setShowRolesMenu(false)}
-                        className="w-full text-left px-3.5 py-2 text-sm font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50 flex items-center justify-between cursor-pointer"
-                      >
-                        {role.name}
-                      </Link>
-                    ))}
-                    <div className="border-t border-slate-100 my-1"></div>
-                    <Link
-                      href="/for"
-                      onClick={() => setShowRolesMenu(false)}
-                      className="w-full text-left px-3.5 py-2 text-xs font-bold text-slate-900 hover:bg-slate-50 flex items-center gap-1.5 cursor-pointer"
-                    >
-                      <Users className="w-3.5 h-3.5 text-emerald-600" />
-                      View All Roles &rarr;
-                    </Link>
-                  </div>
-                )}
+                <NavMegaMenu
+                  columns={ROLE_MEGA_MENU_COLUMNS}
+                  footer={ROLE_MEGA_MENU_FOOTER}
+                  open={showRolesMenu}
+                  onClose={() => setShowRolesMenu(false)}
+                />
               </div>
 
-              {/* All Tools Dropdown */}
-              <div className="relative">
+              <div className="relative h-16">
                 <button
-                  onClick={() => setShowCategoriesMenu(!showCategoriesMenu)}
-                  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg transition-colors cursor-pointer text-sm ${
-                    (isActive('/ai-tools') && pathname === '/ai-tools') ||
-                    pathname.startsWith('/category') ||
-                    pathname === '/ai-tools-directory' ||
-                    pathname === '/best-ai-tools' ||
-                    pathname === '/free-ai-tools' ||
-                    pathname === '/ai-apps'
-                      ? 'text-slate-900 bg-slate-100 font-semibold'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                  }`}
+                  type="button"
+                  onClick={toggleCategoriesMenu}
+                  className={`${allToolsActive ? NAV_LINK_ACTIVE : NAV_LINK_BASE} gap-1.5 cursor-pointer`}
                   id="nav-all-tools-btn"
+                  aria-expanded={showCategoriesMenu}
+                  aria-haspopup="true"
                 >
                   All Tools
-                  <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+                  <ChevronDown className="w-4 h-4 text-muted-foreground" />
                 </button>
 
-                {showCategoriesMenu && (
-                  <div
-                    className="absolute top-full left-0 mt-1.5 w-64 bg-white rounded-xl shadow-lg border border-slate-200 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150"
-                    onMouseLeave={() => setShowCategoriesMenu(false)}
-                  >
-                    <Link
-                      href="/ai-tools"
-                      onClick={() => setShowCategoriesMenu(false)}
-                      className="w-full text-left px-3.5 py-2 text-sm font-bold text-slate-900 hover:bg-slate-50 flex items-center justify-between cursor-pointer"
-                      id="nav-browse-all-tools-btn"
-                    >
-                      Browse All Tools
-                      <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
-                    </Link>
-                    <div className="border-t border-slate-100 my-1"></div>
-                    <div className="px-3.5 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                      Browse Categories
-                    </div>
-                    {CATEGORY_LINKS.map((cat) => (
-                      <Link
-                        key={cat.slug}
-                        href={`/category/${cat.slug}`}
-                        onClick={() => setShowCategoriesMenu(false)}
-                        className="w-full text-left px-3.5 py-2 text-sm font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50 flex items-center justify-between cursor-pointer"
-                      >
-                        {cat.name}
-                      </Link>
-                    ))}
-                    <div className="border-t border-slate-100 my-1"></div>
-                    <Link
-                      href="/best-ai-tools"
-                      onClick={() => setShowCategoriesMenu(false)}
-                      className="w-full text-left px-3.5 py-2 text-sm font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50 flex items-center justify-between cursor-pointer"
-                      id="nav-best-tools-btn"
-                    >
-                      Best AI Tools
-                    </Link>
-                    <Link
-                      href="/free-ai-tools"
-                      onClick={() => setShowCategoriesMenu(false)}
-                      className="w-full text-left px-3.5 py-2 text-sm font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50 flex items-center justify-between cursor-pointer"
-                      id="nav-free-tools-btn"
-                    >
-                      Free Tools
-                    </Link>
-                    <div className="border-t border-slate-100 my-1"></div>
-                    <Link
-                      href="/ai-tools-directory"
-                      onClick={() => setShowCategoriesMenu(false)}
-                      className="w-full text-left px-3.5 py-2 text-xs font-bold text-slate-900 hover:bg-slate-50 flex items-center gap-1.5 cursor-pointer"
-                    >
-                      <Layers className="w-3.5 h-3.5 text-emerald-600" />
-                      View Full Taxonomy Directory &rarr;
-                    </Link>
-                  </div>
-                )}
+                <NavMegaMenu
+                  columns={ALL_TOOLS_MEGA_MENU_COLUMNS}
+                  footer={ALL_TOOLS_MEGA_MENU_FOOTER}
+                  open={showCategoriesMenu}
+                  onClose={() => setShowCategoriesMenu(false)}
+                  align="right"
+                />
               </div>
 
               <Link
                 href="/compare"
-                className={`px-3.5 py-2 rounded-lg transition-colors cursor-pointer text-sm ${
-                  pathname.startsWith('/compare')
-                    ? 'text-slate-900 bg-slate-100 font-semibold'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                }`}
+                className={pathname.startsWith('/compare') ? NAV_LINK_ACTIVE : NAV_LINK_BASE}
                 id="nav-comparisons-btn"
               >
                 Compare
               </Link>
             </nav>
-          </div>
 
-          {/* Quick Search & Right Controls */}
-          <div className="flex items-center gap-3">
-            <form onSubmit={handleSearch} className="relative hidden md:block w-48 lg:w-60">
+            <form onSubmit={handleSearch} className="relative hidden md:block w-48 lg:w-60 self-center">
               <input
                 id="global-search-input"
                 type="text"
                 placeholder="Search AI tools... (/)"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-300 rounded-lg pl-8 pr-7 py-1.5 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200 focus:border-slate-400 transition-all shadow-inner"
+                className="w-full bg-background-raised border border-border/50 rounded-lg pl-8 pr-7 py-1.5 text-xs text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:border-border transition-colors duration-200"
               />
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
-              <span className="absolute right-2 top-2 text-[10px] font-mono text-slate-400 bg-slate-200/80 px-1 py-0.2 rounded">
+              <Search className="w-3.5 h-3.5 text-muted-foreground absolute left-2.5 top-2.5" />
+              <span className="absolute right-2 top-2 text-[10px] font-mono text-muted-foreground px-1 rounded-md border border-border/40">
                 /
               </span>
             </form>
 
             <Link
               href="/ai-tool-finder"
-              className="flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs sm:text-sm px-4 py-2 rounded-lg transition-colors cursor-pointer shadow-sm"
+              className="inline-flex items-center gap-1.5 self-center bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-xs sm:text-sm px-4 h-9 rounded-full transition-colors duration-200"
               id="header-finder-btn"
             >
-              <Compass className="w-4 h-4 text-emerald-400" />
+              <Compass className="w-4 h-4" />
               <span className="hidden sm:inline">Tool Finder</span>
               <span className="sm:hidden">Finder</span>
-            </Link>
-
-            <Link
-              href="/admin"
-              className="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
-              title="Admin Settings"
-              id="header-admin-btn"
-            >
-              <Settings className="w-4 h-4" />
             </Link>
           </div>
         </div>

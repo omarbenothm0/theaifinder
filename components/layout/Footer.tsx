@@ -6,7 +6,7 @@ import { SITE_NAME } from '../../lib/brand';
 import { isDeprecatedPersonaNavSlug } from '../../lib/seo/persona-visibility';
 import { PUBLIC_CATEGORY_NAV_LINKS } from '../../lib/data/category-nav-links';
 import { AffiliateDisclosure } from '../tool/AffiliateDisclosure';
-import { Sparkles, ArrowRight, CheckCircle2, ShieldCheck, Database, FileText } from 'lucide-react';
+import { Sparkles, ArrowRight, CheckCircle2, ShieldCheck } from 'lucide-react';
 
 export function Footer() {
   const [email, setEmail] = useState('');
@@ -21,65 +21,55 @@ export function Footer() {
   };
 
   return (
-    <footer className="bg-slate-900 text-slate-300 border-t border-slate-800 pt-16 pb-12 mt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Top Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-slate-800">
-          
-          {/* Brand Info */}
-          <div className="lg:col-span-2 space-y-4">
+    <footer className="bg-background border-t border-border/40 pt-16 pb-10 mt-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-border/40">
+          <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center text-slate-900 font-bold">
-                <Sparkles className="w-4 h-4 text-slate-900" />
-              </div>
-              <span className="font-bold text-xl text-white tracking-tight">{SITE_NAME}</span>
+              <Sparkles className="w-5 h-5 text-accent" />
+              <span className="font-medium text-base text-foreground tracking-tight">{SITE_NAME}</span>
             </div>
-            <p className="text-sm text-slate-400 max-w-sm leading-relaxed">
-              Find the right AI tool for any task. An independent AI tools directory and discovery engine built for professionals, creators, and engineering teams.
+            <p className="text-[13px] leading-[1.35] text-muted-foreground max-w-xs">
+              Find the right AI tool for any task. An independent directory and discovery engine for professionals,
+              creators, and engineering teams.
             </p>
-
-            {/* Newsletter Subscription Box */}
             <div className="pt-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">
-                Get Weekly AI Tool Updates
+              <span className="text-[11px] font-medium uppercase tracking-[0.015em] text-muted-foreground block mb-2">
+                Weekly AI tool updates
               </span>
               {subscribed ? (
-                <div className="flex items-center gap-2 bg-emerald-950/80 border border-emerald-800 text-emerald-300 px-3.5 py-2 rounded-xl text-xs font-medium">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  Successfully subscribed! Check your inbox for top tool insights.
+                <div className="flex items-center gap-2 bg-background-raised border border-border/50 text-foreground px-3 py-2 rounded-lg text-[12px] font-medium">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-highlighted shrink-0" />
+                  Subscribed — check your inbox.
                 </div>
               ) : (
                 <form onSubmit={handleSubscribe} className="flex items-center gap-2 max-w-sm">
                   <input
                     type="email"
                     required
-                    placeholder="Enter your work email..."
+                    placeholder="Work email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="bg-slate-800 border border-slate-700/80 rounded-xl px-3.5 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 flex-1"
+                    className="bg-background-raised border border-border/50 rounded-lg px-3 py-2 text-[12px] text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:border-border flex-1"
                   />
                   <button
                     type="submit"
-                    className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs px-4 py-2 rounded-xl transition-colors flex items-center gap-1 cursor-pointer"
+                    className="inline-flex items-center gap-1 bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-[12px] px-3 py-2 rounded-full transition-colors cursor-pointer"
                   >
                     Subscribe
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <ArrowRight className="w-3 h-3" />
                   </button>
                 </form>
               )}
             </div>
           </div>
 
-          {/* Categories */}
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-white mb-4">Categories</h4>
-            <ul className="space-y-2.5 text-xs text-slate-400">
+            <h4 className="text-[11px] font-medium uppercase tracking-[0.015em] text-foreground mb-4">Categories</h4>
+            <ul className="space-y-2.5 text-[13px] text-muted-foreground">
               {PUBLIC_CATEGORY_NAV_LINKS.map((c) => (
                 <li key={c.slug}>
-                  <Link
-                    href={`/category/${c.slug}`}
-                    className="hover:text-emerald-400 transition-colors cursor-pointer text-left"
-                  >
+                  <Link href={`/category/${c.slug}`} className="hover:text-foreground transition-colors">
                     {c.name}
                   </Link>
                 </li>
@@ -87,151 +77,99 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Personas / For Workflows */}
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-white mb-4">By Role</h4>
-            <ul className="space-y-2.5 text-xs text-slate-400">
+            <h4 className="text-[11px] font-medium uppercase tracking-[0.015em] text-foreground mb-4">By Role</h4>
+            <ul className="space-y-2.5 text-[13px] text-muted-foreground">
               {[
-                { name: 'AI for Project Managers', slug: 'project-managers' },
-                { name: 'AI for Students', slug: 'students' },
-                { name: 'AI for Writers', slug: 'writers' },
-                { name: 'AI for Marketers', slug: 'marketers' },
-                { name: 'AI for Teachers', slug: 'teachers' },
-                { name: 'AI for Small Business', slug: 'small-business' },
-                { name: 'AI for Researchers', slug: 'researchers' },
-                { name: 'AI for Real Estate Agents', slug: 'real-estate-agents' },
+                { name: 'Project Managers', slug: 'project-managers' },
+                { name: 'Students', slug: 'students' },
+                { name: 'Writers', slug: 'writers' },
+                { name: 'Marketers', slug: 'marketers' },
+                { name: 'Teachers', slug: 'teachers' },
+                { name: 'Small Business', slug: 'small-business' },
+                { name: 'Researchers', slug: 'researchers' },
+                { name: 'Real Estate Agents', slug: 'real-estate-agents' },
               ]
                 .filter((p) => !isDeprecatedPersonaNavSlug(p.slug))
                 .map((p) => (
-                <li key={p.slug}>
-                  <Link
-                    href={`/for/${p.slug}`}
-                    className="hover:text-emerald-400 transition-colors cursor-pointer text-left"
-                  >
-                    {p.name}
-                  </Link>
-                </li>
-              ))}
+                  <li key={p.slug}>
+                    <Link href={`/for/${p.slug}`} className="hover:text-foreground transition-colors">
+                      {p.name}
+                    </Link>
+                  </li>
+                ))}
             </ul>
           </div>
 
-          {/* Core Directory & SEO Pages */}
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-white mb-4">Directory & Hubs</h4>
-            <ul className="space-y-2.5 text-xs text-slate-400">
+            <h4 className="text-[11px] font-medium uppercase tracking-[0.015em] text-foreground mb-4">Directory</h4>
+            <ul className="space-y-2.5 text-[13px] text-muted-foreground">
               <li>
-                <Link href="/best-ai-tools" className="hover:text-emerald-400 transition-colors cursor-pointer">
-                  Best AI Tools (2026)
+                <Link href="/best-ai-tools" className="hover:text-foreground transition-colors">
+                  Best AI Tools
                 </Link>
               </li>
               <li>
-                <Link href="/free-ai-tools" className="hover:text-emerald-400 transition-colors cursor-pointer">
-                  Free AI Tools Directory
+                <Link href="/free-ai-tools" className="hover:text-foreground transition-colors">
+                  Free AI Tools
                 </Link>
               </li>
               <li>
-                <Link href="/ai-apps" className="hover:text-emerald-400 transition-colors cursor-pointer">
-                  AI Apps & Mobile Directory
+                <Link href="/ai-apps" className="hover:text-foreground transition-colors">
+                  AI Apps
                 </Link>
               </li>
               <li>
-                <Link href="/ai-tool-finder" className="hover:text-emerald-400 transition-colors cursor-pointer">
-                  Interactive Tool Finder
+                <Link href="/ai-tool-finder" className="hover:text-foreground transition-colors">
+                  Tool Finder
                 </Link>
               </li>
               <li>
-                <Link href="/ai-tools-directory" className="hover:text-emerald-400 transition-colors cursor-pointer">
-                  Full Category Taxonomy
+                <Link href="/ai-tools-directory" className="hover:text-foreground transition-colors">
+                  Full Taxonomy
                 </Link>
               </li>
               <li>
-                <Link href="/compare/otter-ai-vs-fireflies-ai" className="hover:text-emerald-400 transition-colors cursor-pointer">
-                  Otter.ai vs Fireflies.ai
+                <Link href="/compare" className="hover:text-foreground transition-colors">
+                  Comparisons
                 </Link>
               </li>
               <li>
-                <Link href="/compare/clickup-brain-vs-asana-ai" className="hover:text-emerald-400 transition-colors cursor-pointer">
-                  ClickUp Brain vs Asana AI
+                <Link href="/about" className="hover:text-foreground transition-colors">
+                  About
                 </Link>
               </li>
               <li>
-                <Link href="/compare/sembly-ai-vs-onplana-status-report-writer" className="hover:text-emerald-400 transition-colors cursor-pointer">
-                  Sembly AI vs OnPlana
-                </Link>
-              </li>
-              <li>
-                <Link href="/compare/claude-code-vs-cursor" className="hover:text-emerald-400 transition-colors cursor-pointer">
-                  Claude Code vs Cursor
-                </Link>
-              </li>
-              <li>
-                <Link href="/about" className="hover:text-emerald-400 transition-colors cursor-pointer">
-                  About {SITE_NAME}
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="hover:text-emerald-400 transition-colors cursor-pointer">
-                  Contact & Support
-                </Link>
-              </li>
-              <li>
-                <Link href="/admin" className="hover:text-emerald-400 transition-colors cursor-pointer text-slate-500">
-                  Admin Portal
+                <Link href="/contact" className="hover:text-foreground transition-colors">
+                  Contact
                 </Link>
               </li>
             </ul>
           </div>
-
         </div>
 
-        {/* Affiliate disclosure (site-wide expectation per Terms) */}
-        <div className="pt-4 pb-2 border-b border-slate-800">
+        <div className="pt-4 pb-2 border-b border-border/40">
           <AffiliateDisclosure variant="footer" />
         </div>
 
-        {/* Legal Row */}
-        <div className="pt-6 pb-8 border-b border-slate-800 flex flex-wrap justify-center gap-x-6 gap-y-3 text-[11px] text-slate-400">
-          <Link href="/about" className="hover:text-white transition-colors">
-            About
-          </Link>
-          <Link href="/contact" className="hover:text-white transition-colors">
-            Contact
-          </Link>
-          <Link href="/privacy" className="hover:text-white transition-colors">
+        <div className="pt-6 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[11px] text-muted-foreground">
+          <Link href="/privacy" className="hover:text-foreground transition-colors">
             Privacy Policy
           </Link>
-          <Link href="/terms" className="hover:text-white transition-colors">
+          <Link href="/terms" className="hover:text-foreground transition-colors">
             Terms of Service
           </Link>
-          <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+          <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
             Sitemap
           </a>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-8 flex flex-col md:flex-row items-center justify-between text-xs text-slate-400 gap-4">
-          <div className="flex items-center gap-3 flex-wrap">
-            <div className="flex items-center gap-1.5 bg-slate-800/90 border border-slate-700/80 px-2.5 py-1 rounded-full text-[11px]">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span className="font-medium text-slate-300">Platform Curation Live</span>
-            </div>
-            <span>&copy; 2026 {SITE_NAME}. All rights reserved.</span>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors flex items-center gap-1">
-              <Database className="w-3.5 h-3.5 text-slate-500" />
-              Sitemap.xml
-            </a>
-            <a href="/robots.txt" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors flex items-center gap-1">
-              <FileText className="w-3.5 h-3.5 text-slate-500" />
-              Robots.txt
-            </a>
-            <span className="flex items-center gap-1 text-emerald-400">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              SEO Architecture Verified
-            </span>
-          </div>
+        <div className="pt-6 flex flex-col md:flex-row items-center justify-between text-[12px] text-muted-foreground gap-4">
+          <span>&copy; 2026 {SITE_NAME}. All rights reserved.</span>
+          <span className="flex items-center gap-1 text-highlighted">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            SEO architecture verified
+          </span>
         </div>
       </div>
     </footer>

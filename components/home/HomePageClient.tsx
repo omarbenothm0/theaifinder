@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Tool, Category, Persona, Comparison } from '../../types/tool';
 import { SITE_NAME } from '../../lib/brand';
 import { filterPublicPersonas } from '../../lib/seo/persona-visibility';
@@ -14,21 +14,24 @@ import {
   HOMEPAGE_HERO_BADGE,
   SITE_HERO_SUBTITLE,
 } from '../../lib/seo/site-copy';
-import { ToolCard } from '../tool/ToolCard';
-import { CategoryCard } from '../category/CategoryCard';
+import { HomeToolCard } from './HomeToolCard';
 import {
-  Sparkles,
-  Search,
-  Compass,
   ArrowRight,
   CheckCircle2,
-  Trophy,
-  Users,
-  Layers,
-  Zap,
-  HelpCircle,
+  Compass,
   ShieldCheck,
+  Briefcase,
+  GraduationCap,
+  TrendingUp,
+  BookOpen,
+  Store,
+  Microscope,
+  Home,
+  PenTool,
+  Users,
+  type LucideIcon,
 } from 'lucide-react';
+import './home.css';
 
 interface HomePageClientProps {
   totalToolCount: number;
@@ -41,6 +44,74 @@ interface HomePageClientProps {
   comparisons: Comparison[];
 }
 
+const PERSONA_ICONS: Record<string, LucideIcon> = {
+  'project-managers': Briefcase,
+  students: GraduationCap,
+  marketers: TrendingUp,
+  teachers: BookOpen,
+  'small-business': Store,
+  researchers: Microscope,
+  'real-estate-agents': Home,
+  writers: PenTool,
+};
+
+function SectionHeading({
+  title,
+  description,
+  centered = true,
+}: {
+  title: string;
+  description?: string;
+  centered?: boolean;
+}) {
+  return (
+    <div className={`home-container mb-8 md:mb-10 ${centered ? 'text-center' : ''}`}>
+      <h2 className="text-[30px] leading-[1.15] tracking-[-0.3px] font-medium text-foreground-strong max-w-3xl mx-auto">
+        {title}
+      </h2>
+      {description && (
+        <p className="text-base leading-[1.35] text-muted-foreground mt-4 max-w-2xl mx-auto">{description}</p>
+      )}
+    </div>
+  );
+}
+
+function LogoMarquee({ tools }: { tools: Tool[] }) {
+  const logos = tools.filter((t) => t.logo).slice(0, 12);
+  if (logos.length === 0) return null;
+
+  const duplicated = [...logos, ...logos];
+
+  return (
+    <div className="home-container mt-12 md:mt-16 pb-4">
+      <p className="text-[12px] font-medium uppercase tracking-[0.015em] text-muted-foreground text-center mb-6">
+        Trusted listings across leading AI platforms
+      </p>
+      <div className="home-marquee-wrap py-4">
+        <div className="home-marquee-track">
+          {duplicated.map((tool, i) => (
+            <Link
+              key={`${tool.id}-${i}`}
+              href={`/tools/${tool.slug}`}
+              className="flex items-center gap-2 shrink-0 opacity-70 hover:opacity-100 transition-opacity duration-200"
+            >
+              <Image
+                src={tool.logo}
+                alt={`${tool.name} logo`}
+                width={32}
+                height={32}
+                referrerPolicy="no-referrer"
+                className="w-8 h-8 object-cover rounded-md border border-border/30"
+              />
+              <span className="text-[13px] font-medium text-foreground/80">{tool.name}</span>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function HomePageClient({
   totalToolCount,
   featuredTools,
@@ -49,414 +120,399 @@ export function HomePageClient({
   apiTools,
   categories,
   personas,
-  comparisons
+  comparisons,
 }: HomePageClientProps) {
-  const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'featured' | 'free' | 'trending' | 'api'>('featured');
+  const [activeRole, setActiveRole] = useState<string | null>(null);
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/ai-tools?search=${encodeURIComponent(searchQuery)}`);
-    }
-  };
+  const publicPersonas = filterPublicPersonas(personas);
 
   const currentTabTools =
     activeTab === 'featured'
       ? featuredTools
       : activeTab === 'free'
-      ? freeTools
-      : activeTab === 'trending'
-      ? trendingTools
-      : apiTools;
+        ? freeTools
+        : activeTab === 'trending'
+          ? trendingTools
+          : apiTools;
 
-  const publicPersonas = filterPublicPersonas(personas);
+  const tabItems = [
+    { id: 'featured' as const, label: HOMEPAGE_FEATURED_TAB_LABEL },
+    { id: 'free' as const, label: 'Free / Freemium' },
+    { id: 'trending' as const, label: 'Trending' },
+    { id: 'api' as const, label: 'API Available' },
+  ];
 
-  const heroPersonas = [...publicPersonas].sort((a, b) => {
-    if (a.slug === 'project-managers') return -1;
-    if (b.slug === 'project-managers') return 1;
-    if (a.slug === 'students') return -1;
-    if (b.slug === 'students') return 1;
-    if (a.slug === 'marketers') return -1;
-    if (b.slug === 'marketers') return 1;
-    if (a.slug === 'teachers') return -1;
-    if (b.slug === 'teachers') return 1;
-    if (a.slug === 'small-business') return -1;
-    if (b.slug === 'small-business') return 1;
-    if (a.slug === 'researchers') return -1;
-    if (b.slug === 'researchers') return 1;
-    if (a.slug === 'real-estate-agents') return -1;
-    if (b.slug === 'real-estate-agents') return 1;
-    if (a.slug === 'writers') return -1;
-    if (b.slug === 'writers') return 1;
-    return 0;
-  });
+  const capabilityPills = [
+    { label: 'Browse Directory', href: '/ai-tools' },
+    { label: 'Tool Finder', href: '/ai-tool-finder' },
+    { label: 'Comparisons', href: '/compare' },
+    { label: 'Free Tools', href: '/free-ai-tools' },
+  ];
 
   return (
-    <div className="space-y-16">
-      {/* 1. Hero Banner */}
-      <section className="bg-slate-900 text-white rounded-3xl p-8 sm:p-14 shadow-xl relative overflow-hidden border border-slate-800">
-        <div className="max-w-3xl space-y-6 relative z-10">
-          <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-            {HOMEPAGE_HERO_BADGE}
-          </div>
+    <div className="home-page relative left-1/2 -translate-x-1/2 w-screen max-w-[100vw] -mt-6 sm:-mt-4 home-fade-in">
+      {/* Hero */}
+      <section className="home-section pt-10 md:pt-16 pb-6">
+        <div className="home-container text-center">
+          <span className="home-pill home-pill-outline mb-8">{HOMEPAGE_HERO_BADGE}</span>
 
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
-            Your Hub for <span className="text-emerald-400">AI Tool Discovery</span> &amp; Comparisons
+          <h1 className="text-[38px] md:text-[48px] leading-[1.1] tracking-[-0.3px] font-medium text-foreground-strong max-w-3xl mx-auto">
+            Your Hub for
+            <br />
+            <em className="italic font-normal">AI tool discovery</em>{' '}
+            &amp; comparisons
           </h1>
 
-          <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl">
+          <p className="text-base md:text-[16px] leading-[1.35] text-muted-foreground max-w-[550px] mx-auto mt-6">
             {SITE_HERO_SUBTITLE}
           </p>
 
-          {/* Search Bar */}
-          <form onSubmit={handleSearchSubmit} className="relative pt-2 max-w-xl">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search tools (e.g., ChatGPT, Claude, Cursor, voice cloning, React UI)..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-slate-800/90 border border-slate-700 rounded-2xl pl-12 pr-28 py-4 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-inner"
-              />
-              <Search className="w-5 h-5 text-slate-400 absolute left-4 top-4.5" />
-              <button
-                type="submit"
-                className="absolute right-2 top-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs px-5 py-2.5 rounded-xl transition-all cursor-pointer"
-              >
-                Search
-              </button>
-            </div>
-          </form>
+          <div className="flex flex-wrap items-center justify-center gap-3 mt-10">
+            <Link href="/ai-tool-finder" className="home-btn-primary">
+              Launch Tool Finder
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+            <Link href="/ai-tools" className="home-btn-secondary">
+              Browse all tools
+            </Link>
+          </div>
 
-          {/* Popular Tag Quick Links */}
-          <div className="flex items-center gap-2 text-xs text-slate-400 flex-wrap pt-1">
-            <span className="font-semibold text-slate-300">Popular Searches:</span>
-            {[
-              { name: 'Project Management', slug: 'project-management' },
-              { name: 'Study & Education', slug: 'study-education' },
-              { name: 'Writing & Copywriting', slug: 'writing' },
-              { name: 'Coding IDEs', slug: 'coding' },
-              { name: 'Generative Images', slug: 'image' },
-              { name: 'Text to Speech', slug: 'voice' },
-            ].map((tag) => (
+          <div className="flex flex-wrap items-center justify-center gap-2 mt-10">
+            {capabilityPills.map((pill) => (
               <Link
-                key={tag.slug}
-                href={`/category/${tag.slug}`}
-                className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg border border-slate-700/80 transition-colors"
+                key={pill.href}
+                href={pill.href}
+                className="home-pill home-pill-outline gap-1 px-3 py-1"
               >
-                {tag.name}
+                {pill.label}
+                <ArrowRight className="w-3 h-3 text-muted-foreground" />
               </Link>
             ))}
           </div>
+        </div>
 
-          {/* Persona Quick-Pick Strip */}
-          <div className="flex items-center gap-2 text-xs flex-wrap pt-3 border-t border-slate-800/80 mt-2">
-            <span className="font-semibold text-emerald-300 flex items-center gap-1.5 shrink-0">
-              <Users className="w-3.5 h-3.5" />
-              I am a...
-            </span>
-            {heroPersonas.slice(0, 6).map((p) => (
-              <Link
-                key={p.slug}
-                href={`/for/${p.slug}`}
-                className="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 px-3 py-1.5 rounded-full border border-emerald-500/30 transition-colors font-semibold"
-              >
-                {p.title}
-              </Link>
-            ))}
+        <LogoMarquee tools={featuredTools} />
+      </section>
+
+      {/* Role category strip */}
+      <section className="border-t border-border/30">
+        <div className="home-container py-6">
+          <div className="home-scroll-strip flex gap-2 overflow-x-auto pb-1">
+            {publicPersonas.map((p) => {
+              const Icon = PERSONA_ICONS[p.slug] ?? Users;
+              const isActive = activeRole === p.slug;
+              return (
+                <Link
+                  key={p.slug}
+                  href={`/for/${p.slug}`}
+                  onMouseEnter={() => setActiveRole(p.slug)}
+                  onMouseLeave={() => setActiveRole(null)}
+                  className={`home-pill shrink-0 gap-1.5 px-3 py-1.5 ${isActive ? 'home-pill-active' : 'home-pill-outline'}`}
+                >
+                  <Icon className="w-3.5 h-3.5 text-muted-foreground" />
+                  {p.title}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured stat card */}
+      <section className="home-section !pt-8 !pb-8">
+        <div className="home-container">
+          <div className="home-card home-card-lg p-6 md:p-8 max-w-3xl mx-auto text-center">
+            <p className="text-[12px] font-medium uppercase tracking-[0.015em] text-muted-foreground mb-3">
+              Curated directory
+            </p>
+            <p className="text-[30px] leading-[1.15] tracking-[-0.3px] font-medium text-foreground-strong">
+              {totalToolCount}+ AI tools indexed
+            </p>
+            <p className="text-[14px] leading-[1.35] text-muted-foreground mt-3 max-w-md mx-auto">
+              Editorially verified profiles with pricing, API availability, and workflow fit — updated regularly.
+            </p>
             <Link
-              href="/for"
-              className="text-slate-400 hover:text-white px-2.5 py-1.5 rounded-full transition-colors font-semibold flex items-center gap-1"
+              href="/ai-tools"
+              className="inline-flex items-center gap-1 text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors mt-5"
             >
-              See all roles
+              Explore the directory
               <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* 2. Platform Stats Bar */}
-      <section className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-2xs">
-        <div className="text-center space-y-1">
-          <span className="text-2xl sm:text-3xl font-extrabold text-slate-900 block">{totalToolCount}</span>
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Curated AI Tools</span>
-        </div>
-        <div className="text-center space-y-1">
-          <span className="text-2xl sm:text-3xl font-extrabold text-emerald-600 block">{categories.length} Categories</span>
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Taxonomy Map</span>
-        </div>
-        <div className="text-center space-y-1">
-          <span className="text-2xl sm:text-3xl font-extrabold text-indigo-600 block">{personas.length} Workflows</span>
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Persona Guides</span>
-        </div>
-        <div className="text-center space-y-1">
-          <span className="text-2xl sm:text-3xl font-extrabold text-amber-500 block">Editorial</span>
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Official-Source Profiles</span>
+      {/* Stats grid */}
+      <section className="home-section !pt-0">
+        <div className="home-container">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+            {[
+              { value: totalToolCount, label: 'Curated AI Tools', sub: 'Verified listings' },
+              { value: categories.length, label: 'Categories', sub: 'Taxonomy map' },
+              { value: personas.length, label: 'Workflow Guides', sub: 'By role' },
+              { value: 'Editorial', label: 'Source Profiles', sub: 'Official data' },
+            ].map((stat) => (
+              <div key={stat.label} className="home-card p-5 md:p-6 grid-rows-[auto_auto]">
+                <p className="text-[20px] md:text-[30px] leading-[1.15] tracking-[-0.3px] font-medium text-foreground-strong">
+                  {stat.value}
+                </p>
+                <p className="text-[13px] font-medium text-foreground mt-2">{stat.label}</p>
+                <p className="text-[12px] text-muted-foreground mt-1">{stat.sub}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* 3. Find Tools For Your Role (persona-first entry point) */}
-      <section className="space-y-6">
-        <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-          <div>
-            <h2 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
-              <Users className="w-6 h-6 text-indigo-600" />
-              Find Tools For Your Role
-            </h2>
-            <p className="text-xs text-slate-500 mt-1">
-              Curated software stacks optimized for your specific professional role &mdash; start here
-            </p>
+      {/* Find Tools For Your Role */}
+      <section className="home-section border-t border-border/30">
+        <SectionHeading
+          title="Find Tools For Your Role"
+          description="Curated software stacks optimized for your specific professional role — start here"
+        />
+        <div className="home-container">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {publicPersonas.slice(0, 6).map((p) => {
+              const Icon = PERSONA_ICONS[p.slug] ?? Users;
+              return (
+                <Link
+                  key={p.slug}
+                  href={`/for/${p.slug}`}
+                  className="home-card p-5 group transition-colors"
+                >
+                  <div className="flex items-start gap-3">
+                    <Icon className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
+                    <div>
+                      <p className="text-[14px] font-medium text-foreground group-hover:text-accent transition-colors">
+                        {p.title}
+                      </p>
+                      <p className="text-[13px] leading-[1.35] text-muted-foreground mt-1 line-clamp-2">
+                        {p.subtitle || p.description || `AI tools curated for ${p.title.toLowerCase()}.`}
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
-          <Link
-            href="/for"
-            className="text-xs font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-1 group shrink-0"
-          >
-            <span>View All Roles</span>
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-          {publicPersonas.map((p) => (
+          <div className="text-center mt-8">
             <Link
-              key={p.slug}
-              href={`/for/${p.slug}`}
-              className="bg-white p-5 rounded-2xl border border-slate-200 hover:border-indigo-300 shadow-2xs hover:shadow-xs transition-all group flex flex-col justify-between space-y-4"
+              href="/for"
+              className="inline-flex items-center gap-1 text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors"
             >
-              <div className="space-y-2">
-                <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 font-bold group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                  <Users className="w-5 h-5" />
-                </div>
-                <h3 className="font-bold text-slate-900 text-sm group-hover:text-indigo-600 transition-colors">
-                  {p.title}
+              View all roles
+              <ArrowRight className="w-3 h-3" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Browse Categories */}
+      <section className="home-section border-t border-border/30">
+        <SectionHeading
+          title="Browse Software Categories"
+          description="Explore specialized artificial intelligence solutions by functional directory domain"
+        />
+        <div className="home-container">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {categories.map((cat) => (
+              <Link key={cat.id} href={`/category/${cat.slug}`} className="home-card p-5 group">
+                <p className="text-[14px] font-medium text-foreground group-hover:text-accent transition-colors">
+                  {cat.name}
+                </p>
+                <p className="text-[13px] text-muted-foreground mt-1">
+                  {cat.toolCount ?? 0} tools indexed
+                </p>
+              </Link>
+            ))}
+          </div>
+          <div className="text-center mt-8">
+            <Link
+              href="/ai-tools-directory"
+              className="inline-flex items-center gap-1 text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
+              View full taxonomy directory
+              <ArrowRight className="w-3 h-3" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured AI Tools */}
+      <section className="home-section border-t border-border/30">
+        <SectionHeading
+          title={HOMEPAGE_FEATURED_SECTION_TITLE}
+          description={HOMEPAGE_FEATURED_SECTION_SUBTITLE}
+        />
+        <div className="home-container mb-8">
+          <div className="flex flex-wrap justify-center gap-2">
+            {tabItems.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id)}
+                className={`home-pill px-3 py-1 ${activeTab === tab.id ? 'home-pill-active' : 'home-pill-outline'}`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="home-container">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {currentTabTools.map((tool) => (
+              <HomeToolCard key={tool.id} tool={tool} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Comparisons */}
+      <section className="home-section border-t border-border/30">
+        <SectionHeading
+          title="Popular Software Comparisons"
+          description="Detailed feature-by-feature evaluations of top AI platforms"
+        />
+        <div className="home-container">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {comparisons.map((comp) => (
+              <Link
+                key={comp.slug}
+                href={`/compare/${comp.slug}`}
+                className="home-card home-card-lg p-6 md:p-8 flex flex-col min-h-[200px] group"
+              >
+                <p className="text-[12px] font-medium uppercase tracking-[0.015em] text-muted-foreground mb-3">
+                  Head-to-head evaluation
+                </p>
+                <h3 className="text-[16px] font-medium text-foreground group-hover:text-accent transition-colors mb-2">
+                  {comp.title}
                 </h3>
-                <p className="text-xs text-slate-500 leading-relaxed line-clamp-2">{p.description}</p>
-              </div>
-
-              <div className="flex items-center justify-between text-[11px] font-bold text-indigo-600 pt-3 border-t border-slate-100">
-                <span>Explore Workflow Stack</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </Link>
-          ))}
-        </div>
-
-        <div className="text-center text-xs text-slate-500 pt-1">
-          Not seeing your role?{' '}
-          <Link href="/ai-tool-finder" className="font-bold text-indigo-600 hover:text-indigo-700">
-            Take the 30-second Tool Finder quiz &rarr;
-          </Link>
+                <p className="text-[13px] leading-[1.35] text-muted-foreground line-clamp-3 flex-1">
+                  {comp.verdict}
+                </p>
+                <span className="inline-flex items-center gap-1 text-[13px] font-medium text-muted-foreground group-hover:text-foreground transition-colors mt-5">
+                  Read full comparison
+                  <ArrowRight className="w-3 h-3" />
+                </span>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* 4. Browse Software Categories */}
-      <section className="space-y-6">
-        <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-          <div>
-            <h2 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
-              <Layers className="w-6 h-6 text-emerald-600" />
-              Browse Software Categories
-            </h2>
-            <p className="text-xs text-slate-500 mt-1">
-              Explore specialized artificial intelligence solutions by functional directory domain
-            </p>
-          </div>
-          <Link
-            href="/ai-tools-directory"
-            className="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1 group"
-          >
-            <span>View Full Directory</span>
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-          {categories.map((cat) => (
-            <CategoryCard key={cat.id} category={cat} />
-          ))}
-        </div>
-      </section>
-
-      {/* 5. Featured AI Tools */}
-      <section className="space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-3 gap-4">
-          <div>
-            <h2 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
-              <Trophy className="w-6 h-6 text-amber-500" />
-              {HOMEPAGE_FEATURED_SECTION_TITLE}
-            </h2>
-            <p className="text-xs text-slate-500 mt-1">
-              {HOMEPAGE_FEATURED_SECTION_SUBTITLE}
-            </p>
-          </div>
-
-          {/* Filter Tabs */}
-          <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl shrink-0 self-start sm:self-auto">
-            <button
-              onClick={() => setActiveTab('featured')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                activeTab === 'featured'
-                  ? 'bg-white text-slate-900 shadow-2xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              {HOMEPAGE_FEATURED_TAB_LABEL}
-            </button>
-            <button
-              onClick={() => setActiveTab('free')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                activeTab === 'free'
-                  ? 'bg-white text-slate-900 shadow-2xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              Free / Freemium
-            </button>
-            <button
-              onClick={() => setActiveTab('trending')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                activeTab === 'trending'
-                  ? 'bg-white text-slate-900 shadow-2xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              Trending
-            </button>
-            <button
-              onClick={() => setActiveTab('api')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                activeTab === 'api'
-                  ? 'bg-white text-slate-900 shadow-2xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              API Available
-            </button>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {currentTabTools.map((tool) => (
-            <ToolCard key={tool.id} tool={tool} />
-          ))}
-        </div>
-      </section>
-
-      {/* 6. Popular Head-to-Head Comparisons */}
-      <section className="space-y-6">
-        <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-          <div>
-            <h2 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
-              <Zap className="w-6 h-6 text-amber-500" />
-              Popular Software Comparisons
-            </h2>
-            <p className="text-xs text-slate-500 mt-1">
-              Detailed feature-by-feature evaluations of top AI platforms
-            </p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {comparisons.map((comp) => (
-            <Link
-              key={comp.slug}
-              href={`/compare/${comp.slug}`}
-              className="bg-white p-6 rounded-2xl border border-slate-200 hover:border-amber-300 shadow-2xs hover:shadow-xs transition-all group space-y-4"
-            >
-              <div className="inline-flex items-center gap-1.5 bg-amber-50 text-amber-800 border border-amber-200 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase">
-                <Zap className="w-3 h-3 text-amber-500" />
-                Head-to-Head Evaluation
-              </div>
-
-              <h3 className="font-extrabold text-slate-900 text-base group-hover:text-amber-600 transition-colors">
-                {comp.title}
-              </h3>
-
-              <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed">{comp.verdict}</p>
-
-              <div className="flex items-center justify-between text-xs font-bold text-amber-600 pt-3 border-t border-slate-100">
-                <span>Read Full Comparison</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* 7. Interactive Finder Quiz Banner */}
-      <section className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-8 sm:p-12 shadow-xl flex flex-col md:flex-row items-center justify-between gap-8 border border-slate-800">
-        <div className="space-y-3 max-w-xl">
-          <div className="inline-flex items-center gap-1.5 bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
-            <Compass className="w-4 h-4 text-emerald-400" />
-            Personalized Tool Matcher
-          </div>
-          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
+      {/* Tool Matcher feature section */}
+      <section className="home-section border-t border-border/30">
+        <div className="home-container text-center max-w-3xl">
+          <p className="text-[12px] font-medium uppercase tracking-[0.015em] text-muted-foreground mb-4">
+            Personalized tool matcher
+          </p>
+          <h2 className="text-[30px] leading-[1.15] tracking-[-0.3px] font-medium text-foreground-strong">
             Not Sure Which AI Tool to Pick?
           </h2>
-          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-            Answer 3 quick questions about your task, budget, and role to get instant customized software recommendations with compatibility score breakdowns.
+          <p className="text-base leading-[1.35] text-muted-foreground mt-4 max-w-xl mx-auto">
+            Answer 3 quick questions about your task, budget, and role to get instant customized software
+            recommendations with compatibility score breakdowns.
           </p>
+          <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
+            <Link href="/ai-tool-finder" className="home-btn-primary">
+              <Compass className="w-4 h-4" />
+              Launch AI Tool Finder
+            </Link>
+            <Link href="/compare" className="home-btn-secondary">
+              View comparisons
+            </Link>
+          </div>
         </div>
-
-        <Link
-          href="/ai-tool-finder"
-          className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-sm px-7 py-4 rounded-2xl transition-all shadow-lg flex items-center gap-2 cursor-pointer shrink-0"
-        >
-          <Compass className="w-5 h-5" />
-          <span>Launch AI Tool Finder</span>
-          <ArrowRight className="w-4 h-4" />
-        </Link>
       </section>
 
-      {/* 8. Comprehensive SEO Content Block & FAQ */}
-      <section className="bg-white rounded-3xl border border-slate-200 p-8 sm:p-12 shadow-2xs space-y-8">
-        <div className="max-w-3xl space-y-4">
-          <div className="flex items-center gap-2 text-emerald-600 font-bold text-xs uppercase tracking-wider">
+      {/* SEO / Methodology */}
+      <section className="home-section border-t border-border/30">
+        <div className="home-container max-w-4xl">
+          <div className="flex items-center gap-2 text-[12px] font-medium uppercase tracking-[0.015em] text-muted-foreground mb-6">
             <ShieldCheck className="w-4 h-4" />
-            Editorial Integrity &bull; Methodology
+            Editorial integrity &bull; Methodology
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+          <h2 className="text-[30px] leading-[1.15] tracking-[-0.3px] font-medium text-foreground-strong">
             How We Evaluate &amp; Index Artificial Intelligence Software
           </h2>
-          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            At {SITE_NAME}, our objective is to simplify the rapidly evolving landscape of generative artificial intelligence software. We maintain strict evaluation standards, verifying developer capabilities, pricing transparently, testing API availability, and analyzing real-world workflow suitability.
+          <p className="text-base leading-[1.35] text-muted-foreground mt-5">
+            At {SITE_NAME}, our objective is to simplify the rapidly evolving landscape of generative artificial
+            intelligence software. We maintain strict evaluation standards, verifying developer capabilities, pricing
+            transparently, testing API availability, and analyzing real-world workflow suitability.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-slate-100">
-          <div className="space-y-3 text-xs text-slate-700 leading-relaxed">
-            <h3 className="font-bold text-slate-900 text-sm">Key Evaluation Criteria</h3>
-            <ul className="space-y-2">
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                <span><strong>Output Quality &amp; Accuracy:</strong> Model reasoning fidelity, writing prose naturalness, and visual image photorealism.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                <span><strong>Pricing Transparency:</strong> Clear distinctions between free tiers, freemium limits, and paid monthly subscriptions.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                <span><strong>Developer API Integration:</strong> Availability of REST APIs, SDKs, and custom extension support for software engineers.</span>
-              </li>
-            </ul>
-          </div>
+        <div className="home-container mt-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl mx-auto">
+            <div className="home-card p-6 md:p-8 space-y-4">
+              <h3 className="text-[16px] font-medium text-foreground">Key Evaluation Criteria</h3>
+              <ul className="space-y-4 text-[13px] leading-[1.35] text-muted-foreground">
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-4 h-4 text-highlighted shrink-0 mt-0.5" />
+                  <span>
+                    <span className="text-foreground font-medium">Output Quality &amp; Accuracy:</span> Model reasoning
+                    fidelity, writing prose naturalness, and visual image photorealism.
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-4 h-4 text-highlighted shrink-0 mt-0.5" />
+                  <span>
+                    <span className="text-foreground font-medium">Pricing Transparency:</span> Clear distinctions between
+                    free tiers, freemium limits, and paid monthly subscriptions.
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-4 h-4 text-highlighted shrink-0 mt-0.5" />
+                  <span>
+                    <span className="text-foreground font-medium">Developer API Integration:</span> Availability of REST
+                    APIs, SDKs, and custom extension support for software engineers.
+                  </span>
+                </li>
+              </ul>
+            </div>
 
-          <div className="space-y-3 text-xs text-slate-700 leading-relaxed">
-            <h3 className="font-bold text-slate-900 text-sm">Frequently Asked Questions</h3>
-            <div className="space-y-2">
-              <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                <p className="font-bold text-slate-900">Are all listed AI tools free to use?</p>
-                <p className="text-slate-500 mt-1">Many platforms offer generous free plans or trial credits. Filter using our &quot;Free Tools&quot; directory for zero-cost options.</p>
-              </div>
-              <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                <p className="font-bold text-slate-900">How often is the directory updated?</p>
-                <p className="text-slate-500 mt-1">{HOMEPAGE_FAQ_UPDATE_CADENCE}</p>
+            <div className="home-card p-6 md:p-8 space-y-4">
+              <h3 className="text-[16px] font-medium text-foreground">Frequently Asked Questions</h3>
+              <div className="space-y-4">
+                <div className="rounded-lg border border-border/40 p-4">
+                  <p className="text-[14px] font-medium text-foreground">Are all listed AI tools free to use?</p>
+                  <p className="text-[13px] leading-[1.35] text-muted-foreground mt-2">
+                    Many platforms offer generous free plans or trial credits. Filter using our &quot;Free Tools&quot;
+                    directory for zero-cost options.
+                  </p>
+                </div>
+                <div className="rounded-lg border border-border/40 p-4">
+                  <p className="text-[14px] font-medium text-foreground">How often is the directory updated?</p>
+                  <p className="text-[13px] leading-[1.35] text-muted-foreground mt-2">{HOMEPAGE_FAQ_UPDATE_CADENCE}</p>
+                </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA band */}
+      <section className="home-section bg-inverted text-inverted-foreground">
+        <div className="home-container text-center max-w-2xl">
+          <h2 className="text-[30px] leading-[1.15] tracking-[-0.3px] font-medium">Start discovering</h2>
+          <p className="text-[14px] leading-[1.35] text-inverted-foreground/70 mt-4">
+            Browse curated listings, compare platforms side-by-side, or get personalized recommendations in seconds.
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
+            <Link
+              href="/ai-tools"
+              className="inline-flex items-center gap-1.5 rounded-full px-5 py-2.5 text-[14px] font-medium bg-inverted-foreground text-inverted transition-colors hover:bg-inverted-foreground/90"
+            >
+              Browse all tools
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+            <Link
+              href="/ai-tool-finder"
+              className="inline-flex items-center gap-1.5 rounded-full px-5 py-2.5 text-[14px] font-medium border border-inverted-foreground/30 text-inverted-foreground transition-colors hover:bg-inverted-foreground/10"
+            >
+              Launch Tool Finder
+            </Link>
           </div>
         </div>
       </section>
