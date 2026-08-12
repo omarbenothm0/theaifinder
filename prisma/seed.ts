@@ -91,6 +91,7 @@ async function main() {
     'seo',
     'image',
     'voice',
+    'video',
   ]);
   for (const cat of INITIAL_CATEGORIES) {
     if (!ENRICHED_CATEGORY_SLUGS.has(cat.slug)) continue;

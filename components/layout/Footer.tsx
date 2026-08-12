@@ -79,7 +79,7 @@ export function Footer() {
                 { name: 'Writing & Copywriting', slug: 'writing' },
                 { name: 'Coding & IDEs', slug: 'coding' },
                 { name: 'Image & Design', slug: 'image' },
-                { name: 'Video & VFX', slug: 'video' },
+                { name: 'Video & Motion', slug: 'video' },
                 { name: 'Voice & Audio', slug: 'voice' },
                 { name: 'SEO & Research', slug: 'seo' },
                 { name: 'Presentations & Decks', slug: 'presentations' },
