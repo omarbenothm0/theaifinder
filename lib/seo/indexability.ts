@@ -18,6 +18,9 @@ export const COMPARISON_NOINDEX_SLUGS: ReadonlySet<string> = new Set([
   'midjourney-vs-dall-e-3',
 ]);
 
+/** Category hubs de-indexed until catalog depth supports standalone SEO value. */
+export const CATEGORY_NOINDEX_SLUGS: ReadonlySet<string> = new Set(['presentations']);
+
 export type IndexabilityResult = {
   indexable: boolean;
   reason?: string;
@@ -85,6 +88,13 @@ export function isToolPublicListing(tool: Tool): boolean {
 }
 
 export function isCategoryIndexable(category: Category): IndexabilityResult {
+  if (CATEGORY_NOINDEX_SLUGS.has(category.slug)) {
+    return {
+      indexable: false,
+      reason: 'Category de-indexed (thin hub — re-index when catalog depth improves)',
+    };
+  }
+
   if (!isPublished(category.publishStatus)) {
     return { indexable: false, reason: 'Category not published' };
   }
