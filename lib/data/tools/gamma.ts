@@ -1,10 +1,11 @@
 import { Tool } from '../../../types/tool';
+import { resolveToolLogo } from '../tool-logos';
 
 export const gammaTool: Tool = {
   id: 'tool-gamma',
   name: 'Gamma App',
   slug: 'gamma',
-  logo: 'https://images.unsplash.com/photo-1542744094-3a317272018a?auto=format&fit=crop&w=120&h=120&q=80',
+  logo: resolveToolLogo('gamma'),
   tagline: 'AI presentation generator for slide decks, web pages, and visual docs in minutes.',
   description: 'Gamma transforms text prompts, documents, or outlines into beautifully formatted presentation slide decks and interactive web documents with automated layout styling.',
   categoryId: 'cat-presentations',

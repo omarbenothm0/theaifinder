@@ -1,17 +1,14 @@
 import { Tool } from '../../../types/tool';
+import { resolveToolLogo } from '../tool-logos';
 
 const VERIFIED_DATE = '2026-08-12';
-
-function favicon(domain: string): string {
-  return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
-}
 
 /** Distinct from `/tools/claude` (consumer chat). Agentic coding product from Anthropic. */
 export const claudeCodeTool: Tool = {
   id: 'tool-claude-code',
   name: 'Claude Code',
   slug: 'claude-code',
-  logo: favicon('code.claude.com'),
+  logo: resolveToolLogo('claude-code'),
   tagline:
     'Anthropic agentic coding assistant for terminal, IDE extensions, desktop, web, and CI workflows.',
   description:

@@ -1,10 +1,11 @@
 import { Tool } from '../../../types/tool';
+import { resolveToolLogo } from '../tool-logos';
 
 export const claudeTool: Tool = {
   id: 'tool-claude',
   name: 'Claude',
   slug: 'claude',
-  logo: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=120&h=120&q=80',
+  logo: resolveToolLogo('claude'),
   tagline: 'Next-generation AI assistant built for nuanced writing, complex code analysis, and large context windows.',
   description: 'Claude by Anthropic is built around safety and deep context comprehension. Powered by Claude 3.5 Sonnet and Haiku, it excels at nuanced prose generation, large-scale document editing, code architecture analysis, and interactive Artifact rendering.',
   categoryId: 'cat-writing',

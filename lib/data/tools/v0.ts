@@ -1,10 +1,11 @@
 import { Tool } from '../../../types/tool';
+import { resolveToolLogo } from '../tool-logos';
 
 export const v0Tool: Tool = {
   id: 'tool-v0',
   name: 'v0 by Vercel',
   slug: 'v0',
-  logo: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=120&h=120&q=80',
+  logo: resolveToolLogo('v0'),
   tagline: 'Generative UI system powered by AI to craft React, Tailwind, and Shadcn components instantly.',
   description: 'v0 by Vercel turns text prompts and image mockups into production-ready React JSX code styled with Tailwind CSS and Radix UI primitives. It allows engineers to visually refine UI elements before copying code into projects.',
   categoryId: 'cat-coding',

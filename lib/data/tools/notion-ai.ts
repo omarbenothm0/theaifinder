@@ -1,10 +1,11 @@
 import { Tool } from '../../../types/tool';
+import { resolveToolLogo } from '../tool-logos';
 
 export const notionAiTool: Tool = {
   id: 'tool-notion-ai',
   name: 'Notion AI',
   slug: 'notion-ai',
-  logo: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=120&h=120&q=80',
+  logo: resolveToolLogo('notion-ai'),
   tagline: 'Integrated workspace assistant for notes, project docs, Q&A synthesis, and database search.',
   description: 'Notion AI connects your personal or team wiki notes, tasks, and project docs with an AI assistant that answers workspace questions, drafts documentation, and auto-fills database properties.',
   categoryId: 'cat-productivity',

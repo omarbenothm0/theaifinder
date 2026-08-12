@@ -1,10 +1,11 @@
 import { Tool } from '../../../types/tool';
+import { resolveToolLogo } from '../tool-logos';
 
 export const elevenlabsTool: Tool = {
   id: 'tool-elevenlabs',
   name: 'ElevenLabs',
   slug: 'elevenlabs',
-  logo: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=120&h=120&q=80',
+  logo: resolveToolLogo('elevenlabs'),
   tagline: 'Human-like voice synthesis, instant voice cloning, and AI audio dubbing in 32 languages.',
   description: 'ElevenLabs delivers ultra-realistic speech synthesis with natural emotion, cadence, and inflection. Ideal for video creators, audiobook publishers, game developers, and localization teams.',
   categoryId: 'cat-voice',

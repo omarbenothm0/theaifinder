@@ -1,10 +1,11 @@
 import { Tool } from '../../../types/tool';
+import { resolveToolLogo } from '../tool-logos';
 
 export const sunoAiTool: Tool = {
   id: 'tool-suno-ai',
   name: 'Suno AI',
   slug: 'suno-ai',
-  logo: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=120&h=120&q=80',
+  logo: resolveToolLogo('suno-ai'),
   tagline: 'Generative AI music engine creating full songs with vocals and instrumentation from text.',
   description: 'Suno AI allows anyone to generate full-length songs in any genre complete with realistic vocals, instruments, and lyrics based on simple prompts or custom lyrical inputs.',
   categoryId: 'cat-voice',

@@ -1,16 +1,13 @@
 import { Tool } from '../../../types/tool';
+import { resolveToolLogo } from '../tool-logos';
 
 const VERIFIED_DATE = '2026-08-12';
-
-function favicon(domain: string): string {
-  return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
-}
 
 export const cursorTool: Tool = {
   id: 'tool-cursor',
   name: 'Cursor',
   slug: 'cursor',
-  logo: favicon('cursor.com'),
+  logo: resolveToolLogo('cursor'),
   tagline:
     'AI-native code editor forked from VS Code with agents, Composer, MCP, and team controls.',
   description:

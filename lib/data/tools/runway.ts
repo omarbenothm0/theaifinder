@@ -1,10 +1,11 @@
 import { Tool } from '../../../types/tool';
+import { resolveToolLogo } from '../tool-logos';
 
 export const runwayTool: Tool = {
   id: 'tool-runway',
   name: 'Runway Gen-3',
   slug: 'runway',
-  logo: 'https://images.unsplash.com/photo-1536240478700-b869070f9279?auto=format&fit=crop&w=120&h=120&q=80',
+  logo: resolveToolLogo('runway'),
   tagline: 'Pioneering text-to-video and image-to-video generative media suite for filmmakers.',
   description: 'Runway Gen-3 Alpha offers high-definition video generation with precise camera movement controls, motion brush painting, and temporal consistency for film production, marketing videos, and visual FX.',
   categoryId: 'cat-video',

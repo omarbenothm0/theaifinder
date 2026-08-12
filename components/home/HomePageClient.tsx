@@ -15,6 +15,8 @@ import {
   SITE_HERO_SUBTITLE,
 } from '../../lib/seo/site-copy';
 import { HomeToolCard } from './HomeToolCard';
+import { buildMarqueeLogos } from './home-marquee-logos';
+import { MarqueeLogoImage } from './MarqueeLogoImage';
 import {
   ArrowRight,
   CheckCircle2,
@@ -76,8 +78,8 @@ function SectionHeading({
   );
 }
 
-function LogoMarquee({ tools }: { tools: Tool[] }) {
-  const logos = tools.filter((t) => t.logo).slice(0, 12);
+function LogoMarquee() {
+  const logos = buildMarqueeLogos();
   if (logos.length === 0) return null;
 
   const duplicated = [...logos, ...logos];
@@ -89,21 +91,23 @@ function LogoMarquee({ tools }: { tools: Tool[] }) {
       </p>
       <div className="home-marquee-wrap py-4">
         <div className="home-marquee-track">
-          {duplicated.map((tool, i) => (
+          {duplicated.map((item, i) => (
             <Link
-              key={`${tool.id}-${i}`}
-              href={`/tools/${tool.slug}`}
-              className="flex items-center gap-2 shrink-0 opacity-70 hover:opacity-100 transition-opacity duration-200"
+              key={`${item.slug}-${i}`}
+              href={`/tools/${item.slug}`}
+              aria-label={item.name}
+              className="inline-flex items-center gap-3 shrink-0 min-h-10 opacity-[0.65] hover:opacity-100 transition-opacity duration-300"
             >
-              <Image
-                src={tool.logo}
-                alt={`${tool.name} logo`}
-                width={32}
-                height={32}
-                referrerPolicy="no-referrer"
-                className="w-8 h-8 object-cover rounded-md border border-border/30"
-              />
-              <span className="text-[13px] font-medium text-foreground/80">{tool.name}</span>
+              <span className="flex h-10 w-24 shrink-0 items-center justify-center">
+                <MarqueeLogoImage
+                  src={item.logo}
+                  name={item.name}
+                  fallbackSrc={item.fallbackLogo}
+                />
+              </span>
+              <span className="text-[13px] font-medium leading-none text-foreground/80 whitespace-nowrap">
+                {item.name}
+              </span>
             </Link>
           ))}
         </div>
@@ -192,7 +196,7 @@ export function HomePageClient({
           </div>
         </div>
 
-        <LogoMarquee tools={featuredTools} />
+        <LogoMarquee />
       </section>
 
       {/* Role category strip */}

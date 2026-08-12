@@ -9,7 +9,6 @@ type NavMegaMenuProps = {
   footer?: { label: string; href: string };
   open: boolean;
   onClose: () => void;
-  align?: 'left' | 'right';
   panelClassName?: string;
 };
 
@@ -18,17 +17,13 @@ export function NavMegaMenu({
   footer,
   open,
   onClose,
-  align = 'left',
   panelClassName = '',
 }: NavMegaMenuProps) {
   if (!open) return null;
 
   return (
     <div
-      className={`absolute top-full z-50 mt-2 min-w-[min(100vw-2rem,52rem)] ${
-        align === 'right' ? 'right-0' : 'left-0'
-      } ${panelClassName}`}
-      onMouseLeave={onClose}
+      className={`absolute top-full left-1/2 -translate-x-1/2 z-50 pt-2 min-w-[min(100vw-2rem,52rem)] ${panelClassName}`}
     >
       <div className="bg-background-raised rounded-xl p-6 border border-border/50">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

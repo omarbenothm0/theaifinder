@@ -1,10 +1,11 @@
 import { Tool } from '../../../types/tool';
+import { resolveToolLogo } from '../tool-logos';
 
 export const chatgptTool: Tool = {
   id: 'tool-chatgpt',
   name: 'ChatGPT',
   slug: 'chatgpt',
-  logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=120&h=120&q=80',
+  logo: resolveToolLogo('chatgpt'),
   tagline: 'Conversational AI for writing, analysis, coding, and multi-modal tasks across web and mobile apps.',
   description: 'ChatGPT by OpenAI is a multi-modal AI platform with tiered access to OpenAI models, including GPT-5 on the free plan and advanced reasoning models on paid subscriptions. It assists millions of users worldwide with creative writing, complex data analysis, coding, language translation, and visual image generation via DALL-E 3.',
   categoryId: 'cat-writing',

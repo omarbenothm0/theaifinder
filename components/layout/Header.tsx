@@ -1,10 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
-import { Search, Sparkles, Compass, ChevronDown } from 'lucide-react';
-import { SITE_NAME } from '../../lib/brand';
+import { Search, ChevronDown, ArrowRight } from 'lucide-react';
+import { geistNav } from '../../lib/fonts/nav-font';
+import { LogoWordmark, type LogoWordmarkVariant } from './LogoWordmark';
+import { LogoMark } from './LogoMark';
 import {
   ROLE_MEGA_MENU_COLUMNS,
   ROLE_MEGA_MENU_FOOTER,
@@ -14,10 +16,15 @@ import {
 import { NavMegaMenu } from './NavMegaMenu';
 
 const NAV_LINK_BASE =
-  'inline-flex items-center h-full px-4 text-sm font-medium text-foreground/75 hover:text-foreground hover:bg-foreground/5 transition-colors duration-200';
+  'inline-flex items-center px-4 h-9 text-sm font-medium text-foreground/75 hover:text-foreground hover:bg-foreground/5 transition-colors duration-200 rounded-lg';
 
 const NAV_LINK_ACTIVE =
-  'inline-flex items-center h-full px-4 text-sm font-medium text-foreground bg-foreground/8';
+  'inline-flex items-center px-4 h-9 text-sm font-medium text-foreground bg-foreground/8 rounded-lg';
+
+const MENU_CLOSE_DELAY_MS = 175;
+
+/** Provisional — reply with 1, 2, or 3 to finalize. Preview all at /logo-preview */
+const NAV_LOGO_VARIANT: LogoWordmarkVariant = '1';
 
 export function Header() {
   const router = useRouter();
@@ -25,6 +32,47 @@ export function Header() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showRolesMenu, setShowRolesMenu] = useState(false);
   const [showCategoriesMenu, setShowCategoriesMenu] = useState(false);
+
+  const rolesCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const categoriesCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearTimer = useCallback((timerRef: React.MutableRefObject<ReturnType<typeof setTimeout> | null>) => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+
+  const openRolesMenu = useCallback(() => {
+    clearTimer(rolesCloseTimer);
+    clearTimer(categoriesCloseTimer);
+    setShowCategoriesMenu(false);
+    setShowRolesMenu(true);
+  }, [clearTimer]);
+
+  const scheduleCloseRolesMenu = useCallback(() => {
+    clearTimer(rolesCloseTimer);
+    rolesCloseTimer.current = setTimeout(() => setShowRolesMenu(false), MENU_CLOSE_DELAY_MS);
+  }, [clearTimer]);
+
+  const openCategoriesMenu = useCallback(() => {
+    clearTimer(categoriesCloseTimer);
+    clearTimer(rolesCloseTimer);
+    setShowRolesMenu(false);
+    setShowCategoriesMenu(true);
+  }, [clearTimer]);
+
+  const scheduleCloseCategoriesMenu = useCallback(() => {
+    clearTimer(categoriesCloseTimer);
+    categoriesCloseTimer.current = setTimeout(() => setShowCategoriesMenu(false), MENU_CLOSE_DELAY_MS);
+  }, [clearTimer]);
+
+  useEffect(() => {
+    return () => {
+      clearTimer(rolesCloseTimer);
+      clearTimer(categoriesCloseTimer);
+    };
+  }, [clearTimer]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -59,122 +107,108 @@ export function Header() {
     pathname === '/free-ai-tools' ||
     pathname === '/ai-apps';
 
-  const toggleRolesMenu = () => {
-    if (showRolesMenu) {
-      setShowRolesMenu(false);
-    } else {
-      setShowCategoriesMenu(false);
-      setShowRolesMenu(true);
-    }
-  };
-
-  const toggleCategoriesMenu = () => {
-    if (showCategoriesMenu) {
-      setShowCategoriesMenu(false);
-    } else {
-      setShowRolesMenu(false);
-      setShowCategoriesMenu(true);
-    }
-  };
-
   return (
-    <header className="sticky top-0 z-50 bg-background">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+    <header
+      className={`sticky top-0 z-50 bg-background ${geistNav.variable} font-[family-name:var(--font-nav)] font-medium antialiased`}
+    >
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10 xl:px-12">
+        <div className="flex items-center h-16 w-full">
           <Link
             href="/"
-            className="inline-flex items-center gap-2.5 shrink-0 h-16 focus:outline-hidden group"
+            className="inline-flex items-center shrink-0 text-foreground-strong focus:outline-hidden group mr-8 lg:mr-12"
             id="header-logo-btn"
           >
-            <Sparkles
-              className="h-[22px] w-[22px] text-accent transition-opacity duration-200 group-hover:opacity-80"
-              aria-hidden
-            />
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="font-medium text-base text-foreground tracking-tight truncate">{SITE_NAME}</span>
-              <span className="hidden sm:inline text-[10px] uppercase tracking-[0.015em] font-medium px-1.5 py-0.5 rounded-md border border-border/50 text-muted-foreground">
-                Engine
-              </span>
-            </div>
+            <span className="inline-flex items-end gap-2.5">
+              <LogoMark
+                height={31}
+                className="block shrink-0 group-hover:opacity-90 transition-opacity duration-200"
+              />
+              <LogoWordmark
+                variant={NAV_LOGO_VARIANT}
+                className="block leading-none shrink-0 group-hover:opacity-90 transition-opacity duration-200"
+              />
+            </span>
           </Link>
 
-          <div className="flex items-stretch h-16 gap-3 shrink-0">
-            <nav className="hidden lg:flex items-stretch h-16 gap-6" aria-label="Main">
-              <div className="relative h-16">
-                <button
-                  type="button"
-                  onClick={toggleRolesMenu}
-                  className={`${pathname.startsWith('/for') ? NAV_LINK_ACTIVE : NAV_LINK_BASE} gap-1.5 cursor-pointer`}
-                  id="nav-by-role-btn"
-                  aria-expanded={showRolesMenu}
-                  aria-haspopup="true"
-                >
-                  By Role
-                  <ChevronDown className="w-4 h-4 text-muted-foreground" />
-                </button>
-
-                <NavMegaMenu
-                  columns={ROLE_MEGA_MENU_COLUMNS}
-                  footer={ROLE_MEGA_MENU_FOOTER}
-                  open={showRolesMenu}
-                  onClose={() => setShowRolesMenu(false)}
-                />
-              </div>
-
-              <div className="relative h-16">
-                <button
-                  type="button"
-                  onClick={toggleCategoriesMenu}
-                  className={`${allToolsActive ? NAV_LINK_ACTIVE : NAV_LINK_BASE} gap-1.5 cursor-pointer`}
-                  id="nav-all-tools-btn"
-                  aria-expanded={showCategoriesMenu}
-                  aria-haspopup="true"
-                >
-                  All Tools
-                  <ChevronDown className="w-4 h-4 text-muted-foreground" />
-                </button>
-
-                <NavMegaMenu
-                  columns={ALL_TOOLS_MEGA_MENU_COLUMNS}
-                  footer={ALL_TOOLS_MEGA_MENU_FOOTER}
-                  open={showCategoriesMenu}
-                  onClose={() => setShowCategoriesMenu(false)}
-                  align="right"
-                />
-              </div>
-
-              <Link
-                href="/compare"
-                className={pathname.startsWith('/compare') ? NAV_LINK_ACTIVE : NAV_LINK_BASE}
-                id="nav-comparisons-btn"
+          <nav className="hidden lg:flex items-center h-16 gap-8 xl:gap-10" aria-label="Main">
+            <div
+              className="relative flex items-center h-16"
+              onMouseEnter={openRolesMenu}
+              onMouseLeave={scheduleCloseRolesMenu}
+            >
+              <button
+                type="button"
+                className={`${pathname.startsWith('/for') ? NAV_LINK_ACTIVE : NAV_LINK_BASE} gap-1.5 cursor-pointer`}
+                id="nav-by-role-btn"
+                aria-expanded={showRolesMenu}
+                aria-haspopup="true"
               >
-                Compare
-              </Link>
-            </nav>
+                By Role
+                <ChevronDown className="w-4 h-4 text-muted-foreground" />
+              </button>
 
-            <form onSubmit={handleSearch} className="relative hidden md:block w-48 lg:w-60 self-center">
+              <NavMegaMenu
+                columns={ROLE_MEGA_MENU_COLUMNS}
+                footer={ROLE_MEGA_MENU_FOOTER}
+                open={showRolesMenu}
+                onClose={() => setShowRolesMenu(false)}
+              />
+            </div>
+
+            <div
+              className="relative flex items-center h-16"
+              onMouseEnter={openCategoriesMenu}
+              onMouseLeave={scheduleCloseCategoriesMenu}
+            >
+              <button
+                type="button"
+                className={`${allToolsActive ? NAV_LINK_ACTIVE : NAV_LINK_BASE} gap-1.5 cursor-pointer`}
+                id="nav-all-tools-btn"
+                aria-expanded={showCategoriesMenu}
+                aria-haspopup="true"
+              >
+                All Tools
+                <ChevronDown className="w-4 h-4 text-muted-foreground" />
+              </button>
+
+              <NavMegaMenu
+                columns={ALL_TOOLS_MEGA_MENU_COLUMNS}
+                footer={ALL_TOOLS_MEGA_MENU_FOOTER}
+                open={showCategoriesMenu}
+                onClose={() => setShowCategoriesMenu(false)}
+              />
+            </div>
+
+            <Link
+              href="/compare"
+              className={pathname.startsWith('/compare') ? NAV_LINK_ACTIVE : NAV_LINK_BASE}
+              id="nav-comparisons-btn"
+            >
+              Compare
+            </Link>
+          </nav>
+
+          <div className="flex items-center gap-5 sm:gap-6 shrink-0 ml-auto pl-6 lg:pl-10 h-16">
+            <form onSubmit={handleSearch} className="relative hidden md:block w-40 lg:w-48">
               <input
                 id="global-search-input"
                 type="text"
-                placeholder="Search AI tools... (/)"
+                placeholder="Search AI tools..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-background-raised border border-border/50 rounded-lg pl-8 pr-7 py-1.5 text-xs text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:border-border transition-colors duration-200"
+                className="w-full h-9 bg-background-raised border border-border/50 rounded-lg pl-8 pr-3 text-xs font-medium text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:border-border transition-colors duration-200"
               />
-              <Search className="w-3.5 h-3.5 text-muted-foreground absolute left-2.5 top-2.5" />
-              <span className="absolute right-2 top-2 text-[10px] font-mono text-muted-foreground px-1 rounded-md border border-border/40">
-                /
-              </span>
+              <Search className="w-3.5 h-3.5 text-muted-foreground absolute left-2.5 top-1/2 -translate-y-1/2" />
             </form>
 
             <Link
               href="/ai-tool-finder"
-              className="inline-flex items-center gap-1.5 self-center bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-xs sm:text-sm px-4 h-9 rounded-full transition-colors duration-200"
+              className="inline-flex items-center gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-xs sm:text-sm px-4 sm:px-5 h-9 rounded-full transition-colors duration-200"
               id="header-finder-btn"
             >
-              <Compass className="w-4 h-4" />
               <span className="hidden sm:inline">Tool Finder</span>
               <span className="sm:hidden">Finder</span>
+              <ArrowRight className="w-3.5 h-3.5 shrink-0" />
             </Link>
           </div>
         </div>

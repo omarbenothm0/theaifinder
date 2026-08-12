@@ -1,10 +1,11 @@
 import { Tool } from '../../../types/tool';
+import { resolveToolLogo } from '../tool-logos';
 
 export const jasperTool: Tool = {
   id: 'tool-jasper',
   name: 'Jasper AI',
   slug: 'jasper',
-  logo: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=120&h=120&q=80',
+  logo: resolveToolLogo('jasper'),
   tagline: 'Enterprise marketing AI platform for brand voice, ad campaigns, and multi-channel copy.',
   description: 'Jasper AI empowers enterprise marketing teams to draft on-brand blog posts, ad variants, social content, and email campaigns while strictly adhering to company style guidelines and brand guidelines.',
   categoryId: 'cat-writing',

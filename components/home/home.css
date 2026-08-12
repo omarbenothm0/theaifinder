@@ -121,9 +121,15 @@
 
 .home-marquee-track {
   display: flex;
-  gap: 2.5rem;
+  align-items: center;
+  gap: 3rem;
   width: max-content;
   animation: homeMarquee 40s linear infinite;
+}
+
+.home-marquee-logo {
+  filter: grayscale(100%);
+  opacity: 0.85;
 }
 
 @keyframes homeMarquee {

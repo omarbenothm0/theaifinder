@@ -1,10 +1,11 @@
 import { Tool } from '../../../types/tool';
+import { resolveToolLogo } from '../tool-logos';
 
 export const perplexityTool: Tool = {
   id: 'tool-perplexity',
   name: 'Perplexity AI',
   slug: 'perplexity',
-  logo: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=120&h=120&q=80',
+  logo: resolveToolLogo('perplexity'),
   tagline: 'AI answer engine providing real-time web search results with verifiable web citations.',
   description: 'Perplexity AI functions as an intelligent search answer engine. It searches live web sources, synthesizes clear answers, and attaches inline footnote citations for instant source verification.',
   categoryId: 'cat-seo',

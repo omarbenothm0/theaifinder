@@ -1,10 +1,11 @@
 import { Tool } from '../../../types/tool';
+import { resolveToolLogo } from '../tool-logos';
 
 export const descriptTool: Tool = {
   id: 'tool-descript',
   name: 'Descript',
   slug: 'descript',
-  logo: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=120&h=120&q=80',
+  logo: resolveToolLogo('descript'),
   tagline: 'All-in-one AI video and audio editing app that works like editing a text document.',
   description: 'Descript simplifies podcasting and video production. Edit audio and video by simply deleting or rewriting transcript text. Features studio sound enhancement, filler word removal, and eye-contact correction.',
   categoryId: 'cat-video',

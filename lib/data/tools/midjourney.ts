@@ -1,10 +1,11 @@
 import { Tool } from '../../../types/tool';
+import { resolveToolLogo } from '../tool-logos';
 
 export const midjourneyTool: Tool = {
   id: 'tool-midjourney',
   name: 'Midjourney',
   slug: 'midjourney',
-  logo: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=120&h=120&q=80',
+  logo: resolveToolLogo('midjourney'),
   tagline: 'Text-to-image generation via web app and Discord for concept art, marketing visuals, and design assets.',
   description: 'Midjourney generates hyper-realistic, highly artistic images from natural language text prompts. Used globally by graphic designers, concept artists, and content creators for visual storytelling and asset design.',
   categoryId: 'cat-image',

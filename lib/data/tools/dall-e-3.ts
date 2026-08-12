@@ -1,10 +1,11 @@
 import { Tool } from '../../../types/tool';
+import { resolveToolLogo } from '../tool-logos';
 
 export const dallE3Tool: Tool = {
   id: 'tool-dall-e-3',
   name: 'DALL-E 3',
   slug: 'dall-e-3',
-  logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=120&h=120&q=80',
+  logo: resolveToolLogo('dall-e-3'),
   tagline: 'OpenAI native image generation model integrated seamlessly inside ChatGPT.',
   description: 'DALL-E 3 translates complex, detailed prompts into clear visual graphics, illustrations, and photorealistic imagery. It natively parses context nuances via ChatGPT conversational prompts.',
   categoryId: 'cat-image',
