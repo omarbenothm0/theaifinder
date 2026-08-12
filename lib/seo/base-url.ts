@@ -1,21 +1,59 @@
 /**
  * Single source of truth for the public site origin.
- * Configure production via NEXT_PUBLIC_APP_URL (or APP_URL).
+ * Configure via NEXT_PUBLIC_APP_URL (preferred) or APP_URL.
  */
-export function getBaseUrl(): string {
-  const url =
-    process.env.NEXT_PUBLIC_APP_URL ||
-    process.env.APP_URL ||
-    (process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : '');
+const DEV_FALLBACK = 'http://localhost:3000';
 
-  if (!url) {
-    console.warn(
-      '[SEO] NEXT_PUBLIC_APP_URL is not set. Set it to your production domain before deploying.'
-    );
-    return 'http://localhost:3000';
+function readConfiguredUrl(): string | undefined {
+  const raw = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL;
+  const trimmed = raw?.trim();
+  return trimmed || undefined;
+}
+
+function isLocalhostHostname(hostname: string): boolean {
+  return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]';
+}
+
+/** Normalize to origin only — no path, query, hash, or trailing slash. */
+export function normalizeSiteOrigin(url: string): string {
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    throw new Error(`[SEO] Invalid site URL: "${url}". Use a full origin such as https://www.example.com`);
   }
 
-  return url.replace(/\/+$/, '');
+  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+    throw new Error(`[SEO] Invalid site URL protocol "${parsed.protocol}". Use http: or https:.`);
+  }
+
+  if (!parsed.hostname) {
+    throw new Error(`[SEO] Invalid site URL: missing hostname in "${url}".`);
+  }
+
+  return parsed.origin;
+}
+
+export function getBaseUrl(): string {
+  const configured = readConfiguredUrl();
+
+  if (configured) {
+    const origin = normalizeSiteOrigin(configured);
+    if (process.env.NODE_ENV === 'production' && isLocalhostHostname(new URL(origin).hostname)) {
+      throw new Error(
+        '[SEO] NEXT_PUBLIC_APP_URL must not point to localhost in production. Set your public site origin.'
+      );
+    }
+    return origin;
+  }
+
+  if (process.env.NODE_ENV === 'development') {
+    return DEV_FALLBACK;
+  }
+
+  throw new Error(
+    '[SEO] NEXT_PUBLIC_APP_URL (or APP_URL) is required in production. Example: https://www.example.com'
+  );
 }
 
 export function absoluteUrl(path: string): string {
@@ -28,9 +66,5 @@ export function absoluteUrl(path: string): string {
 
 /** Hostname for display in OG images and footers (no protocol). */
 export function getDisplayDomain(): string {
-  try {
-    return new URL(getBaseUrl()).hostname;
-  } catch {
-    return 'localhost';
-  }
+  return new URL(getBaseUrl()).hostname;
 }
