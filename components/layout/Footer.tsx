@@ -80,7 +80,7 @@ export function Footer() {
                 { name: 'Coding & IDEs', slug: 'coding' },
                 { name: 'Image & Design', slug: 'image' },
                 { name: 'Video & VFX', slug: 'video' },
-                { name: 'Voice & Speech', slug: 'voice' },
+                { name: 'Voice & Audio', slug: 'voice' },
                 { name: 'SEO & Research', slug: 'seo' },
                 { name: 'Presentations & Decks', slug: 'presentations' },
                 { name: 'Productivity & Workspace', slug: 'productivity' },

@@ -20,6 +20,7 @@ import { ProductivityCategoryContent } from '../../../components/category/Produc
 import { MarketingCategoryContent } from '../../../components/category/MarketingCategoryContent';
 import { SeoCategoryContent } from '../../../components/category/SeoCategoryContent';
 import { ImageCategoryContent } from '../../../components/category/ImageCategoryContent';
+import { VoiceCategoryContent } from '../../../components/category/VoiceCategoryContent';
 
 const BASE_URL = getBaseUrl();
 
@@ -145,6 +146,15 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
       <>
         <JsonLd schema={breadcrumbSchema} />
         <ImageCategoryContent category={category} categories={categories} personas={personas} />
+      </>
+    );
+  }
+
+  if (category.slug === 'voice') {
+    return (
+      <>
+        <JsonLd schema={breadcrumbSchema} />
+        <VoiceCategoryContent category={category} categories={categories} personas={personas} />
       </>
     );
   }
