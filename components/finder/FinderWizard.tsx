@@ -171,11 +171,11 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[
                 { id: 'writing', name: 'Writing & Copywriting', desc: 'Articles, ads, emails, summaries, and docs' },
-                { id: 'coding', name: 'Coding & Software', desc: 'Code completion, debugging, and refactoring' },
+                { id: 'coding', name: 'Coding & Software Development', desc: 'Code completion, debugging, and refactoring' },
                 { id: 'video', name: 'Video & Motion', desc: 'Text-to-video, editing, and subtitle automation' },
-                { id: 'image', name: 'Images & Design', desc: 'Generative artwork, thumbnails, and graphic editing' },
-                { id: 'voice', name: 'Voice & Speech', desc: 'Voiceover synthesis, audio dubbing, and cleanup' },
-                { id: 'seo', name: 'SEO & Research', desc: 'Live search research, keyword analysis, and citations' },
+                { id: 'image', name: 'Image & Design', desc: 'Generative artwork, thumbnails, and graphic editing' },
+                { id: 'voice', name: 'Voice & Audio', desc: 'Voiceover synthesis, audio dubbing, and cleanup' },
+                { id: 'seo', name: 'SEO & Web Research', desc: 'Live search research, keyword analysis, and citations' },
                 { id: 'presentations', name: 'Presentations', desc: 'Slide decks, pitch presentations, and visual reports' },
                 { id: 'productivity', name: 'Productivity & Workspace', desc: 'Workspace knowledge, tasks, and meeting capture' },
                 { id: 'project-management', name: 'Project Management', desc: 'Meeting notes, tasks, plans, and status reports for PMs' },

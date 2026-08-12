@@ -12,8 +12,8 @@ export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
-    title: sitePageTitle('Free AI Tools & Freemium Software Directory'),
-    description: 'Discover completely free AI tools and platforms with generous free tiers or trial credits across all categories.',
+    title: sitePageTitle('Free & Freemium AI Tools Directory'),
+    description: 'AI tools with free plans, freemium tiers, or no-credit-card trials — filter the catalog by zero-cost access options.',
     canonicalUrl: '/free-ai-tools'
   });
 }
@@ -38,10 +38,10 @@ export default async function FreeAIToolsPage() {
           Zero Dollar Software Hub
         </div>
         <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
-          Free AI Tools Directory
+          Free &amp; Freemium AI Tools
         </h1>
         <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
-          High-performing AI applications you can use for free without entering credit card details or paying mandatory subscriptions.
+          Tools you can start using at no cost — free plans, freemium tiers, or trial access without a mandatory subscription.
         </p>
       </div>
 

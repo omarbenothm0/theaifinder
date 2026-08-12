@@ -5,6 +5,7 @@ import { Category, Persona } from '../../types/tool';
 export const PERSONA_REDIRECTS: Readonly<Record<string, string>> = {
   'content-creators': '/for/marketers',
   entrepreneurs: '/for/small-business',
+  developers: '/category/coding',
 };
 
 export const PERSONA_NOINDEX_SLUGS: ReadonlySet<string> = new Set(['youtubers', 'developers']);

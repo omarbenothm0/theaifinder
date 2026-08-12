@@ -788,7 +788,8 @@ export function AdminToolForm({
                 />
                 <FieldError field="rating" />
                 <p className="text-[10px] text-slate-400 mt-1">
-                  Shown on tool cards and page hero. Separate from visitor reviews.
+                  Admin-only editorial fields. Public hero and tool cards use approved visitor review aggregates via{' '}
+                  <code className="text-[10px]">applyPublicReviewSignals()</code> — not these values.
                 </p>
               </div>
               <div>

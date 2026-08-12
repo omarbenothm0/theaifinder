@@ -12,8 +12,8 @@ export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
-    title: sitePageTitle('Mobile AI Apps for iOS & Android'),
-    description: 'Explore native iOS and Android AI applications with on-the-go speech recognition, photo generation, and smart assistants.',
+    title: sitePageTitle('AI Mobile Apps for iOS & Android'),
+    description: 'Native iOS and Android AI applications — on-the-go assistants, image tools, voice apps, and mobile-first workflows.',
     canonicalUrl: '/ai-apps'
   });
 }

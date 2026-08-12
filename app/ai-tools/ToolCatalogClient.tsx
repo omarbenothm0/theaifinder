@@ -104,10 +104,10 @@ export function ToolCatalogClient({
             Taxonomy Catalog &bull; {totalCount} AI Tools
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
-            Explore All AI Tools
+            Search &amp; Filter All AI Tools
           </h1>
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-            Discover, filter, and compare top artificial intelligence software across all workflows, pricing tiers, and developer capabilities.
+            The complete searchable catalog — filter by category, pricing, persona fit, and API or mobile availability.
           </p>
 
           <div className="relative pt-2">

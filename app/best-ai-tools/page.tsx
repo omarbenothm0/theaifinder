@@ -12,8 +12,8 @@ export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
-    title: sitePageTitle('Best AI Tools & Software Rankings'),
-    description: 'Expert-curated rankings of the best AI software across writing, coding, video generation, image creation, and business productivity.',
+    title: sitePageTitle('Editorially Featured AI Tools (2026)'),
+    description: 'Hand-picked featured AI tool listings selected by our editorial team — browse standout options across major categories.',
     canonicalUrl: '/best-ai-tools'
   });
 }
@@ -34,10 +34,10 @@ export default async function BestAIToolsPage() {
           Editorial Selections &bull; 2026 Rankings
         </div>
         <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
-          The Best AI Tools of 2026
+          Editorially Featured AI Tools
         </h1>
         <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
-          Highest-rated artificial intelligence platforms evaluated by performance, output quality, pricing fairness, and community reputation.
+          Standout listings flagged by our editorial team — not algorithmic rankings. Each profile links to full pricing, features, and alternatives.
         </p>
       </div>
 

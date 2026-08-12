@@ -11,8 +11,8 @@ export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
-    title: sitePageTitle('AI Tools Directory & Software Catalog'),
-    description: 'Browse the artificial intelligence software directory. Filter by category, pricing model, workflow persona, and API capabilities.',
+    title: sitePageTitle('Search & Filter the Full AI Tools Catalog'),
+    description: 'Searchable index of all listed AI tools — filter by category, pricing model, persona fit, and developer API availability.',
     canonicalUrl: '/ai-tools'
   });
 }

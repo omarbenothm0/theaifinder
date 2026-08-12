@@ -1,73 +1,4 @@
-import { Tool, Category, Persona, Comparison, Article } from '../../types/tool';
-
-export const INITIAL_TOOLS: Tool[] = [
-  {
-    id: 'tool-chatgpt',
-    name: 'ChatGPT',
-    slug: 'chatgpt',
-    logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=120&h=120&q=80',
-    tagline: 'Leading conversational AI model for writing, analysis, coding, and multi-modal problem solving.',
-    description: 'ChatGPT by OpenAI is a multi-modal AI platform powered by GPT-4o and o1 reasoning models. It assists millions of users worldwide with creative writing, complex data analysis, coding, language translation, and visual image generation via DALL-E 3.',
-    categoryId: 'cat-writing',
-    categoryName: 'Writing & Copywriting',
-    tags: ['AI Assistant', 'Copywriting', 'Coding', 'GPT-4o'],
-    pricingModel: 'Freemium',
-    monthlyPrice: 20,
-    hasFreeTrial: true,
-    companyName: 'OpenAI',
-    lastVerifiedDate: '2026-08-07',
-    platforms: ['Web', 'iOS', 'Android', 'Windows', 'macOS'],
-    pricingTiers: [
-      {
-        name: 'Free',
-        price: 0,
-        billingPeriod: 'monthly',
-        features: ['GPT-5 access with usage limits', 'Standard response speed', 'May include ads in some countries']
-      },
-      {
-        name: 'Plus',
-        price: 20,
-        billingPeriod: 'monthly',
-        features: ['Advanced reasoning models', 'Expanded messages and uploads', 'Priority access during high traffic', 'Ad-free']
-      },
-      {
-        name: 'Pro',
-        price: 200,
-        billingPeriod: 'monthly',
-        features: ['Full model suite including top reasoning tier', 'Maximum usage limits', 'Fastest response speed']
-      },
-      {
-        name: 'Business',
-        price: 20,
-        billingPeriod: 'monthly',
-        features: ['Per-user pricing, 2-seat minimum', 'No training on data by default', 'SSO, SOC 2 compliance', 'Shared workspaces']
-      },
-      {
-        name: 'Enterprise',
-        price: null,
-        billingPeriod: 'custom',
-        features: ['Custom contract pricing', 'Advanced admin & security controls', 'Dedicated support']
-      }
-    ],
-    websiteUrl: 'https://chatgpt.com',
-    features: ['GPT-4o & o1 reasoning models', 'Custom GPTs marketplace', 'Data analysis & Python runner', 'DALL-E 3 image generation', 'Voice conversational mode'],
-    pros: ['Industry-leading reasoning quality', 'Extensive third-party GPT ecosystem', 'Fast real-time responses', 'Native mobile applications'],
-    cons: ['Free tier rate limits during peak usage', 'Requires $20/mo Plus subscription for top models'],
-    rating: 4.9,
-    reviewCount: 3420,
-    screenshots: ['https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=500'],
-    alternatives: ['claude', 'gemini', 'perplexity'],
-    targetUsers: ['content-creators', 'developers', 'writers', 'marketers', 'teachers', 'real-estate-agents'],
-    verified: true,
-    featured: true,
-    trending: true,
-    hasApi: true,
-    hasMobileApp: true,
-    hasExtension: true,
-    createdAt: '2024-01-15T00:00:00.000Z',
-    updatedAt: '2026-08-01T00:00:00.000Z'
-  },
-];
+import { Category, Persona, Comparison, Article } from '../../types/tool';
 
 export const INITIAL_CATEGORIES: Category[] = [
   {
@@ -318,7 +249,7 @@ export const INITIAL_COMPARISONS: Comparison[] = [
     overview: 'Evaluating Cursor (AI IDE) against ChatGPT for software development workflows.',
     bestFor1: 'Full-stack software engineering directly inside your codebase files.',
     bestFor2: 'Learning concepts, architecture design, and general assistance.',
-    verdict: 'Cursor is vastly superior for active coding inside a repository due to Composer multi-file edits. ChatGPT is great for quick algorithmic scratchpad queries.',
+    verdict: 'Cursor fits active in-repo coding with Composer multi-file edits. ChatGPT works well for quick algorithmic scratchpad queries and general assistance.',
     winnerSlug: 'cursor',
     featureBreakdown: [
       { feature: 'Codebase Indexing', tool1Value: 'Full local repository semantic index', tool2Value: 'Paste snippet only', winnerSlug: 'cursor' },
@@ -335,10 +266,10 @@ export const INITIAL_COMPARISONS: Comparison[] = [
     overview: 'Comparing Midjourney v6.1 and DALL-E 3 for photorealism, artistic styling, prompt adherence, and ease of use.',
     bestFor1: 'Hyper-realistic textures, cinematic lighting, and fine art synthesis.',
     bestFor2: 'Fulfilling intricate multi-element text prompts and rendering crisp English text.',
-    verdict: 'Midjourney delivers superior aesthetic beauty and artistic depth. DALL-E 3 follows intricate prompt instructions more accurately inside natural conversation.',
+    verdict: 'Midjourney emphasizes stylized aesthetics and artistic depth in its v6.x output. DALL-E 3 follows intricate prompt instructions more accurately inside natural conversation.',
     winnerSlug: 'midjourney',
     featureBreakdown: [
-      { feature: 'Photorealism Quality', tool1Value: 'Industry standard photorealism', tool2Value: 'Good, slightly stylized', winnerSlug: 'midjourney' },
+      { feature: 'Photorealism Quality', tool1Value: 'Strong stylized and photorealistic output', tool2Value: 'Good, slightly stylized', winnerSlug: 'midjourney' },
       { feature: 'Text Rendering in Images', tool1Value: 'Moderate adherence', tool2Value: 'High precision readable text', winnerSlug: 'dall-e-3' },
       { feature: 'Interface', tool1Value: 'Web app & Discord', tool2Value: 'ChatGPT conversation', winnerSlug: 'dall-e-3' }
     ]

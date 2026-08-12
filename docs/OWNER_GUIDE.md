@@ -329,6 +329,7 @@ Visitor on /tools/[slug]
 - Duplicate guard: same email + same tool cannot submit again within **24 hours** if prior submission is pending or approved
 - Rate limit: **5 submissions per 15 minutes** per client
 - Visitors **cannot** set `status` or `verifiedUser`
+- **Seed/demo reviews:** `npm run db:seed` creates sample reviews with default status **`pending`**. They do not appear publicly or affect hero/card JSON-LD until approved in Admin → Review Moderation. Do not auto-approve seeded reviews in production.
 
 ### Admin moderation actions
 
@@ -439,7 +440,14 @@ Draft and archived tools get `noindex` metadata.
 
 ### Environment dependency
 
-Set **`NEXT_PUBLIC_APP_URL`** to your production domain before deploying. Without it, canonical URLs, sitemap links, and OG URLs may be wrong. The build logs a warning if it is unset.
+Set **`NEXT_PUBLIC_APP_URL`** to your production origin (e.g. `https://www.example.com`) **before every production build and deploy**. Without it, canonical URLs, sitemap links, and OG URLs fall back to `http://localhost:3000`. The build logs a warning if it is unset.
+
+**Production deploy checklist (required):**
+1. Set `NEXT_PUBLIC_APP_URL` to the live public origin (no trailing path).
+2. Set `DATABASE_URL`, `ADMIN_AUTH_SECRET`, `ADMIN_USERNAME`, and `ADMIN_PASSWORD`.
+3. Run `npx prisma migrate deploy` then `npm run db:seed` on first deploy (or after seed-module changes).
+4. Run `npm run build` — confirm no `NEXT_PUBLIC_APP_URL` warning in build output.
+5. After deploy, spot-check `/robots.txt`, `/sitemap.xml`, and one tool page canonical in page source.
 
 ---
 
@@ -619,6 +627,8 @@ These are **not bugs**. They are deliberate scope boundaries in the current code
 | Public page cache up to 1 hour | `revalidate = 3600` on key routes |
 | Comparison pages link to tool profiles only | No direct vendor outbound links on comparison pages |
 | Seed skips existing slugs | Re-running seed does not update existing tools |
+| Legacy persona routes | `/for/youtubers` — noindex (thin seed hub). `/for/developers` — 301 → `/category/coding`. `/for/content-creators` — 301 → `/for/marketers`. `/for/entrepreneurs` — 301 → `/for/small-business`. Deprecated slugs hidden from nav via `DEPRECATED_PERSONA_NAV_SLUGS`. |
+| `/category/presentations` | Intentionally noindex (thin hub); excluded from Header/Footer nav |
 
 ---
 

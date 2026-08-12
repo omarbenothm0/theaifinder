@@ -25,6 +25,11 @@ const nextConfig = {
         statusCode: 301,
       },
       {
+        source: '/for/developers',
+        destination: '/category/coding',
+        statusCode: 301,
+      },
+      {
         source: '/compare/cursor-vs-chatgpt',
         destination: '/compare/claude-code-vs-cursor',
         statusCode: 301,

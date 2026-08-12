@@ -104,7 +104,7 @@ export function HomePageClient({
           </div>
 
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
-            Discover &amp; Compare the <span className="text-emerald-400">Best AI Tools</span> for Any Workflow
+            Your Hub for <span className="text-emerald-400">AI Tool Discovery</span> &amp; Comparisons
           </h1>
 
           <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl">

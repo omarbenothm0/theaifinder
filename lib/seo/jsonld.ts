@@ -29,12 +29,21 @@ export function generateSoftwareApplicationSchema(tool: Tool) {
     url: absoluteUrl(`/tools/${tool.slug}`),
     description: tool.tagline,
     applicationCategory: tool.categoryName,
-    offers: {
-      '@type': 'Offer',
-      price: tool.monthlyPrice ? tool.monthlyPrice.toString() : '0.00',
-      priceCurrency: 'USD',
-    },
   };
+
+  if (tool.monthlyPrice != null && tool.monthlyPrice > 0) {
+    schema.offers = {
+      '@type': 'Offer',
+      price: tool.monthlyPrice.toString(),
+      priceCurrency: 'USD',
+    };
+  } else if (tool.pricingModel === 'Free') {
+    schema.offers = {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    };
+  }
 
   if (tool.reviewCount > 0 && tool.rating > 0) {
     schema.aggregateRating = {

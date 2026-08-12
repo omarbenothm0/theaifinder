@@ -39,7 +39,7 @@ export const WRITER_PERSONA: Persona = {
   iconName: 'BookOpen',
   subtitle: 'Drafting, editing, research, long-form manuscripts, and writing organization',
   description:
-    'Verified AI tools for authors, editors, bloggers, and professional writers — drafting, rewriting, proofreading, writing research, long-form manuscripts, and project organization. Curated from official product sources. Not a marketing or SEO hub.',
+    'Role-focused AI tool picks for authors, editors, bloggers, and professional writers — drafting, rewriting, proofreading, writing research, long-form manuscripts, and project organization. For browsing tools by writing capability, see the Writing & Copywriting category hub.',
   targetRole: 'Writer',
   keyBenefits: [
     'Draft articles, essays, newsletters, and creative prose with general writing assistants',

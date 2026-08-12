@@ -392,6 +392,36 @@ async function main() {
     console.log(`Synced review metadata for ${reviewMetadataSyncCount} legacy tools.`);
   }
 
+  // Sync ChatGPT model/tier copy (blocker fix: description, features, tags, tagline)
+  const chatgptSeed = INITIAL_TOOLS.find((tool) => tool.slug === 'chatgpt');
+  if (chatgptSeed) {
+    const existingChatgpt = await prisma.tool.findUnique({ where: { slug: 'chatgpt' } });
+    if (existingChatgpt) {
+      await prisma.tool.update({
+        where: { slug: 'chatgpt' },
+        data: {
+          tagline: chatgptSeed.tagline,
+          description: chatgptSeed.description,
+          features: chatgptSeed.features,
+          tags: chatgptSeed.tags,
+        },
+      });
+      console.log('Synced ChatGPT model/tier copy (tagline, description, features, tags).');
+    }
+  }
+
+  const midjourneySeed = INITIAL_TOOLS.find((tool) => tool.slug === 'midjourney');
+  if (midjourneySeed) {
+    const existingMidjourney = await prisma.tool.findUnique({ where: { slug: 'midjourney' } });
+    if (existingMidjourney) {
+      await prisma.tool.update({
+        where: { slug: 'midjourney' },
+        data: { tagline: midjourneySeed.tagline },
+      });
+      console.log('Synced Midjourney tagline.');
+    }
+  }
+
   console.log(`Seeded ${toolSlugToId.size} tools.`);
 
   // 4. Tool alternatives (self-referential, needs all tools created first)
@@ -445,7 +475,7 @@ async function main() {
   }
   console.log(`Seeded ${topToolCount} persona-topTool links.`);
 
-  // 6. Reviews (need toolSlug -> toolId)
+  // 6. Reviews (need toolSlug -> toolId) — created as pending; moderate before public display
   const seedReviews = [
     {
       toolSlug: 'chatgpt',
@@ -567,6 +597,44 @@ async function main() {
     comparisonCount++;
   }
   console.log(`Seeded ${comparisonCount} comparisons.`);
+
+  // Sync softened verdict/copy for noindex seed comparisons (verdict + feature rows only)
+  const NOINDEX_COMPARISON_COPY_SYNC_SLUGS = new Set([
+    'chatgpt-vs-claude',
+    'midjourney-vs-dall-e-3',
+    'cursor-vs-chatgpt',
+  ]);
+  let comparisonCopySyncCount = 0;
+  for (const comp of INITIAL_COMPARISONS) {
+    if (!NOINDEX_COMPARISON_COPY_SYNC_SLUGS.has(comp.slug)) continue;
+
+    const existingComparison = await prisma.comparison.findUnique({ where: { slug: comp.slug } });
+    if (!existingComparison) continue;
+
+    await prisma.comparison.update({
+      where: { slug: comp.slug },
+      data: { verdict: comp.verdict },
+    });
+
+    await prisma.comparisonFeature.deleteMany({
+      where: { comparisonId: existingComparison.id },
+    });
+    if (comp.featureBreakdown.length > 0) {
+      await prisma.comparisonFeature.createMany({
+        data: comp.featureBreakdown.map((f) => ({
+          comparisonId: existingComparison.id,
+          feature: f.feature,
+          tool1Value: f.tool1Value,
+          tool2Value: f.tool2Value,
+          winnerSlug: f.winnerSlug,
+        })),
+      });
+    }
+    comparisonCopySyncCount++;
+  }
+  if (comparisonCopySyncCount > 0) {
+    console.log(`Synced noindex comparison copy for ${comparisonCopySyncCount} comparisons.`);
+  }
 
   // 8. Articles
   let articleCount = 0;

@@ -8,7 +8,7 @@ export const sunoAiTool: Tool = {
   tagline: 'Generative AI music engine creating full songs with vocals and instrumentation from text.',
   description: 'Suno AI allows anyone to generate full-length songs in any genre complete with realistic vocals, instruments, and lyrics based on simple prompts or custom lyrical inputs.',
   categoryId: 'cat-voice',
-  categoryName: 'Voice & Speech',
+  categoryName: 'Voice & Audio',
   tags: ['Music Generation', 'Songs', 'Vocals', 'Audio'],
   pricingModel: 'Freemium',
   monthlyPrice: 10,

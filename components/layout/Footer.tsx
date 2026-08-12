@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { SITE_NAME } from '../../lib/brand';
 import { isDeprecatedPersonaNavSlug } from '../../lib/seo/persona-visibility';
+import { PUBLIC_CATEGORY_NAV_LINKS } from '../../lib/data/category-nav-links';
 import { AffiliateDisclosure } from '../tool/AffiliateDisclosure';
 import { Sparkles, ArrowRight, CheckCircle2, ShieldCheck, Database, FileText } from 'lucide-react';
 
@@ -40,7 +41,7 @@ export function Footer() {
             {/* Newsletter Subscription Box */}
             <div className="pt-2">
               <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">
-                Join 15,000+ Professionals Receiving Weekly AI Digest
+                Get Weekly AI Tool Updates
               </span>
               {subscribed ? (
                 <div className="flex items-center gap-2 bg-emerald-950/80 border border-emerald-800 text-emerald-300 px-3.5 py-2 rounded-xl text-xs font-medium">
@@ -73,19 +74,7 @@ export function Footer() {
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-white mb-4">Categories</h4>
             <ul className="space-y-2.5 text-xs text-slate-400">
-              {[
-                { name: 'Project Management', slug: 'project-management' },
-                { name: 'Study & Education', slug: 'study-education' },
-                { name: 'Writing & Copywriting', slug: 'writing' },
-                { name: 'Coding & IDEs', slug: 'coding' },
-                { name: 'Image & Design', slug: 'image' },
-                { name: 'Video & Motion', slug: 'video' },
-                { name: 'Voice & Audio', slug: 'voice' },
-                { name: 'SEO & Research', slug: 'seo' },
-                { name: 'Presentations & Decks', slug: 'presentations' },
-                { name: 'Productivity & Workspace', slug: 'productivity' },
-                { name: 'Marketing & CRM', slug: 'marketing' }
-              ].map((c) => (
+              {PUBLIC_CATEGORY_NAV_LINKS.map((c) => (
                 <li key={c.slug}>
                   <Link
                     href={`/category/${c.slug}`}

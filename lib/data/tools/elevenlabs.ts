@@ -8,7 +8,7 @@ export const elevenlabsTool: Tool = {
   tagline: 'Human-like voice synthesis, instant voice cloning, and AI audio dubbing in 32 languages.',
   description: 'ElevenLabs delivers ultra-realistic speech synthesis with natural emotion, cadence, and inflection. Ideal for video creators, audiobook publishers, game developers, and localization teams.',
   categoryId: 'cat-voice',
-  categoryName: 'Voice & Speech',
+  categoryName: 'Voice & Audio',
   tags: ['Voice Synthesis', 'Text to Speech', 'Voice Cloning'],
   pricingModel: 'Freemium',
   monthlyPrice: 5,

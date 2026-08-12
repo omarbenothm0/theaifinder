@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbRepository } from '../../../../lib/dbRepository';
+import { isAdminAuthenticatedFromRequest } from '../../../../lib/auth/edgeSession';
 import {
   validateToolInput,
   validateToolForPublish,
@@ -7,11 +8,15 @@ import {
 } from '../../../../lib/validation/tool.validation';
 
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const tool = await dbRepository.getToolBySlug(slug, { includeUnpublished: true });
+  const isAdmin = await isAdminAuthenticatedFromRequest(req);
+
+  const tool = isAdmin
+    ? await dbRepository.getToolBySlug(slug, { includeUnpublished: true })
+    : await dbRepository.getToolBySlug(slug);
 
   if (!tool) {
     return NextResponse.json({ error: 'Tool not found' }, { status: 404 });

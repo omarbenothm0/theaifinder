@@ -6,6 +6,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { Search, Sparkles, Compass, Layers, Settings, ChevronDown, Users, ArrowRight } from 'lucide-react';
 import { SITE_NAME } from '../../lib/brand';
 import { isDeprecatedPersonaNavSlug } from '../../lib/seo/persona-visibility';
+import { PUBLIC_CATEGORY_NAV_LINKS } from '../../lib/data/category-nav-links';
 
 const ROLE_LINKS = [
   { name: 'Project Managers', slug: 'project-managers' },
@@ -18,19 +19,7 @@ const ROLE_LINKS = [
   { name: 'Real Estate', slug: 'real-estate-agents' },
 ].filter((link) => !isDeprecatedPersonaNavSlug(link.slug));
 
-const CATEGORY_LINKS = [
-  { name: 'Project Management', slug: 'project-management' },
-  { name: 'Study & Education', slug: 'study-education' },
-  { name: 'Writing & Copywriting', slug: 'writing' },
-  { name: 'Coding & Development', slug: 'coding' },
-  { name: 'Image & Design', slug: 'image' },
-  { name: 'Video & Motion', slug: 'video' },
-  { name: 'Voice & Audio', slug: 'voice' },
-  { name: 'SEO & Research', slug: 'seo' },
-  { name: 'Presentations & Slides', slug: 'presentations' },
-  { name: 'Productivity & Workspace', slug: 'productivity' },
-  { name: 'Marketing & CRM', slug: 'marketing' },
-];
+const CATEGORY_LINKS = [...PUBLIC_CATEGORY_NAV_LINKS];
 
 export function Header() {
   const router = useRouter();

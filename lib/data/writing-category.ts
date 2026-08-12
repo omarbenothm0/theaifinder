@@ -54,5 +54,5 @@ export const WRITING_CATEGORY: Category = {
   ],
   seoTitle: 'Best AI Writing Tools (2026)',
   seoDescription:
-    'Curated directory of verified AI writing tools for authors, editors, and marketers — drafting, editing, research, and copywriting with separate workflow guides.',
+    'Category directory of verified AI writing tools — browse by capability (drafting, editing, research, copywriting). For author role workflows, see the Writers & Authors hub.',
 };

@@ -12,8 +12,8 @@ export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
-    title: sitePageTitle('AI Tools Taxonomy Directory & Category Map'),
-    description: 'Complete directory architecture map indexing software categories and head-to-head comparison pages.',
+    title: sitePageTitle('AI Tools Category Taxonomy & Comparison Index'),
+    description: 'Structural map of all software categories plus curated head-to-head comparisons — browse the site architecture by topic.',
     canonicalUrl: '/ai-tools-directory'
   });
 }
@@ -34,10 +34,10 @@ export default async function AIToolsDirectoryPage() {
           Full Taxonomy Sitemap
         </div>
         <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
-          AI Tools Directory Taxonomy
+          Category Taxonomy &amp; Comparison Index
         </h1>
         <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
-          Structured index of software categories and tool taxonomy, plus head-to-head comparisons.
+          Browse every software category and curated comparison in one structural index — useful for exploring the site by topic rather than searching individual tools.
         </p>
       </div>
 

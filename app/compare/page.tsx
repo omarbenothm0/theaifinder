@@ -13,9 +13,8 @@ export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
-    title: sitePageTitle('AI Tool Head-to-Head Comparisons (2026)'),
-    description:
-      'Browse all curated AI tool comparisons — feature breakdowns, pricing, and verdicts for ChatGPT vs Claude, PM tools, and more.',
+    title: sitePageTitle('Curated AI Tool Comparisons (2026)'),
+    description: 'Side-by-side evaluations of curated AI tool matchups — Claude Code vs Cursor, Otter.ai vs Fireflies.ai, ClickUp Brain vs Asana AI, and Sembly AI vs OnPlana.',
     canonicalUrl: '/compare',
   });
 }

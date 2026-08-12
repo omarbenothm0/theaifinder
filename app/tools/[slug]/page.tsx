@@ -100,7 +100,7 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
   const softwareSchema = generateSoftwareApplicationSchema(tool);
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: 'Home', url: `${BASE_URL}` },
-    { name: 'AI Tools', url: `${BASE_URL}/ai-tools` },
+    { name: 'Tools', url: `${BASE_URL}/ai-tools` },
     { name: tool.categoryName, url: `${BASE_URL}/category/${tool.categorySlug || tool.categoryId}` },
     { name: tool.name, url: `${BASE_URL}/tools/${tool.slug}` }
   ]);

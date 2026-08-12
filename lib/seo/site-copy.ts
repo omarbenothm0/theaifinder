@@ -1,12 +1,12 @@
 /** Shared public marketing copy — keep global metadata and homepage in sync. */
 export const SITE_DESCRIPTION =
-  'Find the right AI tool for any task. Browse our curated directory of AI software for writing, coding, video, images, and productivity — with editorial listings and approved user reviews where available.';
+  'Start here: featured AI tool picks, category browse, and head-to-head comparisons — an independent directory for writing, coding, video, images, and productivity workflows.';
 
 export const SITE_DESCRIPTION_SHORT =
-  'Find the right AI tool for any task. Browse our curated AI software directory with editorial listings and approved user reviews where available.';
+  'Featured AI tool picks and category browse — editorial listings with approved user reviews where available.';
 
 export const SITE_HERO_SUBTITLE =
-  'Search our curated AI software directory, filter by pricing and developer APIs, and compare tools side-by-side to find the right fit.';
+  'Your starting point for AI software discovery — browse featured tools, explore categories, or use the interactive finder to narrow by task and budget.';
 
 export const SITE_OG_FOOTER = 'Curated AI Software Directory • 2026';
 
