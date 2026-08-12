@@ -18,6 +18,7 @@ import { Star, CheckCircle2, Check, X, ArrowRight, Layers, Users, Building2, Mon
 import { ToolReviewsSection } from '../../../components/review/ToolReviewsSection';
 import { formatInformationVerifiedDate } from '../../../lib/utils/formatDate';
 import { getContextualInternalLinks } from '../../../lib/utils/internalLinksContext';
+import { getPublicAudienceLinks } from '../../../lib/seo/persona-visibility';
 
 import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
 
@@ -65,18 +66,30 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
   const filteredAlternatives = alternativeTools.slice(0, 3);
 
   // Find a curated comparison involving this tool (avoid linking to auto-generated compare URLs)
-  const curatedComparison = comparisons.find(
+  const toolComparisons = comparisons.filter(
     (c) =>
       c.isCurated !== false &&
       (c.tool1Slug === tool.slug || c.tool2Slug === tool.slug)
   );
+  const curatedComparison =
+    tool.slug === 'cursor'
+      ? toolComparisons.find((c) => c.slug === 'claude-code-vs-cursor') ?? toolComparisons[0]
+      : toolComparisons[0];
   const compareHref = curatedComparison
     ? `/compare/${curatedComparison.slug}`
     : '/ai-tools-directory';
 
+  const audienceLinks = getPublicAudienceLinks(
+    tool.targetUsers ?? [],
+    personas,
+    categories,
+    tool.categorySlug || tool.categoryId
+  );
+
   const internalLinks = getContextualInternalLinks(
     tool.slug,
     tool.targetUsers ?? [],
+    tool.categorySlug || tool.categoryId,
     categories,
     personas,
     comparisons
@@ -288,26 +301,22 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
           </div>
 
           {/* Best Suited For - only renders if targetUsers exist */}
-          {tool.targetUsers && tool.targetUsers.length > 0 && (
+          {audienceLinks.length > 0 && (
             <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-2xs space-y-4">
               <h2 className="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
                 <Users className="w-5 h-5 text-indigo-600" />
                 Best Suited For
               </h2>
               <div className="flex flex-wrap gap-2">
-                {tool.targetUsers.map((slug) => {
-                  const persona = personas.find((p) => p.slug === slug);
-                  if (!persona) return null;
-                  return (
-                    <Link
-                      key={slug}
-                      href={`/for/${slug}`}
-                      className="text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-full hover:bg-indigo-100 transition-colors"
-                    >
-                      {persona.title}
-                    </Link>
-                  );
-                })}
+                {audienceLinks.map((link) => (
+                  <Link
+                    key={link.key}
+                    href={link.href}
+                    className="text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-full hover:bg-indigo-100 transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
               </div>
             </div>
           )}

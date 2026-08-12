@@ -238,7 +238,12 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
         </Link>
       </div>
 
-      <InternalLinks categories={categories} personas={personas} comparisons={comparisons} />
+      <InternalLinks
+        categories={categories}
+        personas={personas}
+        comparisons={comparisons}
+        excludePersonaSlug={persona.slug}
+      />
     </div>
   );
 }

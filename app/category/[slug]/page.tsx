@@ -10,7 +10,8 @@ import { generateCategoryMetadata, generateNotFoundMetadata } from '../../../lib
 import { isCategoryIndexable } from '../../../lib/seo/indexability';
 import { generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
 import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
-import { Layers, Sparkles } from 'lucide-react';
+import { Layers, Sparkles, Zap, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 import { PmWorkflowLinks } from '../../../components/persona/PmWorkflowLinks';
 import { StudentWorkflowLinks } from '../../../components/persona/StudentWorkflowLinks';
 import { MarketerWorkflowLinks } from '../../../components/persona/MarketerWorkflowLinks';
@@ -106,6 +107,19 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         <RealEstateWorkflowLinks variant="category" />
       )}
 
+      {category.slug === 'coding' && (
+        <div className="max-w-4xl mx-auto">
+          <Link
+            href="/compare/claude-code-vs-cursor"
+            className="inline-flex items-center gap-2 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-4 py-2.5 rounded-xl hover:bg-indigo-100 transition-colors"
+          >
+            <Zap className="w-4 h-4 text-indigo-600" />
+            Compare Claude Code vs Cursor
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      )}
+
       {/* Tools Grid */}
       <div className="space-y-6">
         <div className="flex items-center justify-between border-b border-slate-200 pb-3">
@@ -122,7 +136,11 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         </div>
       </div>
 
-      <InternalLinks categories={categories} personas={personas} />
+      <InternalLinks
+        categories={categories}
+        personas={personas}
+        excludeCategorySlug={category.slug}
+      />
     </div>
   );
 }

@@ -175,6 +175,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/compare/claude-code-vs-cursor" className="hover:text-emerald-400 transition-colors cursor-pointer">
+                  Claude Code vs Cursor
+                </Link>
+              </li>
+              <li>
                 <Link href="/about" className="hover:text-emerald-400 transition-colors cursor-pointer">
                   About {SITE_NAME}
                 </Link>

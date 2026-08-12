@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Category, Persona, Comparison, Tool } from '../../types/tool';
 import { ArrowRight, Sparkles, Layers, Users, Zap } from 'lucide-react';
+import { filterPublicPersonas } from '../../lib/seo/persona-visibility';
 
 interface InternalLinksProps {
   categories?: Category[];
@@ -8,6 +9,9 @@ interface InternalLinksProps {
   comparisons?: Comparison[];
   relatedTools?: Tool[];
   title?: string;
+  excludeCategorySlug?: string;
+  excludePersonaSlug?: string;
+  excludeComparisonSlug?: string;
 }
 
 export function InternalLinks({
@@ -15,12 +19,25 @@ export function InternalLinks({
   personas = [],
   comparisons = [],
   relatedTools = [],
-  title = 'Explore Related Hubs & Comparisons'
+  title = 'Explore Related Hubs & Comparisons',
+  excludeCategorySlug,
+  excludePersonaSlug,
+  excludeComparisonSlug,
 }: InternalLinksProps) {
+  const visibleCategories = categories.filter(
+    (cat) => !excludeCategorySlug || cat.slug !== excludeCategorySlug
+  );
+  const visiblePersonas = filterPublicPersonas(personas).filter(
+    (p) => !excludePersonaSlug || p.slug !== excludePersonaSlug
+  );
+  const visibleComparisons = comparisons.filter(
+    (comp) => !excludeComparisonSlug || comp.slug !== excludeComparisonSlug
+  );
+
   if (
-    categories.length === 0 &&
-    personas.length === 0 &&
-    comparisons.length === 0 &&
+    visibleCategories.length === 0 &&
+    visiblePersonas.length === 0 &&
+    visibleComparisons.length === 0 &&
     relatedTools.length === 0
   ) {
     return null;
@@ -35,14 +52,14 @@ export function InternalLinks({
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Categories Section */}
-        {categories.length > 0 && (
+        {visibleCategories.length > 0 && (
           <div className="space-y-3">
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
               <Layers className="w-3.5 h-3.5 text-emerald-400" />
               Related Categories
             </h4>
             <ul className="space-y-2 text-xs">
-              {categories.slice(0, 6).map((cat) => (
+              {visibleCategories.slice(0, 6).map((cat) => (
                 <li key={cat.slug}>
                   <Link
                     href={`/category/${cat.slug}`}
@@ -58,14 +75,14 @@ export function InternalLinks({
         )}
 
         {/* Personas / Workflows Section */}
-        {personas.length > 0 && (
+        {visiblePersonas.length > 0 && (
           <div className="space-y-3">
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
               <Users className="w-3.5 h-3.5 text-emerald-400" />
               Workflow Hubs
             </h4>
             <ul className="space-y-2 text-xs">
-              {personas.slice(0, 6).map((p) => (
+              {visiblePersonas.slice(0, 6).map((p) => (
                 <li key={p.slug}>
                   <Link
                     href={`/for/${p.slug}`}
@@ -81,14 +98,14 @@ export function InternalLinks({
         )}
 
         {/* Comparisons Section */}
-        {comparisons.length > 0 && (
+        {visibleComparisons.length > 0 && (
           <div className="space-y-3">
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
               <Zap className="w-3.5 h-3.5 text-emerald-400" />
               Head-to-Head Comparisons
             </h4>
             <ul className="space-y-2 text-xs">
-              {comparisons.slice(0, 6).map((comp) => (
+              {visibleComparisons.slice(0, 6).map((comp) => (
                 <li key={comp.slug}>
                   <Link
                     href={`/compare/${comp.slug}`}

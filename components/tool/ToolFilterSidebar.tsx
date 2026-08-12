@@ -1,6 +1,7 @@
 'use client';
 
 import { Category, Persona, PricingModel, ToolFilterOptions } from '../../types/tool';
+import { filterPublicPersonas } from '../../lib/seo/persona-visibility';
 import { Filter, RotateCcw, Check, DollarSign, Tag, Users } from 'lucide-react';
 
 interface ToolFilterSidebarProps {
@@ -51,6 +52,8 @@ export function ToolFilterSidebar({
       page: 1
     });
   };
+
+  const visiblePersonas = filterPublicPersonas(personas);
 
   const hasActiveFilters =
     (filters.category && filters.category !== 'all') ||
@@ -177,7 +180,7 @@ export function ToolFilterSidebar({
             {(!filters.persona || filters.persona === 'all') && <Check className="w-3.5 h-3.5 text-emerald-400" />}
           </button>
 
-          {personas.map((p) => {
+          {visiblePersonas.map((p) => {
             const isSelected = filters.persona === p.slug;
             return (
               <button

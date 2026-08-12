@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Tool, Category, Persona, Comparison } from '../../types/tool';
 import { SITE_NAME } from '../../lib/brand';
+import { filterPublicPersonas } from '../../lib/seo/persona-visibility';
 import { ToolCard } from '../tool/ToolCard';
 import { CategoryCard } from '../category/CategoryCard';
 import {
@@ -61,7 +62,9 @@ export function HomePageClient({
       ? trendingTools
       : apiTools;
 
-  const heroPersonas = [...personas].sort((a, b) => {
+  const publicPersonas = filterPublicPersonas(personas);
+
+  const heroPersonas = [...publicPersonas].sort((a, b) => {
     if (a.slug === 'project-managers') return -1;
     if (b.slug === 'project-managers') return 1;
     if (a.slug === 'students') return -1;
@@ -208,7 +211,7 @@ export function HomePageClient({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-          {personas.map((p) => (
+          {publicPersonas.map((p) => (
             <Link
               key={p.slug}
               href={`/for/${p.slug}`}

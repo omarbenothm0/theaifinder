@@ -85,6 +85,7 @@ export default async function ComparisonPage({ params }: { params: Promise<{ slu
         categories={categories}
         personas={personas}
         comparisons={comparisons.filter((c) => c.slug !== comp.slug)}
+        excludeComparisonSlug={comp.slug}
       />
     </div>
   );
