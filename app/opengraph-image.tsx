@@ -1,10 +1,11 @@
 import { ImageResponse } from 'next/og';
-import { SITE_OG_BADGE_DEFAULT, siteRootTitle, SITE_HERO_TITLE } from '../lib/brand';
+import { SITE_OG_BADGE_DEFAULT, SITE_HERO_TITLE } from '../lib/brand';
 import { getDisplayDomain } from '../lib/seo/base-url';
+import { SITE_DESCRIPTION, SITE_OG_FOOTER } from '../lib/seo/site-copy';
 
 export const runtime = 'edge';
 
-export const alt = siteRootTitle(false);
+export const alt = `${SITE_HERO_TITLE} | TheRadarHub`;
 export const size = {
   width: 1200,
   height: 630,
@@ -97,7 +98,7 @@ export default async function Image() {
               color: '#94A3B8',
             }}
           >
-            Find the right AI tool for any task. Search, compare, and filter 100+ top-rated AI software for writing, coding, video, images, and productivity.
+            {SITE_DESCRIPTION}
           </div>
         </div>
 
@@ -113,7 +114,7 @@ export default async function Image() {
             color: '#64748B',
           }}
         >
-          <span>Verified AI Software Directory &bull; 2026 Rankings</span>
+          <span>{SITE_OG_FOOTER}</span>
           <span style={{ color: '#10B981', fontWeight: '600' }}>{displayDomain}</span>
         </div>
       </div>

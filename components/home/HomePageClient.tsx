@@ -6,6 +6,14 @@ import { useRouter } from 'next/navigation';
 import { Tool, Category, Persona, Comparison } from '../../types/tool';
 import { SITE_NAME } from '../../lib/brand';
 import { filterPublicPersonas } from '../../lib/seo/persona-visibility';
+import {
+  HOMEPAGE_FAQ_UPDATE_CADENCE,
+  HOMEPAGE_FEATURED_SECTION_SUBTITLE,
+  HOMEPAGE_FEATURED_SECTION_TITLE,
+  HOMEPAGE_FEATURED_TAB_LABEL,
+  HOMEPAGE_HERO_BADGE,
+  SITE_HERO_SUBTITLE,
+} from '../../lib/seo/site-copy';
 import { ToolCard } from '../tool/ToolCard';
 import { CategoryCard } from '../category/CategoryCard';
 import {
@@ -20,10 +28,10 @@ import {
   Zap,
   HelpCircle,
   ShieldCheck,
-  Star
 } from 'lucide-react';
 
 interface HomePageClientProps {
+  totalToolCount: number;
   featuredTools: Tool[];
   freeTools: Tool[];
   trendingTools: Tool[];
@@ -34,6 +42,7 @@ interface HomePageClientProps {
 }
 
 export function HomePageClient({
+  totalToolCount,
   featuredTools,
   freeTools,
   trendingTools,
@@ -91,7 +100,7 @@ export function HomePageClient({
         <div className="max-w-3xl space-y-6 relative z-10">
           <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
             <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-            Curated AI Discovery Engine &bull; Updated Daily 2026
+            {HOMEPAGE_HERO_BADGE}
           </div>
 
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
@@ -99,7 +108,7 @@ export function HomePageClient({
           </h1>
 
           <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl">
-            Search 100+ verified artificial intelligence platforms, filter by pricing and developer APIs, and compare side-by-side to make confident software decisions.
+            {SITE_HERO_SUBTITLE}
           </p>
 
           {/* Search Bar */}
@@ -172,7 +181,7 @@ export function HomePageClient({
       {/* 2. Platform Stats Bar */}
       <section className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-2xs">
         <div className="text-center space-y-1">
-          <span className="text-2xl sm:text-3xl font-extrabold text-slate-900 block">100+</span>
+          <span className="text-2xl sm:text-3xl font-extrabold text-slate-900 block">{totalToolCount}</span>
           <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Curated AI Tools</span>
         </div>
         <div className="text-center space-y-1">
@@ -184,8 +193,8 @@ export function HomePageClient({
           <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Persona Guides</span>
         </div>
         <div className="text-center space-y-1">
-          <span className="text-2xl sm:text-3xl font-extrabold text-amber-500 block">100% Verified</span>
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Independent Ratings</span>
+          <span className="text-2xl sm:text-3xl font-extrabold text-amber-500 block">Editorial</span>
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Official-Source Profiles</span>
         </div>
       </section>
 
@@ -271,16 +280,16 @@ export function HomePageClient({
         </div>
       </section>
 
-      {/* 5. Top Ranked & Featured AI Tools */}
+      {/* 5. Featured AI Tools */}
       <section className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-3 gap-4">
           <div>
             <h2 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
               <Trophy className="w-6 h-6 text-amber-500" />
-              Featured &amp; Top Ranked AI Tools
+              {HOMEPAGE_FEATURED_SECTION_TITLE}
             </h2>
             <p className="text-xs text-slate-500 mt-1">
-              Highest rated software evaluated by features, output quality, and price fairness
+              {HOMEPAGE_FEATURED_SECTION_SUBTITLE}
             </p>
           </div>
 
@@ -294,7 +303,7 @@ export function HomePageClient({
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Top Ranked
+              {HOMEPAGE_FEATURED_TAB_LABEL}
             </button>
             <button
               onClick={() => setActiveTab('free')}
@@ -445,7 +454,7 @@ export function HomePageClient({
               </div>
               <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
                 <p className="font-bold text-slate-900">How often is the directory updated?</p>
-                <p className="text-slate-500 mt-1">Listings, pricing models, and new model releases (such as GPT-4o and Claude 3.5 Sonnet) are updated daily.</p>
+                <p className="text-slate-500 mt-1">{HOMEPAGE_FAQ_UPDATE_CADENCE}</p>
               </div>
             </div>
           </div>

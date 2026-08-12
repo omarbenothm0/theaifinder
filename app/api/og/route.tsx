@@ -1,7 +1,8 @@
 import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
-import { SITE_NAME, SITE_OG_BADGE_DEFAULT } from '../../../lib/brand';
+import { SITE_OG_BADGE_DEFAULT } from '../../../lib/brand';
 import { getDisplayDomain } from '../../../lib/seo/base-url';
+import { SITE_OG_DEFAULT_DESCRIPTION, SITE_OG_FOOTER } from '../../../lib/seo/site-copy';
 
 export const runtime = 'edge';
 
@@ -12,7 +13,7 @@ export async function GET(req: NextRequest) {
     const title = searchParams.get('title') || 'Discover, Compare & Choose Best AI Tools';
     const description =
       searchParams.get('description') ||
-      'Explore verified AI software listings, pricing tiers, API availability, and head-to-head comparisons.';
+      SITE_OG_DEFAULT_DESCRIPTION;
     const badge = searchParams.get('badge') || SITE_OG_BADGE_DEFAULT;
     const type = searchParams.get('type') || 'default';
     const displayDomain = getDisplayDomain();
@@ -134,7 +135,7 @@ export async function GET(req: NextRequest) {
               color: '#64748B',
             }}
           >
-            <span>Verified AI Software Directory &bull; 2026 Rankings</span>
+            <span>{SITE_OG_FOOTER}</span>
             <span style={{ color: '#10B981', fontWeight: '600' }}>{displayDomain}</span>
           </div>
         </div>

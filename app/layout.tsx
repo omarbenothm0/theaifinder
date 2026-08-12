@@ -5,18 +5,17 @@ import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
 import { getBaseUrl } from '../lib/seo/base-url';
 import { SITE_NAME, SITE_OG_NAME, siteRootTitle, SITE_HERO_TITLE } from '../lib/brand';
+import { SITE_DESCRIPTION, SITE_DESCRIPTION_SHORT } from '../lib/seo/site-copy';
 
 const BASE_URL = getBaseUrl();
 
 export const metadata: Metadata = {
   title: siteRootTitle(),
-  description:
-    'Find the right AI tool for any task. Search, compare, and filter 100+ top-rated AI software for writing, coding, video, images, and productivity.',
+  description: SITE_DESCRIPTION,
   metadataBase: new URL(BASE_URL),
   openGraph: {
     title: `${SITE_NAME} - ${SITE_HERO_TITLE}`,
-    description:
-      'Find the right AI tool for any task. Search, compare, and filter 100+ top-rated AI software for writing, coding, video, images, and productivity.',
+    description: SITE_DESCRIPTION,
     url: BASE_URL,
     siteName: SITE_OG_NAME,
     images: [
@@ -32,8 +31,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: `${SITE_NAME} - ${SITE_HERO_TITLE}`,
-    description:
-      'Find the right AI tool for any task. Search, compare, and filter 100+ top-rated AI software.',
+    description: SITE_DESCRIPTION_SHORT,
     images: [`${BASE_URL}/api/og?title=${encodeURIComponent(SITE_HERO_TITLE)}&type=default`],
   },
   robots: {

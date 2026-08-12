@@ -13,11 +13,12 @@ import { isComparisonIndexable } from '../lib/seo/indexability';
 export const revalidate = 3600;
 
 import { siteRootTitle } from '../lib/brand';
+import { SITE_DESCRIPTION } from '../lib/seo/site-copy';
 
 export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
     title: siteRootTitle(),
-    description: 'Find the right AI tool for any task. Search, compare, and filter 100+ top-rated AI software for writing, coding, video, images, and productivity.',
+    description: SITE_DESCRIPTION,
     canonicalUrl: '/'
   });
 }
@@ -44,6 +45,7 @@ export default async function HomePage() {
     <>
       <JsonLd schema={websiteSchema} />
       <HomePageClient
+        totalToolCount={toolsRes.total}
         featuredTools={featuredTools.length ? featuredTools : allTools.slice(0, 6)}
         freeTools={freeTools.length ? freeTools : allTools.slice(0, 6)}
         trendingTools={trendingTools.length ? trendingTools : allTools.slice(0, 6)}
