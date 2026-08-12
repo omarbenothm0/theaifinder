@@ -157,7 +157,9 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
                   <div className="flex items-center gap-1 font-bold text-slate-900">
                     <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
                     <span>{tool.rating.toFixed(1)}</span>
-                    <span className="text-slate-400 font-normal">({tool.reviewCount} reviews)</span>
+                    <span className="text-slate-400 font-normal">
+                      ({tool.reviewCount} review{tool.reviewCount !== 1 ? 's' : ''})
+                    </span>
                   </div>
                 ) : (
                   <span className="text-slate-500 font-medium">Editorial listing · No user reviews yet</span>

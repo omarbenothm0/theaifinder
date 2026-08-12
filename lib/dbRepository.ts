@@ -21,6 +21,12 @@ import {
 import { ToolMonitoringCheck, MonitoringCheckStatus } from '../types/monitoring';
 import { prisma } from './prisma';
 import { toolMatchesUseCase } from './utils/useCaseMatch';
+import {
+  applyPublicReviewSignals,
+  ApprovedReviewAggregate,
+  EMPTY_APPROVED_REVIEW_AGGREGATE,
+  sortPublicTools,
+} from './seo/public-review-signals';
 
 // --- Mapping helpers: Prisma model -> app-facing Tool/Category/etc shape ---
 
@@ -302,8 +308,59 @@ async function syncToolAlternatives(sourceToolId: string, altSlugs: string[] | u
   await prisma.toolAlternative.createMany({ data: rows, skipDuplicates: true });
 }
 
+function mapApprovedReviewAggregate(
+  count: number,
+  avgRating: number | null
+): ApprovedReviewAggregate {
+  return {
+    count,
+    rating: count > 0 && avgRating != null ? parseFloat(avgRating.toFixed(1)) : 0,
+  };
+}
+
 class DBRepository {
   // --- Tools CRUD & Querying ---
+
+  public async getApprovedReviewAggregatesByToolIds(
+    toolIds: string[]
+  ): Promise<Map<string, ApprovedReviewAggregate>> {
+    if (toolIds.length === 0) return new Map();
+
+    const groups = await prisma.review.groupBy({
+      by: ['toolId'],
+      where: { toolId: { in: toolIds }, status: 'approved' },
+      _avg: { rating: true },
+      _count: { rating: true },
+    });
+
+    return new Map(
+      groups.map((group) => [
+        group.toolId,
+        mapApprovedReviewAggregate(group._count.rating, group._avg.rating),
+      ])
+    );
+  }
+
+  public async enrichToolsWithPublicReviewSignals(tools: Tool[]): Promise<Tool[]> {
+    if (tools.length === 0) return tools;
+
+    const aggregates = await this.getApprovedReviewAggregatesByToolIds(
+      tools.map((tool) => tool.id)
+    );
+
+    return tools.map((tool) =>
+      applyPublicReviewSignals(
+        tool,
+        aggregates.get(tool.id) ?? EMPTY_APPROVED_REVIEW_AGGREGATE
+      )
+    );
+  }
+
+  public async enrichToolWithPublicReviewSignals(tool: Tool): Promise<Tool> {
+    const aggregate = await this.getApprovedReviewAggregates(tool.id);
+    return applyPublicReviewSignals(tool, aggregate);
+  }
+
   public async getTools(options: ToolFilterOptions = {}) {
     const where: any = {};
 
@@ -358,6 +415,33 @@ class DBRepository {
     if (options.hasApi) where.hasApi = true;
     if (options.hasMobileApp) where.hasMobileApp = true;
     if (options.hasExtension) where.hasExtension = true;
+
+    const page = options.page || 1;
+    const limit = options.limit || 50;
+
+    if (!options.includeUnpublished) {
+      const allResults = await prisma.tool.findMany({
+        where,
+        include: TOOL_INCLUDE,
+      });
+
+      let tools = await this.enrichToolsWithPublicReviewSignals(allResults.map(mapTool));
+
+      if (options.minRating) {
+        tools = tools.filter((tool) => tool.rating >= options.minRating!);
+      }
+
+      tools = sortPublicTools(tools, options.sortBy);
+      const total = tools.length;
+
+      return {
+        tools: tools.slice((page - 1) * limit, page * limit),
+        total,
+        page,
+        totalPages: Math.ceil(total / limit),
+      };
+    }
+
     if (options.minRating) where.rating = { gte: options.minRating };
 
     let orderBy: any = [{ featured: 'desc' }, { reviewCount: 'desc' }];
@@ -381,8 +465,6 @@ class DBRepository {
     }
 
     const total = await prisma.tool.count({ where });
-    const page = options.page || 1;
-    const limit = options.limit || 50;
 
     const results = await prisma.tool.findMany({
       where,
@@ -411,27 +493,31 @@ class DBRepository {
       },
       include: TOOL_INCLUDE,
     });
-    return tool ? mapTool(tool) : undefined;
+    if (!tool) return undefined;
+
+    const mapped = mapTool(tool);
+    if (options.includeUnpublished) return mapped;
+    return this.enrichToolWithPublicReviewSignals(mapped);
   }
 
   public async getFeaturedTools(limit = 12): Promise<Tool[]> {
     const results = await prisma.tool.findMany({
       where: { ...PUBLISHED_TOOL_WHERE, featured: true },
-      orderBy: [{ reviewCount: 'desc' }, { rating: 'desc' }],
+      orderBy: [{ featured: 'desc' }, { lastVerifiedDate: 'desc' }],
       take: limit,
       include: TOOL_INCLUDE,
     });
-    return results.map(mapTool);
+    return this.enrichToolsWithPublicReviewSignals(results.map(mapTool));
   }
 
   public async getTrendingTools(limit = 12): Promise<Tool[]> {
     const results = await prisma.tool.findMany({
       where: { ...PUBLISHED_TOOL_WHERE, trending: true },
-      orderBy: [{ reviewCount: 'desc' }, { rating: 'desc' }],
+      orderBy: [{ trending: 'desc' }, { lastVerifiedDate: 'desc' }],
       take: limit,
       include: TOOL_INCLUDE,
     });
-    return results.map(mapTool);
+    return this.enrichToolsWithPublicReviewSignals(results.map(mapTool));
   }
 
   public async getToolsPageForSitemap(page: number, limit: number) {
@@ -966,10 +1052,7 @@ class DBRepository {
 
   /**
    * Approved visitor-review aggregates from the Review table.
-   *
-   * NOTE: Tool.rating / Tool.reviewCount are editorial listing metrics (seed/CMS)
-   * used by hero, cards, finder, and JSON-LD. They are intentionally separate from
-   * moderated visitor reviews and must NOT be overwritten by moderation actions.
+   * Public tool reads apply these via enrichToolsWithPublicReviewSignals().
    */
   public async getApprovedReviewAggregates(toolId: string): Promise<{ rating: number; count: number }> {
     const agg = await prisma.review.aggregate({
@@ -977,13 +1060,7 @@ class DBRepository {
       _avg: { rating: true },
       _count: { rating: true },
     });
-    return {
-      count: agg._count.rating,
-      rating:
-        agg._count.rating > 0 && agg._avg.rating
-          ? parseFloat(agg._avg.rating.toFixed(1))
-          : 0,
-    };
+    return mapApprovedReviewAggregate(agg._count.rating, agg._avg.rating);
   }
 
   public async addReview(input: {
@@ -1073,8 +1150,9 @@ class DBRepository {
       include: TOOL_INCLUDE,
     });
 
-    const scored = allTools.map((toolRaw: any) => {
-      const tool = mapTool(toolRaw);
+    const enrichedTools = await this.enrichToolsWithPublicReviewSignals(allTools.map(mapTool));
+
+    const scored = enrichedTools.map((tool) => {
       let score = 50;
       const matchReasons: string[] = [];
 
