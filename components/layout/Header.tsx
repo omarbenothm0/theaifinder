@@ -23,7 +23,7 @@ const CATEGORY_LINKS = [
   { name: 'Study & Education', slug: 'study-education' },
   { name: 'Writing & Copywriting', slug: 'writing' },
   { name: 'Coding & Development', slug: 'coding' },
-  { name: 'Image Generation', slug: 'image' },
+  { name: 'Image & Design', slug: 'image' },
   { name: 'Video & Motion', slug: 'video' },
   { name: 'Voice & Audio', slug: 'voice' },
   { name: 'SEO & Research', slug: 'seo' },

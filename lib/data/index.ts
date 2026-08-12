@@ -87,6 +87,7 @@ import { WRITING_CATEGORY } from './writing-category';
 import { PRODUCTIVITY_CATEGORY } from './productivity-category';
 import { MARKETING_CATEGORY } from './marketing-category';
 import { SEO_CATEGORY } from './seo-category';
+import { IMAGE_CATEGORY } from './image-category';
 
 export const INITIAL_TOOLS = [
   chatgptTool,
@@ -115,7 +116,8 @@ export const INITIAL_CATEGORIES = [
       c.slug !== 'writing' &&
       c.slug !== 'coding' &&
       c.slug !== 'productivity' &&
-      c.slug !== 'seo'
+      c.slug !== 'seo' &&
+      c.slug !== 'image'
   ),
   WRITING_CATEGORY,
   CODING_CATEGORY,
@@ -124,6 +126,7 @@ export const INITIAL_CATEGORIES = [
   PRODUCTIVITY_CATEGORY,
   MARKETING_CATEGORY,
   SEO_CATEGORY,
+  IMAGE_CATEGORY,
 ];
 export const INITIAL_PERSONAS = [
   ...SEED_PERSONAS.filter(

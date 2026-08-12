@@ -19,6 +19,7 @@ import { StudyEducationCategoryContent } from '../../../components/category/Stud
 import { ProductivityCategoryContent } from '../../../components/category/ProductivityCategoryContent';
 import { MarketingCategoryContent } from '../../../components/category/MarketingCategoryContent';
 import { SeoCategoryContent } from '../../../components/category/SeoCategoryContent';
+import { ImageCategoryContent } from '../../../components/category/ImageCategoryContent';
 
 const BASE_URL = getBaseUrl();
 
@@ -139,6 +140,15 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
     );
   }
 
+  if (category.slug === 'image') {
+    return (
+      <>
+        <JsonLd schema={breadcrumbSchema} />
+        <ImageCategoryContent category={category} categories={categories} personas={personas} />
+      </>
+    );
+  }
+
   return (
     <div className="space-y-10">
       <JsonLd schema={breadcrumbSchema} />
@@ -157,7 +167,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         </p>
       </div>
 
-      {(category.slug === 'image' || category.slug === 'presentations') && (
+      {category.slug === 'presentations' && (
         <RealEstateWorkflowLinks variant="category" />
       )}
 

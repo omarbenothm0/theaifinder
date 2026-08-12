@@ -78,7 +78,7 @@ export function Footer() {
                 { name: 'Study & Education', slug: 'study-education' },
                 { name: 'Writing & Copywriting', slug: 'writing' },
                 { name: 'Coding & IDEs', slug: 'coding' },
-                { name: 'Image Generation', slug: 'image' },
+                { name: 'Image & Design', slug: 'image' },
                 { name: 'Video & VFX', slug: 'video' },
                 { name: 'Voice & Speech', slug: 'voice' },
                 { name: 'SEO & Research', slug: 'seo' },
