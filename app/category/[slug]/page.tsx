@@ -11,15 +11,14 @@ import { isCategoryIndexable } from '../../../lib/seo/indexability';
 import { generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
 import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
 import { Layers, Sparkles } from 'lucide-react';
-import { StudentWorkflowLinks } from '../../../components/persona/StudentWorkflowLinks';
 import { MarketerWorkflowLinks } from '../../../components/persona/MarketerWorkflowLinks';
-import { TeacherWorkflowLinks } from '../../../components/persona/TeacherWorkflowLinks';
 import { SmallBusinessWorkflowLinks } from '../../../components/persona/SmallBusinessWorkflowLinks';
 import { ResearcherWorkflowLinks } from '../../../components/persona/ResearcherWorkflowLinks';
 import { RealEstateWorkflowLinks } from '../../../components/persona/RealEstateWorkflowLinks';
 import { WritingCategoryContent } from '../../../components/category/WritingCategoryContent';
 import { CodingCategoryContent } from '../../../components/category/CodingCategoryContent';
 import { ProjectManagementCategoryContent } from '../../../components/category/ProjectManagementCategoryContent';
+import { StudyEducationCategoryContent } from '../../../components/category/StudyEducationCategoryContent';
 
 const BASE_URL = getBaseUrl();
 
@@ -92,6 +91,19 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
     );
   }
 
+  if (category.slug === 'study-education') {
+    return (
+      <>
+        <JsonLd schema={breadcrumbSchema} />
+        <StudyEducationCategoryContent
+          category={category}
+          categories={categories}
+          personas={personas}
+        />
+      </>
+    );
+  }
+
   return (
     <div className="space-y-10">
       <JsonLd schema={breadcrumbSchema} />
@@ -110,13 +122,6 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         </p>
       </div>
 
-      {category.slug === 'study-education' && (
-        <>
-          <StudentWorkflowLinks variant="category" />
-          <TeacherWorkflowLinks variant="category" />
-          <ResearcherWorkflowLinks variant="category" />
-        </>
-      )}
       {(category.slug === 'seo') && (
         <MarketerWorkflowLinks variant="category" />
       )}

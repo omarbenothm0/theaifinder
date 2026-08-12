@@ -31,8 +31,8 @@ import { PM_COMPARISONS } from './pm-comparisons';
 import { CODING_COMPARISONS } from './coding-comparisons';
 import { CODING_CATEGORY } from './coding-category';
 import { PROJECT_MANAGEMENT_CATEGORY } from './project-management-category';
+import { STUDY_EDUCATION_CATEGORY } from './study-education-category';
 import {
-  STUDENT_CATEGORY,
   STUDENT_PERSONA,
   STUDENT_TOOLS,
   STUDENT_USE_CASES,
@@ -111,7 +111,7 @@ export const INITIAL_CATEGORIES = [
   WRITING_CATEGORY,
   CODING_CATEGORY,
   PROJECT_MANAGEMENT_CATEGORY,
-  STUDENT_CATEGORY,
+  STUDY_EDUCATION_CATEGORY,
 ];
 export const INITIAL_PERSONAS = [
   ...SEED_PERSONAS.filter(
