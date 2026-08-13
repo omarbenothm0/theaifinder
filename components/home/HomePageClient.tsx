@@ -155,11 +155,11 @@ export function HomePageClient({
           <span className="home-pill home-pill-outline mb-8">{HOMEPAGE_HERO_BADGE}</span>
 
           <h1 className="text-[38px] md:text-[48px] leading-[1.1] tracking-[-0.3px] font-medium text-foreground-strong max-w-3xl mx-auto">
-            Find the right AI tool for the job.
+            Discover the AI tools worth knowing.
           </h1>
 
           <p className="text-base md:text-[16px] leading-[1.35] text-muted-foreground max-w-[550px] mx-auto mt-6">
-            Search AI tools, explore by role or category, or get a personalized recommendation.
+            Search, compare, and explore AI software by task, role, category, and budget.
           </p>
 
           <div className="home-hero-search mt-8 md:mt-10">

@@ -13,7 +13,7 @@ export const SITE_OG_FOOTER = 'Curated AI Software Directory • 2026';
 export const SITE_OG_DEFAULT_DESCRIPTION =
   'Explore curated AI software listings, pricing tiers, API availability, and head-to-head comparisons.';
 
-export const HOMEPAGE_HERO_BADGE = 'Curated AI Discovery • 2026';
+export const HOMEPAGE_HERO_BADGE = 'AI TOOL DISCOVERY';
 
 export const HOMEPAGE_FEATURED_SECTION_TITLE = 'Featured AI Tools';
 
