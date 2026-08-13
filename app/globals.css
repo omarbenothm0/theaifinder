@@ -1,8 +1,10 @@
 @import "tailwindcss";
 @import "../components/home/home.css";
 
-/* Inworld-inspired semantic design tokens — warm neutral palette */
+/* Warm monochrome brand + restrained semantic colors */
 :root {
+  /* Core brand palette (locked) */
+  --brand: #1c1b19;
   --background: #f5f3ef;
   --background-raised: #faf9f7;
   --foreground: #1c1b19;
@@ -11,33 +13,53 @@
   --disabled-foreground: #6b6963;
   --primary: #1c1b19;
   --primary-foreground: #f5f3ef;
-  --accent: #2a7a3a;
   --border: #d9d5cf;
   --inverted: #1c1b19;
   --inverted-foreground: #f5f3ef;
+
+  /* Monochrome interaction */
+  --link: var(--foreground);
+  --focus-ring: color-mix(in srgb, var(--foreground) 20%, transparent);
+
+  /* Success / verified semantics (green is NOT brand) */
+  --success: #2a7a3a;
+  --success-muted: #2a7a3a1a;
+  --success-border: #2a7a3a33;
+  --success-foreground: #2a7a3a;
+  --verified: var(--success);
+  --verified-muted: var(--success-muted);
+  --verified-border: var(--success-border);
+
+  /* Legacy alias — decorative accent is now monochrome; migrate usages to success/verified or foreground */
+  --accent: var(--foreground);
+  --color-highlighted: var(--success);
+  --color-competitor: #6b6963;
+  --color-rating: #b8860b;
+
   --light-card-foreground: #1c1b19;
   --light-card-foreground-muted: #6b6963;
-  --color-competitor: #6b6963;
-  --color-highlighted: #2a7a3a;
-  --color-rating: #b8860b;
-  /* Rating semantics — preserve current comparison/star appearance */
+
+  /* Rating semantics */
   --rating-foreground: #92400e;
   --rating-muted: #b8860b1a;
   --rating-border: #b8860b33;
   --rating-on-inverted: #fcd34d;
   --rating-border-on-inverted: #f59e0b4d;
-  /* Secondary intent lane (existing UX pattern; not final brand secondary) */
+
+  /* Secondary intent lane (UX pattern; not brand) */
   --intent-secondary: #6d28d9;
   --intent-secondary-foreground: #5b21b6;
   --intent-secondary-muted: #f5f3ff;
   --intent-secondary-border: #ddd6fe;
   --intent-secondary-hover: #4c1d95;
+
   /* Destructive / error semantics */
   --destructive: #e11d48;
   --destructive-foreground: #4c0519;
   --destructive-muted: #fff1f2;
   --destructive-border: #fecdd3;
   --destructive-text: #881337;
+
   --inworld-brown-700: #5a4f45;
   --inworld-gray-1000: #1c1b19;
 }
@@ -51,14 +73,23 @@
   --color-disabled-foreground: var(--disabled-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
-  --color-accent: var(--accent);
   --color-border: var(--border);
   --color-inverted: var(--inverted);
   --color-inverted-foreground: var(--inverted-foreground);
+  --color-link: var(--link);
+  --color-focus-ring: var(--focus-ring);
+  --color-success: var(--success);
+  --color-success-muted: var(--success-muted);
+  --color-success-border: var(--success-border);
+  --color-success-foreground: var(--success-foreground);
+  --color-verified: var(--verified);
+  --color-verified-muted: var(--verified-muted);
+  --color-verified-border: var(--verified-border);
+  --color-accent: var(--accent);
   --color-light-card-foreground: var(--light-card-foreground);
   --color-light-card-foreground-muted: var(--light-card-foreground-muted);
   --color-competitor: var(--color-competitor);
-  --color-highlighted: var(--accent);
+  --color-highlighted: var(--color-highlighted);
   --color-rating: var(--color-rating);
   --color-rating-foreground: var(--rating-foreground);
   --color-rating-muted: var(--rating-muted);

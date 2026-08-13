@@ -26,7 +26,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-border/40">
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-accent" />
+              <Sparkles className="w-5 h-5 text-foreground" />
               <span className="font-medium text-base text-foreground tracking-tight">{SITE_NAME}</span>
             </div>
             <p className="text-[13px] leading-[1.35] text-muted-foreground max-w-xs">
@@ -39,7 +39,7 @@ export function Footer() {
               </span>
               {subscribed ? (
                 <div className="flex items-center gap-2 bg-background-raised border border-border/50 text-foreground px-3 py-2 rounded-lg text-[12px] font-medium">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-accent shrink-0" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-verified shrink-0" />
                   Subscribed — check your inbox.
                 </div>
               ) : (
@@ -166,7 +166,7 @@ export function Footer() {
 
         <div className="pt-6 flex flex-col md:flex-row items-center justify-between text-[12px] text-muted-foreground gap-4">
           <span>&copy; 2026 {SITE_NAME}. All rights reserved.</span>
-          <span className="flex items-center gap-1 text-accent">
+          <span className="flex items-center gap-1 text-muted-foreground">
             <ShieldCheck className="w-3.5 h-3.5" />
             SEO architecture verified
           </span>

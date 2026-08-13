@@ -138,8 +138,8 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
               <div className="flex items-center gap-2 flex-wrap">
                 <h1 className="text-2xl sm:text-4xl font-medium text-foreground-strong tracking-tight">{tool.name}</h1>
                 {tool.verified && (
-                  <span className="inline-flex items-center gap-1 text-xs font-bold bg-accent/10 text-accent px-2.5 py-0.5 rounded-full border border-accent/20">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-accent" />
+                  <span className="inline-flex items-center gap-1 text-xs font-bold bg-verified-muted text-verified px-2.5 py-0.5 rounded-full border border-verified-border">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-verified" />
                     Verified Listing
                   </span>
                 )}
@@ -148,7 +148,7 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
               <p className="text-sm text-muted-foreground max-w-xl font-medium leading-relaxed">{tool.tagline}</p>
 
               <div className="flex items-center gap-3 text-xs text-muted-foreground pt-1 flex-wrap">
-                <Link href={`/category/${tool.categorySlug || tool.categoryId}`} className="font-bold text-foreground hover:text-accent flex items-center gap-1 bg-foreground/5 px-2.5 py-1 rounded-md">
+                <Link href={`/category/${tool.categorySlug || tool.categoryId}`} className="font-bold text-foreground hover:text-foreground-strong flex items-center gap-1 bg-foreground/5 px-2.5 py-1 rounded-md">
                   <Layers className="w-3.5 h-3.5" />
                   {tool.categoryName}
                 </Link>
@@ -251,7 +251,7 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
                     <ul className="space-y-1.5 text-xs text-muted-foreground">
                       {tier.features.map((feat, fIdx) => (
                         <li key={fIdx} className="flex items-start gap-1.5">
-                          <Check className="w-3.5 h-3.5 text-accent shrink-0 mt-0.5" />
+                          <Check className="w-3.5 h-3.5 text-verified shrink-0 mt-0.5" />
                           <span>{feat}</span>
                         </li>
                       ))}
@@ -268,7 +268,7 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {tool.features.map((feat, idx) => (
                 <div key={idx} className="flex items-start gap-2 text-xs text-foreground bg-background p-3 rounded-xl border border-border/30">
-                  <Check className="w-4 h-4 text-accent shrink-0 mt-0.5" />
+                  <Check className="w-4 h-4 text-verified shrink-0 mt-0.5" />
                   <span>{feat}</span>
                 </div>
               ))}
@@ -277,15 +277,15 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
 
           {/* Pros & Cons */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div className="bg-accent/10 rounded-2xl border border-accent/20 p-6 space-y-3">
+            <div className="bg-verified-muted rounded-2xl border border-verified-border p-6 space-y-3">
               <h3 className="font-bold text-foreground-strong text-sm flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-accent" />
+                <CheckCircle2 className="w-4 h-4 text-verified" />
                 Pros
               </h3>
-              <ul className="space-y-2 text-xs text-accent">
+              <ul className="space-y-2 text-xs text-success-foreground">
                 {tool.pros.map((pro, i) => (
                   <li key={i} className="flex items-start gap-2">
-                    <span className="text-accent font-bold">&bull;</span>
+                    <span className="text-success-foreground font-bold">&bull;</span>
                     <span>{pro}</span>
                   </li>
                 ))}
@@ -312,7 +312,7 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
           {audienceLinks.length > 0 && (
             <div className="bg-background-raised rounded-2xl border border-border/50 p-6 shadow-2xs space-y-4">
               <h2 className="text-lg font-bold text-foreground-strong border-b border-border/30 pb-3 flex items-center gap-2">
-                <Users className="w-5 h-5 text-accent" />
+                <Users className="w-5 h-5 text-foreground" />
                 Best Suited For
               </h2>
               <div className="flex flex-wrap gap-2">
@@ -320,7 +320,7 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
                   <Link
                     key={link.key}
                     href={link.href}
-                    className="text-xs font-bold text-accent bg-accent/10 border border-accent/20 px-3 py-1.5 rounded-full hover:bg-accent/15 transition-colors"
+                    className="text-xs font-bold text-foreground bg-foreground/5 border border-border/50 px-3 py-1.5 rounded-full hover:bg-foreground/8 transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -333,7 +333,7 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
           {useCaseLinks.length > 0 && (
             <div className="bg-background-raised rounded-2xl border border-border/50 p-6 shadow-2xs space-y-4">
               <h2 className="text-lg font-bold text-foreground-strong border-b border-border/30 pb-3 flex items-center gap-2">
-                <Layers className="w-5 h-5 text-accent" />
+                <Layers className="w-5 h-5 text-foreground" />
                 Featured In Workflow Guides
               </h2>
               <div className="flex flex-wrap gap-2">
@@ -345,7 +345,7 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
                         ? `/for/${link.personaSlug}/${link.useCaseSlug}`
                         : `/for/${link.personaSlug}#${link.useCaseSlug}`
                     }
-                    className="text-xs font-bold text-accent bg-accent/10 border border-accent/20 px-3 py-1.5 rounded-full hover:bg-accent/15 transition-colors"
+                    className="text-xs font-bold text-foreground bg-foreground/5 border border-border/50 px-3 py-1.5 rounded-full hover:bg-foreground/8 transition-colors"
                   >
                     {link.personaTitle}: {link.useCaseTitle}
                   </Link>
@@ -390,21 +390,21 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
 
               <div className="flex justify-between py-1 border-b border-border/30">
                 <span className="text-muted-foreground font-medium">Developer API</span>
-                <span className={`font-bold ${tool.hasApi ? 'text-accent' : 'text-muted-foreground'}`}>
+                <span className={`font-bold ${tool.hasApi ? 'text-verified' : 'text-muted-foreground'}`}>
                   {tool.hasApi ? 'Available' : 'No'}
                 </span>
               </div>
 
               <div className="flex justify-between py-1 border-b border-border/30">
                 <span className="text-muted-foreground font-medium">Mobile App</span>
-                <span className={`font-bold ${tool.hasMobileApp ? 'text-accent' : 'text-muted-foreground'}`}>
+                <span className={`font-bold ${tool.hasMobileApp ? 'text-verified' : 'text-muted-foreground'}`}>
                   {tool.hasMobileApp ? 'Available' : 'No'}
                 </span>
               </div>
 
               <div className="flex justify-between py-1 border-b border-border/30">
                 <span className="text-muted-foreground font-medium">Browser Extension</span>
-                <span className={`font-bold ${tool.hasExtension ? 'text-accent' : 'text-muted-foreground'}`}>
+                <span className={`font-bold ${tool.hasExtension ? 'text-verified' : 'text-muted-foreground'}`}>
                   {tool.hasExtension ? 'Available' : 'No'}
                 </span>
               </div>
@@ -413,12 +413,12 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
 
           {/* Compare Prompt - dynamic based on available alternative */}
           <div className="bg-inverted text-inverted-foreground p-6 rounded-2xl border border-inverted-foreground/20 space-y-3">
-            <span className="text-xs font-bold text-accent uppercase tracking-wider">Head-to-Head</span>
+            <span className="text-xs font-bold text-inverted-foreground uppercase tracking-wider">Head-to-Head</span>
             <h4 className="font-bold text-base">Compare {tool.name}</h4>
             <p className="text-xs text-inverted-foreground/70">Evaluate against market rivals side by side in feature matrix.</p>
             <Link
               href={compareHref}
-              className="inline-flex items-center gap-1 text-xs font-bold text-accent hover:text-accent"
+              className="inline-flex items-center gap-1 text-xs font-bold text-inverted-foreground/80 hover:text-inverted-foreground"
             >
               View Head-to-Head Comparisons &rarr;
             </Link>

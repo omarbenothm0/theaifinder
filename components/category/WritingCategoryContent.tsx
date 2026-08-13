@@ -67,7 +67,7 @@ export async function WritingCategoryContent({
 
       <PageHero
         badge={
-          <PageHeroAccentBadge icon={<Layers className="w-4 h-4 text-accent" />}>
+          <PageHeroAccentBadge icon={<Layers className="w-4 h-4 text-inverted-foreground/80" />}>
             Category Hub &bull; {curatedCount} Curated Tools
           </PageHeroAccentBadge>
         }
@@ -81,14 +81,14 @@ export async function WritingCategoryContent({
           href="/for/writers"
           className="group home-intent-card p-5 space-y-2 hover:shadow-md transition-all"
         >
-          <div className="flex items-center gap-2 text-xs font-bold text-accent uppercase tracking-wider">
+          <div className="flex items-center gap-2 text-xs font-bold text-foreground-strong uppercase tracking-wider">
             <BookOpen className="w-4 h-4" />
             For Authors &amp; Editors
           </div>
           <p className="text-sm text-muted-foreground leading-relaxed">
             Drafting, proofreading, writing research, long-form manuscripts, and project organization.
           </p>
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold text-accent group-hover:text-foreground-strong">
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold text-foreground group-hover:text-foreground-strong">
             Writers hub
             <ArrowRight className="w-3.5 h-3.5" />
           </span>
@@ -118,12 +118,12 @@ export async function WritingCategoryContent({
       <div className="space-y-8">
         <div className="flex items-center justify-between border-b border-border/50 pb-3">
           <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
-            <PenTool className="w-5 h-5 text-accent" />
+            <PenTool className="w-5 h-5 text-foreground" />
             Author &amp; Editor Writing Tools
           </h2>
           <Link
             href="/for/writers"
-            className="text-xs font-bold text-accent hover:text-foreground-strong transition-colors"
+            className="text-xs font-bold text-foreground hover:text-foreground-strong transition-colors"
           >
             Full Writers hub
           </Link>
@@ -141,7 +141,7 @@ export async function WritingCategoryContent({
                 <h3 className="text-lg font-bold text-foreground-strong">{section.title}</h3>
                 <Link
                   href={`/for/writers#${section.slug}`}
-                  className="text-xs font-bold text-muted-foreground hover:text-accent whitespace-nowrap"
+                  className="text-xs font-bold text-muted-foreground hover:text-foreground-strong whitespace-nowrap"
                 >
                   Workflow guide
                 </Link>
@@ -189,7 +189,7 @@ export async function WritingCategoryContent({
         <div className="space-y-6">
           <div className="flex items-center justify-between border-b border-border/50 pb-3">
             <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-accent" />
+              <Sparkles className="w-5 h-5 text-foreground" />
               All Tools in {category.name} ({categoryToolsRes.tools.length})
             </h2>
           </div>

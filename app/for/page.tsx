@@ -36,7 +36,7 @@ export default async function ForIndexPage() {
 
       <PageHero
         badge={
-          <PageHeroAccentBadge icon={<Users className="w-4 h-4 text-accent" />}>
+          <PageHeroAccentBadge icon={<Users className="w-4 h-4 text-inverted-foreground/80" />}>
             Workflow Guides
           </PageHeroAccentBadge>
         }
@@ -48,7 +48,7 @@ export default async function ForIndexPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between border-b border-border/50 pb-3">
           <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
-            <Users className="w-5 h-5 text-accent" />
+            <Users className="w-5 h-5 text-foreground" />
             All Roles ({personas.length})
           </h2>
         </div>
@@ -58,13 +58,13 @@ export default async function ForIndexPage() {
             <Link
               key={p.slug}
               href={`/for/${p.slug}`}
-              className="bg-background-raised p-5 rounded-2xl border border-border/50 hover:border-accent/30 shadow-2xs hover:shadow-xs transition-all group"
+              className="bg-background-raised p-5 rounded-2xl border border-border/50 hover:border-border shadow-2xs hover:shadow-xs transition-all group"
             >
-              <h3 className="font-bold text-foreground-strong text-sm mb-1 group-hover:text-accent transition-colors">
+              <h3 className="font-bold text-foreground-strong text-sm mb-1 group-hover:text-foreground-strong transition-colors">
                 {p.title}
               </h3>
               <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed mb-3">{p.description}</p>
-              <div className="flex items-center justify-between text-[11px] font-bold text-accent pt-2 border-t border-border/30">
+              <div className="flex items-center justify-between text-[11px] font-bold text-foreground pt-2 border-t border-border/30">
                 <span>View Recommendations</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>

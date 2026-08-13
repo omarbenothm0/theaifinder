@@ -41,7 +41,7 @@ export function NavMegaMenu({
                       onClick={onClose}
                       className="group block transition-colors duration-200"
                     >
-                      <span className="block text-[15px] font-medium leading-snug text-foreground group-hover:text-accent">
+                      <span className="block text-[15px] font-medium leading-snug text-foreground group-hover:text-foreground-strong">
                         {item.title}
                       </span>
                       <span className="block text-[13px] font-normal leading-[1.35] text-muted-foreground mt-1">

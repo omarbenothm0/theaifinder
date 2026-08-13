@@ -31,13 +31,13 @@ export function HomeToolCard({ tool }: HomeToolCardProps) {
             <div className="flex items-center gap-2 flex-wrap">
               <Link
                 href={`/tools/${tool.slug}`}
-                className="text-[15px] font-medium text-foreground hover:text-accent transition-colors truncate"
+                className="text-[15px] font-medium text-foreground hover:text-foreground-strong transition-colors truncate"
               >
                 {tool.name}
               </Link>
 
               {tool.verified && (
-                <span className="inline-flex items-center text-accent" title="Verified Tool Listing">
+                <span className="inline-flex items-center text-verified" title="Verified Tool Listing">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                 </span>
               )}

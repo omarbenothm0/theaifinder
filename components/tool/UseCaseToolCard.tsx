@@ -17,8 +17,8 @@ const TIER_LABELS: Record<UseCaseFitTier, string> = {
 };
 
 const TIER_STYLES: Record<UseCaseFitTier, string> = {
-  primary: 'bg-accent/10 text-accent border-accent/20',
-  strong: 'bg-accent/10 text-accent border-accent/20',
+  primary: 'bg-verified-muted text-verified border-verified-border',
+  strong: 'bg-verified-muted text-verified border-verified-border',
   partial: 'bg-rating-muted text-rating-foreground border-rating-border',
   listed: 'bg-foreground/5 text-foreground border-border/50',
   exclude: 'bg-destructive-muted text-destructive-text border-destructive-border',
@@ -45,12 +45,12 @@ export function UseCaseToolCard({ tool }: UseCaseToolCardProps) {
           <div className="flex flex-wrap items-center gap-2">
             <Link
               href={`/tools/${tool.slug}`}
-              className="font-bold text-foreground-strong hover:text-accent transition-colors"
+              className="font-bold text-foreground-strong hover:text-foreground-strong transition-colors"
             >
               {tool.name}
             </Link>
             {tool.verified && (
-              <CheckCircle2 className="w-4 h-4 text-accent" aria-label="Verified" />
+              <CheckCircle2 className="w-4 h-4 text-verified" aria-label="Verified" />
             )}
             <span
               className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded border ${TIER_STYLES[tier]}`}
@@ -76,7 +76,7 @@ export function UseCaseToolCard({ tool }: UseCaseToolCardProps) {
           <div className="flex flex-wrap items-center gap-3 pt-1">
             <Link
               href={`/tools/${tool.slug}`}
-              className="inline-flex items-center gap-1 text-xs font-bold text-foreground hover:text-accent transition-colors"
+              className="inline-flex items-center gap-1 text-xs font-bold text-foreground hover:text-foreground-strong transition-colors"
             >
               Full profile
               <ArrowRight className="w-3.5 h-3.5" />
@@ -86,7 +86,7 @@ export function UseCaseToolCard({ tool }: UseCaseToolCardProps) {
               target="_blank"
               rel={outbound.rel}
               title={outbound.title}
-              className="inline-flex items-center gap-1 text-xs font-bold text-accent hover:text-accent transition-colors"
+              className="inline-flex items-center gap-1 text-xs font-bold text-foreground hover:text-foreground-strong transition-colors"
             >
               Official site
               <ExternalLink className="w-3 h-3" />

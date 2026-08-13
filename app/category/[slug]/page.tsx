@@ -176,7 +176,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
 
       <PageHero
         badge={
-          <PageHeroAccentBadge icon={<Layers className="w-4 h-4 text-accent" />}>
+          <PageHeroAccentBadge icon={<Layers className="w-4 h-4 text-inverted-foreground/80" />}>
             Category Hub &bull; {category.toolCount} Software Listings
           </PageHeroAccentBadge>
         }
@@ -192,7 +192,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
       <div className="space-y-6">
         <div className="flex items-center justify-between border-b border-border/50 pb-3">
           <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-accent" />
+            <Sparkles className="w-5 h-5 text-foreground" />
             Available Tools in {category.name} ({toolsRes.tools.length})
           </h2>
         </div>

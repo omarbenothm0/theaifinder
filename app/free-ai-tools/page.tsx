@@ -34,7 +34,7 @@ export default async function FreeAIToolsPage() {
     <div className="space-y-10">
       <PageHero
         badge={
-          <PageHeroAccentBadge icon={<DollarSign className="w-4 h-4 text-accent" />}>
+          <PageHeroAccentBadge icon={<DollarSign className="w-4 h-4 text-inverted-foreground/80" />}>
             Zero Dollar Software Hub
           </PageHeroAccentBadge>
         }
@@ -46,7 +46,7 @@ export default async function FreeAIToolsPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between border-b border-border/50 pb-3">
           <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
-            <CheckCircle2 className="w-5 h-5 text-accent" />
+            <CheckCircle2 className="w-5 h-5 text-foreground" />
             Free &amp; Freemium Applications ({freeTools.length})
           </h2>
         </div>

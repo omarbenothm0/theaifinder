@@ -14,7 +14,7 @@ export function PersonaUseCaseCards({ personaSlug, useCases }: PersonaUseCaseCar
     <div className="space-y-6">
       <div className="flex items-center justify-between border-b border-border/50 pb-3">
         <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
-          <Layers className="w-5 h-5 text-accent" />
+          <Layers className="w-5 h-5 text-foreground" />
           Use Cases
         </h2>
       </div>
@@ -29,15 +29,15 @@ export function PersonaUseCaseCards({ personaSlug, useCases }: PersonaUseCaseCar
               <Link
                 key={item.useCase.slug}
                 href={href}
-                className="group bg-background-raised rounded-2xl border border-border/50 p-5 shadow-xs hover:border-accent/30 hover:shadow-md transition-all flex flex-col gap-3"
+                className="group bg-background-raised rounded-2xl border border-border/50 p-5 shadow-xs hover:border-border hover:shadow-md transition-all flex flex-col gap-3"
               >
-                <h3 className="font-bold text-foreground-strong group-hover:text-accent transition-colors">
+                <h3 className="font-bold text-foreground-strong group-hover:text-foreground-strong transition-colors">
                   {item.useCase.title}
                 </h3>
                 <p className="text-xs text-muted-foreground leading-relaxed flex-1">
                   {item.useCase.description}
                 </p>
-                <span className="inline-flex items-center gap-1 text-xs font-bold text-accent">
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-foreground">
                   View verified tools
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                 </span>

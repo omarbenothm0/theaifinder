@@ -13,11 +13,10 @@ export const size = {
 export const contentType = 'image/png';
 
 const DS = {
-  inverted: '#1c1b19',
-  invertedRaised: '#2a2826',
+  brand: '#1c1b19',
+  brandRaised: '#2a2826',
   foreground: '#f5f3ef',
   muted: '#6b6963',
-  accent: '#2a7a3a',
   border: '#d9d5cf',
 } as const;
 
@@ -34,8 +33,8 @@ export default async function Image() {
           flexDirection: 'column',
           justifyContent: 'space-between',
           alignItems: 'flex-start',
-          backgroundColor: DS.inverted,
-          backgroundImage: `radial-gradient(circle at 80% 20%, ${DS.invertedRaised} 0%, ${DS.inverted} 70%), radial-gradient(circle at 20% 80%, rgba(42, 122, 58, 0.12) 0%, transparent 50%)`,
+          backgroundColor: DS.brand,
+          backgroundImage: `radial-gradient(circle at 80% 20%, ${DS.brandRaised} 0%, ${DS.brand} 70%)`,
           padding: '60px',
           fontFamily: 'sans-serif',
           color: DS.foreground,
@@ -55,26 +54,27 @@ export default async function Image() {
                 width: '44px',
                 height: '44px',
                 borderRadius: '12px',
-                backgroundColor: DS.accent,
+                backgroundColor: DS.foreground,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontWeight: 500,
                 fontSize: '20px',
-                color: DS.foreground,
+                color: DS.brand,
               }}
             >
               TR
             </div>
-            <span style={{ fontSize: '28px', fontWeight: 500, letterSpacing: '-0.5px' }}>
-              TheRadar<span style={{ color: DS.accent }}>Hub</span>
+            <span style={{ fontSize: '28px', fontWeight: 500, letterSpacing: '-0.5px', color: DS.foreground }}>
+              TheRadarHub
             </span>
           </div>
 
           <div
             style={{
-              backgroundColor: DS.accent,
+              backgroundColor: 'rgba(245, 243, 239, 0.1)',
               color: DS.foreground,
+              border: `1px solid rgba(217, 213, 207, 0.35)`,
               padding: '8px 20px',
               borderRadius: '9999px',
               fontSize: '14px',
@@ -123,7 +123,7 @@ export default async function Image() {
           }}
         >
           <span>{SITE_OG_FOOTER}</span>
-          <span style={{ color: DS.accent, fontWeight: 500 }}>{displayDomain}</span>
+          <span style={{ color: DS.foreground, fontWeight: 500 }}>{displayDomain}</span>
         </div>
       </div>
     ),

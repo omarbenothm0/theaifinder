@@ -58,7 +58,7 @@ export async function MarketingCategoryContent({
       {/* Hero */}
       <PageHero
         badge={
-          <PageHeroAccentBadge icon={<Layers className="w-4 h-4 text-accent" />}>
+          <PageHeroAccentBadge icon={<Layers className="w-4 h-4 text-inverted-foreground/80" />}>
             Category Hub &bull; {curatedCount} Listed {curatedCount === 1 ? 'Tool' : 'Tools'}
           </PageHeroAccentBadge>
         }
@@ -68,8 +68,8 @@ export async function MarketingCategoryContent({
 
       {/* Intent split */}
       <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-background-raised border border-accent/20 rounded-2xl p-5 space-y-2">
-          <div className="flex items-center gap-2 text-xs font-bold text-accent uppercase tracking-wider">
+        <div className="bg-background-raised border border-border/50 rounded-2xl p-5 space-y-2">
+          <div className="flex items-center gap-2 text-xs font-bold text-foreground-strong uppercase tracking-wider">
             <PenTool className="w-4 h-4" />
             Copy &amp; content
           </div>
@@ -78,7 +78,7 @@ export async function MarketingCategoryContent({
           </p>
           <Link
             href="/category/writing"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-accent hover:text-foreground-strong"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-foreground hover:text-foreground-strong"
           >
             Writing category
             <ArrowRight className="w-3.5 h-3.5" />
@@ -101,8 +101,8 @@ export async function MarketingCategoryContent({
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
-        <div className="bg-background-raised border border-accent/20 rounded-2xl p-5 space-y-2">
-          <div className="flex items-center gap-2 text-xs font-bold text-accent uppercase tracking-wider">
+        <div className="bg-background-raised border border-border/50 rounded-2xl p-5 space-y-2">
+          <div className="flex items-center gap-2 text-xs font-bold text-foreground-strong uppercase tracking-wider">
             <TrendingUp className="w-4 h-4" />
             Workflow hub
           </div>
@@ -112,7 +112,7 @@ export async function MarketingCategoryContent({
           </p>
           <Link
             href="/for/marketers"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-accent hover:text-accent"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-foreground hover:text-foreground-strong"
           >
             Marketers hub
             <ArrowRight className="w-3.5 h-3.5" />
@@ -133,7 +133,7 @@ export async function MarketingCategoryContent({
           <div key={section.slug} className="space-y-4">
             <div className="border-b border-border/50 pb-3 space-y-2">
               <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-accent" />
+                <Sparkles className="w-5 h-5 text-foreground" />
                 {section.title}
               </h2>
               <p className="text-sm text-muted-foreground max-w-3xl leading-relaxed">{section.description}</p>

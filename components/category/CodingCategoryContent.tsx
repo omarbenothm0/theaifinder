@@ -57,7 +57,7 @@ export async function CodingCategoryContent({
       {/* Hero */}
       <PageHero
         badge={
-          <PageHeroAccentBadge icon={<Layers className="w-4 h-4 text-accent" />}>
+          <PageHeroAccentBadge icon={<Layers className="w-4 h-4 text-inverted-foreground/80" />}>
             Category Hub &bull; {curatedCount} Curated {curatedCount === 1 ? 'Tool' : 'Tools'}
           </PageHeroAccentBadge>
         }
@@ -67,8 +67,8 @@ export async function CodingCategoryContent({
 
       {/* Intent split */}
       <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="bg-background-raised border border-accent/20 rounded-2xl p-5 space-y-2">
-          <div className="flex items-center gap-2 text-xs font-bold text-accent uppercase tracking-wider">
+        <div className="bg-background-raised border border-border/50 rounded-2xl p-5 space-y-2">
+          <div className="flex items-center gap-2 text-xs font-bold text-foreground-strong uppercase tracking-wider">
             <Terminal className="w-4 h-4" />
             Agentic repo workflows
           </div>
@@ -78,7 +78,7 @@ export async function CodingCategoryContent({
           </p>
           <Link
             href="/compare/claude-code-vs-cursor"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-accent hover:text-foreground-strong"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-foreground hover:text-foreground-strong"
           >
             Compare Claude Code vs Cursor
             <ArrowRight className="w-3.5 h-3.5" />
@@ -107,9 +107,9 @@ export async function CodingCategoryContent({
       <div className="max-w-4xl mx-auto">
         <Link
           href="/compare/claude-code-vs-cursor"
-          className="inline-flex items-center gap-2 text-xs font-bold text-accent bg-accent/10 border border-accent/20 px-4 py-2.5 rounded-xl hover:bg-accent/15 transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-bold text-foreground bg-foreground/5 border border-border/50 px-4 py-2.5 rounded-xl hover:bg-foreground/5 transition-colors"
         >
-          <Zap className="w-4 h-4 text-accent" />
+          <Zap className="w-4 h-4 text-inverted-foreground/80" />
           Compare Claude Code vs Cursor
           <ArrowRight className="w-3.5 h-3.5" />
         </Link>
@@ -126,7 +126,7 @@ export async function CodingCategoryContent({
           <div key={section.slug} className="space-y-4">
             <div className="border-b border-border/50 pb-3 space-y-2">
               <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-accent" />
+                <Sparkles className="w-5 h-5 text-foreground" />
                 {section.title}
               </h2>
               <p className="text-sm text-muted-foreground max-w-3xl leading-relaxed">{section.description}</p>

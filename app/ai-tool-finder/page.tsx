@@ -36,11 +36,11 @@ export default async function AIToolFinderPage() {
         </ul>
         <p className="text-xs text-muted-foreground">
           Prefer browsing manually?{' '}
-          <Link href="/ai-tools" className="text-accent font-semibold hover:underline inline-flex items-center gap-1">
+          <Link href="/ai-tools" className="text-foreground font-semibold hover:underline inline-flex items-center gap-1">
             Search the full catalog <ArrowRight className="w-3 h-3" />
           </Link>
           {' '}or explore{' '}
-          <Link href="/ai-tools-directory" className="text-accent font-semibold hover:underline">
+          <Link href="/ai-tools-directory" className="text-foreground font-semibold hover:underline">
             categories by topic
           </Link>.
         </p>

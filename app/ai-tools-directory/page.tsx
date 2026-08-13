@@ -30,7 +30,7 @@ export default async function AIToolsDirectoryPage() {
     <div className="space-y-12">
       <PageHero
         badge={
-          <PageHeroAccentBadge icon={<Database className="w-4 h-4 text-accent" />}>
+          <PageHeroAccentBadge icon={<Database className="w-4 h-4 text-inverted-foreground/80" />}>
             Full Taxonomy Sitemap
           </PageHeroAccentBadge>
         }
@@ -42,7 +42,7 @@ export default async function AIToolsDirectoryPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between border-b border-border/50 pb-3">
           <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
-            <Layers className="w-5 h-5 text-accent" />
+            <Layers className="w-5 h-5 text-foreground" />
             Software Categories ({categories.length})
           </h2>
         </div>

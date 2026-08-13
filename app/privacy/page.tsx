@@ -122,8 +122,8 @@ export default function PrivacyPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-12 pb-16">
       <header className="space-y-4 text-center">
-        <div className="inline-flex items-center gap-1.5 bg-accent/10 border border-accent/30 text-accent px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-          <ShieldCheck className="w-4 h-4 text-accent" />
+        <div className="inline-flex items-center gap-1.5 bg-background-raised border border-border/50 text-foreground px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
+          <ShieldCheck className="w-4 h-4 text-verified" />
           Privacy Policy
         </div>
         <h1 className="text-3xl sm:text-5xl font-medium tracking-tight text-foreground-strong">
@@ -143,7 +143,7 @@ export default function PrivacyPage() {
             className="bg-background-raised rounded-2xl border border-border/50 shadow-sm p-6 sm:p-8 space-y-4"
           >
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-accent/10 text-accent flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-foreground/5 text-foreground flex items-center justify-center shrink-0">
                 <Icon className="w-5 h-5" />
               </div>
               <h2 className="text-lg font-medium tracking-tight text-foreground-strong">{title}</h2>
@@ -154,7 +154,7 @@ export default function PrivacyPage() {
                   key={idx}
                   className="text-sm text-foreground leading-relaxed flex gap-2.5"
                 >
-                  <span className="mt-[0.55rem] w-1.5 h-1.5 shrink-0 rounded-full bg-accent" />
+                  <span className="mt-[0.55rem] w-1.5 h-1.5 shrink-0 rounded-full bg-foreground" />
                   <span>{line}</span>
                 </li>
               ))}

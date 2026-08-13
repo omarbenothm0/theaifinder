@@ -143,9 +143,9 @@ export default function TermsPage() {
         </p>
       </header>
 
-      <div className="bg-accent/10 border border-accent/20 rounded-2xl p-5 sm:p-6 flex gap-4 items-start">
-        <CheckCircle2 className="w-5 h-5 shrink-0 text-accent mt-0.5" />
-        <p className="text-sm text-accent leading-relaxed">
+      <div className="bg-background-raised border border-border/50 rounded-2xl p-5 sm:p-6 flex gap-4 items-start">
+        <CheckCircle2 className="w-5 h-5 shrink-0 text-foreground mt-0.5" />
+        <p className="text-sm text-foreground leading-relaxed">
           <strong className="font-medium">Short version:</strong> Use the directory ethically,
           do not scrape it, be honest in reviews, and understand that tool metadata is best-effort
           editorial information rather than a vendor-validated contract. The full legal terms

@@ -59,7 +59,7 @@ export async function ProjectManagementCategoryContent({
       {/* Hero */}
       <PageHero
         badge={
-          <PageHeroAccentBadge icon={<Layers className="w-4 h-4 text-accent" />}>
+          <PageHeroAccentBadge icon={<Layers className="w-4 h-4 text-inverted-foreground/80" />}>
             Category Hub &bull; {curatedCount} Curated {curatedCount === 1 ? 'Tool' : 'Tools'}
           </PageHeroAccentBadge>
         }
@@ -69,8 +69,8 @@ export async function ProjectManagementCategoryContent({
 
       {/* Intent split */}
       <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-background-raised border border-accent/20 rounded-2xl p-5 space-y-2">
-          <div className="flex items-center gap-2 text-xs font-bold text-accent uppercase tracking-wider">
+        <div className="bg-background-raised border border-border/50 rounded-2xl p-5 space-y-2">
+          <div className="flex items-center gap-2 text-xs font-bold text-foreground-strong uppercase tracking-wider">
             <Mic className="w-4 h-4" />
             Meeting notes
           </div>
@@ -80,7 +80,7 @@ export async function ProjectManagementCategoryContent({
           </p>
           <Link
             href="/for/project-managers/meeting-notes"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-accent hover:text-foreground-strong"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-foreground hover:text-foreground-strong"
           >
             Meeting notes guide
             <ArrowRight className="w-3.5 h-3.5" />
@@ -103,8 +103,8 @@ export async function ProjectManagementCategoryContent({
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
-        <div className="bg-background-raised border border-accent/20 rounded-2xl p-5 space-y-2">
-          <div className="flex items-center gap-2 text-xs font-bold text-accent uppercase tracking-wider">
+        <div className="bg-background-raised border border-border/50 rounded-2xl p-5 space-y-2">
+          <div className="flex items-center gap-2 text-xs font-bold text-foreground-strong uppercase tracking-wider">
             <FileText className="w-4 h-4" />
             Reporting &amp; decks
           </div>
@@ -114,7 +114,7 @@ export async function ProjectManagementCategoryContent({
           </p>
           <Link
             href="/for/project-managers/project-reporting"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-accent hover:text-accent"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-foreground hover:text-foreground-strong"
           >
             Project reporting guide
             <ArrowRight className="w-3.5 h-3.5" />
@@ -126,9 +126,9 @@ export async function ProjectManagementCategoryContent({
       <div className="max-w-4xl mx-auto">
         <Link
           href="/for/project-managers"
-          className="inline-flex items-center gap-2 text-xs font-bold text-accent bg-accent/10 border border-accent/20 px-4 py-2.5 rounded-xl hover:bg-accent/15 transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-bold text-foreground bg-foreground/5 border border-border/50 px-4 py-2.5 rounded-xl hover:bg-foreground/5 transition-colors"
         >
-          <ClipboardList className="w-4 h-4 text-accent" />
+          <ClipboardList className="w-4 h-4 text-inverted-foreground/80" />
           Project Managers workflow hub
           <ArrowRight className="w-3.5 h-3.5" />
         </Link>
@@ -138,9 +138,9 @@ export async function ProjectManagementCategoryContent({
       <div className="max-w-4xl mx-auto flex flex-wrap gap-3">
         <Link
           href="/compare/otter-ai-vs-fireflies-ai"
-          className="inline-flex items-center gap-2 text-xs font-bold text-accent bg-accent/10 border border-accent/20 px-4 py-2.5 rounded-xl hover:bg-accent/15 transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-bold text-foreground bg-foreground/5 border border-border/50 px-4 py-2.5 rounded-xl hover:bg-foreground/5 transition-colors"
         >
-          <Zap className="w-4 h-4 text-accent" />
+          <Zap className="w-4 h-4 text-inverted-foreground/80" />
           Otter.ai vs Fireflies.ai
           <ArrowRight className="w-3.5 h-3.5" />
         </Link>
@@ -154,9 +154,9 @@ export async function ProjectManagementCategoryContent({
         </Link>
         <Link
           href="/compare/sembly-ai-vs-onplana-status-report-writer"
-          className="inline-flex items-center gap-2 text-xs font-bold text-accent bg-accent/10 border border-accent/20 px-4 py-2.5 rounded-xl hover:bg-accent/15 transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-bold text-foreground bg-foreground/5 border border-border/50 px-4 py-2.5 rounded-xl hover:bg-foreground/5 transition-colors"
         >
-          <Zap className="w-4 h-4 text-accent" />
+          <Zap className="w-4 h-4 text-inverted-foreground/80" />
           Sembly AI vs Onplana
           <ArrowRight className="w-3.5 h-3.5" />
         </Link>
@@ -173,7 +173,7 @@ export async function ProjectManagementCategoryContent({
           <div key={section.slug} className="space-y-4">
             <div className="border-b border-border/50 pb-3 space-y-2">
               <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-accent" />
+                <Sparkles className="w-5 h-5 text-foreground" />
                 {section.title}
               </h2>
               <p className="text-sm text-muted-foreground max-w-3xl leading-relaxed">{section.description}</p>

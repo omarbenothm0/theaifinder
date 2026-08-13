@@ -121,12 +121,32 @@
 .home-intent-card {
   border-radius: 1rem;
   background: var(--background-raised);
-  border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+  border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .home-intent-card:hover {
-  border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+  border-color: color-mix(in srgb, var(--border) 90%, transparent);
+}
+
+/* Neutral hub navigation chip */
+.home-hub-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+  background: var(--background);
+  padding: 0.625rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--foreground);
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.home-hub-chip:hover {
+  background: color-mix(in srgb, var(--foreground) 5%, transparent);
+  border-color: color-mix(in srgb, var(--border) 80%, transparent);
 }
 
 /* Secondary intent lane — tokenized existing violet appearance */

@@ -109,8 +109,8 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
     <div className="space-y-8">
       {/* Header Banner */}
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-1.5 bg-accent/10 border border-accent/20 text-accent px-3.5 py-1 rounded-full text-xs font-semibold">
-          <Compass className="w-3.5 h-3.5 text-accent" />
+        <div className="inline-flex items-center gap-1.5 bg-background border border-border/50 text-foreground px-3.5 py-1 rounded-full text-xs font-semibold">
+          <Compass className="w-3.5 h-3.5 text-muted-foreground" />
           Interactive AI Recommendation Engine
         </div>
         <h1 className="text-3xl sm:text-4xl font-medium text-foreground-strong tracking-tight">AI Tool Finder</h1>
@@ -121,7 +121,7 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
 
       {/* Step Progress Bar */}
       <div className="bg-background-raised rounded-2xl border border-border/50/80 p-4 shadow-2xs flex items-center justify-between text-xs font-bold text-muted-foreground">
-        <div className={`flex items-center gap-2 ${step >= 1 ? 'text-accent' : ''}`}>
+        <div className={`flex items-center gap-2 ${step >= 1 ? 'text-foreground-strong' : ''}`}>
           <span className={`w-6 h-6 rounded-full flex items-center justify-center ${step >= 1 ? 'bg-primary text-primary-foreground' : 'bg-foreground/5'}`}>
             1
           </span>
@@ -129,7 +129,7 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
         </div>
         <div className="w-12 h-0.5 bg-border"></div>
 
-        <div className={`flex items-center gap-2 ${step >= 2 ? 'text-accent' : ''}`}>
+        <div className={`flex items-center gap-2 ${step >= 2 ? 'text-foreground-strong' : ''}`}>
           <span className={`w-6 h-6 rounded-full flex items-center justify-center ${step >= 2 ? 'bg-primary text-primary-foreground' : 'bg-foreground/5'}`}>
             2
           </span>
@@ -137,7 +137,7 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
         </div>
         <div className="w-12 h-0.5 bg-border"></div>
 
-        <div className={`flex items-center gap-2 ${step >= 3 ? 'text-accent' : ''}`}>
+        <div className={`flex items-center gap-2 ${step >= 3 ? 'text-foreground-strong' : ''}`}>
           <span className={`w-6 h-6 rounded-full flex items-center justify-center ${step >= 3 ? 'bg-primary text-primary-foreground' : 'bg-foreground/5'}`}>
             3
           </span>
@@ -145,7 +145,7 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
         </div>
         <div className="w-12 h-0.5 bg-border"></div>
 
-        <div className={`flex items-center gap-2 ${step === 4 ? 'text-accent' : ''}`}>
+        <div className={`flex items-center gap-2 ${step === 4 ? 'text-foreground-strong' : ''}`}>
           <span className={`w-6 h-6 rounded-full flex items-center justify-center ${step === 4 ? 'bg-primary text-primary-foreground' : 'bg-foreground/5'}`}>
             4
           </span>
@@ -160,7 +160,7 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
         {step === 1 && (
           <div className="space-y-6 animate-in fade-in duration-200">
             <div className="space-y-1">
-              <span className="text-xs font-bold uppercase tracking-wider text-accent flex items-center gap-1">
+              <span className="text-xs font-bold uppercase tracking-wider text-foreground-strong flex items-center gap-1">
                 <Layers className="w-3.5 h-3.5" />
                 Step 1 of 3
               </span>
@@ -191,13 +191,13 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
                   onClick={() => setUseCase(item.id)}
                   className={`p-4 rounded-2xl border text-left transition-all cursor-pointer ${
                     useCase === item.id
-                      ? 'border-accent bg-accent/10 shadow-2xs font-bold text-foreground-strong'
+                      ? 'border-verified-border bg-verified-muted shadow-2xs font-bold text-foreground-strong'
                       : 'border-border/50 hover:border-border text-foreground hover:bg-background'
                   }`}
                 >
                   <div className="text-sm font-bold text-foreground-strong mb-1 flex items-center justify-between">
                     <span>{item.name}</span>
-                    {useCase === item.id && <CheckCircle2 className="w-4 h-4 text-accent" />}
+                    {useCase === item.id && <CheckCircle2 className="w-4 h-4 text-verified" />}
                   </div>
                   <p className="text-xs text-muted-foreground font-normal leading-relaxed">{item.desc}</p>
                 </button>
@@ -210,7 +210,7 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
                 className="bg-inverted hover:bg-inverted-foreground/10 text-primary-foreground font-bold text-xs px-6 py-3 rounded-xl transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs"
               >
                 <span>Next: Your Role</span>
-                <ArrowRight className="w-4 h-4 text-accent" />
+                <ArrowRight className="w-4 h-4 text-inverted-foreground/80" />
               </button>
             </div>
           </div>
@@ -220,7 +220,7 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
         {step === 2 && (
           <div className="space-y-6 animate-in fade-in duration-200">
             <div className="space-y-1">
-              <span className="text-xs font-bold uppercase tracking-wider text-accent flex items-center gap-1">
+              <span className="text-xs font-bold uppercase tracking-wider text-foreground-strong flex items-center gap-1">
                 <Users className="w-3.5 h-3.5" />
                 Step 2 of 3
               </span>
@@ -235,13 +235,13 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
                   onClick={() => setRole(item.id)}
                   className={`p-4 rounded-2xl border text-left transition-all cursor-pointer ${
                     role === item.id
-                      ? 'border-accent bg-accent/10 shadow-2xs font-bold text-foreground-strong'
+                      ? 'border-verified-border bg-verified-muted shadow-2xs font-bold text-foreground-strong'
                       : 'border-border/50 hover:border-border text-foreground hover:bg-background'
                   }`}
                 >
                   <div className="text-sm font-bold text-foreground-strong flex items-center justify-between">
                     <span>{item.name}</span>
-                    {role === item.id && <CheckCircle2 className="w-4 h-4 text-accent" />}
+                    {role === item.id && <CheckCircle2 className="w-4 h-4 text-verified" />}
                   </div>
                 </button>
               ))}
@@ -259,7 +259,7 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
                 className="bg-inverted hover:bg-inverted-foreground/10 text-primary-foreground font-bold text-xs px-6 py-3 rounded-xl transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs"
               >
                 <span>Next: Budget</span>
-                <ArrowRight className="w-4 h-4 text-accent" />
+                <ArrowRight className="w-4 h-4 text-inverted-foreground/80" />
               </button>
             </div>
           </div>
@@ -269,7 +269,7 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
         {step === 3 && (
           <div className="space-y-6 animate-in fade-in duration-200">
             <div className="space-y-1">
-              <span className="text-xs font-bold uppercase tracking-wider text-accent flex items-center gap-1">
+              <span className="text-xs font-bold uppercase tracking-wider text-foreground-strong flex items-center gap-1">
                 <DollarSign className="w-3.5 h-3.5" />
                 Step 3 of 3
               </span>
@@ -288,13 +288,13 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
                   onClick={() => setBudgetPreference(item.id)}
                   className={`w-full p-4 rounded-2xl border text-left transition-all cursor-pointer ${
                     budgetPreference === item.id
-                      ? 'border-accent bg-accent/10 shadow-2xs font-bold text-foreground-strong'
+                      ? 'border-verified-border bg-verified-muted shadow-2xs font-bold text-foreground-strong'
                       : 'border-border/50 hover:border-border text-foreground hover:bg-background'
                   }`}
                 >
                   <div className="text-sm font-bold text-foreground-strong mb-1 flex items-center justify-between">
                     <span>{item.name}</span>
-                    {budgetPreference === item.id && <CheckCircle2 className="w-4 h-4 text-accent" />}
+                    {budgetPreference === item.id && <CheckCircle2 className="w-4 h-4 text-verified" />}
                   </div>
                   <p className="text-xs text-muted-foreground font-normal leading-relaxed">{item.desc}</p>
                 </button>
@@ -325,7 +325,7 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
           <div className="space-y-8 animate-in fade-in duration-300">
             <div className="flex items-center justify-between border-b border-border/30 pb-4">
               <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-accent flex items-center gap-1">
+                <span className="text-xs font-bold uppercase tracking-wider text-foreground-strong flex items-center gap-1">
                   <CheckCircle2 className="w-4 h-4" />
                   Matching Evaluation Complete
                 </span>
@@ -344,8 +344,8 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
             <div className="space-y-6">
               {results.map((resItem, idx) => (
                 <div key={resItem.tool.id} className="relative">
-                  <div className="absolute -top-3 right-4 z-10 bg-inverted text-inverted-foreground text-[11px] font-medium px-3 py-1 rounded-full shadow-md flex items-center gap-1 border border-accent/40">
-                    <Sparkles className="w-3 h-3 text-accent" />
+                  <div className="absolute -top-3 right-4 z-10 bg-inverted text-inverted-foreground text-[11px] font-medium px-3 py-1 rounded-full shadow-md flex items-center gap-1 border border-border/60">
+                    <Sparkles className="w-3 h-3 text-muted-foreground" />
                     <span>#{idx + 1} Match &bull; {resItem.score}% Fit Score</span>
                   </div>
 
@@ -358,8 +358,8 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
                         <span className="font-bold text-foreground-strong block mb-1">Why this was recommended for you:</span>
                         <ul className="space-y-1">
                           {resItem.matchReasons.map((reason, rIdx) => (
-                            <li key={rIdx} className="flex items-center gap-1.5 text-accent">
-                              <CheckCircle2 className="w-3.5 h-3.5 text-accent shrink-0" />
+                            <li key={rIdx} className="flex items-center gap-1.5 text-success-foreground">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-verified shrink-0" />
                               <span>{reason}</span>
                             </li>
                           ))}

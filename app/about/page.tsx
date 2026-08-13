@@ -21,7 +21,7 @@ export default function AboutPage() {
       <PageHero
         maxWidth="5xl"
         badge={
-          <PageHeroAccentBadge icon={<Sparkles className="w-4 h-4 text-accent" />}>
+          <PageHeroAccentBadge icon={<Sparkles className="w-4 h-4 text-inverted-foreground/80" />}>
             About {SITE_NAME}
           </PageHeroAccentBadge>
         }
@@ -29,7 +29,7 @@ export default function AboutPage() {
           <>
             Independent AI Tools Discovery,
             <br />
-            <span className="text-accent">Built by Practitioners</span>
+            <span className="text-inverted-foreground">Built by Practitioners</span>
           </>
         }
         description={`${SITE_NAME} is a curated directory of the world's best artificial intelligence software. We help professionals, creators and teams discover the right AI tools for their workflow - with honest reviews, head-to-head comparisons and verified pricing data.`}
@@ -62,7 +62,7 @@ export default function AboutPage() {
             key={title}
             className="bg-background-raised rounded-2xl border border-border/50 shadow-sm p-6 sm:p-7 space-y-2.5"
           >
-            <div className="w-11 h-11 rounded-xl bg-accent/10 text-accent flex items-center justify-center">
+            <div className="w-11 h-11 rounded-xl bg-foreground/5 text-foreground flex items-center justify-center">
               <Icon className="w-5 h-5" />
             </div>
             <h2 className="text-lg font-medium tracking-tight text-foreground-strong">{title}</h2>
@@ -71,9 +71,9 @@ export default function AboutPage() {
         ))}
       </section>
 
-      <section className="max-w-5xl mx-auto bg-gradient-to-br from-accent/5 via-background-raised to-rating/5 rounded-3xl border border-border/50 p-8 sm:p-10 space-y-6">
+      <section className="max-w-5xl mx-auto bg-gradient-to-br from-foreground/5 via-background-raised to-rating/5 rounded-3xl border border-border/50 p-8 sm:p-10 space-y-6">
         <div className="flex items-center gap-2.5">
-          <Award className="w-6 h-6 text-accent" />
+          <Award className="w-6 h-6 text-foreground" />
           <h2 className="text-2xl font-medium tracking-tight text-foreground-strong">
             Our Editorial Principles
           </h2>
@@ -100,7 +100,7 @@ export default function AboutPage() {
       <section className="max-w-3xl mx-auto text-center space-y-5">
         <div className="inline-flex items-center gap-2">
           <Heart className="w-4 h-4 text-rose-500" />
-          <ShieldCheck className="w-4 h-4 text-accent" />
+          <ShieldCheck className="w-4 h-4 text-verified" />
         </div>
         <h2 className="text-2xl font-medium tracking-tight text-foreground-strong">
           Thank you for trusting {SITE_NAME}
@@ -109,7 +109,7 @@ export default function AboutPage() {
           Questions about our methodology, want to suggest a tool, or interested in partnering?{' '}
           <a
             href="/contact"
-            className="font-semibold text-accent hover:text-accent underline decoration-accent/40 underline-offset-2"
+            className="font-semibold text-foreground hover:text-foreground-strong underline decoration-border underline-offset-2"
           >
             Reach out to our team &rarr;
           </a>

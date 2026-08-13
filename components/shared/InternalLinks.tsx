@@ -46,14 +46,14 @@ export function InternalLinks({
     return null;
   }
 
-  const sectionIcon = 'w-3.5 h-3.5 text-accent';
+  const sectionIcon = 'w-3.5 h-3.5 text-inverted-foreground/80';
   const linkClass =
-    'text-inverted-foreground/70 hover:text-accent font-medium flex items-center justify-between group py-1 transition-colors';
+    'text-inverted-foreground/70 hover:text-inverted-foreground font-medium flex items-center justify-between group py-1 transition-colors';
 
   return (
     <div className="bg-inverted text-inverted-foreground rounded-2xl p-6 sm:p-8 space-y-8 my-12 border border-inverted-foreground/20">
       <div className="flex items-center gap-2">
-        <Sparkles className="w-5 h-5 text-accent" />
+        <Sparkles className="w-5 h-5 text-inverted-foreground/80" />
         <h3 className="text-lg font-medium text-inverted-foreground">{title}</h3>
       </div>
 
@@ -69,7 +69,7 @@ export function InternalLinks({
                 <li key={cat.slug}>
                   <Link href={`/category/${cat.slug}`} className={linkClass}>
                     <span>{cat.name}</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-inverted-foreground/40 group-hover:translate-x-1 group-hover:text-accent transition-all" />
+                    <ArrowRight className="w-3.5 h-3.5 text-inverted-foreground/40 group-hover:translate-x-1 group-hover:text-inverted-foreground transition-all" />
                   </Link>
                 </li>
               ))}
@@ -88,7 +88,7 @@ export function InternalLinks({
                 <li key={p.slug}>
                   <Link href={`/for/${p.slug}`} className={linkClass}>
                     <span>{p.title}</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-inverted-foreground/40 group-hover:translate-x-1 group-hover:text-accent transition-all" />
+                    <ArrowRight className="w-3.5 h-3.5 text-inverted-foreground/40 group-hover:translate-x-1 group-hover:text-inverted-foreground transition-all" />
                   </Link>
                 </li>
               ))}
@@ -107,7 +107,7 @@ export function InternalLinks({
                 <li key={comp.slug}>
                   <Link href={`/compare/${comp.slug}`} className={linkClass}>
                     <span>{comp.title}</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-inverted-foreground/40 group-hover:translate-x-1 group-hover:text-accent transition-all" />
+                    <ArrowRight className="w-3.5 h-3.5 text-inverted-foreground/40 group-hover:translate-x-1 group-hover:text-inverted-foreground transition-all" />
                   </Link>
                 </li>
               ))}

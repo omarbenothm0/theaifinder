@@ -82,7 +82,7 @@ export default function ContactPage() {
       <PageHero
         maxWidth="5xl"
         badge={
-          <PageHeroAccentBadge icon={<Mail className="w-4 h-4 text-accent" />}>
+          <PageHeroAccentBadge icon={<Mail className="w-4 h-4 text-inverted-foreground/80" />}>
             Contact
           </PageHeroAccentBadge>
         }
@@ -95,21 +95,21 @@ export default function ContactPage() {
           <a
             key={key}
             href={`mailto:${email}?subject=${encodeURIComponent(SITE_NAME)}%20-%20${encodeURIComponent(label)}`}
-            className="group bg-background-raised rounded-2xl border border-border/50 hover:border-accent/30 shadow-sm hover:shadow-md p-6 space-y-3 transition-all"
+            className="group bg-background-raised rounded-2xl border border-border/50 hover:border-border shadow-sm hover:shadow-md p-6 space-y-3 transition-all"
           >
             <div className="flex items-center justify-between">
-              <div className="w-11 h-11 rounded-xl bg-accent/10 text-accent flex items-center justify-center group-hover:bg-accent/15 transition-colors">
+              <div className="w-11 h-11 rounded-xl bg-foreground/5 text-foreground flex items-center justify-center group-hover:bg-foreground/5 transition-colors">
                 <Icon className="w-5 h-5" />
               </div>
-              <Send className="w-4 h-4 text-inverted-foreground/70 group-hover:text-accent transition-colors" />
+              <Send className="w-4 h-4 text-muted-foreground group-hover:text-foreground-strong transition-colors" />
             </div>
             <div className="space-y-1">
-              <h2 className="text-sm font-medium text-foreground-strong group-hover:text-accent transition-colors">
+              <h2 className="text-sm font-medium text-foreground-strong group-hover:text-foreground-strong transition-colors">
                 {label}
               </h2>
               <p className="text-xs text-muted-foreground leading-relaxed">{detail}</p>
             </div>
-            <code className="block text-[11px] font-mono font-semibold text-accent bg-accent/10 border border-accent/20 px-2.5 py-1.5 rounded-lg">
+            <code className="block text-[11px] font-mono font-semibold text-foreground bg-foreground/5 border border-border/50 px-2.5 py-1.5 rounded-lg">
               {email}
             </code>
           </a>
@@ -134,7 +134,7 @@ export default function ContactPage() {
                 name="name"
                 type="text"
                 placeholder="Your name"
-                className="w-full bg-background border border-border/50 rounded-xl px-3.5 py-2.5 text-sm text-foreground-strong focus:outline-none focus:ring-2 focus:ring-accent"
+                className="w-full bg-background border border-border/50 rounded-xl px-3.5 py-2.5 text-sm text-foreground-strong focus:outline-none focus:ring-2 focus:ring-foreground/20"
               />
             </div>
             <div>
@@ -144,7 +144,7 @@ export default function ContactPage() {
                 name="email"
                 type="email"
                 placeholder="you@company.com"
-                className="w-full bg-background border border-border/50 rounded-xl px-3.5 py-2.5 text-sm text-foreground-strong focus:outline-none focus:ring-2 focus:ring-accent"
+                className="w-full bg-background border border-border/50 rounded-xl px-3.5 py-2.5 text-sm text-foreground-strong focus:outline-none focus:ring-2 focus:ring-foreground/20"
               />
             </div>
             <div className="sm:col-span-2">
@@ -152,7 +152,7 @@ export default function ContactPage() {
               <select
                 name="topic"
                 defaultValue="general"
-                className="w-full bg-background border border-border/50 rounded-xl px-3.5 py-2.5 text-sm text-foreground-strong focus:outline-none focus:ring-2 focus:ring-accent"
+                className="w-full bg-background border border-border/50 rounded-xl px-3.5 py-2.5 text-sm text-foreground-strong focus:outline-none focus:ring-2 focus:ring-foreground/20"
               >
                 {REASONS.map((r) => (
                   <option key={r.key} value={r.key}>
@@ -168,7 +168,7 @@ export default function ContactPage() {
                 rows={6}
                 name="message"
                 placeholder="Tell us what you need..."
-                className="w-full bg-background border border-border/50 rounded-xl px-3.5 py-2.5 text-sm text-foreground-strong focus:outline-none focus:ring-2 focus:ring-accent resize-none"
+                className="w-full bg-background border border-border/50 rounded-xl px-3.5 py-2.5 text-sm text-foreground-strong focus:outline-none focus:ring-2 focus:ring-foreground/20 resize-none"
               />
             </div>
             <div className="sm:col-span-2 pt-1">
@@ -184,12 +184,12 @@ export default function ContactPage() {
         </div>
 
         <aside className="bg-gradient-to-br from-inverted to-inverted text-inverted-foreground rounded-2xl shadow-sm p-7 sm:p-8 space-y-5">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-accent">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-foreground-strong">
             Response Times
           </h3>
           <ul className="space-y-3.5 text-xs text-inverted-foreground/80">
             <li className="flex gap-3">
-              <Clock3 className="w-4 h-4 shrink-0 text-accent mt-0.5" />
+              <Clock3 className="w-4 h-4 shrink-0 text-muted-foreground mt-0.5" />
               <span>
                 <strong className="text-inverted-foreground">Editorial / Listings:</strong> within 24 hours on
                 business days.
@@ -219,7 +219,7 @@ export default function ContactPage() {
               <ShieldAlert className="w-3.5 h-3.5 shrink-0 text-muted-foreground mt-0.5" />
               <span>
                 For security disclosures please email{' '}
-                <code className="bg-inverted-foreground/10 text-accent rounded px-1.5 py-0.5">
+                <code className="bg-inverted-foreground/10 text-foreground rounded px-1.5 py-0.5">
                   security@aifind.io
                 </code>
                 .

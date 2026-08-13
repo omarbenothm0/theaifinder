@@ -14,7 +14,7 @@ export function StudentHubSections({ sections, heading = 'Student Workflows' }: 
     <div className="space-y-10">
       <div className="flex items-center justify-between border-b border-border/50 pb-3">
         <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
-          <Layers className="w-5 h-5 text-accent" />
+          <Layers className="w-5 h-5 text-foreground" />
           {heading}
         </h2>
       </div>

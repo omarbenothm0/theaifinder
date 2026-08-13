@@ -98,7 +98,7 @@ export function ToolCatalogClient({
     <div className="space-y-8">
       <PageHero
         badge={
-          <PageHeroAccentBadge icon={<Sparkles className="w-3 h-3 text-accent" />}>
+          <PageHeroAccentBadge icon={<Sparkles className="w-3 h-3 text-muted-foreground" />}>
             Taxonomy Catalog &bull; {totalCount} AI Tools
           </PageHeroAccentBadge>
         }
@@ -111,7 +111,7 @@ export function ToolCatalogClient({
             placeholder="Filter by name, keyword, capability, or tag..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-inverted-foreground/10 border border-inverted-foreground/20 rounded-2xl pl-11 pr-4 py-3 text-sm text-inverted-foreground placeholder:text-inverted-foreground/40 focus:outline-none focus:ring-2 focus:ring-accent shadow-inner"
+            className="w-full bg-inverted-foreground/10 border border-inverted-foreground/20 rounded-2xl pl-11 pr-4 py-3 text-sm text-inverted-foreground placeholder:text-inverted-foreground/40 focus:outline-none focus:ring-2 focus:ring-foreground/20 shadow-inner"
           />
           <Search className="w-5 h-5 text-inverted-foreground/50 absolute left-4 top-3.5" />
         </div>

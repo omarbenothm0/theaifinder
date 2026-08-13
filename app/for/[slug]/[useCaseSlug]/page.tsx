@@ -122,7 +122,7 @@ export default async function PersonaUseCasePage({
         <PageHero
           titleSize="compact"
           badge={
-            <PageHeroAccentBadge icon={<Kanban className="w-4 h-4 text-accent" />}>
+            <PageHeroAccentBadge icon={<Kanban className="w-4 h-4 text-inverted-foreground/80" />}>
               {page.persona.title} &bull; {page.useCase.title}
             </PageHeroAccentBadge>
           }
@@ -141,7 +141,7 @@ export default async function PersonaUseCasePage({
         <div key={section.key} className="space-y-4">
           <div className="flex items-center justify-between border-b border-border/50 pb-3">
             <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-accent" />
+              <CheckCircle2 className="w-5 h-5 text-foreground" />
               {section.label} ({section.tools.length})
             </h2>
           </div>

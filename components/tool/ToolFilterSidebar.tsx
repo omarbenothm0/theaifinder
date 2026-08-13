@@ -128,7 +128,7 @@ export function ToolFilterSidebar({
             }`}
           >
             <span>All Categories</span>
-            {(!filters.category || filters.category === 'all') && <Check className="w-3.5 h-3.5 text-accent" />}
+            {(!filters.category || filters.category === 'all') && <Check className="w-3.5 h-3.5 text-verified" />}
           </button>
 
           {categories.map((cat) => {
@@ -146,7 +146,7 @@ export function ToolFilterSidebar({
                   <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${isSelected ? 'bg-inverted-foreground/15 text-inverted-foreground/80' : 'bg-foreground/5 text-muted-foreground'}`}>
                     {cat.toolCount}
                   </span>
-                  {isSelected && <Check className="w-3.5 h-3.5 text-accent" />}
+                  {isSelected && <Check className="w-3.5 h-3.5 text-verified" />}
                 </div>
               </button>
             );
@@ -167,7 +167,7 @@ export function ToolFilterSidebar({
             }`}
           >
             <span>All Roles</span>
-            {(!filters.persona || filters.persona === 'all') && <Check className="w-3.5 h-3.5 text-accent" />}
+            {(!filters.persona || filters.persona === 'all') && <Check className="w-3.5 h-3.5 text-verified" />}
           </button>
 
           {visiblePersonas.map((p) => {
@@ -181,7 +181,7 @@ export function ToolFilterSidebar({
                 }`}
               >
                 <span className="truncate">{p.title}</span>
-                {isSelected && <Check className="w-3.5 h-3.5 text-accent" />}
+                {isSelected && <Check className="w-3.5 h-3.5 text-verified" />}
               </button>
             );
           })}
@@ -206,7 +206,7 @@ export function ToolFilterSidebar({
                 type="checkbox"
                 checked={!!filters[key]}
                 onChange={() => handleToggleFeature(key)}
-                className="rounded border-border text-primary focus:ring-accent"
+                className="rounded border-border text-primary focus:ring-foreground/20"
               />
               <span>{label}</span>
             </label>

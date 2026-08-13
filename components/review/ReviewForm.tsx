@@ -105,7 +105,7 @@ export function ReviewForm({ toolSlug, toolName }: ReviewFormProps) {
             onChange={(e) => setAuthorName(e.target.value)}
             maxLength={80}
             placeholder="Anonymous"
-            className="w-full bg-background border border-border/50 rounded-xl px-3 py-2 text-sm text-foreground-strong placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/30"
+            className="w-full bg-background border border-border/50 rounded-xl px-3 py-2 text-sm text-foreground-strong placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20"
           />
         </div>
         <div>
@@ -119,7 +119,7 @@ export function ReviewForm({ toolSlug, toolName }: ReviewFormProps) {
             onChange={(e) => setEmail(e.target.value)}
             maxLength={254}
             placeholder="you@example.com"
-            className="w-full bg-background border border-border/50 rounded-xl px-3 py-2 text-sm text-foreground-strong placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/30"
+            className="w-full bg-background border border-border/50 rounded-xl px-3 py-2 text-sm text-foreground-strong placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20"
           />
         </div>
       </div>
@@ -137,7 +137,7 @@ export function ReviewForm({ toolSlug, toolName }: ReviewFormProps) {
           rows={4}
           required
           placeholder="Share your experience with this tool (min 10 characters)..."
-          className="w-full bg-background border border-border/50 rounded-xl px-3 py-2 text-sm text-foreground-strong placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/30 resize-y"
+          className="w-full bg-background border border-border/50 rounded-xl px-3 py-2 text-sm text-foreground-strong placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 resize-y"
         />
         <p className="text-[10px] text-muted-foreground mt-1">{comment.length}/2000</p>
       </div>
@@ -145,7 +145,7 @@ export function ReviewForm({ toolSlug, toolName }: ReviewFormProps) {
       {message && (
         <p
           className={`text-xs font-medium ${
-            status === 'success' ? 'text-accent' : 'text-destructive'
+            status === 'success' ? 'text-success-foreground' : 'text-destructive'
           }`}
         >
           {message}

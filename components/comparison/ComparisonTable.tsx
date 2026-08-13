@@ -102,10 +102,10 @@ export function ComparisonTable({ comparison, tool1, tool2 }: ComparisonTablePro
         <div className="p-5 bg-inverted text-inverted-foreground flex items-center justify-between">
           <div>
             <h3 className="text-base font-medium flex items-center gap-2">
-              <Zap className="w-4 h-4 text-accent" />
+              <Zap className="w-4 h-4 text-inverted-foreground/80" />
               Feature Comparison Matrix
             </h3>
-            <p className="text-xs text-muted-foreground">Direct head-to-head evaluation parameters</p>
+            <p className="text-xs text-inverted-foreground/70">Direct head-to-head evaluation parameters</p>
           </div>
         </div>
 
@@ -122,15 +122,15 @@ export function ComparisonTable({ comparison, tool1, tool2 }: ComparisonTablePro
               {comparison.featureBreakdown.map((row, idx) => (
                 <tr key={idx} className="hover:bg-background/80 transition-colors">
                   <td className="p-4 font-semibold text-foreground-strong bg-background/50">{row.feature}</td>
-                  <td className={`p-4 ${row.winnerSlug === tool1.slug ? 'bg-accent/10 font-bold text-foreground-strong' : ''}`}>
+                  <td className={`p-4 ${row.winnerSlug === tool1.slug ? 'bg-success-muted font-bold text-foreground-strong' : ''}`}>
                     <div className="flex items-center gap-1.5">
-                      {row.winnerSlug === tool1.slug && <CheckCircle2 className="w-4 h-4 text-accent shrink-0" />}
+                      {row.winnerSlug === tool1.slug && <CheckCircle2 className="w-4 h-4 text-verified shrink-0" />}
                       <span>{row.tool1Value}</span>
                     </div>
                   </td>
-                  <td className={`p-4 ${row.winnerSlug === tool2.slug ? 'bg-accent/10 font-bold text-foreground-strong' : ''}`}>
+                  <td className={`p-4 ${row.winnerSlug === tool2.slug ? 'bg-success-muted font-bold text-foreground-strong' : ''}`}>
                     <div className="flex items-center gap-1.5">
-                      {row.winnerSlug === tool2.slug && <CheckCircle2 className="w-4 h-4 text-accent shrink-0" />}
+                      {row.winnerSlug === tool2.slug && <CheckCircle2 className="w-4 h-4 text-verified shrink-0" />}
                       <span>{row.tool2Value}</span>
                     </div>
                   </td>
@@ -143,8 +143,8 @@ export function ComparisonTable({ comparison, tool1, tool2 }: ComparisonTablePro
 
       {/* Editorial Verdict Box */}
       <div className="bg-inverted text-inverted-foreground/80 rounded-2xl p-6 sm:p-8 shadow-sm">
-        <span className="text-accent font-medium text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
-          <ShieldCheck className="w-4 h-4 text-accent" />
+        <span className="text-inverted-foreground font-medium text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
+          <ShieldCheck className="w-4 h-4 text-verified" />
           {SITE_NAME} Editorial Recommendation
         </span>
         <h4 className="text-xl font-medium text-inverted-foreground mb-3">Final Verdict</h4>

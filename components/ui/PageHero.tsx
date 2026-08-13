@@ -72,14 +72,9 @@ interface PageHeroAccentBadgeProps {
   children: ReactNode;
 }
 
-/** Accent-tinted badge on inverted hero (category/persona hubs). */
+/** Neutral metadata badge on inverted hero (category/persona hubs). */
 export function PageHeroAccentBadge({ icon, children }: PageHeroAccentBadgeProps) {
-  return (
-    <div className="inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-xs font-medium uppercase tracking-wider text-accent">
-      {icon}
-      {children}
-    </div>
-  );
+  return <PageHeroBadge icon={icon}>{children}</PageHeroBadge>;
 }
 
 interface PageHeroRatingBadgeProps {

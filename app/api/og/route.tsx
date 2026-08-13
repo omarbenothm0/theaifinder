@@ -18,13 +18,13 @@ export async function GET(req: NextRequest) {
     const type = searchParams.get('type') || 'default';
     const displayDomain = getDisplayDomain();
 
-    const badgeStyles: Record<string, { bg: string; text: string }> = {
-      default: { bg: '#2a7a3a', text: '#f5f3ef' },
-      comparison: { bg: '#b8860b', text: '#f5f3ef' },
-      persona: { bg: '#6d28d9', text: '#f5f3ef' },
-      tool: { bg: '#2a7a3a', text: '#f5f3ef' },
+    const badgeStyles: Record<string, { bg: string; text: string; border: string }> = {
+      default: { bg: 'rgba(245, 243, 239, 0.1)', text: '#f5f3ef', border: 'rgba(217, 213, 207, 0.35)' },
+      comparison: { bg: '#b8860b', text: '#f5f3ef', border: 'transparent' },
+      persona: { bg: '#6d28d9', text: '#f5f3ef', border: 'transparent' },
+      tool: { bg: '#2a7a3a', text: '#f5f3ef', border: 'transparent' },
     };
-    const { bg: badgeBg, text: badgeText } = badgeStyles[type] ?? badgeStyles.default;
+    const { bg: badgeBg, text: badgeText, border: badgeBorder } = badgeStyles[type] ?? badgeStyles.default;
 
     return new ImageResponse(
       (
@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
             alignItems: 'flex-start',
             backgroundColor: '#1c1b19',
             backgroundImage:
-              'radial-gradient(circle at 80% 20%, #2a2826 0%, #1c1b19 70%), radial-gradient(circle at 20% 80%, rgba(42, 122, 58, 0.12) 0%, transparent 50%)',
+              'radial-gradient(circle at 80% 20%, #2a2826 0%, #1c1b19 70%)',
             padding: '60px',
             fontFamily: 'sans-serif',
             color: '#f5f3ef',
@@ -59,19 +59,19 @@ export async function GET(req: NextRequest) {
                   width: '44px',
                   height: '44px',
                   borderRadius: '12px',
-                  backgroundColor: '#2a7a3a',
+                  backgroundColor: '#f5f3ef',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontWeight: 500,
                   fontSize: '24px',
-                  color: '#f5f3ef',
+                  color: '#1c1b19',
                 }}
               >
                 TR
               </div>
-              <span style={{ fontSize: '28px', fontWeight: 500, letterSpacing: '-0.5px' }}>
-                TheRadar<span style={{ color: '#2a7a3a' }}>Hub</span>
+              <span style={{ fontSize: '28px', fontWeight: 500, letterSpacing: '-0.5px', color: '#f5f3ef' }}>
+                TheRadarHub
               </span>
             </div>
 
@@ -79,6 +79,7 @@ export async function GET(req: NextRequest) {
               style={{
                 backgroundColor: badgeBg,
                 color: badgeText,
+                border: `1px solid ${badgeBorder}`,
                 padding: '8px 20px',
                 borderRadius: '9999px',
                 fontSize: '14px',
@@ -132,7 +133,7 @@ export async function GET(req: NextRequest) {
             }}
           >
             <span>{SITE_OG_FOOTER}</span>
-            <span style={{ color: '#2a7a3a', fontWeight: 500 }}>{displayDomain}</span>
+            <span style={{ color: '#f5f3ef', fontWeight: 500 }}>{displayDomain}</span>
           </div>
         </div>
       ),

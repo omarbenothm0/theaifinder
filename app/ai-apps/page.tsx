@@ -32,7 +32,7 @@ export default async function AIAppsPage() {
     <div className="space-y-10">
       <PageHero
         badge={
-          <PageHeroAccentBadge icon={<Smartphone className="w-4 h-4 text-accent" />}>
+          <PageHeroAccentBadge icon={<Smartphone className="w-4 h-4 text-inverted-foreground/80" />}>
             Mobile Software Directory
           </PageHeroAccentBadge>
         }
@@ -43,7 +43,7 @@ export default async function AIAppsPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between border-b border-border/50 pb-3">
           <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-accent" />
+            <Sparkles className="w-5 h-5 text-foreground" />
             Mobile AI Applications ({mobileTools.length})
           </h2>
         </div>

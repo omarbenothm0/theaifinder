@@ -19,7 +19,7 @@ export function CategoryCard({ category }: CategoryCardProps) {
           </span>
         </div>
 
-        <h3 className="text-base font-medium text-foreground-strong mb-1 group-hover:text-accent transition-colors">
+        <h3 className="text-base font-medium text-foreground-strong mb-1 group-hover:text-foreground-strong transition-colors">
           {category.name}
         </h3>
         <p className="text-[13px] leading-[1.35] text-muted-foreground line-clamp-2 mb-4">
