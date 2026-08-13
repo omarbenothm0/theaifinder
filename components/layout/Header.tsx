@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
-import { useRouter, usePathname } from 'next/navigation';
-import { Search, ChevronDown, ArrowRight } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { ChevronDown, ArrowRight } from 'lucide-react';
+import { NavSearch } from './NavSearch';
 import { geistNav } from '../../lib/fonts/nav-font';
 import { LogoWordmark, type LogoWordmarkVariant } from './LogoWordmark';
 import { LogoMark } from './LogoMark';
@@ -27,9 +28,7 @@ const MENU_CLOSE_DELAY_MS = 175;
 const NAV_LOGO_VARIANT: LogoWordmarkVariant = '1';
 
 export function Header() {
-  const router = useRouter();
   const pathname = usePathname();
-  const [searchQuery, setSearchQuery] = useState('');
   const [showRolesMenu, setShowRolesMenu] = useState(false);
   const [showCategoriesMenu, setShowCategoriesMenu] = useState(false);
 
@@ -85,13 +84,6 @@ export function Header() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/ai-tools?search=${encodeURIComponent(searchQuery)}`);
-    }
-  };
 
   const isActive = (path: string) => {
     if (path === '/' && pathname === '/') return true;
@@ -189,17 +181,7 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-5 sm:gap-6 shrink-0 ml-auto pl-6 lg:pl-10 h-16">
-            <form onSubmit={handleSearch} className="relative hidden md:block w-40 lg:w-48">
-              <input
-                id="global-search-input"
-                type="text"
-                placeholder="Search AI tools..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-9 bg-background-raised border border-border/50 rounded-lg pl-8 pr-3 text-xs font-medium text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:border-border transition-colors duration-200"
-              />
-              <Search className="w-3.5 h-3.5 text-muted-foreground absolute left-2.5 top-1/2 -translate-y-1/2" />
-            </form>
+            <NavSearch className="hidden md:block w-40 lg:w-48" />
 
             <Link
               href="/ai-tool-finder"

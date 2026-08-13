@@ -14,6 +14,12 @@
   padding-right: 1.5rem;
 }
 
+.home-hero-search {
+  max-width: 36rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .home-section {
   padding-top: 3rem;
   padding-bottom: 3rem;

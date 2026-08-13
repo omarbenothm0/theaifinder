@@ -12,8 +12,8 @@ import {
   HOMEPAGE_FEATURED_SECTION_TITLE,
   HOMEPAGE_FEATURED_TAB_LABEL,
   HOMEPAGE_HERO_BADGE,
-  SITE_HERO_SUBTITLE,
 } from '../../lib/seo/site-copy';
+import { NavSearch } from '../layout/NavSearch';
 import { HomeToolCard } from './HomeToolCard';
 import { buildMarqueeLogos } from './home-marquee-logos';
 import { MarqueeLogoImage } from './MarqueeLogoImage';
@@ -87,7 +87,7 @@ function LogoMarquee() {
   return (
     <div className="home-container mt-12 md:mt-16 pb-4">
       <p className="text-[12px] font-medium uppercase tracking-[0.015em] text-muted-foreground text-center mb-6">
-        Trusted listings across leading AI platforms
+        Popular tools on TheRadarHub
       </p>
       <div className="home-marquee-wrap py-4">
         <div className="home-marquee-track">
@@ -147,13 +147,6 @@ export function HomePageClient({
     { id: 'api' as const, label: 'API Available' },
   ];
 
-  const capabilityPills = [
-    { label: 'Browse Directory', href: '/ai-tools' },
-    { label: 'Tool Finder', href: '/ai-tool-finder' },
-    { label: 'Comparisons', href: '/compare' },
-    { label: 'Free Tools', href: '/free-ai-tools' },
-  ];
-
   return (
     <div className="home-page relative left-1/2 -translate-x-1/2 w-screen max-w-[100vw] -mt-6 sm:-mt-4 home-fade-in">
       {/* Hero */}
@@ -162,38 +155,37 @@ export function HomePageClient({
           <span className="home-pill home-pill-outline mb-8">{HOMEPAGE_HERO_BADGE}</span>
 
           <h1 className="text-[38px] md:text-[48px] leading-[1.1] tracking-[-0.3px] font-medium text-foreground-strong max-w-3xl mx-auto">
-            Your Hub for
-            <br />
-            <em className="italic font-normal">AI tool discovery</em>{' '}
-            &amp; comparisons
+            Find the right AI tool for the job.
           </h1>
 
           <p className="text-base md:text-[16px] leading-[1.35] text-muted-foreground max-w-[550px] mx-auto mt-6">
-            {SITE_HERO_SUBTITLE}
+            Search AI tools, explore by role or category, or get a personalized recommendation.
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-3 mt-10">
-            <Link href="/ai-tool-finder" className="home-btn-primary">
-              Launch Tool Finder
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-            <Link href="/ai-tools" className="home-btn-secondary">
-              Browse all tools
-            </Link>
+          <div className="home-hero-search mt-8 md:mt-10">
+            <NavSearch variant="hero" className="w-full" />
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-2 mt-10">
-            {capabilityPills.map((pill) => (
-              <Link
-                key={pill.href}
-                href={pill.href}
-                className="home-pill home-pill-outline gap-1 px-3 py-1"
-              >
-                {pill.label}
-                <ArrowRight className="w-3 h-3 text-muted-foreground" />
-              </Link>
-            ))}
-          </div>
+          <nav
+            aria-label="Hero navigation"
+            className="mt-5 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[13px] md:text-sm text-muted-foreground"
+          >
+            <Link href="/ai-tools" className="hover:text-foreground transition-colors duration-200">
+              Browse all tools
+            </Link>
+            <span aria-hidden="true" className="text-muted-foreground/50">
+              ·
+            </span>
+            <Link href="/compare" className="hover:text-foreground transition-colors duration-200">
+              Compare tools
+            </Link>
+            <span aria-hidden="true" className="text-muted-foreground/50">
+              ·
+            </span>
+            <Link href="/ai-tool-finder" className="hover:text-foreground transition-colors duration-200">
+              Tool Finder
+            </Link>
+          </nav>
         </div>
 
         <LogoMarquee />
