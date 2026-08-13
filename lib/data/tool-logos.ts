@@ -37,21 +37,21 @@ export type HomeMarqueeLogo = {
   fallbackLogo?: string;
 };
 
+/** Flat monochrome brand glyph for the homepage logo marquee (no background box). */
+export function marqueeMonochromeLogo(slug: string): string {
+  return `/logos/marquee/${slug}.svg`;
+}
+
 /** Curated, deduplicated logos for the homepage trusted strip. */
 export const HOME_MARQUEE_LOGOS: HomeMarqueeLogo[] = [
-  { slug: 'chatgpt', name: 'ChatGPT', logo: toolLogoFromDomain('openai.com') },
-  { slug: 'claude', name: 'Claude', logo: toolLogoFromDomain('claude.ai') },
-  { slug: 'cursor', name: 'Cursor', logo: toolLogoFromDomain('cursor.com') },
-  { slug: 'midjourney', name: 'Midjourney', logo: toolLogoFromDomain('midjourney.com') },
-  { slug: 'perplexity', name: 'Perplexity', logo: toolLogoFromDomain('perplexity.ai') },
-  { slug: 'notion-ai', name: 'Notion AI', logo: toolLogoFromDomain('notion.so') },
-  { slug: 'elevenlabs', name: 'ElevenLabs', logo: toolLogoFromDomain('elevenlabs.io') },
-  { slug: 'runway', name: 'Runway', logo: toolLogoFromDomain('runwayml.com') },
-  { slug: 'descript', name: 'Descript', logo: toolLogoFromDomain('descript.com') },
-  {
-    slug: 'v0',
-    name: 'v0 by Vercel',
-    logo: toolLogoFromDomain('v0.dev'),
-    fallbackLogo: toolLogoFromDomain('vercel.com'),
-  },
+  { slug: 'chatgpt', name: 'ChatGPT', logo: marqueeMonochromeLogo('chatgpt') },
+  { slug: 'claude', name: 'Claude', logo: marqueeMonochromeLogo('claude') },
+  { slug: 'cursor', name: 'Cursor', logo: marqueeMonochromeLogo('cursor') },
+  { slug: 'midjourney', name: 'Midjourney', logo: marqueeMonochromeLogo('midjourney') },
+  { slug: 'perplexity', name: 'Perplexity', logo: marqueeMonochromeLogo('perplexity') },
+  { slug: 'notion-ai', name: 'Notion AI', logo: marqueeMonochromeLogo('notion-ai') },
+  { slug: 'elevenlabs', name: 'ElevenLabs', logo: marqueeMonochromeLogo('elevenlabs') },
+  { slug: 'runway', name: 'Runway', logo: marqueeMonochromeLogo('runway') },
+  { slug: 'descript', name: 'Descript', logo: marqueeMonochromeLogo('descript') },
+  { slug: 'v0', name: 'v0 by Vercel', logo: marqueeMonochromeLogo('v0') },
 ];

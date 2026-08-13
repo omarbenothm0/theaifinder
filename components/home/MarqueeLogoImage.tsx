@@ -14,10 +14,7 @@ export function MarqueeLogoImage({ src, name, fallbackSrc }: MarqueeLogoImagePro
 
   if (failed) {
     return (
-      <span
-        aria-hidden
-        className="flex h-8 w-8 items-center justify-center rounded-md bg-foreground/10 text-[11px] font-medium text-foreground/70"
-      >
+      <span aria-hidden className="home-marquee-logo-fallback">
         {name.charAt(0).toUpperCase()}
       </span>
     );
@@ -27,12 +24,12 @@ export function MarqueeLogoImage({ src, name, fallbackSrc }: MarqueeLogoImagePro
     <img
       src={currentSrc}
       alt=""
-      width={112}
+      width={32}
       height={32}
       loading="lazy"
       decoding="async"
       referrerPolicy="no-referrer"
-      className="home-marquee-logo block max-h-8 max-w-full w-auto object-contain"
+      className="home-marquee-logo"
       onError={() => {
         if (fallbackSrc && currentSrc !== fallbackSrc) {
           setCurrentSrc(fallbackSrc);

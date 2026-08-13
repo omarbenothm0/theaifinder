@@ -98,7 +98,7 @@ function LogoMarquee() {
               aria-label={item.name}
               className="inline-flex items-center gap-3 shrink-0 min-h-10 opacity-[0.65] hover:opacity-100 transition-opacity duration-300"
             >
-              <span className="flex h-10 w-24 shrink-0 items-center justify-center">
+              <span className="flex h-8 shrink-0 items-center justify-center">
                 <MarqueeLogoImage
                   src={item.logo}
                   name={item.name}

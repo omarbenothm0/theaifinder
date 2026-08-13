@@ -134,8 +134,26 @@
 }
 
 .home-marquee-logo {
-  filter: grayscale(100%);
-  opacity: 0.85;
+  display: block;
+  height: 2rem;
+  width: auto;
+  max-width: 5rem;
+  object-fit: contain;
+  opacity: 0.8;
+  background: transparent;
+  filter: brightness(0) saturate(100%);
+}
+
+.home-marquee-logo-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2rem;
+  min-width: 2rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--foreground) 75%, transparent);
+  background: transparent;
 }
 
 @keyframes homeMarquee {
