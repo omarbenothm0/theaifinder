@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { ChevronDown, ArrowRight } from 'lucide-react';
 import { NavSearch } from './NavSearch';
 import { geistNav } from '../../lib/fonts/nav-font';
-import { LogoWordmark, type LogoWordmarkVariant } from './LogoWordmark';
+import { LogoWordmark } from './LogoWordmark';
 import { LogoMark } from './LogoMark';
 import {
   ROLE_MEGA_MENU_COLUMNS,
@@ -23,9 +23,6 @@ const NAV_LINK_ACTIVE =
   'inline-flex items-center px-4 h-9 text-sm font-medium text-foreground bg-foreground/8 rounded-lg';
 
 const MENU_CLOSE_DELAY_MS = 175;
-
-/** Provisional — reply with 1, 2, or 3 to finalize. Preview all at /logo-preview */
-const NAV_LOGO_VARIANT: LogoWordmarkVariant = '1';
 
 export function Header() {
   const pathname = usePathname();
@@ -115,10 +112,7 @@ export function Header() {
                 height={31}
                 className="block shrink-0 group-hover:opacity-90 transition-opacity duration-200"
               />
-              <LogoWordmark
-                variant={NAV_LOGO_VARIANT}
-                className="block leading-none shrink-0 group-hover:opacity-90 transition-opacity duration-200"
-              />
+              <LogoWordmark className="block leading-none shrink-0 group-hover:opacity-90 transition-opacity duration-200" />
             </span>
           </Link>
 
