@@ -145,7 +145,7 @@ export function ReviewForm({ toolSlug, toolName }: ReviewFormProps) {
       {message && (
         <p
           className={`text-xs font-medium ${
-            status === 'success' ? 'text-accent' : 'text-rose-600'
+            status === 'success' ? 'text-accent' : 'text-destructive'
           }`}
         >
           {message}
@@ -155,7 +155,7 @@ export function ReviewForm({ toolSlug, toolName }: ReviewFormProps) {
       <button
         type="submit"
         disabled={status === 'submitting'}
-        className="inline-flex items-center gap-2 bg-primary hover:bg-foreground/90 disabled:opacity-60 text-white font-bold text-sm px-5 py-2.5 rounded-xl transition-colors"
+        className="inline-flex items-center gap-2 bg-primary hover:bg-foreground/90 disabled:opacity-60 text-primary-foreground font-medium text-sm px-5 py-2.5 rounded-xl transition-colors"
       >
         {status === 'submitting' ? (
           <Loader2 className="w-4 h-4 animate-spin" />

@@ -16,6 +16,7 @@ import { generateBreadcrumbSchema } from '../../../../lib/seo/jsonld';
 import { getBaseUrl, absoluteUrl } from '../../../../lib/seo/base-url';
 import { ToolWithUseCaseFit } from '../../../../types/tool';
 import { ArrowLeft, CheckCircle2, Kanban } from 'lucide-react';
+import { PageHero, PageHeroAccentBadge } from '../../../../components/ui/PageHero';
 
 export const revalidate = 3600;
 
@@ -112,27 +113,28 @@ export default async function PersonaUseCasePage({
       <div className="max-w-4xl mx-auto space-y-4">
         <Link
           href={`/for/${page.persona.slug}`}
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-muted-foreground hover:text-foreground-strong transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground-strong transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           Back to {page.persona.title}
         </Link>
 
-        <div className="bg-inverted text-inverted-foreground rounded-3xl p-8 sm:p-12 shadow-lg text-center space-y-4">
-          <div className="inline-flex items-center gap-1.5 bg-accent/10 border border-accent/30 text-accent px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-            <Kanban className="w-4 h-4 text-accent" />
-            {page.persona.title} &bull; {page.useCase.title}
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-medium tracking-tight">{page.useCase.title}</h1>
-          <p className="text-sm sm:text-base text-inverted-foreground/70 max-w-2xl mx-auto leading-relaxed">
-            {page.useCase.description}
-          </p>
+        <PageHero
+          titleSize="compact"
+          badge={
+            <PageHeroAccentBadge icon={<Kanban className="w-4 h-4 text-accent" />}>
+              {page.persona.title} &bull; {page.useCase.title}
+            </PageHeroAccentBadge>
+          }
+          title={page.useCase.title}
+          description={page.useCase.description}
+        >
           {isMergedTaskPage && (
             <p className="text-xs text-inverted-foreground/70 max-w-xl mx-auto">
               Project planning is merged here — verified overlap between task and planning tools exceeded 70%.
             </p>
           )}
-        </div>
+        </PageHero>
       </div>
 
       {groupedTools.map((section) => (

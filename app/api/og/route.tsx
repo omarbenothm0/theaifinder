@@ -18,17 +18,13 @@ export async function GET(req: NextRequest) {
     const type = searchParams.get('type') || 'default';
     const displayDomain = getDisplayDomain();
 
-    // Badge styling colors
-    let badgeBg = '#10B981'; // Emerald
-    let badgeText = '#FFFFFF';
-
-    if (type === 'comparison') {
-      badgeBg = '#F59E0B'; // Amber
-    } else if (type === 'persona') {
-      badgeBg = '#6366F1'; // Indigo
-    } else if (type === 'tool') {
-      badgeBg = '#06B6D4'; // Cyan
-    }
+    const badgeStyles: Record<string, { bg: string; text: string }> = {
+      default: { bg: '#2a7a3a', text: '#f5f3ef' },
+      comparison: { bg: '#b8860b', text: '#f5f3ef' },
+      persona: { bg: '#6d28d9', text: '#f5f3ef' },
+      tool: { bg: '#2a7a3a', text: '#f5f3ef' },
+    };
+    const { bg: badgeBg, text: badgeText } = badgeStyles[type] ?? badgeStyles.default;
 
     return new ImageResponse(
       (
@@ -40,12 +36,12 @@ export async function GET(req: NextRequest) {
             flexDirection: 'column',
             justifyContent: 'space-between',
             alignItems: 'flex-start',
-            backgroundColor: '#0F172A', // Slate 900
+            backgroundColor: '#1c1b19',
             backgroundImage:
-              'radial-gradient(circle at 80% 20%, #1E293B 0%, #0F172A 70%), radial-gradient(circle at 20% 80%, #064E3B 0%, transparent 50%)',
+              'radial-gradient(circle at 80% 20%, #2a2826 0%, #1c1b19 70%), radial-gradient(circle at 20% 80%, rgba(42, 122, 58, 0.12) 0%, transparent 50%)',
             padding: '60px',
             fontFamily: 'sans-serif',
-            color: '#FFFFFF',
+            color: '#f5f3ef',
           }}
         >
           {/* Top Row: Brand Logo & Type Badge */}
@@ -63,19 +59,19 @@ export async function GET(req: NextRequest) {
                   width: '44px',
                   height: '44px',
                   borderRadius: '12px',
-                  backgroundColor: '#10B981',
+                  backgroundColor: '#2a7a3a',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontWeight: 'bold',
+                  fontWeight: 500,
                   fontSize: '24px',
-                  color: '#FFFFFF',
+                  color: '#f5f3ef',
                 }}
               >
                 TR
               </div>
-              <span style={{ fontSize: '28px', fontWeight: '800', letterSpacing: '-0.5px' }}>
-                TheRadar<span style={{ color: '#10B981' }}>Hub</span>
+              <span style={{ fontSize: '28px', fontWeight: 500, letterSpacing: '-0.5px' }}>
+                TheRadar<span style={{ color: '#2a7a3a' }}>Hub</span>
               </span>
             </div>
 
@@ -86,7 +82,7 @@ export async function GET(req: NextRequest) {
                 padding: '8px 20px',
                 borderRadius: '9999px',
                 fontSize: '14px',
-                fontWeight: '700',
+                fontWeight: 500,
                 letterSpacing: '1px',
                 textTransform: 'uppercase',
               }}
@@ -100,10 +96,10 @@ export async function GET(req: NextRequest) {
             <div
               style={{
                 fontSize: title.length > 50 ? '42px' : '52px',
-                fontWeight: '800',
+                fontWeight: 500,
                 lineHeight: '1.2',
                 letterSpacing: '-1px',
-                color: '#F8FAFC',
+                color: '#f5f3ef',
               }}
             >
               {title}
@@ -112,7 +108,7 @@ export async function GET(req: NextRequest) {
               style={{
                 fontSize: '20px',
                 lineHeight: '1.5',
-                color: '#94A3B8',
+                color: '#6b6963',
                 display: '-webkit-box',
                 WebkitLineClamp: 2,
                 overflow: 'hidden',
@@ -129,14 +125,14 @@ export async function GET(req: NextRequest) {
               width: '100%',
               justifyContent: 'space-between',
               alignItems: 'center',
-              borderTop: '1px solid #334155',
+              borderTop: '1px solid #d9d5cf',
               paddingTop: '24px',
               fontSize: '16px',
-              color: '#64748B',
+              color: '#6b6963',
             }}
           >
             <span>{SITE_OG_FOOTER}</span>
-            <span style={{ color: '#10B981', fontWeight: '600' }}>{displayDomain}</span>
+            <span style={{ color: '#2a7a3a', fontWeight: 500 }}>{displayDomain}</span>
           </div>
         </div>
       ),

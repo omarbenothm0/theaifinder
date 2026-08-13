@@ -12,6 +12,15 @@ export const size = {
 };
 export const contentType = 'image/png';
 
+const DS = {
+  inverted: '#1c1b19',
+  invertedRaised: '#2a2826',
+  foreground: '#f5f3ef',
+  muted: '#6b6963',
+  accent: '#2a7a3a',
+  border: '#d9d5cf',
+} as const;
+
 export default async function Image() {
   const displayDomain = getDisplayDomain();
 
@@ -25,12 +34,11 @@ export default async function Image() {
           flexDirection: 'column',
           justifyContent: 'space-between',
           alignItems: 'flex-start',
-          backgroundColor: '#0F172A',
-          backgroundImage:
-            'radial-gradient(circle at 80% 20%, #1E293B 0%, #0F172A 70%), radial-gradient(circle at 20% 80%, #064E3B 0%, transparent 50%)',
+          backgroundColor: DS.inverted,
+          backgroundImage: `radial-gradient(circle at 80% 20%, ${DS.invertedRaised} 0%, ${DS.inverted} 70%), radial-gradient(circle at 20% 80%, rgba(42, 122, 58, 0.12) 0%, transparent 50%)`,
           padding: '60px',
           fontFamily: 'sans-serif',
-          color: '#FFFFFF',
+          color: DS.foreground,
         }}
       >
         <div
@@ -47,30 +55,30 @@ export default async function Image() {
                 width: '44px',
                 height: '44px',
                 borderRadius: '12px',
-                backgroundColor: '#10B981',
+                backgroundColor: DS.accent,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontWeight: 'bold',
+                fontWeight: 500,
                 fontSize: '20px',
-                color: '#FFFFFF',
+                color: DS.foreground,
               }}
             >
               TR
             </div>
-            <span style={{ fontSize: '28px', fontWeight: '800', letterSpacing: '-0.5px' }}>
-              TheRadar<span style={{ color: '#10B981' }}>Hub</span>
+            <span style={{ fontSize: '28px', fontWeight: 500, letterSpacing: '-0.5px' }}>
+              TheRadar<span style={{ color: DS.accent }}>Hub</span>
             </span>
           </div>
 
           <div
             style={{
-              backgroundColor: '#10B981',
-              color: '#FFFFFF',
+              backgroundColor: DS.accent,
+              color: DS.foreground,
               padding: '8px 20px',
               borderRadius: '9999px',
               fontSize: '14px',
-              fontWeight: '700',
+              fontWeight: 500,
               letterSpacing: '1px',
               textTransform: 'uppercase',
             }}
@@ -83,10 +91,10 @@ export default async function Image() {
           <div
             style={{
               fontSize: '52px',
-              fontWeight: '800',
+              fontWeight: 500,
               lineHeight: '1.2',
               letterSpacing: '-1px',
-              color: '#F8FAFC',
+              color: DS.foreground,
             }}
           >
             {SITE_HERO_TITLE}
@@ -95,7 +103,7 @@ export default async function Image() {
             style={{
               fontSize: '22px',
               lineHeight: '1.5',
-              color: '#94A3B8',
+              color: DS.muted,
             }}
           >
             {SITE_DESCRIPTION}
@@ -108,14 +116,14 @@ export default async function Image() {
             width: '100%',
             justifyContent: 'space-between',
             alignItems: 'center',
-            borderTop: '1px solid #334155',
+            borderTop: `1px solid ${DS.border}`,
             paddingTop: '24px',
             fontSize: '16px',
-            color: '#64748B',
+            color: DS.muted,
           }}
         >
           <span>{SITE_OG_FOOTER}</span>
-          <span style={{ color: '#10B981', fontWeight: '600' }}>{displayDomain}</span>
+          <span style={{ color: DS.accent, fontWeight: 500 }}>{displayDomain}</span>
         </div>
       </div>
     ),

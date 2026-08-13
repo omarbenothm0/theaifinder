@@ -23,8 +23,8 @@ export function ComparisonTable({ comparison, tool1, tool2 }: ComparisonTablePro
             <div className="flex items-center gap-3 mb-4">
               <Image src={tool1.logo} alt={tool1.name} width={56} height={56} referrerPolicy="no-referrer" className="w-14 h-14 rounded-2xl object-cover bg-foreground/5 border border-border/50" />
               <div>
-                <h3 className="text-xl font-bold text-foreground-strong">{tool1.name}</h3>
-                <span className="text-xs font-semibold text-muted-foreground bg-foreground/5 px-2 py-0.5 rounded-md">
+                <h3 className="text-xl font-medium text-foreground-strong">{tool1.name}</h3>
+                <span className="text-xs font-medium text-muted-foreground bg-foreground/5 px-2 py-0.5 rounded-md">
                   {tool1.categoryName}
                 </span>
               </div>
@@ -33,14 +33,14 @@ export function ComparisonTable({ comparison, tool1, tool2 }: ComparisonTablePro
             <p className="text-xs text-muted-foreground mb-4 leading-relaxed">{tool1.tagline}</p>
 
             <div className="bg-background p-3.5 rounded-xl border border-border/30 mb-4 text-xs">
-              <span className="font-bold text-foreground-strong block mb-1">Best For:</span>
+              <span className="font-medium text-foreground-strong block mb-1">Best For:</span>
               <p className="text-muted-foreground leading-relaxed">{comparison.bestFor1}</p>
             </div>
           </div>
 
           <div className="pt-4 border-t border-border/30 flex items-center justify-between">
             <div className="text-xs">
-              <span className="text-muted-foreground block text-[10px] uppercase font-bold">Pricing</span>
+              <span className="text-muted-foreground block text-[10px] uppercase font-medium">Pricing</span>
               <span className="font-medium text-foreground-strong">
                 {tool1.pricingModel} {tool1.monthlyPrice ? `($${tool1.monthlyPrice}/mo)` : ''}
               </span>
@@ -48,7 +48,7 @@ export function ComparisonTable({ comparison, tool1, tool2 }: ComparisonTablePro
 
             <Link
               href={`/tools/${tool1.slug}`}
-              className="bg-inverted hover:bg-inverted-foreground/10 text-white font-medium text-xs px-4 py-2 rounded-xl transition-colors cursor-pointer flex items-center gap-1"
+              className="bg-inverted hover:bg-inverted-foreground/10 text-inverted-foreground font-medium text-xs px-4 py-2 rounded-xl transition-colors cursor-pointer flex items-center gap-1"
             >
               Full Profile
               <ArrowRight className="w-3.5 h-3.5" />
@@ -62,8 +62,8 @@ export function ComparisonTable({ comparison, tool1, tool2 }: ComparisonTablePro
             <div className="flex items-center gap-3 mb-4">
               <Image src={tool2.logo} alt={tool2.name} width={56} height={56} referrerPolicy="no-referrer" className="w-14 h-14 rounded-2xl object-cover bg-foreground/5 border border-border/50" />
               <div>
-                <h3 className="text-xl font-bold text-foreground-strong">{tool2.name}</h3>
-                <span className="text-xs font-semibold text-muted-foreground bg-foreground/5 px-2 py-0.5 rounded-md">
+                <h3 className="text-xl font-medium text-foreground-strong">{tool2.name}</h3>
+                <span className="text-xs font-medium text-muted-foreground bg-foreground/5 px-2 py-0.5 rounded-md">
                   {tool2.categoryName}
                 </span>
               </div>
@@ -72,14 +72,14 @@ export function ComparisonTable({ comparison, tool1, tool2 }: ComparisonTablePro
             <p className="text-xs text-muted-foreground mb-4 leading-relaxed">{tool2.tagline}</p>
 
             <div className="bg-background p-3.5 rounded-xl border border-border/30 mb-4 text-xs">
-              <span className="font-bold text-foreground-strong block mb-1">Best For:</span>
+              <span className="font-medium text-foreground-strong block mb-1">Best For:</span>
               <p className="text-muted-foreground leading-relaxed">{comparison.bestFor2}</p>
             </div>
           </div>
 
           <div className="pt-4 border-t border-border/30 flex items-center justify-between">
             <div className="text-xs">
-              <span className="text-muted-foreground block text-[10px] uppercase font-bold">Pricing</span>
+              <span className="text-muted-foreground block text-[10px] uppercase font-medium">Pricing</span>
               <span className="font-medium text-foreground-strong">
                 {tool2.pricingModel} {tool2.monthlyPrice ? `($${tool2.monthlyPrice}/mo)` : ''}
               </span>
@@ -87,7 +87,7 @@ export function ComparisonTable({ comparison, tool1, tool2 }: ComparisonTablePro
 
             <Link
               href={`/tools/${tool2.slug}`}
-              className="bg-inverted hover:bg-inverted-foreground/10 text-white font-medium text-xs px-4 py-2 rounded-xl transition-colors cursor-pointer flex items-center gap-1"
+              className="bg-inverted hover:bg-inverted-foreground/10 text-inverted-foreground font-medium text-xs px-4 py-2 rounded-xl transition-colors cursor-pointer flex items-center gap-1"
             >
               Full Profile
               <ArrowRight className="w-3.5 h-3.5" />
@@ -101,7 +101,7 @@ export function ComparisonTable({ comparison, tool1, tool2 }: ComparisonTablePro
       <div className="bg-background-raised rounded-2xl border border-border/50 overflow-hidden shadow-xs">
         <div className="p-5 bg-inverted text-inverted-foreground flex items-center justify-between">
           <div>
-            <h3 className="text-base font-bold flex items-center gap-2">
+            <h3 className="text-base font-medium flex items-center gap-2">
               <Zap className="w-4 h-4 text-accent" />
               Feature Comparison Matrix
             </h3>
@@ -112,7 +112,7 @@ export function ComparisonTable({ comparison, tool1, tool2 }: ComparisonTablePro
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="bg-background border-b border-border/50 text-muted-foreground uppercase font-bold">
+              <tr className="bg-background border-b border-border/50 text-muted-foreground uppercase font-medium">
                 <th className="p-4 w-1/3">Feature / Metric</th>
                 <th className="p-4 w-1/3 font-medium text-foreground-strong">{tool1.name}</th>
                 <th className="p-4 w-1/3 font-medium text-foreground-strong">{tool2.name}</th>
@@ -143,11 +143,11 @@ export function ComparisonTable({ comparison, tool1, tool2 }: ComparisonTablePro
 
       {/* Editorial Verdict Box */}
       <div className="bg-inverted text-inverted-foreground/80 rounded-2xl p-6 sm:p-8 shadow-sm">
-        <span className="text-accent font-bold text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
+        <span className="text-accent font-medium text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
           <ShieldCheck className="w-4 h-4 text-accent" />
           {SITE_NAME} Editorial Recommendation
         </span>
-        <h4 className="text-xl font-bold text-white mb-3">Final Verdict</h4>
+        <h4 className="text-xl font-medium text-inverted-foreground mb-3">Final Verdict</h4>
         <p className="text-sm leading-relaxed text-inverted-foreground/80">{comparison.verdict}</p>
       </div>
 

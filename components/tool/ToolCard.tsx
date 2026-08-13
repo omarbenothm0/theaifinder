@@ -20,7 +20,7 @@ export function ToolCard({ tool, layout = 'grid' }: ToolCardProps) {
     >
       {tool.featured && (
         <div className="absolute top-3 right-3 text-[11px] font-medium uppercase tracking-[0.015em] text-muted-foreground px-2 py-0.5 rounded-full border border-border/40">
-          <Sparkles className="w-3 h-3 inline mr-1 text-highlighted" />
+          <Sparkles className="w-3 h-3 inline mr-1 text-accent" />
           Featured
         </div>
       )}
@@ -45,7 +45,7 @@ export function ToolCard({ tool, layout = 'grid' }: ToolCardProps) {
               </Link>
 
               {tool.verified && (
-                <span className="inline-flex items-center text-highlighted" title="Verified Tool Listing">
+                <span className="inline-flex items-center text-accent" title="Verified Tool Listing">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                 </span>
               )}

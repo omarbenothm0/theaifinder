@@ -10,6 +10,7 @@ import { ResearcherWorkflowLinks } from '../persona/ResearcherWorkflowLinks';
 import { STUDY_SECTIONS } from '../../lib/data/study-education-category';
 import { getFAQSchema, getCollectionPageSchema } from '../../lib/seo/jsonld';
 import { ArrowRight, Compass, GraduationCap, Layers, Sparkles } from 'lucide-react';
+import { PageHero, PageHeroAccentBadge } from '../ui/PageHero';
 
 interface StudyEducationCategoryContentProps {
   category: Category;
@@ -45,24 +46,24 @@ export async function StudyEducationCategoryContent({
       <JsonLd schema={collectionSchema} />
 
       {/* Hero */}
-      <div className="bg-inverted text-inverted-foreground rounded-3xl p-8 sm:p-12 shadow-lg max-w-4xl mx-auto text-center space-y-4">
-        <div className="inline-flex items-center gap-1.5 bg-accent/10 border border-accent/30 text-accent px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-          <Layers className="w-4 h-4 text-accent" />
-          Category Hub &bull; {curatedCount} Curated {curatedCount === 1 ? 'Tool' : 'Tools'}
-        </div>
-        <h1 className="text-3xl sm:text-5xl font-medium tracking-tight">Best AI Study Tools</h1>
-        <p className="text-sm sm:text-base text-inverted-foreground/70 max-w-2xl mx-auto leading-relaxed">
-          {category.longDescription || category.description}
-        </p>
+      <PageHero
+        badge={
+          <PageHeroAccentBadge icon={<Layers className="w-4 h-4 text-accent" />}>
+            Category Hub &bull; {curatedCount} Curated {curatedCount === 1 ? 'Tool' : 'Tools'}
+          </PageHeroAccentBadge>
+        }
+        title={<>Best AI Study Tools</>}
+        description={category.longDescription || category.description}
+      >
         <Link
           href="/for/students"
-          className="inline-flex items-center gap-2 text-xs font-bold text-white bg-primary hover:bg-foreground/90 px-4 py-2.5 rounded-xl transition-colors mt-2"
+          className="inline-flex items-center gap-2 text-xs font-bold text-primary-foreground bg-primary hover:bg-foreground/90 px-4 py-2.5 rounded-xl transition-colors mt-2"
         >
           <GraduationCap className="w-4 h-4" />
           Students workflow hub
           <ArrowRight className="w-3.5 h-3.5" />
         </Link>
-      </div>
+      </PageHero>
 
       {/* Workflow links */}
       <StudentWorkflowLinks variant="category" />

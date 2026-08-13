@@ -19,7 +19,7 @@ export function ToolOutboundLink({ tool, variant, className = '' }: ToolOutbound
         title={link.title}
         className={
           className ||
-          'home-btn-primary text-sm px-6 py-3.5 rounded-2xl shadow-md flex items-center justify-center gap-2 cursor-pointer'
+          'home-btn-primary text-sm px-6 py-3.5 rounded-xl shadow-md flex items-center justify-center gap-2 cursor-pointer'
         }
       >
         <span>{link.label}</span>

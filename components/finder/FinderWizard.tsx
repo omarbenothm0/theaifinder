@@ -122,7 +122,7 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
       {/* Step Progress Bar */}
       <div className="bg-background-raised rounded-2xl border border-border/50/80 p-4 shadow-2xs flex items-center justify-between text-xs font-bold text-muted-foreground">
         <div className={`flex items-center gap-2 ${step >= 1 ? 'text-accent' : ''}`}>
-          <span className={`w-6 h-6 rounded-full flex items-center justify-center ${step >= 1 ? 'bg-primary text-white' : 'bg-foreground/5'}`}>
+          <span className={`w-6 h-6 rounded-full flex items-center justify-center ${step >= 1 ? 'bg-primary text-primary-foreground' : 'bg-foreground/5'}`}>
             1
           </span>
           <span className="hidden sm:inline">Use Case</span>
@@ -130,7 +130,7 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
         <div className="w-12 h-0.5 bg-border"></div>
 
         <div className={`flex items-center gap-2 ${step >= 2 ? 'text-accent' : ''}`}>
-          <span className={`w-6 h-6 rounded-full flex items-center justify-center ${step >= 2 ? 'bg-primary text-white' : 'bg-foreground/5'}`}>
+          <span className={`w-6 h-6 rounded-full flex items-center justify-center ${step >= 2 ? 'bg-primary text-primary-foreground' : 'bg-foreground/5'}`}>
             2
           </span>
           <span className="hidden sm:inline">Your Role</span>
@@ -138,7 +138,7 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
         <div className="w-12 h-0.5 bg-border"></div>
 
         <div className={`flex items-center gap-2 ${step >= 3 ? 'text-accent' : ''}`}>
-          <span className={`w-6 h-6 rounded-full flex items-center justify-center ${step >= 3 ? 'bg-primary text-white' : 'bg-foreground/5'}`}>
+          <span className={`w-6 h-6 rounded-full flex items-center justify-center ${step >= 3 ? 'bg-primary text-primary-foreground' : 'bg-foreground/5'}`}>
             3
           </span>
           <span className="hidden sm:inline">Budget</span>
@@ -146,7 +146,7 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
         <div className="w-12 h-0.5 bg-border"></div>
 
         <div className={`flex items-center gap-2 ${step === 4 ? 'text-accent' : ''}`}>
-          <span className={`w-6 h-6 rounded-full flex items-center justify-center ${step === 4 ? 'bg-primary text-white' : 'bg-foreground/5'}`}>
+          <span className={`w-6 h-6 rounded-full flex items-center justify-center ${step === 4 ? 'bg-primary text-primary-foreground' : 'bg-foreground/5'}`}>
             4
           </span>
           <span className="hidden sm:inline">Results</span>
@@ -207,7 +207,7 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
             <div className="flex justify-end pt-4">
               <button
                 onClick={() => setStep(2)}
-                className="bg-inverted hover:bg-inverted-foreground/10 text-white font-bold text-xs px-6 py-3 rounded-xl transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs"
+                className="bg-inverted hover:bg-inverted-foreground/10 text-primary-foreground font-bold text-xs px-6 py-3 rounded-xl transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs"
               >
                 <span>Next: Your Role</span>
                 <ArrowRight className="w-4 h-4 text-accent" />
@@ -256,7 +256,7 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
               </button>
               <button
                 onClick={() => setStep(3)}
-                className="bg-inverted hover:bg-inverted-foreground/10 text-white font-bold text-xs px-6 py-3 rounded-xl transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs"
+                className="bg-inverted hover:bg-inverted-foreground/10 text-primary-foreground font-bold text-xs px-6 py-3 rounded-xl transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs"
               >
                 <span>Next: Budget</span>
                 <ArrowRight className="w-4 h-4 text-accent" />
@@ -311,9 +311,9 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
               <button
                 onClick={handleEvaluate}
                 disabled={evaluating}
-                className="bg-primary hover:bg-foreground/90 text-white font-medium text-sm px-8 py-3.5 rounded-xl transition-all cursor-pointer shadow-md flex items-center gap-2"
+                className="bg-primary hover:bg-foreground/90 text-primary-foreground font-medium text-sm px-8 py-3.5 rounded-xl transition-all cursor-pointer shadow-md flex items-center gap-2"
               >
-                <Sparkles className="w-4 h-4 text-white" />
+                <Sparkles className="w-4 h-4 text-primary-foreground" />
                 <span>{evaluating ? 'Evaluating Match Matrix...' : 'Generate My Tool Match Report'}</span>
               </button>
             </div>

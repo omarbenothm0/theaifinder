@@ -12,6 +12,7 @@ import { isComparisonIndexable } from '../../../lib/seo/indexability';
 import { generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
 import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
 import { Zap } from 'lucide-react';
+import { PageHero, PageHeroRatingBadge } from '../../../components/ui/PageHero';
 
 const BASE_URL = getBaseUrl();
 
@@ -63,19 +64,15 @@ export default async function ComparisonPage({ params }: { params: Promise<{ slu
     <div className="space-y-10 max-w-5xl mx-auto">
       <JsonLd schema={breadcrumbSchema} />
 
-      {/* Hero Header */}
-      <div className="bg-inverted text-inverted-foreground rounded-3xl p-8 sm:p-12 shadow-lg text-center space-y-4">
-        <div className="inline-flex items-center gap-1.5 bg-rating/100/10 border border-amber-500/30 text-amber-300 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-          <Zap className="w-4 h-4 text-rating" />
-          Head-to-Head Software Evaluation
-        </div>
-        <h1 className="text-3xl sm:text-5xl font-medium tracking-tight">
-          {comp.title}
-        </h1>
-        <p className="text-sm sm:text-base text-inverted-foreground/70 max-w-2xl mx-auto leading-relaxed">
-          Comprehensive comparison of feature sets, pricing plans, accuracy, and workflow fit.
-        </p>
-      </div>
+      <PageHero
+        badge={
+          <PageHeroRatingBadge icon={<Zap className="w-4 h-4 text-rating" />}>
+            Head-to-Head Software Evaluation
+          </PageHeroRatingBadge>
+        }
+        title={comp.title}
+        description="Comprehensive comparison of feature sets, pricing plans, accuracy, and workflow fit."
+      />
 
       {/* Comparison Matrix Table */}
       <ComparisonTable comparison={comp} tool1={tool1} tool2={tool2} />

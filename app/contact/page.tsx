@@ -12,6 +12,7 @@ import {
   ShieldAlert,
   MapPin,
 } from 'lucide-react';
+import { PageHero, PageHeroAccentBadge } from '../../components/ui/PageHero';
 
 export const revalidate = 86400;
 
@@ -78,19 +79,16 @@ const REASONS: Array<{
 export default function ContactPage() {
   return (
     <div className="space-y-14 pb-16">
-      <section className="bg-inverted text-inverted-foreground rounded-3xl p-8 sm:p-12 shadow-lg max-w-5xl mx-auto text-center space-y-5">
-        <div className="inline-flex items-center gap-1.5 bg-accent/10 border border-accent/30 text-accent px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-          <Mail className="w-4 h-4 text-accent" />
-          Contact
-        </div>
-        <h1 className="text-3xl sm:text-5xl font-medium tracking-tight leading-tight">
-          Get In Touch With The {SITE_NAME} Team
-        </h1>
-        <p className="text-sm sm:text-base text-inverted-foreground/70 max-w-2xl mx-auto leading-relaxed">
-          Pick the topic that matches best and we will get back to you within one business day. We
-          read every message personally.
-        </p>
-      </section>
+      <PageHero
+        maxWidth="5xl"
+        badge={
+          <PageHeroAccentBadge icon={<Mail className="w-4 h-4 text-accent" />}>
+            Contact
+          </PageHeroAccentBadge>
+        }
+        title={`Get In Touch With The ${SITE_NAME} Team`}
+        description="Pick the topic that matches best and we will get back to you within one business day. We read every message personally."
+      />
 
       <section className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {REASONS.map(({ key, Icon, label, email, detail }) => (
@@ -176,7 +174,7 @@ export default function ContactPage() {
             <div className="sm:col-span-2 pt-1">
               <button
                 type="submit"
-                className="bg-primary hover:bg-foreground/90 text-white font-bold text-sm px-6 py-3 rounded-xl transition-colors shadow-sm flex items-center gap-2 cursor-pointer"
+                className="bg-primary hover:bg-foreground/90 text-primary-foreground font-medium text-sm px-6 py-3 rounded-xl transition-colors shadow-sm flex items-center gap-2 cursor-pointer"
               >
                 <Send className="w-4 h-4" />
                 Send Message
@@ -185,7 +183,7 @@ export default function ContactPage() {
           </form>
         </div>
 
-        <aside className="bg-gradient-to-br from-inverted to-inverted text-white rounded-2xl shadow-sm p-7 sm:p-8 space-y-5">
+        <aside className="bg-gradient-to-br from-inverted to-inverted text-inverted-foreground rounded-2xl shadow-sm p-7 sm:p-8 space-y-5">
           <h3 className="text-sm font-bold uppercase tracking-wider text-accent">
             Response Times
           </h3>
@@ -193,20 +191,20 @@ export default function ContactPage() {
             <li className="flex gap-3">
               <Clock3 className="w-4 h-4 shrink-0 text-accent mt-0.5" />
               <span>
-                <strong className="text-white">Editorial / Listings:</strong> within 24 hours on
+                <strong className="text-inverted-foreground">Editorial / Listings:</strong> within 24 hours on
                 business days.
               </span>
             </li>
             <li className="flex gap-3">
               <Bug className="w-4 h-4 shrink-0 text-rating mt-0.5" />
               <span>
-                <strong className="text-white">Bug / Correction reports:</strong> same-day triage.
+                <strong className="text-inverted-foreground">Bug / Correction reports:</strong> same-day triage.
               </span>
             </li>
             <li className="flex gap-3">
               <Briefcase className="w-4 h-4 shrink-0 text-sky-400 mt-0.5" />
               <span>
-                <strong className="text-white">Partnerships:</strong> within 2-3 business days.
+                <strong className="text-inverted-foreground">Partnerships:</strong> within 2-3 business days.
               </span>
             </li>
           </ul>

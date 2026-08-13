@@ -7,6 +7,7 @@ import { InternalLinks } from '../../components/shared/InternalLinks';
 import { generatePageMetadata } from '../../lib/seo/metadata';
 import { sitePageTitle } from '../../lib/brand';
 import { Sparkles, Trophy, Star } from 'lucide-react';
+import { PageHero, PageHeroRatingBadge } from '../../components/ui/PageHero';
 
 export const revalidate = 3600;
 
@@ -27,19 +28,15 @@ export default async function BestAIToolsPage() {
 
   return (
     <div className="space-y-10">
-      {/* Hero Header */}
-      <div className="bg-inverted text-inverted-foreground rounded-3xl p-8 sm:p-12 shadow-lg text-center max-w-4xl mx-auto space-y-4">
-        <div className="inline-flex items-center gap-1.5 bg-rating/100/10 border border-amber-500/30 text-amber-300 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-          <Trophy className="w-4 h-4 text-rating" />
-          Editorial Selections &bull; 2026 Rankings
-        </div>
-        <h1 className="text-3xl sm:text-5xl font-medium tracking-tight">
-          Editorially Featured AI Tools
-        </h1>
-        <p className="text-sm sm:text-base text-inverted-foreground/70 max-w-2xl mx-auto leading-relaxed">
-          Standout listings flagged by our editorial team — not algorithmic rankings. Each profile links to full pricing, features, and alternatives.
-        </p>
-      </div>
+      <PageHero
+        badge={
+          <PageHeroRatingBadge icon={<Trophy className="w-4 h-4 text-rating" />}>
+            Editorial Selections &bull; 2026 Rankings
+          </PageHeroRatingBadge>
+        }
+        title="Editorially Featured AI Tools"
+        description="Standout listings flagged by our editorial team — not algorithmic rankings. Each profile links to full pricing, features, and alternatives."
+      />
 
       {/* Featured Tools Grid */}
       <div className="space-y-6">
@@ -48,7 +45,7 @@ export default async function BestAIToolsPage() {
             <Star className="w-5 h-5 fill-rating text-rating" />
             Top Ranked Software
           </h2>
-          <span className="text-xs font-bold text-muted-foreground">{featuredTools.length} Curated Tools</span>
+          <span className="text-xs font-medium text-muted-foreground">{featuredTools.length} Curated Tools</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

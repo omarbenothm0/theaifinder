@@ -37,7 +37,7 @@ export function PmWorkflowLinks({ variant = 'category' }: { variant?: 'category'
       <div className="flex flex-wrap gap-2">
         <Link
           href="/for/project-managers"
-          className="inline-flex items-center gap-1 text-xs font-bold text-white bg-primary hover:bg-foreground/90 px-3 py-2 rounded-xl transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-bold text-primary-foreground bg-primary hover:bg-foreground/90 px-3 py-2 rounded-xl transition-colors"
         >
           PM Persona Hub
           <ArrowRight className="w-3.5 h-3.5" />

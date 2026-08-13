@@ -7,9 +7,21 @@ interface PageHeroProps {
   children?: ReactNode;
   className?: string;
   centered?: boolean;
+  maxWidth?: '4xl' | '5xl';
+  titleSize?: 'default' | 'compact';
 }
 
-/** Dark editorial hero band — matches homepage inverted CTA styling. */
+const MAX_WIDTH_CLASS = {
+  '4xl': 'max-w-4xl',
+  '5xl': 'max-w-5xl',
+} as const;
+
+const TITLE_SIZE_CLASS = {
+  default: 'text-3xl sm:text-5xl',
+  compact: 'text-3xl sm:text-4xl',
+} as const;
+
+/** Dark editorial hero band — canonical inverted page header. */
 export function PageHero({
   badge,
   title,
@@ -17,15 +29,17 @@ export function PageHero({
   children,
   className = '',
   centered = true,
+  maxWidth = '4xl',
+  titleSize = 'default',
 }: PageHeroProps) {
   return (
     <div
-      className={`bg-inverted text-inverted-foreground rounded-3xl p-8 sm:p-12 shadow-lg max-w-4xl mx-auto space-y-4 ${
+      className={`bg-inverted text-inverted-foreground rounded-3xl p-8 sm:p-12 shadow-lg ${MAX_WIDTH_CLASS[maxWidth]} mx-auto space-y-4 ${
         centered ? 'text-center' : ''
       } ${className}`}
     >
       {badge}
-      <h1 className="text-3xl sm:text-4xl font-medium tracking-[-0.3px] text-inverted-foreground">
+      <h1 className={`${TITLE_SIZE_CLASS[titleSize]} font-medium tracking-[-0.3px] leading-tight text-inverted-foreground`}>
         {title}
       </h1>
       {description && (
@@ -43,9 +57,40 @@ interface PageHeroBadgeProps {
   children: ReactNode;
 }
 
+/** Neutral badge on inverted hero (subtle inverted-foreground tint). */
 export function PageHeroBadge({ icon, children }: PageHeroBadgeProps) {
   return (
     <div className="inline-flex items-center gap-1.5 rounded-full border border-inverted-foreground/20 bg-inverted-foreground/10 px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.015em] text-inverted-foreground/85">
+      {icon}
+      {children}
+    </div>
+  );
+}
+
+interface PageHeroAccentBadgeProps {
+  icon?: ReactNode;
+  children: ReactNode;
+}
+
+/** Accent-tinted badge on inverted hero (category/persona hubs). */
+export function PageHeroAccentBadge({ icon, children }: PageHeroAccentBadgeProps) {
+  return (
+    <div className="inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-xs font-medium uppercase tracking-wider text-accent">
+      {icon}
+      {children}
+    </div>
+  );
+}
+
+interface PageHeroRatingBadgeProps {
+  icon?: ReactNode;
+  children: ReactNode;
+}
+
+/** Rating-tinted badge on inverted hero (comparisons, featured listings). */
+export function PageHeroRatingBadge({ icon, children }: PageHeroRatingBadgeProps) {
+  return (
+    <div className="home-rating-badge-inverted">
       {icon}
       {children}
     </div>

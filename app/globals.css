@@ -20,6 +20,24 @@
   --color-competitor: #6b6963;
   --color-highlighted: #2a7a3a;
   --color-rating: #b8860b;
+  /* Rating semantics — preserve current comparison/star appearance */
+  --rating-foreground: #92400e;
+  --rating-muted: #b8860b1a;
+  --rating-border: #b8860b33;
+  --rating-on-inverted: #fcd34d;
+  --rating-border-on-inverted: #f59e0b4d;
+  /* Secondary intent lane (existing UX pattern; not final brand secondary) */
+  --intent-secondary: #6d28d9;
+  --intent-secondary-foreground: #5b21b6;
+  --intent-secondary-muted: #f5f3ff;
+  --intent-secondary-border: #ddd6fe;
+  --intent-secondary-hover: #4c1d95;
+  /* Destructive / error semantics */
+  --destructive: #e11d48;
+  --destructive-foreground: #4c0519;
+  --destructive-muted: #fff1f2;
+  --destructive-border: #fecdd3;
+  --destructive-text: #881337;
   --inworld-brown-700: #5a4f45;
   --inworld-gray-1000: #1c1b19;
 }
@@ -40,8 +58,23 @@
   --color-light-card-foreground: var(--light-card-foreground);
   --color-light-card-foreground-muted: var(--light-card-foreground-muted);
   --color-competitor: var(--color-competitor);
-  --color-highlighted: var(--color-highlighted);
+  --color-highlighted: var(--accent);
   --color-rating: var(--color-rating);
+  --color-rating-foreground: var(--rating-foreground);
+  --color-rating-muted: var(--rating-muted);
+  --color-rating-border: var(--rating-border);
+  --color-rating-on-inverted: var(--rating-on-inverted);
+  --color-rating-border-on-inverted: var(--rating-border-on-inverted);
+  --color-intent-secondary: var(--intent-secondary);
+  --color-intent-secondary-foreground: var(--intent-secondary-foreground);
+  --color-intent-secondary-muted: var(--intent-secondary-muted);
+  --color-intent-secondary-border: var(--intent-secondary-border);
+  --color-intent-secondary-hover: var(--intent-secondary-hover);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-muted: var(--destructive-muted);
+  --color-destructive-border: var(--destructive-border);
+  --color-destructive-text: var(--destructive-text);
   --color-inworld-brown-700: var(--inworld-brown-700);
   --color-inworld-gray-1000: var(--inworld-gray-1000);
 

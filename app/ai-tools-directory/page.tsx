@@ -7,6 +7,7 @@ import { generatePageMetadata } from '../../lib/seo/metadata';
 import { isComparisonIndexable } from '../../lib/seo/indexability';
 import { sitePageTitle } from '../../lib/brand';
 import { Layers, Zap, ArrowRight, Database } from 'lucide-react';
+import { PageHero, PageHeroAccentBadge } from '../../components/ui/PageHero';
 
 export const revalidate = 3600;
 
@@ -27,19 +28,15 @@ export default async function AIToolsDirectoryPage() {
 
   return (
     <div className="space-y-12">
-      {/* Header */}
-      <div className="bg-inverted text-inverted-foreground rounded-3xl p-8 sm:p-12 shadow-lg text-center max-w-4xl mx-auto space-y-4">
-        <div className="inline-flex items-center gap-1.5 bg-accent/10 border border-accent/30 text-accent px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-          <Database className="w-4 h-4 text-accent" />
-          Full Taxonomy Sitemap
-        </div>
-        <h1 className="text-3xl sm:text-5xl font-medium tracking-tight">
-          Category Taxonomy &amp; Comparison Index
-        </h1>
-        <p className="text-sm sm:text-base text-inverted-foreground/70 max-w-2xl mx-auto leading-relaxed">
-          Browse every software category and curated comparison in one structural index — useful for exploring the site by topic rather than searching individual tools.
-        </p>
-      </div>
+      <PageHero
+        badge={
+          <PageHeroAccentBadge icon={<Database className="w-4 h-4 text-accent" />}>
+            Full Taxonomy Sitemap
+          </PageHeroAccentBadge>
+        }
+        title={<>Category Taxonomy &amp; Comparison Index</>}
+        description="Browse every software category and curated comparison in one structural index — useful for exploring the site by topic rather than searching individual tools."
+      />
 
       {/* Categories Section */}
       <div className="space-y-6">
@@ -71,7 +68,7 @@ export default async function AIToolsDirectoryPage() {
             <Link
               key={comp.slug}
               href={`/compare/${comp.slug}`}
-              className="bg-background-raised p-5 rounded-2xl border border-border/50 hover:border-amber-300 shadow-2xs hover:shadow-xs transition-all group"
+              className="bg-background-raised p-5 rounded-2xl border border-border/50 hover:border-rating-border shadow-2xs hover:shadow-xs transition-all group"
             >
               <h3 className="font-bold text-foreground-strong text-sm mb-1 group-hover:text-rating transition-colors">
                 {comp.title}

@@ -18,6 +18,7 @@ import {
   Sparkles,
   TrendingUp,
 } from 'lucide-react';
+import { PageHero, PageHeroAccentBadge } from '../ui/PageHero';
 
 interface VideoCategoryContentProps {
   category: Category;
@@ -56,23 +57,20 @@ export async function VideoCategoryContent({
       <JsonLd schema={collectionSchema} />
 
       {/* Hero */}
-      <div className="bg-inverted text-inverted-foreground rounded-3xl p-8 sm:p-12 shadow-lg max-w-4xl mx-auto text-center space-y-4">
-        <div className="inline-flex items-center gap-1.5 bg-accent/10 border border-accent/30 text-accent px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-          <Layers className="w-4 h-4 text-accent" />
-          Category Hub &bull; {curatedCount} Curated {curatedCount === 1 ? 'Tool' : 'Tools'}
-        </div>
-        <h1 className="text-3xl sm:text-5xl font-medium tracking-tight">
-          AI Video &amp; Motion Tools
-        </h1>
-        <p className="text-sm sm:text-base text-inverted-foreground/70 max-w-2xl mx-auto leading-relaxed">
-          {category.longDescription || category.description}
-        </p>
-      </div>
+      <PageHero
+        badge={
+          <PageHeroAccentBadge icon={<Layers className="w-4 h-4 text-accent" />}>
+            Category Hub &bull; {curatedCount} Curated {curatedCount === 1 ? 'Tool' : 'Tools'}
+          </PageHeroAccentBadge>
+        }
+        title={<>AI Video &amp; Motion Tools</>}
+        description={category.longDescription || category.description}
+      />
 
       {/* Intent split */}
       <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="bg-background-raised border border-violet-200 rounded-2xl p-5 space-y-2">
-          <div className="flex items-center gap-2 text-xs font-bold text-violet-800 uppercase tracking-wider">
+        <div className="bg-background-raised border border-intent-secondary-border rounded-2xl p-5 space-y-2">
+          <div className="flex items-center gap-2 text-xs font-bold text-intent-secondary-foreground uppercase tracking-wider">
             <Film className="w-4 h-4" />
             Generative video
           </div>
@@ -82,7 +80,7 @@ export async function VideoCategoryContent({
           </p>
           <Link
             href="/category/image"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-violet-700 hover:text-violet-900"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-intent-secondary hover:text-intent-secondary-hover"
           >
             Image &amp; Design — source visuals for video
             <ArrowRight className="w-3.5 h-3.5" />
@@ -119,7 +117,7 @@ export async function VideoCategoryContent({
         </Link>
         <Link
           href="/category/image"
-          className="inline-flex items-center gap-2 text-xs font-bold text-violet-700 bg-violet-50 border border-violet-200 px-4 py-2.5 rounded-xl hover:bg-violet-100 transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-bold text-intent-secondary bg-intent-secondary-muted border border-intent-secondary-border px-4 py-2.5 rounded-xl hover:bg-intent-secondary-muted transition-colors"
         >
           <ImageIcon className="w-4 h-4" />
           Image &amp; Design category

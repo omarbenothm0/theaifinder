@@ -292,15 +292,15 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
               </ul>
             </div>
 
-            <div className="bg-rose-50/50 rounded-2xl border border-rose-200/80 p-6 space-y-3">
-              <h3 className="font-bold text-rose-950 text-sm flex items-center gap-1.5">
-                <X className="w-4 h-4 text-rose-600" />
+            <div className="home-destructive-panel space-y-3">
+              <h3 className="font-medium text-destructive-foreground text-sm flex items-center gap-1.5">
+                <X className="w-4 h-4 text-destructive" />
                 Cons
               </h3>
-              <ul className="space-y-2 text-xs text-rose-900">
+              <ul className="space-y-2 text-xs text-destructive-text">
                 {tool.cons.map((con, i) => (
                   <li key={i} className="flex items-start gap-2">
-                    <span className="text-rose-600 font-bold">&bull;</span>
+                    <span className="text-destructive font-medium">&bull;</span>
                     <span>{con}</span>
                   </li>
                 ))}

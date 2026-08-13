@@ -20,9 +20,9 @@ export default async function AIToolFinderPage() {
   const toolsRes = await ToolService.getTools({ limit: 100 });
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 space-y-10">
+    <div className="max-w-4xl mx-auto space-y-10">
       <section className="bg-background border border-border/50 rounded-2xl p-6 sm:p-8 space-y-4">
-        <h2 className="text-lg font-bold text-foreground-strong">How the AI Tool Finder works</h2>
+        <h2 className="text-lg font-medium text-foreground-strong">How the AI Tool Finder works</h2>
         <p className="text-sm text-muted-foreground leading-relaxed">
           Not sure where to start in the full catalog? The finder narrows {toolsRes.total} verified listings
           to a short list based on your primary use case, professional role, and budget preference.

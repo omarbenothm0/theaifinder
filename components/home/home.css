@@ -117,6 +117,70 @@
   border-radius: 1rem;
 }
 
+/* Primary intent lane card (category hub dual-path) */
+.home-intent-card {
+  border-radius: 1rem;
+  background: var(--background-raised);
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.home-intent-card:hover {
+  border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+/* Secondary intent lane — tokenized existing violet appearance */
+.home-intent-card-secondary {
+  border-radius: 1rem;
+  background: var(--background-raised);
+  border: 1px solid var(--intent-secondary-border);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.home-intent-card-secondary:hover {
+  border-color: color-mix(in srgb, var(--intent-secondary-border) 80%, var(--intent-secondary) 20%);
+}
+
+/* Rating badge on light surfaces */
+.home-rating-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 9999px;
+  padding: 0.125rem 0.5rem;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--rating-muted);
+  color: var(--rating-foreground);
+  border: 1px solid var(--rating-border);
+}
+
+/* Rating badge on inverted hero surfaces */
+.home-rating-badge-inverted {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 9999px;
+  padding: 0.375rem 1rem;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: color-mix(in srgb, var(--rating) 10%, transparent);
+  color: var(--rating-on-inverted);
+  border: 1px solid var(--rating-border-on-inverted);
+}
+
+/* Destructive content panel (e.g. cons lists) */
+.home-destructive-panel {
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--destructive-muted) 50%, transparent);
+  border: 1px solid color-mix(in srgb, var(--destructive-border) 80%, transparent);
+  padding: 1.5rem;
+}
+
 /* Logo marquee */
 .home-marquee-wrap {
   position: relative;

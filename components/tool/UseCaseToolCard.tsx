@@ -19,9 +19,9 @@ const TIER_LABELS: Record<UseCaseFitTier, string> = {
 const TIER_STYLES: Record<UseCaseFitTier, string> = {
   primary: 'bg-accent/10 text-accent border-accent/20',
   strong: 'bg-accent/10 text-accent border-accent/20',
-  partial: 'bg-amber-100 text-amber-800 border-rating/20',
+  partial: 'bg-rating-muted text-rating-foreground border-rating-border',
   listed: 'bg-foreground/5 text-foreground border-border/50',
-  exclude: 'bg-red-100 text-red-800 border-red-200',
+  exclude: 'bg-destructive-muted text-destructive-text border-destructive-border',
 };
 
 export function UseCaseToolCard({ tool }: UseCaseToolCardProps) {
@@ -67,7 +67,7 @@ export function UseCaseToolCard({ tool }: UseCaseToolCardProps) {
           </p>
 
           {useCaseFit.limitation && (
-            <p className="text-xs text-amber-800 bg-rating/10 rounded-lg px-3 py-2 border border-amber-100">
+            <p className="text-xs text-rating-foreground bg-rating-muted rounded-lg px-3 py-2 border border-rating-border">
               <span className="font-semibold">Limitation: </span>
               {useCaseFit.limitation}
             </p>

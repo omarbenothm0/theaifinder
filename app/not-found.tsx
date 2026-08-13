@@ -24,14 +24,14 @@ export default function NotFound() {
       <div className="flex items-center gap-3">
         <Link
           href="/"
-          className="bg-primary hover:bg-foreground/90 text-primary-foreground font-bold text-xs px-5 py-2.5 rounded-xl transition-colors flex items-center gap-2 cursor-pointer shadow-xs"
+          className="bg-primary hover:bg-foreground/90 text-primary-foreground font-medium text-xs px-5 py-2.5 rounded-xl transition-colors flex items-center gap-2 cursor-pointer shadow-xs"
         >
           <Home className="w-4 h-4" />
           Back to Homepage
         </Link>
         <Link
           href="/ai-tools"
-          className="bg-foreground/5 hover:bg-foreground/8 text-foreground font-bold text-xs px-5 py-2.5 rounded-xl transition-colors flex items-center gap-2 cursor-pointer"
+          className="bg-foreground/5 hover:bg-foreground/8 text-foreground font-medium text-xs px-5 py-2.5 rounded-xl transition-colors flex items-center gap-2 cursor-pointer"
         >
           <Search className="w-4 h-4" />
           Browse All Tools

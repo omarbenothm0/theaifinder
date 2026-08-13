@@ -7,6 +7,7 @@ import { InternalLinks } from '../../components/shared/InternalLinks';
 import { generatePageMetadata } from '../../lib/seo/metadata';
 import { sitePageTitle } from '../../lib/brand';
 import { DollarSign, CheckCircle2 } from 'lucide-react';
+import { PageHero, PageHeroAccentBadge } from '../../components/ui/PageHero';
 
 export const revalidate = 3600;
 
@@ -31,19 +32,15 @@ export default async function FreeAIToolsPage() {
 
   return (
     <div className="space-y-10">
-      {/* Header */}
-      <div className="bg-inverted text-inverted-foreground rounded-3xl p-8 sm:p-12 shadow-lg text-center max-w-4xl mx-auto space-y-4">
-        <div className="inline-flex items-center gap-1.5 bg-accent/10 border border-accent/30 text-accent px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-          <DollarSign className="w-4 h-4 text-accent" />
-          Zero Dollar Software Hub
-        </div>
-        <h1 className="text-3xl sm:text-5xl font-medium tracking-tight">
-          Free &amp; Freemium AI Tools
-        </h1>
-        <p className="text-sm sm:text-base text-inverted-foreground/70 max-w-2xl mx-auto leading-relaxed">
-          Tools you can start using at no cost — free plans, freemium tiers, or trial access without a mandatory subscription.
-        </p>
-      </div>
+      <PageHero
+        badge={
+          <PageHeroAccentBadge icon={<DollarSign className="w-4 h-4 text-accent" />}>
+            Zero Dollar Software Hub
+          </PageHeroAccentBadge>
+        }
+        title={<>Free &amp; Freemium AI Tools</>}
+        description="Tools you can start using at no cost — free plans, freemium tiers, or trial access without a mandatory subscription."
+      />
 
       {/* Tools List */}
       <div className="space-y-6">

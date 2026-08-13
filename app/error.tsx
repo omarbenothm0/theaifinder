@@ -17,7 +17,7 @@ export default function Error({
 
   return (
     <div className="min-h-[60vh] flex flex-col items-center justify-center p-6 text-center space-y-6">
-      <div className="w-16 h-16 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center border border-rose-200 shadow-2xs">
+      <div className="w-16 h-16 bg-destructive-muted text-destructive rounded-2xl flex items-center justify-center border border-destructive-border shadow-2xs">
         <AlertTriangle className="w-8 h-8" />
       </div>
 
@@ -31,14 +31,14 @@ export default function Error({
       <div className="flex items-center gap-3">
         <button
           onClick={() => reset()}
-          className="bg-primary hover:bg-foreground/90 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-colors flex items-center gap-2 cursor-pointer"
+          className="bg-primary hover:bg-foreground/90 text-primary-foreground font-medium text-xs px-5 py-2.5 rounded-xl transition-colors flex items-center gap-2 cursor-pointer"
         >
           <RefreshCw className="w-4 h-4" />
           Try Again
         </button>
         <Link
           href="/"
-          className="bg-foreground/5 hover:bg-foreground/8 text-foreground font-bold text-xs px-5 py-2.5 rounded-xl transition-colors flex items-center gap-2 cursor-pointer"
+          className="bg-foreground/5 hover:bg-foreground/8 text-foreground font-medium text-xs px-5 py-2.5 rounded-xl transition-colors flex items-center gap-2 cursor-pointer"
         >
           <Home className="w-4 h-4" />
           Return Home

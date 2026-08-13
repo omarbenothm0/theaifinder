@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { generatePageMetadata } from '../../lib/seo/metadata';
 import { SITE_NAME, sitePageTitle } from '../../lib/brand';
 import { Sparkles, Target, Users, Award, Heart, ShieldCheck, Lightbulb, TrendingUp } from 'lucide-react';
+import { PageHero, PageHeroAccentBadge } from '../../components/ui/PageHero';
 
 export const revalidate = 86400;
 
@@ -17,22 +18,22 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function AboutPage() {
   return (
     <div className="space-y-16 pb-16">
-      <section className="bg-inverted text-inverted-foreground rounded-3xl p-8 sm:p-12 shadow-lg max-w-5xl mx-auto text-center space-y-5">
-        <div className="inline-flex items-center gap-1.5 bg-accent/10 border border-accent/30 text-accent px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-          <Sparkles className="w-4 h-4 text-accent" />
-          About {SITE_NAME}
-        </div>
-        <h1 className="text-3xl sm:text-5xl font-medium tracking-tight leading-tight">
-          Independent AI Tools Discovery,
-          <br />
-          <span className="text-accent">Built by Practitioners</span>
-        </h1>
-        <p className="text-sm sm:text-base text-inverted-foreground/70 max-w-2xl mx-auto leading-relaxed">
-          {SITE_NAME} is a curated directory of the world's best artificial intelligence software. We
-          help professionals, creators and teams discover the right AI tools for their workflow -
-          with honest reviews, head-to-head comparisons and verified pricing data.
-        </p>
-      </section>
+      <PageHero
+        maxWidth="5xl"
+        badge={
+          <PageHeroAccentBadge icon={<Sparkles className="w-4 h-4 text-accent" />}>
+            About {SITE_NAME}
+          </PageHeroAccentBadge>
+        }
+        title={
+          <>
+            Independent AI Tools Discovery,
+            <br />
+            <span className="text-accent">Built by Practitioners</span>
+          </>
+        }
+        description={`${SITE_NAME} is a curated directory of the world's best artificial intelligence software. We help professionals, creators and teams discover the right AI tools for their workflow - with honest reviews, head-to-head comparisons and verified pricing data.`}
+      />
 
       <section className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
         {[
@@ -87,7 +88,7 @@ export default function AboutPage() {
             'No undisclosed sponsors - any brand collaboration is clearly labeled on the applicable listing.',
           ].map((line, idx) => (
             <li key={idx} className="flex gap-3 text-sm text-foreground leading-relaxed">
-              <span className="shrink-0 w-7 h-7 rounded-lg bg-primary text-white font-bold text-xs flex items-center justify-center">
+              <span className="shrink-0 w-7 h-7 rounded-lg bg-primary text-primary-foreground font-medium text-xs flex items-center justify-center">
                 {idx + 1}
               </span>
               <span>{line}</span>

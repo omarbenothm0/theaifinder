@@ -8,6 +8,7 @@ import { getBaseUrl, absoluteUrl } from '../../lib/seo/base-url';
 import { sitePageTitle } from '../../lib/brand';
 import { isDeprecatedPersonaNavSlug } from '../../lib/seo/persona-visibility';
 import { Users, ArrowRight } from 'lucide-react';
+import { PageHero, PageHeroAccentBadge } from '../../components/ui/PageHero';
 
 export const revalidate = 3600;
 
@@ -33,19 +34,15 @@ export default async function ForIndexPage() {
     <div className="space-y-10">
       <JsonLd schema={breadcrumbSchema} />
 
-      {/* Hero Header */}
-      <div className="bg-inverted text-inverted-foreground rounded-3xl p-8 sm:p-12 shadow-lg max-w-4xl mx-auto text-center space-y-4">
-        <div className="inline-flex items-center gap-1.5 bg-accent/10 border border-accent/30 text-accent px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-          <Users className="w-4 h-4 text-accent" />
-          Workflow Guides
-        </div>
-        <h1 className="text-3xl sm:text-5xl font-medium tracking-tight">
-          Find AI Tools For Your Role
-        </h1>
-        <p className="text-sm sm:text-base text-inverted-foreground/70 max-w-2xl mx-auto leading-relaxed">
-          Curated AI tool recommendations organized by profession and workflow — pick your role to get started.
-        </p>
-      </div>
+      <PageHero
+        badge={
+          <PageHeroAccentBadge icon={<Users className="w-4 h-4 text-accent" />}>
+            Workflow Guides
+          </PageHeroAccentBadge>
+        }
+        title="Find AI Tools For Your Role"
+        description="Curated AI tool recommendations organized by profession and workflow — pick your role to get started."
+      />
 
       {/* Personas Grid */}
       <div className="space-y-6">

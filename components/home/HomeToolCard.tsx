@@ -37,7 +37,7 @@ export function HomeToolCard({ tool }: HomeToolCardProps) {
               </Link>
 
               {tool.verified && (
-                <span className="inline-flex items-center text-highlighted" title="Verified Tool Listing">
+                <span className="inline-flex items-center text-accent" title="Verified Tool Listing">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                 </span>
               )}

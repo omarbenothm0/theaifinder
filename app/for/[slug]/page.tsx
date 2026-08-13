@@ -17,6 +17,7 @@ import { generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
 import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
 import { Users, CheckCircle2, Compass, ArrowRight, Layers, GraduationCap, TrendingUp, Store, Microscope, Home, BookOpen } from 'lucide-react';
 import Link from 'next/link';
+import { PageHero, PageHeroAccentBadge } from '../../../components/ui/PageHero';
 
 export const revalidate = 3600;
 
@@ -79,19 +80,15 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
     <div className="space-y-10">
       <JsonLd schema={breadcrumbSchema} />
 
-      {/* Hero Header */}
-      <div className="bg-inverted text-inverted-foreground rounded-3xl p-8 sm:p-12 shadow-lg max-w-4xl mx-auto text-center space-y-4">
-        <div className="inline-flex items-center gap-1.5 bg-accent/10 border border-accent/30 text-accent px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-          <Users className="w-4 h-4 text-accent" />
-          Workflow Guide &bull; {persona.title}
-        </div>
-        <h1 className="text-3xl sm:text-5xl font-medium tracking-tight">
-          {persona.title}
-        </h1>
-        <p className="text-sm sm:text-base text-inverted-foreground/70 max-w-2xl mx-auto leading-relaxed">
-          {persona.description}
-        </p>
-      </div>
+      <PageHero
+        badge={
+          <PageHeroAccentBadge icon={<Users className="w-4 h-4 text-accent" />}>
+            Workflow Guide &bull; {persona.title}
+          </PageHeroAccentBadge>
+        }
+        title={persona.title}
+        description={persona.description}
+      />
 
       {persona.slug === 'project-managers' && (
         <div className="max-w-4xl mx-auto">

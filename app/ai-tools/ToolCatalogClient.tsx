@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { Tool, Category, Persona, ToolFilterOptions } from '../../types/tool';
 import { ToolCard } from '../../components/tool/ToolCard';
 import { ToolFilterSidebar } from '../../components/tool/ToolFilterSidebar';
-import { PageHero, PageHeroBadge } from '../../components/ui/PageHero';
+import { PageHero, PageHeroAccentBadge } from '../../components/ui/PageHero';
 import { Search, Sparkles, Filter, Grid, List } from 'lucide-react';
 
 interface ToolCatalogClientProps {
@@ -98,9 +98,9 @@ export function ToolCatalogClient({
     <div className="space-y-8">
       <PageHero
         badge={
-          <PageHeroBadge icon={<Sparkles className="w-3 h-3 text-accent" />}>
+          <PageHeroAccentBadge icon={<Sparkles className="w-3 h-3 text-accent" />}>
             Taxonomy Catalog &bull; {totalCount} AI Tools
-          </PageHeroBadge>
+          </PageHeroAccentBadge>
         }
         title="Search & Filter All AI Tools"
         description="The complete searchable catalog — filter by category, pricing, persona fit, and API or mobile availability."

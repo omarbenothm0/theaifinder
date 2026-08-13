@@ -11,6 +11,7 @@ import { isCategoryIndexable } from '../../../lib/seo/indexability';
 import { generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
 import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
 import { Layers, Sparkles } from 'lucide-react';
+import { PageHero, PageHeroAccentBadge } from '../../../components/ui/PageHero';
 import { RealEstateWorkflowLinks } from '../../../components/persona/RealEstateWorkflowLinks';
 import { WritingCategoryContent } from '../../../components/category/WritingCategoryContent';
 import { CodingCategoryContent } from '../../../components/category/CodingCategoryContent';
@@ -173,19 +174,15 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
     <div className="space-y-10">
       <JsonLd schema={breadcrumbSchema} />
 
-      {/* Hero Header */}
-      <div className="bg-inverted text-inverted-foreground rounded-3xl p-8 sm:p-12 shadow-lg max-w-4xl mx-auto text-center space-y-4">
-        <div className="inline-flex items-center gap-1.5 bg-accent/10 border border-accent/30 text-accent px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-          <Layers className="w-4 h-4 text-accent" />
-          Category Hub &bull; {category.toolCount} Software Listings
-        </div>
-        <h1 className="text-3xl sm:text-5xl font-medium tracking-tight">
-          {category.name} AI Tools
-        </h1>
-        <p className="text-sm sm:text-base text-inverted-foreground/70 max-w-2xl mx-auto leading-relaxed">
-          {category.description}
-        </p>
-      </div>
+      <PageHero
+        badge={
+          <PageHeroAccentBadge icon={<Layers className="w-4 h-4 text-accent" />}>
+            Category Hub &bull; {category.toolCount} Software Listings
+          </PageHeroAccentBadge>
+        }
+        title={`${category.name} AI Tools`}
+        description={category.description}
+      />
 
       {category.slug === 'presentations' && (
         <RealEstateWorkflowLinks variant="category" />

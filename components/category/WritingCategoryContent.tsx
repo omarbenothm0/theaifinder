@@ -11,6 +11,7 @@ import {
   WRITING_MARKETING_TOOL_SLUGS,
 } from '../../lib/data/writing-category';
 import { getFAQSchema, getCollectionPageSchema } from '../../lib/seo/jsonld';
+import { PageHero, PageHeroAccentBadge } from '../ui/PageHero';
 import {
   ArrowRight,
   BookOpen,
@@ -64,23 +65,21 @@ export async function WritingCategoryContent({
       {faqSchema && <JsonLd schema={faqSchema} />}
       <JsonLd schema={collectionSchema} />
 
-      {/* Hero */}
-      <div className="bg-inverted text-inverted-foreground rounded-3xl p-8 sm:p-12 shadow-lg max-w-4xl mx-auto text-center space-y-4">
-        <div className="inline-flex items-center gap-1.5 bg-accent/10 border border-accent/30 text-accent px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-          <Layers className="w-4 h-4 text-accent" />
-          Category Hub &bull; {curatedCount} Curated Tools
-        </div>
-        <h1 className="text-3xl sm:text-5xl font-medium tracking-tight">Best AI Writing Tools</h1>
-        <p className="text-sm sm:text-base text-inverted-foreground/70 max-w-2xl mx-auto leading-relaxed">
-          {category.longDescription || category.description}
-        </p>
-      </div>
+      <PageHero
+        badge={
+          <PageHeroAccentBadge icon={<Layers className="w-4 h-4 text-accent" />}>
+            Category Hub &bull; {curatedCount} Curated Tools
+          </PageHeroAccentBadge>
+        }
+        title="Best AI Writing Tools"
+        description={category.longDescription || category.description}
+      />
 
       {/* Intent split */}
       <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Link
           href="/for/writers"
-          className="group bg-background-raised border border-accent/20 rounded-2xl p-5 space-y-2 hover:border-accent/30 hover:shadow-md transition-all"
+          className="group home-intent-card p-5 space-y-2 hover:shadow-md transition-all"
         >
           <div className="flex items-center gap-2 text-xs font-bold text-accent uppercase tracking-wider">
             <BookOpen className="w-4 h-4" />
@@ -96,16 +95,16 @@ export async function WritingCategoryContent({
         </Link>
         <Link
           href="/for/marketers"
-          className="group bg-background-raised border border-violet-200 rounded-2xl p-5 space-y-2 hover:border-violet-300 hover:shadow-md transition-all"
+          className="group home-intent-card-secondary p-5 space-y-2 hover:shadow-md transition-all"
         >
-          <div className="flex items-center gap-2 text-xs font-bold text-violet-800 uppercase tracking-wider">
+          <div className="flex items-center gap-2 text-xs font-bold text-intent-secondary-foreground uppercase tracking-wider">
             <Megaphone className="w-4 h-4" />
             For Marketers &amp; Copy Teams
           </div>
           <p className="text-sm text-muted-foreground leading-relaxed">
             Campaign copy, content marketing, email, ads, and SEO workflows — separate from author tools.
           </p>
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold text-violet-700 group-hover:text-violet-900">
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold text-intent-secondary group-hover:text-intent-secondary-hover">
             Marketers hub
             <ArrowRight className="w-3.5 h-3.5" />
           </span>
@@ -161,12 +160,12 @@ export async function WritingCategoryContent({
       <div className="space-y-6">
         <div className="flex items-center justify-between border-b border-border/50 pb-3">
           <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
-            <Megaphone className="w-5 h-5 text-violet-600" />
+            <Megaphone className="w-5 h-5 text-intent-secondary" />
             Marketing &amp; Copywriting Tools
           </h2>
           <Link
             href="/for/marketers"
-            className="text-xs font-bold text-violet-700 hover:text-violet-900 transition-colors"
+            className="text-xs font-bold text-intent-secondary hover:text-intent-secondary-hover transition-colors"
           >
             Full Marketers hub
           </Link>

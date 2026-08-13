@@ -39,7 +39,7 @@ export function Footer() {
               </span>
               {subscribed ? (
                 <div className="flex items-center gap-2 bg-background-raised border border-border/50 text-foreground px-3 py-2 rounded-lg text-[12px] font-medium">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-highlighted shrink-0" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-accent shrink-0" />
                   Subscribed — check your inbox.
                 </div>
               ) : (
@@ -166,7 +166,7 @@ export function Footer() {
 
         <div className="pt-6 flex flex-col md:flex-row items-center justify-between text-[12px] text-muted-foreground gap-4">
           <span>&copy; 2026 {SITE_NAME}. All rights reserved.</span>
-          <span className="flex items-center gap-1 text-highlighted">
+          <span className="flex items-center gap-1 text-accent">
             <ShieldCheck className="w-3.5 h-3.5" />
             SEO architecture verified
           </span>
