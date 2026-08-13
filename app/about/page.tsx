@@ -17,17 +17,17 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function AboutPage() {
   return (
     <div className="space-y-16 pb-16">
-      <section className="bg-slate-900 text-white rounded-3xl p-8 sm:p-12 shadow-lg max-w-5xl mx-auto text-center space-y-5">
-        <div className="inline-flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-          <Sparkles className="w-4 h-4 text-emerald-400" />
+      <section className="bg-inverted text-inverted-foreground rounded-3xl p-8 sm:p-12 shadow-lg max-w-5xl mx-auto text-center space-y-5">
+        <div className="inline-flex items-center gap-1.5 bg-accent/10 border border-accent/30 text-accent px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
+          <Sparkles className="w-4 h-4 text-accent" />
           About {SITE_NAME}
         </div>
-        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+        <h1 className="text-3xl sm:text-5xl font-medium tracking-tight leading-tight">
           Independent AI Tools Discovery,
           <br />
-          <span className="text-emerald-400">Built by Practitioners</span>
+          <span className="text-accent">Built by Practitioners</span>
         </h1>
-        <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-sm sm:text-base text-inverted-foreground/70 max-w-2xl mx-auto leading-relaxed">
           {SITE_NAME} is a curated directory of the world's best artificial intelligence software. We
           help professionals, creators and teams discover the right AI tools for their workflow -
           with honest reviews, head-to-head comparisons and verified pricing data.
@@ -59,21 +59,21 @@ export default function AboutPage() {
         ].map(({ Icon, title, text }) => (
           <div
             key={title}
-            className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-7 space-y-2.5"
+            className="bg-background-raised rounded-2xl border border-border/50 shadow-sm p-6 sm:p-7 space-y-2.5"
           >
-            <div className="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <div className="w-11 h-11 rounded-xl bg-accent/10 text-accent flex items-center justify-center">
               <Icon className="w-5 h-5" />
             </div>
-            <h2 className="text-lg font-extrabold tracking-tight text-slate-900">{title}</h2>
-            <p className="text-sm text-slate-600 leading-relaxed">{text}</p>
+            <h2 className="text-lg font-medium tracking-tight text-foreground-strong">{title}</h2>
+            <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
           </div>
         ))}
       </section>
 
-      <section className="max-w-5xl mx-auto bg-gradient-to-br from-emerald-50 via-white to-amber-50 rounded-3xl border border-slate-200 p-8 sm:p-10 space-y-6">
+      <section className="max-w-5xl mx-auto bg-gradient-to-br from-accent/5 via-background-raised to-rating/5 rounded-3xl border border-border/50 p-8 sm:p-10 space-y-6">
         <div className="flex items-center gap-2.5">
-          <Award className="w-6 h-6 text-emerald-600" />
-          <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">
+          <Award className="w-6 h-6 text-accent" />
+          <h2 className="text-2xl font-medium tracking-tight text-foreground-strong">
             Our Editorial Principles
           </h2>
         </div>
@@ -86,8 +86,8 @@ export default function AboutPage() {
             'Transparent update cadence - tool metadata is flagged as stale when last-verified dates exceed 60 days.',
             'No undisclosed sponsors - any brand collaboration is clearly labeled on the applicable listing.',
           ].map((line, idx) => (
-            <li key={idx} className="flex gap-3 text-sm text-slate-700 leading-relaxed">
-              <span className="shrink-0 w-7 h-7 rounded-lg bg-emerald-600 text-white font-bold text-xs flex items-center justify-center">
+            <li key={idx} className="flex gap-3 text-sm text-foreground leading-relaxed">
+              <span className="shrink-0 w-7 h-7 rounded-lg bg-primary text-white font-bold text-xs flex items-center justify-center">
                 {idx + 1}
               </span>
               <span>{line}</span>
@@ -99,16 +99,16 @@ export default function AboutPage() {
       <section className="max-w-3xl mx-auto text-center space-y-5">
         <div className="inline-flex items-center gap-2">
           <Heart className="w-4 h-4 text-rose-500" />
-          <ShieldCheck className="w-4 h-4 text-emerald-600" />
+          <ShieldCheck className="w-4 h-4 text-accent" />
         </div>
-        <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">
+        <h2 className="text-2xl font-medium tracking-tight text-foreground-strong">
           Thank you for trusting {SITE_NAME}
         </h2>
-        <p className="text-sm text-slate-600 leading-relaxed">
+        <p className="text-sm text-muted-foreground leading-relaxed">
           Questions about our methodology, want to suggest a tool, or interested in partnering?{' '}
           <a
             href="/contact"
-            className="font-semibold text-emerald-700 hover:text-emerald-600 underline decoration-emerald-300 underline-offset-2"
+            className="font-semibold text-accent hover:text-accent underline decoration-accent/40 underline-offset-2"
           >
             Reach out to our team &rarr;
           </a>

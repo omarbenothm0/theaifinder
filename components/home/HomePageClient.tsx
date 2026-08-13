@@ -33,8 +33,6 @@ import {
   Users,
   type LucideIcon,
 } from 'lucide-react';
-import './home.css';
-
 interface HomePageClientProps {
   totalToolCount: number;
   featuredTools: Tool[];

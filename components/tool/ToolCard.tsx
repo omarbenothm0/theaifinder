@@ -14,117 +14,103 @@ export function ToolCard({ tool, layout = 'grid' }: ToolCardProps) {
 
   return (
     <div
-      className={`group bg-white rounded-xl border border-slate-200 hover:border-slate-300 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between overflow-hidden relative ${
-        isGrid ? 'p-5' : 'p-5 sm:flex-row sm:items-center gap-6'
+      className={`home-card group flex flex-col justify-between overflow-hidden relative ${
+        isGrid ? 'p-5 md:p-6' : 'p-5 sm:flex-row sm:items-center gap-6'
       }`}
     >
-      {/* Top Banner highlight if featured */}
       {tool.featured && (
-        <div className="absolute top-0 right-0 bg-slate-900 text-white font-bold text-[10px] uppercase tracking-wider px-2.5 py-0.5 rounded-bl-lg flex items-center gap-1 shadow-xs">
-          <Sparkles className="w-3 h-3 text-emerald-400" />
+        <div className="absolute top-3 right-3 text-[11px] font-medium uppercase tracking-[0.015em] text-muted-foreground px-2 py-0.5 rounded-full border border-border/40">
+          <Sparkles className="w-3 h-3 inline mr-1 text-highlighted" />
           Featured
         </div>
       )}
 
       <div>
-        {/* Header section: Logo, Name, Rating, Category */}
-        <div className="flex items-start gap-3.5 mb-3">
+        <div className="flex items-start gap-3 mb-4">
           <Image
             src={tool.logo}
             alt={`${tool.name} logo`}
-            width={48}
-            height={48}
+            width={44}
+            height={44}
             referrerPolicy="no-referrer"
-            className="w-12 h-12 rounded-lg object-cover bg-slate-100 border border-slate-200 shrink-0 group-hover:scale-102 transition-transform"
+            className="w-11 h-11 object-cover border border-border/40 shrink-0 rounded-lg"
           />
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
               <Link
                 href={`/tools/${tool.slug}`}
-                className="font-bold text-slate-900 text-base hover:text-emerald-600 transition-colors cursor-pointer text-left truncate"
+                className="text-[15px] font-medium text-foreground hover:text-accent transition-colors truncate"
               >
                 {tool.name}
               </Link>
 
               {tool.verified && (
-                <span className="inline-flex items-center text-emerald-600" title="Verified Tool Listing">
-                  <CheckCircle2 className="w-4 h-4" />
+                <span className="inline-flex items-center text-highlighted" title="Verified Tool Listing">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
                 </span>
               )}
             </div>
 
-            <div className="flex items-center gap-2 text-xs text-slate-500 mt-1 flex-wrap">
+            <div className="flex items-center gap-2 mt-2 flex-wrap">
               <Link
                 href={`/category/${tool.categorySlug || tool.categoryId}`}
-                className="text-[10px] font-bold text-slate-500 uppercase tracking-tight bg-slate-100 px-2 py-0.5 rounded hover:bg-slate-200 transition-colors"
+                className="home-pill home-pill-outline !text-[11px] !py-0.5 !px-2"
               >
                 {tool.categoryName}
               </Link>
-              <span className="text-slate-300">&bull;</span>
               {tool.reviewCount > 0 ? (
-                <div className="flex items-center gap-1 font-bold text-slate-800 text-xs">
-                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                <div className="flex items-center gap-1 text-[13px] text-foreground">
+                  <Star className="w-3.5 h-3.5 fill-rating/70 text-rating/70" />
                   <span>{tool.rating.toFixed(1)}</span>
-                  <span className="text-slate-400 font-normal text-[11px]">({tool.reviewCount})</span>
+                  <span className="text-muted-foreground">({tool.reviewCount})</span>
                 </div>
               ) : (
-                <span className="text-[11px] font-medium text-slate-500">Editorial listing</span>
+                <span className="text-[11px] text-muted-foreground">Editorial listing</span>
               )}
             </div>
           </div>
         </div>
 
-        {/* Tagline */}
-        <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed mb-3">
+        <p className="text-[13px] leading-[1.35] text-muted-foreground line-clamp-2 mb-4">
           {tool.tagline || tool.description}
         </p>
 
-        {/* Tags & Feature Badges */}
         <div className="flex flex-wrap gap-1.5 mb-4">
-          <span
-            className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${
-              tool.pricingModel === 'Free'
-                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                : tool.pricingModel === 'Freemium'
-                ? 'bg-blue-50 text-blue-700 border-blue-200'
-                : 'bg-slate-100 text-slate-700 border-slate-200'
-            }`}
-          >
+          <span className="home-pill home-pill-outline !text-[11px] !py-0.5 !px-2">
             {tool.pricingModel}
-            {tool.monthlyPrice ? ` • $${tool.monthlyPrice}/mo` : ''}
+            {tool.monthlyPrice ? ` · $${tool.monthlyPrice}/mo` : ''}
           </span>
 
           {tool.hasApi && (
-            <span className="text-[10px] font-semibold text-slate-600 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded-md flex items-center gap-1" title="API Available">
-              <Code className="w-3 h-3 text-slate-400" />
+            <span className="home-pill home-pill-outline !text-[11px] !py-0.5 !px-2" title="API Available">
+              <Code className="w-3 h-3 mr-0.5" />
               API
             </span>
           )}
 
           {tool.hasMobileApp && (
-            <span className="text-[10px] font-semibold text-slate-600 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded-md flex items-center gap-1" title="Mobile App Available">
-              <Smartphone className="w-3 h-3 text-slate-400" />
+            <span className="home-pill home-pill-outline !text-[11px] !py-0.5 !px-2" title="Mobile App Available">
+              <Smartphone className="w-3 h-3 mr-0.5" />
               Mobile
             </span>
           )}
 
           {tool.hasExtension && (
-            <span className="text-[10px] font-semibold text-slate-600 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded-md flex items-center gap-1" title="Extension Available">
-              <Puzzle className="w-3 h-3 text-slate-400" />
+            <span className="home-pill home-pill-outline !text-[11px] !py-0.5 !px-2" title="Extension Available">
+              <Puzzle className="w-3 h-3 mr-0.5" />
               Extension
             </span>
           )}
         </div>
       </div>
 
-      {/* Action Footer */}
-      <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+      <div className="pt-4 border-t border-border/30 flex items-center justify-between gap-2">
         <Link
           href={`/tools/${tool.slug}`}
-          className="text-xs font-bold text-slate-900 hover:text-emerald-600 flex items-center gap-1 cursor-pointer transition-colors py-1"
+          className="text-[13px] font-medium text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
         >
-          View Profile &amp; Pricing
-          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+          View profile &amp; pricing
+          <ArrowRight className="w-3.5 h-3.5" />
         </Link>
 
         <ToolOutboundLink tool={tool} variant="icon" />

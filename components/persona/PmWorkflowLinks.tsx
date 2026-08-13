@@ -16,7 +16,7 @@ export function PmWorkflowLinks({ variant = 'category' }: { variant?: 'category'
           <Link
             key={uc.slug}
             href={`/for/project-managers/${uc.slug}`}
-            className="text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-full hover:bg-indigo-100 transition-colors"
+            className="text-xs font-bold text-accent bg-accent/10 border border-accent/20 px-3 py-1.5 rounded-full hover:bg-accent/15 transition-colors"
           >
             {uc.label}
           </Link>
@@ -26,18 +26,18 @@ export function PmWorkflowLinks({ variant = 'category' }: { variant?: 'category'
   }
 
   return (
-    <div className="bg-indigo-50/80 rounded-2xl border border-indigo-200 p-6 space-y-4">
+    <div className="bg-accent/10/80 rounded-2xl border border-accent/20 p-6 space-y-4">
       <div className="flex items-center gap-2">
-        <Kanban className="w-5 h-5 text-indigo-600" />
-        <h3 className="font-bold text-slate-900 text-sm">Project Manager Workflows</h3>
+        <Kanban className="w-5 h-5 text-accent" />
+        <h3 className="font-bold text-foreground-strong text-sm">Project Manager Workflows</h3>
       </div>
-      <p className="text-xs text-slate-600 leading-relaxed">
+      <p className="text-xs text-muted-foreground leading-relaxed">
         Browse verified PM use-case guides — meeting notes, task planning, and status reporting — curated from official sources.
       </p>
       <div className="flex flex-wrap gap-2">
         <Link
           href="/for/project-managers"
-          className="inline-flex items-center gap-1 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-500 px-3 py-2 rounded-xl transition-colors"
+          className="inline-flex items-center gap-1 text-xs font-bold text-white bg-primary hover:bg-foreground/90 px-3 py-2 rounded-xl transition-colors"
         >
           PM Persona Hub
           <ArrowRight className="w-3.5 h-3.5" />
@@ -46,7 +46,7 @@ export function PmWorkflowLinks({ variant = 'category' }: { variant?: 'category'
           <Link
             key={uc.slug}
             href={`/for/project-managers/${uc.slug}`}
-            className="inline-flex items-center gap-1 text-xs font-bold text-indigo-700 bg-white border border-indigo-200 px-3 py-2 rounded-xl hover:border-indigo-300 transition-colors"
+            className="inline-flex items-center gap-1 text-xs font-bold text-accent bg-background-raised border border-accent/20 px-3 py-2 rounded-xl hover:border-accent/30 transition-colors"
           >
             {uc.label}
           </Link>

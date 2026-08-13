@@ -22,8 +22,8 @@ export default function Error({
       </div>
 
       <div className="space-y-2 max-w-md">
-        <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Something went wrong</h1>
-        <p className="text-sm text-slate-600">
+        <h1 className="text-2xl font-medium text-foreground-strong tracking-tight">Something went wrong</h1>
+        <p className="text-sm text-muted-foreground">
           An unexpected error occurred while rendering this page.
         </p>
       </div>
@@ -31,14 +31,14 @@ export default function Error({
       <div className="flex items-center gap-3">
         <button
           onClick={() => reset()}
-          className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-colors flex items-center gap-2 cursor-pointer"
+          className="bg-primary hover:bg-foreground/90 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-colors flex items-center gap-2 cursor-pointer"
         >
           <RefreshCw className="w-4 h-4" />
           Try Again
         </button>
         <Link
           href="/"
-          className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs px-5 py-2.5 rounded-xl transition-colors flex items-center gap-2 cursor-pointer"
+          className="bg-foreground/5 hover:bg-foreground/8 text-foreground font-bold text-xs px-5 py-2.5 rounded-xl transition-colors flex items-center gap-2 cursor-pointer"
         >
           <Home className="w-4 h-4" />
           Return Home

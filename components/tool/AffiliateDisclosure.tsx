@@ -12,15 +12,15 @@ export function AffiliateDisclosure({
 }: AffiliateDisclosureProps) {
   const baseClass =
     variant === 'footer'
-      ? 'text-[11px] text-slate-500 leading-relaxed max-w-2xl'
-      : 'text-[11px] text-slate-500 leading-relaxed';
+      ? 'text-[11px] text-muted-foreground leading-relaxed max-w-2xl'
+      : 'text-[11px] text-muted-foreground leading-relaxed';
 
   return (
     <p className={`${baseClass} ${className}`.trim()}>
       Some outbound links on {variant === 'footer' ? 'this site' : 'this page'} are affiliate
       links. If you sign up through one of these links, we may earn a commission at no extra cost
       to you.{' '}
-      <Link href="/terms" className="underline hover:text-slate-700 transition-colors">
+      <Link href="/terms" className="underline hover:text-foreground transition-colors">
         Learn more
       </Link>
     </p>

@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { Tool, Category, Persona, ToolFilterOptions } from '../../types/tool';
 import { ToolCard } from '../../components/tool/ToolCard';
 import { ToolFilterSidebar } from '../../components/tool/ToolFilterSidebar';
+import { PageHero, PageHeroBadge } from '../../components/ui/PageHero';
 import { Search, Sparkles, Filter, Grid, List } from 'lucide-react';
 
 interface ToolCatalogClientProps {
@@ -41,7 +42,6 @@ export function ToolCatalogClient({
     }
   }, [searchParams]);
 
-  // Local filtering for fast client response
   const filteredTools = tools.filter((t) => {
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
@@ -96,37 +96,28 @@ export function ToolCatalogClient({
 
   return (
     <div className="space-y-8">
-      {/* Search Header Banner */}
-      <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-lg relative overflow-hidden">
-        <div className="max-w-2xl space-y-4 relative z-10">
-          <div className="inline-flex items-center gap-1.5 bg-emerald-950 border border-emerald-800 text-emerald-300 px-3 py-1 rounded-full text-xs font-semibold">
-            <Sparkles className="w-3 h-3 text-emerald-400" />
+      <PageHero
+        badge={
+          <PageHeroBadge icon={<Sparkles className="w-3 h-3 text-accent" />}>
             Taxonomy Catalog &bull; {totalCount} AI Tools
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
-            Search &amp; Filter All AI Tools
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-            The complete searchable catalog — filter by category, pricing, persona fit, and API or mobile availability.
-          </p>
-
-          <div className="relative pt-2">
-            <input
-              type="text"
-              placeholder="Filter by name, keyword, capability, or tag..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-slate-800/90 border border-slate-700/80 rounded-2xl pl-11 pr-4 py-3 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-inner"
-            />
-            <Search className="w-5 h-5 text-slate-400 absolute left-4 top-5" />
-          </div>
+          </PageHeroBadge>
+        }
+        title="Search & Filter All AI Tools"
+        description="The complete searchable catalog — filter by category, pricing, persona fit, and API or mobile availability."
+      >
+        <div className="relative pt-2 max-w-2xl mx-auto">
+          <input
+            type="text"
+            placeholder="Filter by name, keyword, capability, or tag..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-inverted-foreground/10 border border-inverted-foreground/20 rounded-2xl pl-11 pr-4 py-3 text-sm text-inverted-foreground placeholder:text-inverted-foreground/40 focus:outline-none focus:ring-2 focus:ring-accent shadow-inner"
+          />
+          <Search className="w-5 h-5 text-inverted-foreground/50 absolute left-4 top-3.5" />
         </div>
-      </div>
+      </PageHero>
 
-      {/* Main Grid Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        
-        {/* Sidebar Filters */}
         <div className="lg:col-span-1">
           <ToolFilterSidebar
             categories={categories}
@@ -138,18 +129,19 @@ export function ToolCatalogClient({
           />
         </div>
 
-        {/* Tools Results List */}
         <div className="lg:col-span-3 space-y-6">
-          <div className="flex items-center justify-between bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
-            <div className="text-xs font-bold text-slate-700">
-              Showing <span className="text-slate-900">{filteredTools.length}</span> tools
+          <div className="home-card flex items-center justify-between p-4">
+            <div className="text-xs font-medium text-foreground">
+              Showing <span className="text-foreground-strong">{filteredTools.length}</span> tools
             </div>
 
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setViewLayout('grid')}
                 className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
-                  viewLayout === 'grid' ? 'bg-slate-900 text-white border-slate-900' : 'bg-slate-50 text-slate-500 border-slate-200'
+                  viewLayout === 'grid'
+                    ? 'bg-primary text-primary-foreground border-primary'
+                    : 'bg-background text-muted-foreground border-border/50'
                 }`}
                 title="Grid View"
               >
@@ -158,7 +150,9 @@ export function ToolCatalogClient({
               <button
                 onClick={() => setViewLayout('list')}
                 className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
-                  viewLayout === 'list' ? 'bg-slate-900 text-white border-slate-900' : 'bg-slate-50 text-slate-500 border-slate-200'
+                  viewLayout === 'list'
+                    ? 'bg-primary text-primary-foreground border-primary'
+                    : 'bg-background text-muted-foreground border-border/50'
                 }`}
                 title="List View"
               >
@@ -168,16 +162,13 @@ export function ToolCatalogClient({
           </div>
 
           {filteredTools.length === 0 ? (
-            <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center space-y-3">
-              <Filter className="w-8 h-8 text-slate-300 mx-auto" />
-              <h3 className="font-bold text-slate-900 text-lg">No tools found matching your criteria</h3>
-              <p className="text-xs text-slate-500 max-w-sm mx-auto">
+            <div className="home-card p-12 text-center space-y-3">
+              <Filter className="w-8 h-8 text-muted-foreground mx-auto" />
+              <h3 className="font-medium text-foreground-strong text-lg">No tools found matching your criteria</h3>
+              <p className="text-xs text-muted-foreground max-w-sm mx-auto">
                 Try widening your filters or resetting pricing and category selections.
               </p>
-              <button
-                onClick={handleReset}
-                className="bg-slate-900 text-white text-xs font-bold px-4 py-2 rounded-xl transition-colors cursor-pointer mt-2"
-              >
+              <button onClick={handleReset} className="home-btn-primary text-xs mt-2 cursor-pointer">
                 Reset All Filters
               </button>
             </div>
@@ -189,7 +180,6 @@ export function ToolCatalogClient({
             </div>
           )}
         </div>
-
       </div>
     </div>
   );

@@ -112,23 +112,23 @@ export default async function PersonaUseCasePage({
       <div className="max-w-4xl mx-auto space-y-4">
         <Link
           href={`/for/${page.persona.slug}`}
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-muted-foreground hover:text-foreground-strong transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           Back to {page.persona.title}
         </Link>
 
-        <div className="bg-slate-900 text-white rounded-3xl p-8 sm:p-12 shadow-lg text-center space-y-4">
-          <div className="inline-flex items-center gap-1.5 bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-            <Kanban className="w-4 h-4 text-indigo-400" />
+        <div className="bg-inverted text-inverted-foreground rounded-3xl p-8 sm:p-12 shadow-lg text-center space-y-4">
+          <div className="inline-flex items-center gap-1.5 bg-accent/10 border border-accent/30 text-accent px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
+            <Kanban className="w-4 h-4 text-accent" />
             {page.persona.title} &bull; {page.useCase.title}
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">{page.useCase.title}</h1>
-          <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
+          <h1 className="text-3xl sm:text-4xl font-medium tracking-tight">{page.useCase.title}</h1>
+          <p className="text-sm sm:text-base text-inverted-foreground/70 max-w-2xl mx-auto leading-relaxed">
             {page.useCase.description}
           </p>
           {isMergedTaskPage && (
-            <p className="text-xs text-indigo-200/90 max-w-xl mx-auto">
+            <p className="text-xs text-inverted-foreground/70 max-w-xl mx-auto">
               Project planning is merged here — verified overlap between task and planning tools exceeded 70%.
             </p>
           )}
@@ -137,9 +137,9 @@ export default async function PersonaUseCasePage({
 
       {groupedTools.map((section) => (
         <div key={section.key} className="space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-            <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-indigo-600" />
+          <div className="flex items-center justify-between border-b border-border/50 pb-3">
+            <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-accent" />
               {section.label} ({section.tools.length})
             </h2>
           </div>

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "../components/home/home.css";
 
 /* Inworld-inspired semantic design tokens — warm neutral palette */
 :root {
@@ -18,6 +19,7 @@
   --light-card-foreground-muted: #6b6963;
   --color-competitor: #6b6963;
   --color-highlighted: #2a7a3a;
+  --color-rating: #b8860b;
   --inworld-brown-700: #5a4f45;
   --inworld-gray-1000: #1c1b19;
 }
@@ -39,6 +41,7 @@
   --color-light-card-foreground-muted: var(--light-card-foreground-muted);
   --color-competitor: var(--color-competitor);
   --color-highlighted: var(--color-highlighted);
+  --color-rating: var(--color-rating);
   --color-inworld-brown-700: var(--inworld-brown-700);
   --color-inworld-gray-1000: var(--inworld-gray-1000);
 

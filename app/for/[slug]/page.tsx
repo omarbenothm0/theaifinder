@@ -80,15 +80,15 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
       <JsonLd schema={breadcrumbSchema} />
 
       {/* Hero Header */}
-      <div className="bg-slate-900 text-white rounded-3xl p-8 sm:p-12 shadow-lg max-w-4xl mx-auto text-center space-y-4">
-        <div className="inline-flex items-center gap-1.5 bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-          <Users className="w-4 h-4 text-indigo-400" />
+      <div className="bg-inverted text-inverted-foreground rounded-3xl p-8 sm:p-12 shadow-lg max-w-4xl mx-auto text-center space-y-4">
+        <div className="inline-flex items-center gap-1.5 bg-accent/10 border border-accent/30 text-accent px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
+          <Users className="w-4 h-4 text-accent" />
           Workflow Guide &bull; {persona.title}
         </div>
-        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
+        <h1 className="text-3xl sm:text-5xl font-medium tracking-tight">
           {persona.title}
         </h1>
-        <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-sm sm:text-base text-inverted-foreground/70 max-w-2xl mx-auto leading-relaxed">
           {persona.description}
         </p>
       </div>
@@ -97,7 +97,7 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
         <div className="max-w-4xl mx-auto">
           <Link
             href="/category/project-management"
-            className="inline-flex items-center gap-2 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-4 py-2.5 rounded-xl hover:bg-indigo-100 transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-bold text-accent bg-accent/10 border border-accent/20 px-4 py-2.5 rounded-xl hover:bg-accent/15 transition-colors"
           >
             <Layers className="w-4 h-4" />
             Browse all Project Management category tools
@@ -110,7 +110,7 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
         <div className="max-w-4xl mx-auto">
           <Link
             href="/category/study-education"
-            className="inline-flex items-center gap-2 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-4 py-2.5 rounded-xl hover:bg-indigo-100 transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-bold text-accent bg-accent/10 border border-accent/20 px-4 py-2.5 rounded-xl hover:bg-accent/15 transition-colors"
           >
             <GraduationCap className="w-4 h-4" />
             Browse all Study &amp; Education category tools
@@ -123,7 +123,7 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
         <div className="max-w-4xl mx-auto flex flex-wrap gap-3">
           <Link
             href="/category/marketing"
-            className="inline-flex items-center gap-2 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-4 py-2.5 rounded-xl hover:bg-indigo-100 transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-bold text-accent bg-accent/10 border border-accent/20 px-4 py-2.5 rounded-xl hover:bg-accent/15 transition-colors"
           >
             <TrendingUp className="w-4 h-4" />
             Browse Marketing &amp; CRM category tools
@@ -131,7 +131,7 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
           </Link>
           <Link
             href="/category/writing"
-            className="inline-flex items-center gap-2 text-xs font-bold text-slate-700 bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl hover:bg-slate-100 transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-bold text-foreground bg-background border border-border/50 px-4 py-2.5 rounded-xl hover:bg-foreground/5 transition-colors"
           >
             Browse Writing category (copy tools)
             <ArrowRight className="w-3.5 h-3.5" />
@@ -143,7 +143,7 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
         <div className="max-w-4xl mx-auto">
           <Link
             href="/category/study-education"
-            className="inline-flex items-center gap-2 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-4 py-2.5 rounded-xl hover:bg-indigo-100 transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-bold text-accent bg-accent/10 border border-accent/20 px-4 py-2.5 rounded-xl hover:bg-accent/15 transition-colors"
           >
             <GraduationCap className="w-4 h-4" />
             Browse Study &amp; Education category tools
@@ -156,7 +156,7 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
         <div className="max-w-4xl mx-auto">
           <Link
             href="/category/productivity"
-            className="inline-flex items-center gap-2 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-4 py-2.5 rounded-xl hover:bg-indigo-100 transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-bold text-accent bg-accent/10 border border-accent/20 px-4 py-2.5 rounded-xl hover:bg-accent/15 transition-colors"
           >
             <Store className="w-4 h-4" />
             Browse Productivity &amp; Workspace category tools
@@ -169,7 +169,7 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
         <div className="max-w-4xl mx-auto">
           <Link
             href="/category/study-education"
-            className="inline-flex items-center gap-2 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-4 py-2.5 rounded-xl hover:bg-indigo-100 transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-bold text-accent bg-accent/10 border border-accent/20 px-4 py-2.5 rounded-xl hover:bg-accent/15 transition-colors"
           >
             <Microscope className="w-4 h-4" />
             Browse Study &amp; Education category tools
@@ -182,7 +182,7 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
         <div className="max-w-4xl mx-auto">
           <Link
             href="/category/image"
-            className="inline-flex items-center gap-2 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-4 py-2.5 rounded-xl hover:bg-indigo-100 transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-bold text-accent bg-accent/10 border border-accent/20 px-4 py-2.5 rounded-xl hover:bg-accent/15 transition-colors"
           >
             <Home className="w-4 h-4" />
             Browse Image &amp; Design category tools
@@ -195,7 +195,7 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
         <div className="max-w-4xl mx-auto">
           <Link
             href="/category/writing"
-            className="inline-flex items-center gap-2 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-4 py-2.5 rounded-xl hover:bg-indigo-100 transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-bold text-accent bg-accent/10 border border-accent/20 px-4 py-2.5 rounded-xl hover:bg-accent/15 transition-colors"
           >
             <BookOpen className="w-4 h-4" />
             Browse Writing &amp; Copywriting category tools
@@ -217,9 +217,9 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
 
       {/* Recommended Tools List */}
       <div className="space-y-6">
-        <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-          <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
-            <CheckCircle2 className="w-5 h-5 text-indigo-600" />
+        <div className="flex items-center justify-between border-b border-border/50 pb-3">
+          <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
+            <CheckCircle2 className="w-5 h-5 text-accent" />
             Recommended Tools for {persona.title} ({toolsRes.length})
           </h2>
         </div>
@@ -228,17 +228,17 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
       </div>
 
       {/* Tool Finder CTA */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-4 max-w-4xl mx-auto">
+      <div className="bg-background-raised rounded-2xl border border-border/50 p-6 sm:p-8 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-4 max-w-4xl mx-auto">
         <div className="flex items-center gap-3 text-center sm:text-left">
-          <Compass className="w-8 h-8 text-emerald-600 shrink-0" />
+          <Compass className="w-8 h-8 text-accent shrink-0" />
           <div>
-            <h3 className="font-bold text-slate-900 text-sm">Not seeing the right fit?</h3>
-            <p className="text-xs text-slate-500">Take the 30-second Tool Finder quiz for a personalized match.</p>
+            <h3 className="font-bold text-foreground-strong text-sm">Not seeing the right fit?</h3>
+            <p className="text-xs text-muted-foreground">Take the 30-second Tool Finder quiz for a personalized match.</p>
           </div>
         </div>
         <Link
           href="/ai-tool-finder"
-          className="bg-slate-900 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition-colors hover:bg-slate-800 flex items-center gap-1.5 shrink-0"
+          className="bg-inverted text-inverted-foreground text-xs font-bold px-5 py-2.5 rounded-xl transition-colors hover:bg-inverted-foreground/10 flex items-center gap-1.5 shrink-0"
         >
           Try the AI Tool Finder
           <ArrowRight className="w-3.5 h-3.5" />

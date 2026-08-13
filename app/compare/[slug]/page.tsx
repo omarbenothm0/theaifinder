@@ -64,15 +64,15 @@ export default async function ComparisonPage({ params }: { params: Promise<{ slu
       <JsonLd schema={breadcrumbSchema} />
 
       {/* Hero Header */}
-      <div className="bg-slate-900 text-white rounded-3xl p-8 sm:p-12 shadow-lg text-center space-y-4">
-        <div className="inline-flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/30 text-amber-300 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-          <Zap className="w-4 h-4 text-amber-400" />
+      <div className="bg-inverted text-inverted-foreground rounded-3xl p-8 sm:p-12 shadow-lg text-center space-y-4">
+        <div className="inline-flex items-center gap-1.5 bg-rating/100/10 border border-amber-500/30 text-amber-300 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
+          <Zap className="w-4 h-4 text-rating" />
           Head-to-Head Software Evaluation
         </div>
-        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
+        <h1 className="text-3xl sm:text-5xl font-medium tracking-tight">
           {comp.title}
         </h1>
-        <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-sm sm:text-base text-inverted-foreground/70 max-w-2xl mx-auto leading-relaxed">
           Comprehensive comparison of feature sets, pricing plans, accuracy, and workflow fit.
         </p>
       </div>

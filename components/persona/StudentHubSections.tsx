@@ -12,9 +12,9 @@ export function StudentHubSections({ sections, heading = 'Student Workflows' }: 
 
   return (
     <div className="space-y-10">
-      <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-        <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
-          <Layers className="w-5 h-5 text-indigo-600" />
+      <div className="flex items-center justify-between border-b border-border/50 pb-3">
+        <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
+          <Layers className="w-5 h-5 text-accent" />
           {heading}
         </h2>
       </div>
@@ -26,8 +26,8 @@ export function StudentHubSections({ sections, heading = 'Student Workflows' }: 
           className="scroll-mt-24 space-y-4"
         >
           <div className="space-y-1">
-            <h3 className="text-lg font-extrabold text-slate-900">{section.useCase.title}</h3>
-            <p className="text-xs text-slate-600 leading-relaxed max-w-3xl">
+            <h3 className="text-lg font-medium text-foreground-strong">{section.useCase.title}</h3>
+            <p className="text-xs text-muted-foreground leading-relaxed max-w-3xl">
               {section.useCase.description}
             </p>
           </div>
@@ -39,7 +39,7 @@ export function StudentHubSections({ sections, heading = 'Student Workflows' }: 
               ))}
             </div>
           ) : (
-            <p className="text-xs text-slate-500 italic">No verified tools mapped for this workflow yet.</p>
+            <p className="text-xs text-muted-foreground italic">No verified tools mapped for this workflow yet.</p>
           )}
         </section>
       ))}

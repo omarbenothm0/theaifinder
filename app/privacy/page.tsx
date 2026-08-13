@@ -122,15 +122,15 @@ export default function PrivacyPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-12 pb-16">
       <header className="space-y-4 text-center">
-        <div className="inline-flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-          <ShieldCheck className="w-4 h-4 text-emerald-600" />
+        <div className="inline-flex items-center gap-1.5 bg-accent/10 border border-accent/30 text-accent px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
+          <ShieldCheck className="w-4 h-4 text-accent" />
           Privacy Policy
         </div>
-        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900">
+        <h1 className="text-3xl sm:text-5xl font-medium tracking-tight text-foreground-strong">
           How TheRadarHub Protects Your Privacy
         </h1>
-        <p className="text-sm text-slate-600 max-w-2xl mx-auto leading-relaxed">
-          Last updated <span className="font-semibold text-slate-900">{LAST_UPDATED}</span>. This
+        <p className="text-sm text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          Last updated <span className="font-semibold text-foreground-strong">{LAST_UPDATED}</span>. This
           policy explains what information the TheRadarHub directory collects, why it is processed, and
           the concrete controls you have over your data.
         </p>
@@ -140,21 +140,21 @@ export default function PrivacyPage() {
         {SECTIONS.map(({ Icon, title, body }) => (
           <section
             key={title}
-            className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-4"
+            className="bg-background-raised rounded-2xl border border-border/50 shadow-sm p-6 sm:p-8 space-y-4"
           >
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-accent/10 text-accent flex items-center justify-center shrink-0">
                 <Icon className="w-5 h-5" />
               </div>
-              <h2 className="text-lg font-extrabold tracking-tight text-slate-900">{title}</h2>
+              <h2 className="text-lg font-medium tracking-tight text-foreground-strong">{title}</h2>
             </div>
             <ul className="space-y-2.5 pl-13 list-none">
               {body.map((line, idx) => (
                 <li
                   key={idx}
-                  className="text-sm text-slate-700 leading-relaxed flex gap-2.5"
+                  className="text-sm text-foreground leading-relaxed flex gap-2.5"
                 >
-                  <span className="mt-[0.55rem] w-1.5 h-1.5 shrink-0 rounded-full bg-emerald-500" />
+                  <span className="mt-[0.55rem] w-1.5 h-1.5 shrink-0 rounded-full bg-accent" />
                   <span>{line}</span>
                 </li>
               ))}
@@ -163,7 +163,7 @@ export default function PrivacyPage() {
         ))}
       </div>
 
-      <div className="text-center text-xs text-slate-500 pt-2">
+      <div className="text-center text-xs text-muted-foreground pt-2">
         &copy; {new Date().getFullYear()} TheRadarHub Platform &middot; Policy document hash updated at
         publication.
       </div>

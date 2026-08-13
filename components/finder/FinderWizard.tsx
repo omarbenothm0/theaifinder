@@ -109,44 +109,44 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
     <div className="space-y-8">
       {/* Header Banner */}
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-800 px-3.5 py-1 rounded-full text-xs font-semibold">
-          <Compass className="w-3.5 h-3.5 text-emerald-600" />
+        <div className="inline-flex items-center gap-1.5 bg-accent/10 border border-accent/20 text-accent px-3.5 py-1 rounded-full text-xs font-semibold">
+          <Compass className="w-3.5 h-3.5 text-accent" />
           Interactive AI Recommendation Engine
         </div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">AI Tool Finder</h1>
-        <p className="text-xs sm:text-sm text-slate-500 max-w-lg mx-auto">
+        <h1 className="text-3xl sm:text-4xl font-medium text-foreground-strong tracking-tight">AI Tool Finder</h1>
+        <p className="text-xs sm:text-sm text-muted-foreground max-w-lg mx-auto">
           Find the right AI tool tailored precisely to your specific task, role, and budget in under 30 seconds.
         </p>
       </div>
 
       {/* Step Progress Bar */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-2xs flex items-center justify-between text-xs font-bold text-slate-500">
-        <div className={`flex items-center gap-2 ${step >= 1 ? 'text-emerald-600' : ''}`}>
-          <span className={`w-6 h-6 rounded-full flex items-center justify-center ${step >= 1 ? 'bg-emerald-600 text-white' : 'bg-slate-100'}`}>
+      <div className="bg-background-raised rounded-2xl border border-border/50/80 p-4 shadow-2xs flex items-center justify-between text-xs font-bold text-muted-foreground">
+        <div className={`flex items-center gap-2 ${step >= 1 ? 'text-accent' : ''}`}>
+          <span className={`w-6 h-6 rounded-full flex items-center justify-center ${step >= 1 ? 'bg-primary text-white' : 'bg-foreground/5'}`}>
             1
           </span>
           <span className="hidden sm:inline">Use Case</span>
         </div>
-        <div className="w-12 h-0.5 bg-slate-200"></div>
+        <div className="w-12 h-0.5 bg-border"></div>
 
-        <div className={`flex items-center gap-2 ${step >= 2 ? 'text-emerald-600' : ''}`}>
-          <span className={`w-6 h-6 rounded-full flex items-center justify-center ${step >= 2 ? 'bg-emerald-600 text-white' : 'bg-slate-100'}`}>
+        <div className={`flex items-center gap-2 ${step >= 2 ? 'text-accent' : ''}`}>
+          <span className={`w-6 h-6 rounded-full flex items-center justify-center ${step >= 2 ? 'bg-primary text-white' : 'bg-foreground/5'}`}>
             2
           </span>
           <span className="hidden sm:inline">Your Role</span>
         </div>
-        <div className="w-12 h-0.5 bg-slate-200"></div>
+        <div className="w-12 h-0.5 bg-border"></div>
 
-        <div className={`flex items-center gap-2 ${step >= 3 ? 'text-emerald-600' : ''}`}>
-          <span className={`w-6 h-6 rounded-full flex items-center justify-center ${step >= 3 ? 'bg-emerald-600 text-white' : 'bg-slate-100'}`}>
+        <div className={`flex items-center gap-2 ${step >= 3 ? 'text-accent' : ''}`}>
+          <span className={`w-6 h-6 rounded-full flex items-center justify-center ${step >= 3 ? 'bg-primary text-white' : 'bg-foreground/5'}`}>
             3
           </span>
           <span className="hidden sm:inline">Budget</span>
         </div>
-        <div className="w-12 h-0.5 bg-slate-200"></div>
+        <div className="w-12 h-0.5 bg-border"></div>
 
-        <div className={`flex items-center gap-2 ${step === 4 ? 'text-emerald-600' : ''}`}>
-          <span className={`w-6 h-6 rounded-full flex items-center justify-center ${step === 4 ? 'bg-emerald-600 text-white' : 'bg-slate-100'}`}>
+        <div className={`flex items-center gap-2 ${step === 4 ? 'text-accent' : ''}`}>
+          <span className={`w-6 h-6 rounded-full flex items-center justify-center ${step === 4 ? 'bg-primary text-white' : 'bg-foreground/5'}`}>
             4
           </span>
           <span className="hidden sm:inline">Results</span>
@@ -154,18 +154,18 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
       </div>
 
       {/* Wizard Form Cards */}
-      <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-10 shadow-xs space-y-8">
+      <div className="bg-background-raised rounded-3xl border border-border/50/80 p-6 sm:p-10 shadow-xs space-y-8">
         
         {/* Step 1: Use Case */}
         {step === 1 && (
           <div className="space-y-6 animate-in fade-in duration-200">
             <div className="space-y-1">
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 flex items-center gap-1">
+              <span className="text-xs font-bold uppercase tracking-wider text-accent flex items-center gap-1">
                 <Layers className="w-3.5 h-3.5" />
                 Step 1 of 3
               </span>
-              <h2 className="text-xl font-bold text-slate-900">What do you need AI for?</h2>
-              <p className="text-xs text-slate-500">Select the primary objective you want to accomplish:</p>
+              <h2 className="text-xl font-bold text-foreground-strong">What do you need AI for?</h2>
+              <p className="text-xs text-muted-foreground">Select the primary objective you want to accomplish:</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -191,15 +191,15 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
                   onClick={() => setUseCase(item.id)}
                   className={`p-4 rounded-2xl border text-left transition-all cursor-pointer ${
                     useCase === item.id
-                      ? 'border-emerald-600 bg-emerald-50/50 shadow-2xs font-bold text-slate-900'
-                      : 'border-slate-200 hover:border-slate-300 text-slate-700 hover:bg-slate-50'
+                      ? 'border-accent bg-accent/10 shadow-2xs font-bold text-foreground-strong'
+                      : 'border-border/50 hover:border-border text-foreground hover:bg-background'
                   }`}
                 >
-                  <div className="text-sm font-bold text-slate-900 mb-1 flex items-center justify-between">
+                  <div className="text-sm font-bold text-foreground-strong mb-1 flex items-center justify-between">
                     <span>{item.name}</span>
-                    {useCase === item.id && <CheckCircle2 className="w-4 h-4 text-emerald-600" />}
+                    {useCase === item.id && <CheckCircle2 className="w-4 h-4 text-accent" />}
                   </div>
-                  <p className="text-xs text-slate-500 font-normal leading-relaxed">{item.desc}</p>
+                  <p className="text-xs text-muted-foreground font-normal leading-relaxed">{item.desc}</p>
                 </button>
               ))}
             </div>
@@ -207,10 +207,10 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
             <div className="flex justify-end pt-4">
               <button
                 onClick={() => setStep(2)}
-                className="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-6 py-3 rounded-xl transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs"
+                className="bg-inverted hover:bg-inverted-foreground/10 text-white font-bold text-xs px-6 py-3 rounded-xl transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs"
               >
                 <span>Next: Your Role</span>
-                <ArrowRight className="w-4 h-4 text-emerald-400" />
+                <ArrowRight className="w-4 h-4 text-accent" />
               </button>
             </div>
           </div>
@@ -220,12 +220,12 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
         {step === 2 && (
           <div className="space-y-6 animate-in fade-in duration-200">
             <div className="space-y-1">
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 flex items-center gap-1">
+              <span className="text-xs font-bold uppercase tracking-wider text-accent flex items-center gap-1">
                 <Users className="w-3.5 h-3.5" />
                 Step 2 of 3
               </span>
-              <h2 className="text-xl font-bold text-slate-900">What best describes your role?</h2>
-              <p className="text-xs text-slate-500">We prioritize tools optimized for your specific role:</p>
+              <h2 className="text-xl font-bold text-foreground-strong">What best describes your role?</h2>
+              <p className="text-xs text-muted-foreground">We prioritize tools optimized for your specific role:</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -235,13 +235,13 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
                   onClick={() => setRole(item.id)}
                   className={`p-4 rounded-2xl border text-left transition-all cursor-pointer ${
                     role === item.id
-                      ? 'border-emerald-600 bg-emerald-50/50 shadow-2xs font-bold text-slate-900'
-                      : 'border-slate-200 hover:border-slate-300 text-slate-700 hover:bg-slate-50'
+                      ? 'border-accent bg-accent/10 shadow-2xs font-bold text-foreground-strong'
+                      : 'border-border/50 hover:border-border text-foreground hover:bg-background'
                   }`}
                 >
-                  <div className="text-sm font-bold text-slate-900 flex items-center justify-between">
+                  <div className="text-sm font-bold text-foreground-strong flex items-center justify-between">
                     <span>{item.name}</span>
-                    {role === item.id && <CheckCircle2 className="w-4 h-4 text-emerald-600" />}
+                    {role === item.id && <CheckCircle2 className="w-4 h-4 text-accent" />}
                   </div>
                 </button>
               ))}
@@ -250,16 +250,16 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
             <div className="flex justify-between pt-4">
               <button
                 onClick={() => setStep(1)}
-                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 cursor-pointer"
+                className="px-4 py-2 text-xs font-semibold text-muted-foreground hover:text-foreground-strong cursor-pointer"
               >
                 Back
               </button>
               <button
                 onClick={() => setStep(3)}
-                className="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-6 py-3 rounded-xl transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs"
+                className="bg-inverted hover:bg-inverted-foreground/10 text-white font-bold text-xs px-6 py-3 rounded-xl transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs"
               >
                 <span>Next: Budget</span>
-                <ArrowRight className="w-4 h-4 text-emerald-400" />
+                <ArrowRight className="w-4 h-4 text-accent" />
               </button>
             </div>
           </div>
@@ -269,12 +269,12 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
         {step === 3 && (
           <div className="space-y-6 animate-in fade-in duration-200">
             <div className="space-y-1">
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 flex items-center gap-1">
+              <span className="text-xs font-bold uppercase tracking-wider text-accent flex items-center gap-1">
                 <DollarSign className="w-3.5 h-3.5" />
                 Step 3 of 3
               </span>
-              <h2 className="text-xl font-bold text-slate-900">What is your pricing preference?</h2>
-              <p className="text-xs text-slate-500">Filter software options based on financial requirements:</p>
+              <h2 className="text-xl font-bold text-foreground-strong">What is your pricing preference?</h2>
+              <p className="text-xs text-muted-foreground">Filter software options based on financial requirements:</p>
             </div>
 
             <div className="space-y-3">
@@ -288,15 +288,15 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
                   onClick={() => setBudgetPreference(item.id)}
                   className={`w-full p-4 rounded-2xl border text-left transition-all cursor-pointer ${
                     budgetPreference === item.id
-                      ? 'border-emerald-600 bg-emerald-50/50 shadow-2xs font-bold text-slate-900'
-                      : 'border-slate-200 hover:border-slate-300 text-slate-700 hover:bg-slate-50'
+                      ? 'border-accent bg-accent/10 shadow-2xs font-bold text-foreground-strong'
+                      : 'border-border/50 hover:border-border text-foreground hover:bg-background'
                   }`}
                 >
-                  <div className="text-sm font-bold text-slate-900 mb-1 flex items-center justify-between">
+                  <div className="text-sm font-bold text-foreground-strong mb-1 flex items-center justify-between">
                     <span>{item.name}</span>
-                    {budgetPreference === item.id && <CheckCircle2 className="w-4 h-4 text-emerald-600" />}
+                    {budgetPreference === item.id && <CheckCircle2 className="w-4 h-4 text-accent" />}
                   </div>
-                  <p className="text-xs text-slate-500 font-normal leading-relaxed">{item.desc}</p>
+                  <p className="text-xs text-muted-foreground font-normal leading-relaxed">{item.desc}</p>
                 </button>
               ))}
             </div>
@@ -304,14 +304,14 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
             <div className="flex justify-between pt-4">
               <button
                 onClick={() => setStep(2)}
-                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 cursor-pointer"
+                className="px-4 py-2 text-xs font-semibold text-muted-foreground hover:text-foreground-strong cursor-pointer"
               >
                 Back
               </button>
               <button
                 onClick={handleEvaluate}
                 disabled={evaluating}
-                className="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm px-8 py-3.5 rounded-xl transition-all cursor-pointer shadow-md flex items-center gap-2"
+                className="bg-primary hover:bg-foreground/90 text-white font-medium text-sm px-8 py-3.5 rounded-xl transition-all cursor-pointer shadow-md flex items-center gap-2"
               >
                 <Sparkles className="w-4 h-4 text-white" />
                 <span>{evaluating ? 'Evaluating Match Matrix...' : 'Generate My Tool Match Report'}</span>
@@ -323,18 +323,18 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
         {/* Step 4: Results */}
         {step === 4 && results && (
           <div className="space-y-8 animate-in fade-in duration-300">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+            <div className="flex items-center justify-between border-b border-border/30 pb-4">
               <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 flex items-center gap-1">
+                <span className="text-xs font-bold uppercase tracking-wider text-accent flex items-center gap-1">
                   <CheckCircle2 className="w-4 h-4" />
                   Matching Evaluation Complete
                 </span>
-                <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Your Top Recommended AI Tools</h2>
+                <h2 className="text-2xl font-medium text-foreground-strong tracking-tight">Your Top Recommended AI Tools</h2>
               </div>
 
               <button
                 onClick={handleReset}
-                className="text-xs font-bold text-slate-500 hover:text-slate-900 flex items-center gap-1 cursor-pointer"
+                className="text-xs font-bold text-muted-foreground hover:text-foreground-strong flex items-center gap-1 cursor-pointer"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 Restart Quiz
@@ -344,22 +344,22 @@ export function FinderWizard({ initialTools }: FinderWizardProps) {
             <div className="space-y-6">
               {results.map((resItem, idx) => (
                 <div key={resItem.tool.id} className="relative">
-                  <div className="absolute -top-3 right-4 z-10 bg-slate-900 text-white text-[11px] font-extrabold px-3 py-1 rounded-full shadow-md flex items-center gap-1 border border-emerald-400/40">
-                    <Sparkles className="w-3 h-3 text-emerald-400" />
+                  <div className="absolute -top-3 right-4 z-10 bg-inverted text-inverted-foreground text-[11px] font-medium px-3 py-1 rounded-full shadow-md flex items-center gap-1 border border-accent/40">
+                    <Sparkles className="w-3 h-3 text-accent" />
                     <span>#{idx + 1} Match &bull; {resItem.score}% Fit Score</span>
                   </div>
 
-                  <div className="bg-slate-50/50 p-4 rounded-2xl border border-slate-200/80 space-y-3">
+                  <div className="bg-background/50 p-4 rounded-2xl border border-border/50/80 space-y-3">
                     <ToolCard tool={resItem.tool} layout="list" />
 
                     {/* Match reasoning list */}
                     {resItem.matchReasons.length > 0 && (
-                      <div className="bg-white p-3 rounded-xl border border-slate-100 text-xs text-slate-700">
-                        <span className="font-bold text-slate-900 block mb-1">Why this was recommended for you:</span>
+                      <div className="bg-background-raised p-3 rounded-xl border border-border/30 text-xs text-foreground">
+                        <span className="font-bold text-foreground-strong block mb-1">Why this was recommended for you:</span>
                         <ul className="space-y-1">
                           {resItem.matchReasons.map((reason, rIdx) => (
-                            <li key={rIdx} className="flex items-center gap-1.5 text-emerald-800">
-                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                            <li key={rIdx} className="flex items-center gap-1.5 text-accent">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-accent shrink-0" />
                               <span>{reason}</span>
                             </li>
                           ))}

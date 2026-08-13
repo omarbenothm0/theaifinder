@@ -19,7 +19,7 @@ export function ToolOutboundLink({ tool, variant, className = '' }: ToolOutbound
         title={link.title}
         className={
           className ||
-          'bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm px-6 py-3.5 rounded-2xl transition-all cursor-pointer shadow-md flex items-center justify-center gap-2'
+          'home-btn-primary text-sm px-6 py-3.5 rounded-2xl shadow-md flex items-center justify-center gap-2 cursor-pointer'
         }
       >
         <span>{link.label}</span>
@@ -37,7 +37,7 @@ export function ToolOutboundLink({ tool, variant, className = '' }: ToolOutbound
       aria-label={link.title}
       className={
         className ||
-        'p-1.5 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer'
+        'p-1.5 text-muted-foreground hover:text-foreground-strong hover:bg-foreground/5 rounded-lg transition-colors cursor-pointer'
       }
     >
       <ExternalLink className="w-4 h-4" />

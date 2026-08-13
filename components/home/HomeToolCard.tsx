@@ -52,7 +52,7 @@ export function HomeToolCard({ tool }: HomeToolCardProps) {
               </Link>
               {tool.reviewCount > 0 ? (
                 <div className="flex items-center gap-1 text-[13px] text-foreground">
-                  <Star className="w-3.5 h-3.5 fill-amber-500/70 text-amber-500/70" />
+                  <Star className="w-3.5 h-3.5 fill-rating/70 text-rating/70" />
                   <span>{tool.rating.toFixed(1)}</span>
                   <span className="text-muted-foreground">({tool.reviewCount})</span>
                 </div>

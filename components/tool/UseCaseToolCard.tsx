@@ -17,10 +17,10 @@ const TIER_LABELS: Record<UseCaseFitTier, string> = {
 };
 
 const TIER_STYLES: Record<UseCaseFitTier, string> = {
-  primary: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-  strong: 'bg-indigo-100 text-indigo-800 border-indigo-200',
-  partial: 'bg-amber-100 text-amber-800 border-amber-200',
-  listed: 'bg-slate-100 text-slate-700 border-slate-200',
+  primary: 'bg-accent/10 text-accent border-accent/20',
+  strong: 'bg-accent/10 text-accent border-accent/20',
+  partial: 'bg-amber-100 text-amber-800 border-rating/20',
+  listed: 'bg-foreground/5 text-foreground border-border/50',
   exclude: 'bg-red-100 text-red-800 border-red-200',
 };
 
@@ -30,7 +30,7 @@ export function UseCaseToolCard({ tool }: UseCaseToolCardProps) {
   const outbound = getToolOutboundLink(tool);
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs hover:border-slate-300 hover:shadow-md transition-all">
+    <div className="bg-background-raised rounded-xl border border-border/50 p-5 shadow-xs hover:border-border hover:shadow-md transition-all">
       <div className="flex items-start gap-4">
         <Image
           src={tool.logo}
@@ -38,19 +38,19 @@ export function UseCaseToolCard({ tool }: UseCaseToolCardProps) {
           width={48}
           height={48}
           referrerPolicy="no-referrer"
-          className="w-12 h-12 rounded-lg object-cover bg-slate-100 border border-slate-200 shrink-0"
+          className="w-12 h-12 rounded-lg object-cover bg-foreground/5 border border-border/50 shrink-0"
         />
 
         <div className="min-w-0 flex-1 space-y-2">
           <div className="flex flex-wrap items-center gap-2">
             <Link
               href={`/tools/${tool.slug}`}
-              className="font-bold text-slate-900 hover:text-emerald-600 transition-colors"
+              className="font-bold text-foreground-strong hover:text-accent transition-colors"
             >
               {tool.name}
             </Link>
             {tool.verified && (
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" aria-label="Verified" />
+              <CheckCircle2 className="w-4 h-4 text-accent" aria-label="Verified" />
             )}
             <span
               className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded border ${TIER_STYLES[tier]}`}
@@ -59,15 +59,15 @@ export function UseCaseToolCard({ tool }: UseCaseToolCardProps) {
             </span>
           </div>
 
-          <p className="text-xs text-slate-600 leading-relaxed">{tool.tagline}</p>
+          <p className="text-xs text-muted-foreground leading-relaxed">{tool.tagline}</p>
 
-          <p className="text-xs text-slate-700 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100">
-            <span className="font-semibold text-slate-900">Verified capabilities: </span>
+          <p className="text-xs text-foreground bg-background rounded-lg px-3 py-2 border border-border/30">
+            <span className="font-semibold text-foreground-strong">Verified capabilities: </span>
             {useCaseFit.capabilities}
           </p>
 
           {useCaseFit.limitation && (
-            <p className="text-xs text-amber-800 bg-amber-50 rounded-lg px-3 py-2 border border-amber-100">
+            <p className="text-xs text-amber-800 bg-rating/10 rounded-lg px-3 py-2 border border-amber-100">
               <span className="font-semibold">Limitation: </span>
               {useCaseFit.limitation}
             </p>
@@ -76,7 +76,7 @@ export function UseCaseToolCard({ tool }: UseCaseToolCardProps) {
           <div className="flex flex-wrap items-center gap-3 pt-1">
             <Link
               href={`/tools/${tool.slug}`}
-              className="inline-flex items-center gap-1 text-xs font-bold text-slate-700 hover:text-emerald-600 transition-colors"
+              className="inline-flex items-center gap-1 text-xs font-bold text-foreground hover:text-accent transition-colors"
             >
               Full profile
               <ArrowRight className="w-3.5 h-3.5" />
@@ -86,7 +86,7 @@ export function UseCaseToolCard({ tool }: UseCaseToolCardProps) {
               target="_blank"
               rel={outbound.rel}
               title={outbound.title}
-              className="inline-flex items-center gap-1 text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors"
+              className="inline-flex items-center gap-1 text-xs font-bold text-accent hover:text-accent transition-colors"
             >
               Official site
               <ExternalLink className="w-3 h-3" />
@@ -95,7 +95,7 @@ export function UseCaseToolCard({ tool }: UseCaseToolCardProps) {
               href={useCaseFit.evidenceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs text-slate-500 hover:text-slate-700 transition-colors"
+              className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
             >
               Evidence source
               <ExternalLink className="w-3 h-3" />

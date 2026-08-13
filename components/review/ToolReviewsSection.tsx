@@ -19,16 +19,16 @@ export async function ToolReviewsSection({ toolSlug, toolName }: ToolReviewsSect
       : 0;
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-2xs space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
-        <h2 className="text-lg font-bold text-slate-900">User Reviews</h2>
+    <div className="bg-background-raised rounded-2xl border border-border/50 p-6 shadow-2xs space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/30 pb-4">
+        <h2 className="text-lg font-bold text-foreground-strong">User Reviews</h2>
         {approvedCount > 0 && aggregateRating > 0 && (
           <div className="flex items-center gap-2 text-sm">
-            <div className="flex items-center gap-1 font-bold text-slate-900">
-              <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+            <div className="flex items-center gap-1 font-bold text-foreground-strong">
+              <Star className="w-4 h-4 fill-rating text-rating" />
               <span>{aggregateRating.toFixed(1)}</span>
             </div>
-            <span className="text-slate-400">
+            <span className="text-muted-foreground">
               based on {approvedCount} approved review{approvedCount !== 1 ? 's' : ''}
             </span>
           </div>

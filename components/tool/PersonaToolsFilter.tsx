@@ -38,8 +38,8 @@ export function PersonaToolsFilter({ tools }: PersonaToolsFilterProps) {
             onClick={() => setSelectedCategory('all')}
             className={`text-xs py-1.5 px-3 rounded-lg font-medium transition-colors cursor-pointer ${
               selectedCategory === 'all'
-                ? 'bg-slate-900 text-white font-semibold shadow-xs'
-                : 'bg-slate-100 text-slate-700 hover:bg-slate-200/80'
+                ? 'bg-inverted text-inverted-foreground font-semibold shadow-xs'
+                : 'bg-foreground/5 text-foreground hover:bg-foreground/8'
             }`}
           >
             All Categories
@@ -50,8 +50,8 @@ export function PersonaToolsFilter({ tools }: PersonaToolsFilterProps) {
               onClick={() => setSelectedCategory(cat.id)}
               className={`text-xs py-1.5 px-3 rounded-lg font-medium transition-colors cursor-pointer ${
                 selectedCategory === cat.id
-                  ? 'bg-slate-900 text-white font-semibold shadow-xs'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200/80'
+                  ? 'bg-inverted text-inverted-foreground font-semibold shadow-xs'
+                  : 'bg-foreground/5 text-foreground hover:bg-foreground/8'
               }`}
             >
               {cat.name}

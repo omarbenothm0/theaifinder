@@ -12,9 +12,9 @@ export function PersonaUseCaseCards({ personaSlug, useCases }: PersonaUseCaseCar
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-        <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
-          <Layers className="w-5 h-5 text-indigo-600" />
+      <div className="flex items-center justify-between border-b border-border/50 pb-3">
+        <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
+          <Layers className="w-5 h-5 text-accent" />
           Use Cases
         </h2>
       </div>
@@ -29,15 +29,15 @@ export function PersonaUseCaseCards({ personaSlug, useCases }: PersonaUseCaseCar
               <Link
                 key={item.useCase.slug}
                 href={href}
-                className="group bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:border-indigo-300 hover:shadow-md transition-all flex flex-col gap-3"
+                className="group bg-background-raised rounded-2xl border border-border/50 p-5 shadow-xs hover:border-accent/30 hover:shadow-md transition-all flex flex-col gap-3"
               >
-                <h3 className="font-bold text-slate-900 group-hover:text-indigo-700 transition-colors">
+                <h3 className="font-bold text-foreground-strong group-hover:text-accent transition-colors">
                   {item.useCase.title}
                 </h3>
-                <p className="text-xs text-slate-600 leading-relaxed flex-1">
+                <p className="text-xs text-muted-foreground leading-relaxed flex-1">
                   {item.useCase.description}
                 </p>
-                <span className="inline-flex items-center gap-1 text-xs font-bold text-indigo-600">
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-accent">
                   View verified tools
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                 </span>
@@ -48,16 +48,16 @@ export function PersonaUseCaseCards({ personaSlug, useCases }: PersonaUseCaseCar
           return (
             <div
               key={item.useCase.slug}
-              className="bg-slate-50 rounded-2xl border border-dashed border-slate-200 p-5 flex flex-col gap-3"
+              className="bg-background rounded-2xl border border-dashed border-border/50 p-5 flex flex-col gap-3"
             >
               <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-slate-400" />
-                <h3 className="font-bold text-slate-700">{item.useCase.title}</h3>
+                <Clock className="w-4 h-4 text-muted-foreground" />
+                <h3 className="font-bold text-foreground">{item.useCase.title}</h3>
               </div>
-              <p className="text-xs text-slate-500 leading-relaxed flex-1">
+              <p className="text-xs text-muted-foreground leading-relaxed flex-1">
                 {item.hubNote ?? item.useCase.description}
               </p>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                 Standalone page deferred
               </span>
             </div>

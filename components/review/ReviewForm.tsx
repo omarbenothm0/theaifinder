@@ -62,11 +62,11 @@ export function ReviewForm({ toolSlug, toolName }: ReviewFormProps) {
   const displayRating = hoverRating || rating;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 border-t border-slate-100 pt-6">
-      <h3 className="text-sm font-bold text-slate-900">Write a Review for {toolName}</h3>
+    <form onSubmit={handleSubmit} className="space-y-4 border-t border-border/30 pt-6">
+      <h3 className="text-sm font-bold text-foreground-strong">Write a Review for {toolName}</h3>
 
       <div>
-        <label className="block text-xs font-semibold text-slate-600 mb-1.5">Your Rating</label>
+        <label className="block text-xs font-semibold text-muted-foreground mb-1.5">Your Rating</label>
         <div className="flex items-center gap-1">
           {[1, 2, 3, 4, 5].map((value) => (
             <button
@@ -81,22 +81,22 @@ export function ReviewForm({ toolSlug, toolName }: ReviewFormProps) {
               <Star
                 className={`w-6 h-6 ${
                   value <= displayRating
-                    ? 'fill-amber-400 text-amber-400'
-                    : 'text-slate-300'
+                    ? 'fill-rating text-rating'
+                    : 'text-inverted-foreground/70'
                 }`}
               />
             </button>
           ))}
           {displayRating > 0 && (
-            <span className="text-xs text-slate-500 ml-2">{displayRating}/5</span>
+            <span className="text-xs text-muted-foreground ml-2">{displayRating}/5</span>
           )}
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label htmlFor="review-name" className="block text-xs font-semibold text-slate-600 mb-1.5">
-            Display Name <span className="text-slate-400 font-normal">(optional)</span>
+          <label htmlFor="review-name" className="block text-xs font-semibold text-muted-foreground mb-1.5">
+            Display Name <span className="text-muted-foreground font-normal">(optional)</span>
           </label>
           <input
             id="review-name"
@@ -105,12 +105,12 @@ export function ReviewForm({ toolSlug, toolName }: ReviewFormProps) {
             onChange={(e) => setAuthorName(e.target.value)}
             maxLength={80}
             placeholder="Anonymous"
-            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+            className="w-full bg-background border border-border/50 rounded-xl px-3 py-2 text-sm text-foreground-strong placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/30"
           />
         </div>
         <div>
-          <label htmlFor="review-email" className="block text-xs font-semibold text-slate-600 mb-1.5">
-            Email <span className="text-slate-400 font-normal">(optional, never shown publicly)</span>
+          <label htmlFor="review-email" className="block text-xs font-semibold text-muted-foreground mb-1.5">
+            Email <span className="text-muted-foreground font-normal">(optional, never shown publicly)</span>
           </label>
           <input
             id="review-email"
@@ -119,13 +119,13 @@ export function ReviewForm({ toolSlug, toolName }: ReviewFormProps) {
             onChange={(e) => setEmail(e.target.value)}
             maxLength={254}
             placeholder="you@example.com"
-            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+            className="w-full bg-background border border-border/50 rounded-xl px-3 py-2 text-sm text-foreground-strong placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/30"
           />
         </div>
       </div>
 
       <div>
-        <label htmlFor="review-comment" className="block text-xs font-semibold text-slate-600 mb-1.5">
+        <label htmlFor="review-comment" className="block text-xs font-semibold text-muted-foreground mb-1.5">
           Your Review
         </label>
         <textarea
@@ -137,15 +137,15 @@ export function ReviewForm({ toolSlug, toolName }: ReviewFormProps) {
           rows={4}
           required
           placeholder="Share your experience with this tool (min 10 characters)..."
-          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 resize-y"
+          className="w-full bg-background border border-border/50 rounded-xl px-3 py-2 text-sm text-foreground-strong placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/30 resize-y"
         />
-        <p className="text-[10px] text-slate-400 mt-1">{comment.length}/2000</p>
+        <p className="text-[10px] text-muted-foreground mt-1">{comment.length}/2000</p>
       </div>
 
       {message && (
         <p
           className={`text-xs font-medium ${
-            status === 'success' ? 'text-emerald-700' : 'text-rose-600'
+            status === 'success' ? 'text-accent' : 'text-rose-600'
           }`}
         >
           {message}
@@ -155,7 +155,7 @@ export function ReviewForm({ toolSlug, toolName }: ReviewFormProps) {
       <button
         type="submit"
         disabled={status === 'submitting'}
-        className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-60 text-white font-bold text-sm px-5 py-2.5 rounded-xl transition-colors"
+        className="inline-flex items-center gap-2 bg-primary hover:bg-foreground/90 disabled:opacity-60 text-white font-bold text-sm px-5 py-2.5 rounded-xl transition-colors"
       >
         {status === 'submitting' ? (
           <Loader2 className="w-4 h-4 animate-spin" />

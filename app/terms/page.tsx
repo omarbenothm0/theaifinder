@@ -129,24 +129,24 @@ export default function TermsPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-12 pb-16">
       <header className="space-y-4 text-center">
-        <div className="inline-flex items-center gap-1.5 bg-slate-900/5 border border-slate-900/10 text-slate-800 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-          <Scale className="w-4 h-4 text-slate-800" />
+        <div className="inline-flex items-center gap-1.5 bg-inverted/5 border border-primary/10 text-foreground-strong px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
+          <Scale className="w-4 h-4 text-foreground-strong" />
           Terms of Service
         </div>
-        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900">
+        <h1 className="text-3xl sm:text-5xl font-medium tracking-tight text-foreground-strong">
           TheRadarHub Terms of Service
         </h1>
-        <p className="text-sm text-slate-600 max-w-2xl mx-auto leading-relaxed">
-          Last updated <span className="font-semibold text-slate-900">{LAST_UPDATED}</span>. Please
+        <p className="text-sm text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          Last updated <span className="font-semibold text-foreground-strong">{LAST_UPDATED}</span>. Please
           read these terms carefully before using the TheRadarHub directory. They explain the rules for
           using our Service and the scope of what we provide.
         </p>
       </header>
 
-      <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 sm:p-6 flex gap-4 items-start">
-        <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-600 mt-0.5" />
-        <p className="text-sm text-emerald-900 leading-relaxed">
-          <strong className="font-extrabold">Short version:</strong> Use the directory ethically,
+      <div className="bg-accent/10 border border-accent/20 rounded-2xl p-5 sm:p-6 flex gap-4 items-start">
+        <CheckCircle2 className="w-5 h-5 shrink-0 text-accent mt-0.5" />
+        <p className="text-sm text-accent leading-relaxed">
+          <strong className="font-medium">Short version:</strong> Use the directory ethically,
           do not scrape it, be honest in reviews, and understand that tool metadata is best-effort
           editorial information rather than a vendor-validated contract. The full legal terms
           follow below.
@@ -157,18 +157,18 @@ export default function TermsPage() {
         {SECTIONS.map(({ Icon, title, body }) => (
           <section
             key={title}
-            className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-4"
+            className="bg-background-raised rounded-2xl border border-border/50 shadow-sm p-6 sm:p-8 space-y-4"
           >
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-foreground/5 text-foreground-strong flex items-center justify-center shrink-0">
                 <Icon className="w-5 h-5" />
               </div>
-              <h2 className="text-lg font-extrabold tracking-tight text-slate-900">{title}</h2>
+              <h2 className="text-lg font-medium tracking-tight text-foreground-strong">{title}</h2>
             </div>
             <ul className="space-y-2.5 list-none">
               {body.map((line, idx) => (
-                <li key={idx} className="text-sm text-slate-700 leading-relaxed flex gap-2.5">
-                  <span className="mt-[0.55rem] w-1.5 h-1.5 shrink-0 rounded-full bg-slate-400" />
+                <li key={idx} className="text-sm text-foreground leading-relaxed flex gap-2.5">
+                  <span className="mt-[0.55rem] w-1.5 h-1.5 shrink-0 rounded-full bg-muted-foreground" />
                   <span>{line}</span>
                 </li>
               ))}
@@ -177,12 +177,12 @@ export default function TermsPage() {
         ))}
       </div>
 
-      <div className="text-center text-xs text-slate-500 pt-2 space-y-1">
+      <div className="text-center text-xs text-muted-foreground pt-2 space-y-1">
         <div>
           Questions about these Terms? Contact{' '}
           <a
             href="/contact"
-            className="font-semibold text-slate-700 hover:text-slate-900 underline underline-offset-2"
+            className="font-semibold text-foreground hover:text-foreground-strong underline underline-offset-2"
           >
             our legal team
           </a>

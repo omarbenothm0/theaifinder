@@ -30,23 +30,23 @@ export default async function AIAppsPage() {
   return (
     <div className="space-y-10">
       {/* Header */}
-      <div className="bg-slate-900 text-white rounded-3xl p-8 sm:p-12 shadow-lg text-center max-w-4xl mx-auto space-y-4">
-        <div className="inline-flex items-center gap-1.5 bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-          <Smartphone className="w-4 h-4 text-indigo-400" />
+      <div className="bg-inverted text-inverted-foreground rounded-3xl p-8 sm:p-12 shadow-lg text-center max-w-4xl mx-auto space-y-4">
+        <div className="inline-flex items-center gap-1.5 bg-accent/10 border border-accent/30 text-accent px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
+          <Smartphone className="w-4 h-4 text-accent" />
           Mobile Software Directory
         </div>
-        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
+        <h1 className="text-3xl sm:text-5xl font-medium tracking-tight">
           AI Apps for iOS &amp; Android
         </h1>
-        <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-sm sm:text-base text-inverted-foreground/70 max-w-2xl mx-auto leading-relaxed">
           Artificial intelligence software available as mobile applications on Apple App Store and Google Play Store.
         </p>
       </div>
 
       <div className="space-y-6">
-        <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-          <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-indigo-600" />
+        <div className="flex items-center justify-between border-b border-border/50 pb-3">
+          <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-accent" />
             Mobile AI Applications ({mobileTools.length})
           </h2>
         </div>

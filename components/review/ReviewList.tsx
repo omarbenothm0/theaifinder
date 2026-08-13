@@ -20,7 +20,7 @@ function formatReviewDate(dateStr: string): string {
 export function ReviewList({ reviews }: ReviewListProps) {
   if (reviews.length === 0) {
     return (
-      <p className="text-sm text-slate-500 italic">
+      <p className="text-sm text-muted-foreground italic">
         No approved reviews yet. Be the first to share your experience.
       </p>
     );
@@ -31,18 +31,18 @@ export function ReviewList({ reviews }: ReviewListProps) {
       {reviews.map((review) => (
         <li
           key={review.id}
-          className="border border-slate-100 rounded-xl p-4 bg-slate-50/50 space-y-2"
+          className="border border-border/30 rounded-xl p-4 bg-background/50 space-y-2"
         >
           <div className="flex items-center justify-between gap-3 flex-wrap">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-sm text-slate-900">{review.authorName}</span>
+              <span className="font-bold text-sm text-foreground-strong">{review.authorName}</span>
               {review.verifiedUser && (
-                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-accent bg-accent/10 px-1.5 py-0.5 rounded">
                   Verified
                 </span>
               )}
             </div>
-            <time className="text-xs text-slate-400" dateTime={review.date}>
+            <time className="text-xs text-muted-foreground" dateTime={review.date}>
               {formatReviewDate(review.date)}
             </time>
           </div>
@@ -53,14 +53,14 @@ export function ReviewList({ reviews }: ReviewListProps) {
                 key={value}
                 className={`w-3.5 h-3.5 ${
                   value <= review.rating
-                    ? 'fill-amber-400 text-amber-400'
-                    : 'text-slate-200'
+                    ? 'fill-rating text-rating'
+                    : 'text-inverted-foreground/80'
                 }`}
               />
             ))}
           </div>
 
-          <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">{review.comment}</p>
+          <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">{review.comment}</p>
         </li>
       ))}
     </ul>

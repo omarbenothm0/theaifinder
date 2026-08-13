@@ -65,13 +65,13 @@ export async function WritingCategoryContent({
       <JsonLd schema={collectionSchema} />
 
       {/* Hero */}
-      <div className="bg-slate-900 text-white rounded-3xl p-8 sm:p-12 shadow-lg max-w-4xl mx-auto text-center space-y-4">
-        <div className="inline-flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-          <Layers className="w-4 h-4 text-emerald-400" />
+      <div className="bg-inverted text-inverted-foreground rounded-3xl p-8 sm:p-12 shadow-lg max-w-4xl mx-auto text-center space-y-4">
+        <div className="inline-flex items-center gap-1.5 bg-accent/10 border border-accent/30 text-accent px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
+          <Layers className="w-4 h-4 text-accent" />
           Category Hub &bull; {curatedCount} Curated Tools
         </div>
-        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">Best AI Writing Tools</h1>
-        <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
+        <h1 className="text-3xl sm:text-5xl font-medium tracking-tight">Best AI Writing Tools</h1>
+        <p className="text-sm sm:text-base text-inverted-foreground/70 max-w-2xl mx-auto leading-relaxed">
           {category.longDescription || category.description}
         </p>
       </div>
@@ -80,29 +80,29 @@ export async function WritingCategoryContent({
       <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Link
           href="/for/writers"
-          className="group bg-white border border-indigo-200 rounded-2xl p-5 space-y-2 hover:border-indigo-300 hover:shadow-md transition-all"
+          className="group bg-background-raised border border-accent/20 rounded-2xl p-5 space-y-2 hover:border-accent/30 hover:shadow-md transition-all"
         >
-          <div className="flex items-center gap-2 text-xs font-bold text-indigo-800 uppercase tracking-wider">
+          <div className="flex items-center gap-2 text-xs font-bold text-accent uppercase tracking-wider">
             <BookOpen className="w-4 h-4" />
             For Authors &amp; Editors
           </div>
-          <p className="text-sm text-slate-600 leading-relaxed">
+          <p className="text-sm text-muted-foreground leading-relaxed">
             Drafting, proofreading, writing research, long-form manuscripts, and project organization.
           </p>
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-700 group-hover:text-indigo-900">
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold text-accent group-hover:text-foreground-strong">
             Writers hub
             <ArrowRight className="w-3.5 h-3.5" />
           </span>
         </Link>
         <Link
           href="/for/marketers"
-          className="group bg-white border border-violet-200 rounded-2xl p-5 space-y-2 hover:border-violet-300 hover:shadow-md transition-all"
+          className="group bg-background-raised border border-violet-200 rounded-2xl p-5 space-y-2 hover:border-violet-300 hover:shadow-md transition-all"
         >
           <div className="flex items-center gap-2 text-xs font-bold text-violet-800 uppercase tracking-wider">
             <Megaphone className="w-4 h-4" />
             For Marketers &amp; Copy Teams
           </div>
-          <p className="text-sm text-slate-600 leading-relaxed">
+          <p className="text-sm text-muted-foreground leading-relaxed">
             Campaign copy, content marketing, email, ads, and SEO workflows — separate from author tools.
           </p>
           <span className="inline-flex items-center gap-1.5 text-xs font-bold text-violet-700 group-hover:text-violet-900">
@@ -117,14 +117,14 @@ export async function WritingCategoryContent({
 
       {/* Author & editor sections */}
       <div className="space-y-8">
-        <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-          <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
-            <PenTool className="w-5 h-5 text-indigo-600" />
+        <div className="flex items-center justify-between border-b border-border/50 pb-3">
+          <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
+            <PenTool className="w-5 h-5 text-accent" />
             Author &amp; Editor Writing Tools
           </h2>
           <Link
             href="/for/writers"
-            className="text-xs font-bold text-indigo-700 hover:text-indigo-900 transition-colors"
+            className="text-xs font-bold text-accent hover:text-foreground-strong transition-colors"
           >
             Full Writers hub
           </Link>
@@ -139,10 +139,10 @@ export async function WritingCategoryContent({
           return (
             <div key={section.slug} className="space-y-4">
               <div className="flex items-center justify-between gap-4">
-                <h3 className="text-lg font-bold text-slate-900">{section.title}</h3>
+                <h3 className="text-lg font-bold text-foreground-strong">{section.title}</h3>
                 <Link
                   href={`/for/writers#${section.slug}`}
-                  className="text-xs font-bold text-slate-500 hover:text-indigo-700 whitespace-nowrap"
+                  className="text-xs font-bold text-muted-foreground hover:text-accent whitespace-nowrap"
                 >
                   Workflow guide
                 </Link>
@@ -159,8 +159,8 @@ export async function WritingCategoryContent({
 
       {/* Marketing section */}
       <div className="space-y-6">
-        <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-          <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+        <div className="flex items-center justify-between border-b border-border/50 pb-3">
+          <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
             <Megaphone className="w-5 h-5 text-violet-600" />
             Marketing &amp; Copywriting Tools
           </h2>
@@ -171,7 +171,7 @@ export async function WritingCategoryContent({
             Full Marketers hub
           </Link>
         </div>
-        <p className="text-sm text-slate-600 max-w-3xl leading-relaxed">
+        <p className="text-sm text-muted-foreground max-w-3xl leading-relaxed">
           Jasper and Copy.ai are marketing-first platforms for campaign copy and content marketing — kept
           separate from the author and editor tools above.
         </p>
@@ -188,9 +188,9 @@ export async function WritingCategoryContent({
       {/* Category-native listings */}
       {categoryToolsRes.tools.length > 0 && (
         <div className="space-y-6">
-          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-            <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-emerald-600" />
+          <div className="flex items-center justify-between border-b border-border/50 pb-3">
+            <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-accent" />
               All Tools in {category.name} ({categoryToolsRes.tools.length})
             </h2>
           </div>
@@ -204,20 +204,20 @@ export async function WritingCategoryContent({
 
       {/* FAQs */}
       {category.faqs.length > 0 && (
-        <section className="max-w-4xl mx-auto bg-white rounded-3xl border border-slate-200 p-8 sm:p-10 space-y-6">
-          <h2 className="text-xl font-extrabold text-slate-900">Frequently Asked Questions</h2>
+        <section className="max-w-4xl mx-auto bg-background-raised rounded-3xl border border-border/50 p-8 sm:p-10 space-y-6">
+          <h2 className="text-xl font-medium text-foreground-strong">Frequently Asked Questions</h2>
           <div className="space-y-4">
             {category.faqs.map((faq) => (
-              <div key={faq.question} className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                <h3 className="font-bold text-slate-900 text-sm">{faq.question}</h3>
-                <p className="text-sm text-slate-600 mt-2 leading-relaxed">{faq.answer}</p>
+              <div key={faq.question} className="bg-background p-4 rounded-xl border border-border/30">
+                <h3 className="font-bold text-foreground-strong text-sm">{faq.question}</h3>
+                <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{faq.answer}</p>
               </div>
             ))}
           </div>
           <div className="flex flex-wrap gap-3 pt-2">
             <Link
               href="/for/students"
-              className="text-xs font-bold text-slate-700 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-full hover:bg-slate-100 transition-colors"
+              className="text-xs font-bold text-foreground bg-background border border-border/50 px-3 py-1.5 rounded-full hover:bg-foreground/5 transition-colors"
             >
               Academic writing (Students hub)
             </Link>
