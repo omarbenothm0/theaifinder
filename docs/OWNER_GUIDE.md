@@ -444,7 +444,7 @@ Set **`NEXT_PUBLIC_APP_URL`** to your production origin (e.g. `https://www.examp
 
 **Production deploy checklist (required):**
 1. Set `NEXT_PUBLIC_APP_URL` to the live public origin (no trailing path).
-2. Set `DATABASE_URL`, `ADMIN_AUTH_SECRET`, `ADMIN_USERNAME`, and `ADMIN_PASSWORD`.
+2. Set `DATABASE_URL` (pooled), `DIRECT_URL` (direct), `ADMIN_AUTH_SECRET`, `ADMIN_USERNAME`, and `ADMIN_PASSWORD`.
 3. Run `npx prisma migrate deploy` then `npm run db:seed` on first deploy (or after seed-module changes).
 4. Run `npm run build` — confirm no `NEXT_PUBLIC_APP_URL` warning in build output.
 5. After deploy, spot-check `/robots.txt`, `/sitemap.xml`, and one tool page canonical in page source.
@@ -520,10 +520,12 @@ QA script: `npx tsx scripts/test-monitoring.ts`
 
 ### Development vs production
 
-| Environment | Typical `DATABASE_URL` | Notes |
-|---|---|---|
-| **Local dev** | Local Postgres or Neon dev branch | `.env.local` |
-| **Production** | Neon/host Postgres | Host secret manager — never commit |
+| Environment | `DATABASE_URL` | `DIRECT_URL` | Notes |
+|---|---|---|---|
+| **Local dev** | Pooled Neon URL or local Postgres | Direct Neon URL or same as pooled locally | `.env.local` |
+| **Production** | Neon pooled connection (`-pooler` host) | Neon direct connection | Host secret manager — never commit |
+
+Prisma Client uses `DATABASE_URL` at runtime. Prisma CLI commands (`migrate`, `db push`, `seed`) use `DIRECT_URL` via `directUrl` in `prisma/schema.prisma`.
 
 **The site does not read `lib/data/` at runtime.** After initial seeding, all live tool data comes from PostgreSQL.
 
@@ -589,7 +591,8 @@ Configure in `.env.local` (local) or host secrets (production). **Never commit r
 
 | Variable | Purpose | Required production |
 |---|---|---|
-| `DATABASE_URL` | PostgreSQL connection for Prisma | **Yes** |
+| `DATABASE_URL` | Pooled PostgreSQL connection for Prisma Client runtime | **Yes** |
+| `DIRECT_URL` | Direct PostgreSQL connection for Prisma CLI (migrations, seed) | **Yes** (Neon); optional locally if same as pooled |
 | `NEXT_PUBLIC_APP_URL` | Canonical site URL, sitemap, OG links | **Yes** |
 | `APP_URL` | Fallback for site URL | Optional |
 | `ADMIN_AUTH_SECRET` | Signs admin session cookies (≥ 32 chars) | **Yes** |
@@ -674,7 +677,7 @@ These are **not bugs**. They are deliberate scope boundaries in the current code
 
 1. Read terminal error.
 2. Run `npm run lint`.
-3. Ensure `DATABASE_URL` is set.
+3. Ensure `DATABASE_URL` and `DIRECT_URL` are set.
 4. Delete `.next` folder and rebuild.
 5. Windows: if `prisma generate` fails with **EPERM**, stop all Node processes and retry.
 

@@ -6,6 +6,10 @@ import {
   validateToolForPublish,
   formatValidationErrors,
 } from '../../../lib/validation/tool.validation';
+import {
+  databaseUnavailableResponse,
+  isDatabaseUnavailableError,
+} from '../../../lib/api/database-unavailable';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -26,8 +30,15 @@ export async function GET(req: NextRequest) {
     includeUnpublished: searchParams.get('includeUnpublished') === 'true',
   };
 
-  const result = await dbRepository.getTools(options);
-  return NextResponse.json(result);
+  try {
+    const result = await dbRepository.getTools(options);
+    return NextResponse.json(result);
+  } catch (error) {
+    if (isDatabaseUnavailableError(error)) {
+      return databaseUnavailableResponse();
+    }
+    throw error;
+  }
 }
 
 export async function POST(req: NextRequest) {

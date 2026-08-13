@@ -72,9 +72,12 @@ export function NavSearch({ className, variant = 'nav', inputId }: NavSearchProp
     let cancelled = false;
 
     fetch(`/api/tools?limit=${TOOLS_FETCH_LIMIT}`)
-      .then((res) => res.json())
-      .then((data: { tools?: Tool[] }) => {
-        if (!cancelled && Array.isArray(data.tools)) {
+      .then((res) => {
+        if (!res.ok) return null;
+        return res.json();
+      })
+      .then((data: { tools?: Tool[] } | null) => {
+        if (!cancelled && data && Array.isArray(data.tools)) {
           setTools(data.tools);
         }
       })
