@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChevronDown, ArrowRight } from 'lucide-react';
+import { ChevronDown, ArrowRight, Menu, X } from 'lucide-react';
 import { NavSearch } from './NavSearch';
 import { geistMonoNav } from '../../lib/fonts/nav-font';
 import { LogoWordmark } from './LogoWordmark';
@@ -15,6 +15,7 @@ import {
   ALL_TOOLS_MEGA_MENU_FOOTER,
 } from '../../lib/data/nav-mega-menu';
 import { NavMegaMenu } from './NavMegaMenu';
+import { MobileNav } from './MobileNav';
 
 const NAV_LINK_BASE =
   'flex items-center h-16 px-4 gap-0.5 font-[family-name:var(--font-inter)] text-sm font-normal leading-[18.9px] tracking-[-0.42px] text-foreground/75 hover:text-foreground hover:bg-foreground/5 transition-colors duration-200';
@@ -31,6 +32,7 @@ export function Header() {
   const pathname = usePathname();
   const [showRolesMenu, setShowRolesMenu] = useState(false);
   const [showCategoriesMenu, setShowCategoriesMenu] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const rolesCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const categoriesCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -188,9 +190,25 @@ export function Header() {
               <span className="sm:hidden">Finder</span>
               <ArrowRight className="w-3.5 h-3.5 shrink-0" />
             </Link>
+
+            <button
+              type="button"
+              onClick={() => setShowMobileMenu(true)}
+              className="lg:hidden p-2 -mr-2 text-foreground hover:bg-foreground/5 rounded-lg transition-colors"
+              aria-label="Open navigation menu"
+              id="mobile-menu-btn"
+            >
+              <Menu className="w-6 h-6" />
+            </button>
           </div>
         </div>
       </div>
+
+      <MobileNav
+        isOpen={showMobileMenu}
+        onClose={() => setShowMobileMenu(false)}
+        pathname={pathname}
+      />
     </header>
   );
 }

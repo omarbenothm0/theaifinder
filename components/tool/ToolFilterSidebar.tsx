@@ -92,7 +92,7 @@ export function ToolFilterSidebar({
           <DollarSign className="w-3.5 h-3.5" />
           Pricing Model
         </h4>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+        <div className="grid grid-cols-2 gap-1.5">
           {[
             { label: 'All', value: 'all' },
             { label: 'Free', value: 'Free' },

@@ -6,7 +6,8 @@ import { Tool, Category, Persona, ToolFilterOptions } from '../../types/tool';
 import { ToolCard } from '../../components/tool/ToolCard';
 import { ToolFilterSidebar } from '../../components/tool/ToolFilterSidebar';
 import { PageHero, PageHeroAccentBadge } from '../../components/ui/PageHero';
-import { Search, Sparkles, Filter, Grid, List } from 'lucide-react';
+import { Search, Sparkles, Filter, Grid, List, X } from 'lucide-react';
+import { MobileFilterDrawer } from '../../components/tool/MobileFilterDrawer';
 
 interface ToolCatalogClientProps {
   initialTools: Tool[];
@@ -23,6 +24,7 @@ export function ToolCatalogClient({
 }: ToolCatalogClientProps) {
   const [tools, setTools] = useState<Tool[]>(initialTools);
   const [viewLayout, setViewLayout] = useState<'grid' | 'list'>('grid');
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [filters, setFilters] = useState<ToolFilterOptions>({
     category: 'all',
     pricing: 'all',
@@ -137,6 +139,14 @@ export function ToolCatalogClient({
 
             <div className="flex items-center gap-2">
               <button
+                onClick={() => setShowMobileFilters(true)}
+                className="lg:hidden flex items-center gap-2 px-3 py-2 text-xs font-medium bg-foreground/5 hover:bg-foreground/10 border border-border/50 rounded-lg transition-colors"
+              >
+                <Filter className="w-4 h-4" />
+                Filters
+              </button>
+
+              <button
                 onClick={() => setViewLayout('grid')}
                 className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
                   viewLayout === 'grid'
@@ -181,6 +191,17 @@ export function ToolCatalogClient({
           )}
         </div>
       </div>
+
+      <MobileFilterDrawer
+        isOpen={showMobileFilters}
+        onClose={() => setShowMobileFilters(false)}
+        categories={categories}
+        personas={personas}
+        filters={filters}
+        onFilterChange={setFilters}
+        onResetFilters={handleReset}
+        totalResultsCount={filteredTools.length}
+      />
     </div>
   );
 }
