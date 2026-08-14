@@ -32,6 +32,7 @@ import {
   Home,
   PenTool,
   Users,
+  ChevronRight,
   type LucideIcon,
 } from 'lucide-react';
 interface HomePageClientProps {
@@ -222,14 +223,19 @@ export function HomePageClient({
                 <Link
                   key={p.slug}
                   href={`/for/${p.slug}`}
-                  className="home-card p-5 group transition-colors"
+                  className="home-card p-5 group transition-all duration-200 ease shadow-[0_1px_3px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:-translate-y-[-4px]"
                 >
                   <div className="flex items-start gap-3">
-                    <Icon className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
-                    <div>
-                      <p className="text-[14px] font-medium text-foreground group-hover:text-accent transition-colors">
-                        {ROLE_CARD_LABELS[p.slug] ?? p.title}
-                      </p>
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-role-accent-muted group-hover:bg-role-accent-hover transition-colors duration-200">
+                      <Icon className="w-5 h-5 text-role-accent" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <p className="text-[14px] font-medium text-foreground group-hover:text-accent transition-colors">
+                          {ROLE_CARD_LABELS[p.slug] ?? p.title}
+                        </p>
+                        <ChevronRight className="w-4 h-4 text-role-accent opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
+                      </div>
                       <p className="text-[13px] leading-[1.35] text-muted-foreground mt-1 line-clamp-2">
                         {p.subtitle || p.description || `AI tools curated for ${p.title.toLowerCase()}.`}
                       </p>

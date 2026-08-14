@@ -6,9 +6,17 @@ import { CategoryService } from '../../../lib/services/category.service';
 import { UseCaseService } from '../../../lib/services/use-case.service';
 import { ComparisonService } from '../../../lib/services/comparison.service';
 import { PersonaToolsFilter } from '../../../components/tool/PersonaToolsFilter';
-import { PersonaUseCaseCards } from '../../../components/persona/PersonaUseCaseCards';
 import { StudentHubSections } from '../../../components/persona/StudentHubSections';
+import { WritersCuratedHub } from '../../../components/persona/WritersCuratedHub';
+import { PersonaCuratedHub } from '../../../components/persona/PersonaCuratedHub';
 import { InternalLinks } from '../../../components/shared/InternalLinks';
+import { STUDENT_TOOL_USE_CASES, STUDENT_USE_CASES } from '../../../lib/data/student-cluster';
+import { MARKETER_TOOL_USE_CASES, MARKETER_USE_CASES } from '../../../lib/data/marketer-cluster';
+import { TEACHER_TOOL_USE_CASES, TEACHER_USE_CASES } from '../../../lib/data/teacher-cluster';
+import { SMALL_BUSINESS_TOOL_USE_CASES, SMALL_BUSINESS_USE_CASES } from '../../../lib/data/small-business-cluster';
+import { RESEARCHER_TOOL_USE_CASES, RESEARCHER_USE_CASES } from '../../../lib/data/researcher-cluster';
+import { REAL_ESTATE_TOOL_USE_CASES, REAL_ESTATE_USE_CASES } from '../../../lib/data/real-estate-cluster';
+import { PM_TOOL_USE_CASES, PM_USE_CASES } from '../../../lib/data/pm-cluster';
 import { JsonLd } from '../../../components/shared/JsonLd';
 import { generatePersonaMetadata, generateNotFoundMetadata } from '../../../lib/seo/metadata';
 import { isPersonaIndexable } from '../../../lib/seo/indexability';
@@ -22,7 +30,7 @@ import { PageHero, PageHeroAccentBadge } from '../../../components/ui/PageHero';
 
 export const revalidate = 3600;
 
-const HUB_PERSONA_SLUGS = new Set(['students', 'marketers', 'teachers', 'small-business', 'researchers', 'real-estate-agents', 'writers']);
+const HUB_PERSONA_SLUGS = new Set(['students', 'marketers', 'teachers', 'small-business', 'researchers', 'real-estate-agents', 'writers', 'project-managers']);
 
 const HUB_SECTION_HEADINGS: Record<string, string> = {
   students: 'Student Workflows',
@@ -61,7 +69,12 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
   }
 
   const [toolsRes, categories, personas, useCases, comparisons, hubSections] = await Promise.all([
-    ToolService.getToolsByPersona(persona.slug),
+    HUB_PERSONA_SLUGS.has(persona.slug)
+      ? (async () => {
+          const res = await ToolService.getTools();
+          return res.tools;
+        })()
+      : ToolService.getToolsByPersona(persona.slug),
     CategoryService.getCategories(),
     PersonaService.getPersonas(),
     UseCaseService.getPersonaUseCases(persona.slug),
@@ -72,6 +85,58 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
   ]);
 
   const personaCategoryMapping = getPersonaCategoryMapping(persona.slug);
+
+  // Map persona to its canonical data
+  const getPersonaData = (personaSlug: string) => {
+    switch (personaSlug) {
+      case 'students':
+        return {
+          toolUseCases: STUDENT_TOOL_USE_CASES,
+          useCases: STUDENT_USE_CASES,
+          headingLabel: 'Student Workflows'
+        };
+      case 'marketers':
+        return {
+          toolUseCases: MARKETER_TOOL_USE_CASES,
+          useCases: MARKETER_USE_CASES,
+          headingLabel: 'Marketing Workflows'
+        };
+      case 'teachers':
+        return {
+          toolUseCases: TEACHER_TOOL_USE_CASES,
+          useCases: TEACHER_USE_CASES,
+          headingLabel: 'Teaching Workflows'
+        };
+      case 'small-business':
+        return {
+          toolUseCases: SMALL_BUSINESS_TOOL_USE_CASES,
+          useCases: SMALL_BUSINESS_USE_CASES,
+          headingLabel: 'Small Business Workflows'
+        };
+      case 'researchers':
+        return {
+          toolUseCases: RESEARCHER_TOOL_USE_CASES,
+          useCases: RESEARCHER_USE_CASES,
+          headingLabel: 'Researcher Workflows'
+        };
+      case 'real-estate-agents':
+        return {
+          toolUseCases: REAL_ESTATE_TOOL_USE_CASES,
+          useCases: REAL_ESTATE_USE_CASES,
+          headingLabel: 'Real Estate Workflows'
+        };
+      case 'project-managers':
+        return {
+          toolUseCases: PM_TOOL_USE_CASES,
+          useCases: PM_USE_CASES,
+          headingLabel: 'PM Workflows'
+        };
+      default:
+        return null;
+    }
+  };
+
+  const personaData = getPersonaData(persona.slug);
 
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: 'Home', url: getBaseUrl() },
@@ -115,28 +180,29 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
         </div>
       )}
 
-      {HUB_PERSONA_SLUGS.has(persona.slug) && hubSections.length > 0 && (
-        <StudentHubSections
-          sections={hubSections}
-          heading={HUB_SECTION_HEADINGS[persona.slug] ?? 'Workflows'}
+      {/* Writers-specific curated hub */}
+      {persona.slug === 'writers' ? (
+        <WritersCuratedHub tools={toolsRes} />
+      ) : personaData ? (
+        <PersonaCuratedHub
+          tools={toolsRes}
+          personaSlug={persona.slug}
+          toolUseCases={personaData.toolUseCases}
+          useCases={personaData.useCases}
+          headingLabel={personaData.headingLabel}
         />
-      )}
+      ) : (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between border-b border-border/50 pb-3">
+            <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-foreground" />
+              Recommended Tools for {persona.title} ({toolsRes.length})
+            </h2>
+          </div>
 
-      {persona.slug === 'project-managers' && useCases.length > 0 && (
-        <PersonaUseCaseCards personaSlug={persona.slug} useCases={useCases} />
-      )}
-
-      {/* Recommended Tools List */}
-      <div className="space-y-6">
-        <div className="flex items-center justify-between border-b border-border/50 pb-3">
-          <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
-            <CheckCircle2 className="w-5 h-5 text-foreground" />
-            Recommended Tools for {persona.title} ({toolsRes.length})
-          </h2>
+          <PersonaToolsFilter tools={toolsRes} />
         </div>
-
-        <PersonaToolsFilter tools={toolsRes} />
-      </div>
+      )}
 
       {/* Tool Finder CTA */}
       <div className="bg-background-raised rounded-2xl border border-border/50 p-6 sm:p-8 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-4 max-w-4xl mx-auto">

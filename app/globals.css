@@ -53,6 +53,11 @@
   --intent-secondary-border: #ddd6fe;
   --intent-secondary-hover: #4c1d95;
 
+  /* Role card accent (slate blue) */
+  --role-accent: #3B4A6B;
+  --role-accent-muted: rgba(59, 74, 107, 0.1);
+  --role-accent-hover: rgba(59, 74, 107, 0.15);
+
   /* Destructive / error semantics */
   --destructive: #e11d48;
   --destructive-foreground: #4c0519;
@@ -101,6 +106,9 @@
   --color-intent-secondary-muted: var(--intent-secondary-muted);
   --color-intent-secondary-border: var(--intent-secondary-border);
   --color-intent-secondary-hover: var(--intent-secondary-hover);
+  --color-role-accent: var(--role-accent);
+  --color-role-accent-muted: var(--role-accent-muted);
+  --color-role-accent-hover: var(--role-accent-hover);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-destructive-muted: var(--destructive-muted);

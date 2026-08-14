@@ -857,6 +857,56 @@ async function main() {
     }
   }
 
+  // 14. Sync targetUsers with canonical persona mappings
+  const canonicalPersonaMappings: Record<string, string[]> = {
+    'writers': WRITER_TOOL_USE_CASES.map(uc => uc.toolSlug),
+    'students': STUDENT_TOOL_USE_CASES.map(uc => uc.toolSlug),
+    'marketers': MARKETER_TOOL_USE_CASES.map(uc => uc.toolSlug),
+    'teachers': TEACHER_TOOL_USE_CASES.map(uc => uc.toolSlug),
+    'small-business': SMALL_BUSINESS_TOOL_USE_CASES.map(uc => uc.toolSlug),
+    'researchers': RESEARCHER_TOOL_USE_CASES.map(uc => uc.toolSlug),
+    'real-estate-agents': REAL_ESTATE_TOOL_USE_CASES.map(uc => uc.toolSlug),
+    'project-managers': PM_TOOL_USE_CASES.map(uc => uc.toolSlug),
+  };
+
+  // Build reverse mapping: toolSlug -> personas
+  const toolToPersonas = new Map<string, Set<string>>();
+  for (const [persona, toolSlugs] of Object.entries(canonicalPersonaMappings)) {
+    for (const toolSlug of toolSlugs) {
+      if (!toolToPersonas.has(toolSlug)) {
+        toolToPersonas.set(toolSlug, new Set());
+      }
+      toolToPersonas.get(toolSlug)!.add(persona);
+    }
+  }
+
+  // Update each tool's targetUsers
+  let syncCount = 0;
+  const missingTools: string[] = [];
+  for (const [toolSlug, personas] of toolToPersonas) {
+    const tool = await prisma.tool.findUnique({ where: { slug: toolSlug } });
+    if (!tool) {
+      missingTools.push(toolSlug);
+      continue;
+    }
+    
+    const canonicalTargetUsers = Array.from(personas);
+    const merged = [...new Set([...tool.targetUsers, ...canonicalTargetUsers])];
+    
+    if (merged.length !== tool.targetUsers.length || 
+        !canonicalTargetUsers.every(p => tool.targetUsers.includes(p))) {
+      await prisma.tool.update({
+        where: { slug: toolSlug },
+        data: { targetUsers: merged },
+      });
+      syncCount++;
+    }
+  }
+  console.log(`Synced targetUsers for ${syncCount} tools with canonical persona mappings.`);
+  if (missingTools.length > 0) {
+    console.log(`Warning: ${missingTools.length} tools in canonical mappings not found in DB: ${missingTools.join(', ')}`);
+  }
+
   // 13. Sync tool alternatives for tools with explicit alternatives (incl. PM rivals)
   for (const tool of INITIAL_TOOLS) {
     if (!tool.alternatives?.length) continue;
