@@ -15,7 +15,8 @@ import { isPersonaIndexable } from '../../../lib/seo/indexability';
 import { dbRepository } from '../../../lib/dbRepository';
 import { generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
 import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
-import { Users, CheckCircle2, Compass, ArrowRight, Layers, GraduationCap, TrendingUp, Store, Microscope, Home, BookOpen } from 'lucide-react';
+import { getPersonaCategoryMapping } from '../../../lib/data/persona-category-mapping';
+import { Users, CheckCircle2, Compass, ArrowRight, Layers } from 'lucide-react';
 import Link from 'next/link';
 import { PageHero, PageHeroAccentBadge } from '../../../components/ui/PageHero';
 
@@ -70,6 +71,8 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
       : Promise.resolve([]),
   ]);
 
+  const personaCategoryMapping = getPersonaCategoryMapping(persona.slug);
+
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: 'Home', url: getBaseUrl() },
     { name: 'By Role', url: absoluteUrl('/for') },
@@ -90,114 +93,25 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
         description={persona.description}
       />
 
-      {persona.slug === 'project-managers' && (
-        <div className="max-w-4xl mx-auto">
+      {personaCategoryMapping && (
+        <div className="max-w-4xl mx-auto flex flex-wrap gap-3">
           <Link
-            href="/category/project-management"
+            href={`/category/${personaCategoryMapping.categorySlug}`}
             className="inline-flex items-center gap-2 text-xs font-bold text-foreground bg-foreground/5 border border-border/50 px-4 py-2.5 rounded-xl hover:bg-foreground/5 transition-colors"
           >
             <Layers className="w-4 h-4" />
-            Browse all Project Management category tools
+            Browse all {categories.find((c) => c.slug === personaCategoryMapping.categorySlug)?.name || 'category'} tools
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
-        </div>
-      )}
-
-      {persona.slug === 'students' && (
-        <div className="max-w-4xl mx-auto">
-          <Link
-            href="/category/study-education"
-            className="inline-flex items-center gap-2 text-xs font-bold text-foreground bg-foreground/5 border border-border/50 px-4 py-2.5 rounded-xl hover:bg-foreground/5 transition-colors"
-          >
-            <GraduationCap className="w-4 h-4" />
-            Browse all Study &amp; Education category tools
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-      )}
-
-      {persona.slug === 'marketers' && (
-        <div className="max-w-4xl mx-auto flex flex-wrap gap-3">
-          <Link
-            href="/category/marketing"
-            className="inline-flex items-center gap-2 text-xs font-bold text-foreground bg-foreground/5 border border-border/50 px-4 py-2.5 rounded-xl hover:bg-foreground/5 transition-colors"
-          >
-            <TrendingUp className="w-4 h-4" />
-            Browse Marketing &amp; CRM category tools
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-          <Link
-            href="/category/writing"
-            className="inline-flex items-center gap-2 text-xs font-bold text-foreground bg-background border border-border/50 px-4 py-2.5 rounded-xl hover:bg-foreground/5 transition-colors"
-          >
-            Browse Writing category (copy tools)
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-      )}
-
-      {persona.slug === 'teachers' && (
-        <div className="max-w-4xl mx-auto">
-          <Link
-            href="/category/study-education"
-            className="inline-flex items-center gap-2 text-xs font-bold text-foreground bg-foreground/5 border border-border/50 px-4 py-2.5 rounded-xl hover:bg-foreground/5 transition-colors"
-          >
-            <GraduationCap className="w-4 h-4" />
-            Browse Study &amp; Education category tools
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-      )}
-
-      {persona.slug === 'small-business' && (
-        <div className="max-w-4xl mx-auto">
-          <Link
-            href="/category/productivity"
-            className="inline-flex items-center gap-2 text-xs font-bold text-foreground bg-foreground/5 border border-border/50 px-4 py-2.5 rounded-xl hover:bg-foreground/5 transition-colors"
-          >
-            <Store className="w-4 h-4" />
-            Browse Productivity &amp; Workspace category tools
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-      )}
-
-      {persona.slug === 'researchers' && (
-        <div className="max-w-4xl mx-auto">
-          <Link
-            href="/category/study-education"
-            className="inline-flex items-center gap-2 text-xs font-bold text-foreground bg-foreground/5 border border-border/50 px-4 py-2.5 rounded-xl hover:bg-foreground/5 transition-colors"
-          >
-            <Microscope className="w-4 h-4" />
-            Browse Study &amp; Education category tools
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-      )}
-
-      {persona.slug === 'real-estate-agents' && (
-        <div className="max-w-4xl mx-auto">
-          <Link
-            href="/category/image"
-            className="inline-flex items-center gap-2 text-xs font-bold text-foreground bg-foreground/5 border border-border/50 px-4 py-2.5 rounded-xl hover:bg-foreground/5 transition-colors"
-          >
-            <Home className="w-4 h-4" />
-            Browse Image &amp; Design category tools
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-      )}
-
-      {persona.slug === 'writers' && (
-        <div className="max-w-4xl mx-auto">
-          <Link
-            href="/category/writing"
-            className="inline-flex items-center gap-2 text-xs font-bold text-foreground bg-foreground/5 border border-border/50 px-4 py-2.5 rounded-xl hover:bg-foreground/5 transition-colors"
-          >
-            <BookOpen className="w-4 h-4" />
-            Browse Writing &amp; Copywriting category tools
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
+          {personaCategoryMapping.secondaryCategorySlug && (
+            <Link
+              href={`/category/${personaCategoryMapping.secondaryCategorySlug}`}
+              className="inline-flex items-center gap-2 text-xs font-bold text-foreground bg-background border border-border/50 px-4 py-2.5 rounded-xl hover:bg-foreground/5 transition-colors"
+            >
+              Browse {categories.find((c) => c.slug === personaCategoryMapping.secondaryCategorySlug)?.name || 'category'} tools
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          )}
         </div>
       )}
 

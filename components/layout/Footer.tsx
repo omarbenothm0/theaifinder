@@ -3,14 +3,22 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { SITE_NAME } from '../../lib/brand';
-import { isDeprecatedPersonaNavSlug } from '../../lib/seo/persona-visibility';
 import { PUBLIC_CATEGORY_NAV_LINKS } from '../../lib/data/category-nav-links';
+import { getPublicPersonaNavSlugs } from '../../lib/seo/persona-visibility';
+import { INITIAL_PERSONAS } from '../../lib/data/index';
 import { AffiliateDisclosure } from '../tool/AffiliateDisclosure';
 import { Sparkles, ArrowRight, CheckCircle2, ShieldCheck } from 'lucide-react';
 
 export function Footer() {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+
+  // Use canonical persona source for footer links
+  const publicPersonaSlugs = getPublicPersonaNavSlugs();
+  const personaBySlug = new Map(INITIAL_PERSONAS.map((persona) => [persona.slug, persona]));
+  const footerPersonas = publicPersonaSlugs
+    .map((slug) => personaBySlug.get(slug))
+    .filter((persona): persona is NonNullable<typeof persona> => persona != null);
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,24 +88,13 @@ export function Footer() {
           <div>
             <h4 className="text-[11px] font-medium uppercase tracking-[0.015em] text-foreground mb-4">I Am A...</h4>
             <ul className="space-y-2.5 text-[13px] text-muted-foreground">
-              {[
-                { name: 'Project Managers', slug: 'project-managers' },
-                { name: 'Students', slug: 'students' },
-                { name: 'Writers', slug: 'writers' },
-                { name: 'Marketers', slug: 'marketers' },
-                { name: 'Teachers', slug: 'teachers' },
-                { name: 'Small Business', slug: 'small-business' },
-                { name: 'Researchers', slug: 'researchers' },
-                { name: 'Real Estate Agents', slug: 'real-estate-agents' },
-              ]
-                .filter((p) => !isDeprecatedPersonaNavSlug(p.slug))
-                .map((p) => (
-                  <li key={p.slug}>
-                    <Link href={`/for/${p.slug}`} className="hover:text-foreground transition-colors">
-                      {p.name}
-                    </Link>
-                  </li>
-                ))}
+              {footerPersonas.map((persona) => (
+                <li key={persona.slug}>
+                  <Link href={`/for/${persona.slug}`} className="hover:text-foreground transition-colors">
+                    {persona.title}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

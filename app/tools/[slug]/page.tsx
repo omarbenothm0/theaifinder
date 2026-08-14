@@ -114,7 +114,7 @@ export default async function ToolProfilePage({ params }: { params: Promise<{ sl
       <nav className="flex items-center gap-2 text-xs text-muted-foreground flex-wrap">
         <Link href="/" className="hover:text-foreground-strong transition-colors">Home</Link>
         <span>/</span>
-        <Link href="/ai-tools" className="hover:text-foreground-strong transition-colors">Tools</Link>
+        <Link href="/ai-tools" className="hover:text-foreground-strong transition-colors">AI Tools</Link>
         <span>/</span>
         <Link href={`/category/${tool.categorySlug || tool.categoryId}`} className="hover:text-foreground-strong transition-colors">{tool.categoryName}</Link>
         <span>/</span>
