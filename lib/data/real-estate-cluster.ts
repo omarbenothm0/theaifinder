@@ -1,5 +1,4 @@
-import { Persona } from '../../types/tool';
-import { UseCaseFitTier } from './pm-cluster';
+import { Persona, UseCaseFitTier } from '../../types/tool';
 
 export interface RealEstateUseCaseSeed {
   slug: string;

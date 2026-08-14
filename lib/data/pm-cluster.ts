@@ -1,6 +1,4 @@
-import { Category, Persona, Tool } from '../../types/tool';
-
-export type UseCaseFitTier = 'primary' | 'strong' | 'partial' | 'listed' | 'exclude';
+import { Category, Persona, Tool, UseCaseFitTier } from '../../types/tool';
 
 export interface PmUseCaseSeed {
   slug: string;

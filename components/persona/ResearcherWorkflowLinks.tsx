@@ -1,66 +1,25 @@
-import Link from 'next/link';
-import { ArrowRight, Microscope } from 'lucide-react';
+import { Microscope } from 'lucide-react';
+import { WorkflowLinks, WorkflowLinksConfig } from './WorkflowLinks';
 
-const WORKFLOW_SECTIONS = [
-  { slug: 'literature-discovery', label: 'Literature Discovery' },
-  { slug: 'paper-reading-understanding', label: 'Paper Reading' },
-  { slug: 'evidence-synthesis-citation-checking', label: 'Evidence & Citations' },
-  { slug: 'research-web-discovery', label: 'Research & Web Discovery' },
-  { slug: 'academic-writing', label: 'Academic Writing' },
-  { slug: 'reference-management-organization', label: 'Reference Organization' },
-];
+const RESEARCHER_CONFIG: WorkflowLinksConfig = {
+  personaSlug: 'researchers',
+  personaTitle: 'Researcher',
+  icon: Microscope,
+  workflowSections: [
+    { slug: 'literature-discovery', label: 'Literature Discovery' },
+    { slug: 'paper-reading-understanding', label: 'Paper Reading' },
+    { slug: 'evidence-synthesis-citation-checking', label: 'Evidence & Citations' },
+    { slug: 'research-web-discovery', label: 'Research & Web Discovery' },
+    { slug: 'academic-writing', label: 'Academic Writing' },
+    { slug: 'reference-management-organization', label: 'Reference Organization' },
+  ],
+  linkType: 'anchor',
+};
 
 interface ResearcherWorkflowLinksProps {
   variant?: 'category' | 'compact';
 }
 
 export function ResearcherWorkflowLinks({ variant = 'compact' }: ResearcherWorkflowLinksProps) {
-  if (variant === 'category') {
-    return (
-      <div className="max-w-4xl mx-auto bg-background-raised border border-border/50 rounded-2xl p-5 space-y-3">
-        <div className="flex items-center gap-2 text-xs font-bold text-foreground-strong uppercase tracking-wider">
-          <Microscope className="w-4 h-4" />
-          Researcher Workflow Guides
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {WORKFLOW_SECTIONS.map((section) => (
-            <Link
-              key={section.slug}
-              href={`/for/researchers#${section.slug}`}
-              className="text-xs font-bold text-foreground bg-background-raised border border-border/50 px-3 py-1.5 rounded-full hover:bg-foreground/5 transition-colors"
-            >
-              {section.label}
-            </Link>
-          ))}
-        </div>
-        <Link
-          href="/for/researchers"
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-foreground hover:text-foreground-strong transition-colors"
-        >
-          View full Researchers hub
-          <ArrowRight className="w-3.5 h-3.5" />
-        </Link>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex flex-wrap gap-2">
-      <Link
-        href="/for/researchers"
-        className="text-xs font-bold text-foreground bg-foreground/5 border border-border/50 px-3 py-1.5 rounded-full hover:bg-foreground/5 transition-colors"
-      >
-        All Researcher Workflows
-      </Link>
-      {WORKFLOW_SECTIONS.map((section) => (
-        <Link
-          key={section.slug}
-          href={`/for/researchers#${section.slug}`}
-          className="text-xs font-bold text-foreground bg-background border border-border/50 px-3 py-1.5 rounded-full hover:bg-foreground/5 transition-colors"
-        >
-          {section.label}
-        </Link>
-      ))}
-    </div>
-  );
+  return <WorkflowLinks config={RESEARCHER_CONFIG} variant={variant} />;
 }

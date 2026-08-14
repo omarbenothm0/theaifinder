@@ -5,9 +5,10 @@ import { Layers } from 'lucide-react';
 interface StudentHubSectionsProps {
   sections: PersonaHubSection[];
   heading?: string;
+  personaTitle?: string;
 }
 
-export function StudentHubSections({ sections, heading = 'Student Workflows' }: StudentHubSectionsProps) {
+export function StudentHubSections({ sections, heading = 'Student Workflows', personaTitle }: StudentHubSectionsProps) {
   if (sections.length === 0) return null;
 
   return (
@@ -26,7 +27,9 @@ export function StudentHubSections({ sections, heading = 'Student Workflows' }: 
           className="scroll-mt-24 space-y-4"
         >
           <div className="space-y-1">
-            <h3 className="text-lg font-medium text-foreground-strong">{section.useCase.title}</h3>
+            <h3 className="text-lg font-medium text-foreground-strong">
+              {section.useCase.title} {personaTitle ? `for ${personaTitle}` : ''}
+            </h3>
             <p className="text-xs text-muted-foreground leading-relaxed max-w-3xl">
               {section.useCase.description}
             </p>

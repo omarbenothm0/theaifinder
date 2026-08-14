@@ -1,4 +1,4 @@
-import { Tool, Category } from '../../types/tool';
+import { Tool, Category, Persona, ToolWithUseCaseFit } from '../../types/tool';
 import { getBaseUrl, absoluteUrl } from './base-url';
 import { SITE_NAME } from '../brand';
 
@@ -94,4 +94,66 @@ export function getCollectionPageSchema(category: Category) {
     description: category.description,
     url: `${BASE_URL}/category/${category.slug}`,
   };
+}
+
+/**
+ * Generates CollectionPage schema for persona hub pages with ItemList for recommended tools.
+ * Only includes tools actually rendered on the page to avoid claiming non-existent content.
+ */
+export function generatePersonaCollectionPageSchema(persona: Persona, tools: Tool[] | ToolWithUseCaseFit[], personaSlug: string, useCaseSlug?: string, useCaseTitle?: string, useCaseDescription?: string) {
+  // Handle both Tool and ToolWithUseCaseFit types
+  const toolsToProcess = tools.map(t => 'useCaseFit' in t ? t : { tool: t, useCaseFit: null });
+  // Only include top 10 tools to avoid bloating the schema
+  const schemaTools = toolsToProcess.slice(0, 10);
+  
+  const collectionPage: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: useCaseTitle || persona.title,
+    description: useCaseDescription || persona.description,
+    url: useCaseSlug ? absoluteUrl(`/for/${personaSlug}/${useCaseSlug}`) : absoluteUrl(`/for/${personaSlug}`),
+    about: {
+      '@type': 'Thing',
+      name: persona.targetRole || persona.title,
+    },
+  };
+
+  // Only add ItemList if there are tools to list
+  if (schemaTools.length > 0) {
+    collectionPage.mainEntity = {
+      '@type': 'ItemList',
+      numberOfItems: schemaTools.length,
+      itemListElement: schemaTools.map((item, index) => {
+        const tool = 'tool' in item ? item.tool : item;
+        return {
+          '@type': 'SoftwareApplication',
+          position: index + 1,
+          name: tool.name,
+          url: absoluteUrl(`/tools/${tool.slug}`),
+          description: tool.tagline || tool.description,
+          applicationCategory: tool.categoryName,
+          // Only include offers if pricing information exists
+          ...(tool.monthlyPrice !== null && tool.monthlyPrice !== undefined && {
+            offers: {
+              '@type': 'Offer',
+              price: tool.monthlyPrice.toString(),
+              priceCurrency: 'USD',
+            },
+          }),
+          // Only include aggregateRating if it exists
+          ...(tool.reviewCount > 0 && tool.rating > 0 && {
+            aggregateRating: {
+              '@type': 'AggregateRating',
+              ratingValue: tool.rating.toString(),
+              reviewCount: tool.reviewCount.toString(),
+              bestRating: '5',
+              worstRating: '1',
+            },
+          }),
+        };
+      }),
+    };
+  }
+
+  return collectionPage;
 }

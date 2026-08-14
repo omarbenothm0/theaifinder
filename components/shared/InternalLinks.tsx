@@ -20,7 +20,7 @@ export function InternalLinks({
   personas = [],
   comparisons = [],
   relatedTools = [],
-  title = 'Explore Related Hubs & Comparisons',
+  title = 'Explore Related Tools & Guides',
   excludeCategorySlug,
   excludePersonaSlug,
   excludeComparisonSlug,
@@ -81,12 +81,12 @@ export function InternalLinks({
           <div className="space-y-3">
             <h4 className="text-xs font-medium uppercase tracking-wider text-inverted-foreground/50 flex items-center gap-1.5">
               <Users className={sectionIcon} />
-              Workflow Hubs
+              AI Tools by Role
             </h4>
             <ul className="space-y-2 text-xs">
               {visiblePersonas.slice(0, 6).map((p) => (
                 <li key={p.slug}>
-                  <Link href={`/for/${p.slug}`} className={linkClass}>
+                  <Link href={`/for/${p.slug}`} className={linkClass} title={`AI tools for ${p.subtitle || p.title}`}>
                     <span>{p.title}</span>
                     <ArrowRight className="w-3.5 h-3.5 text-inverted-foreground/40 group-hover:translate-x-1 group-hover:text-inverted-foreground transition-all" />
                   </Link>

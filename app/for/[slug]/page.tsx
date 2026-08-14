@@ -21,10 +21,10 @@ import { JsonLd } from '../../../components/shared/JsonLd';
 import { generatePersonaMetadata, generateNotFoundMetadata } from '../../../lib/seo/metadata';
 import { isPersonaIndexable } from '../../../lib/seo/indexability';
 import { dbRepository } from '../../../lib/dbRepository';
-import { generateBreadcrumbSchema } from '../../../lib/seo/jsonld';
+import { generateBreadcrumbSchema, generatePersonaCollectionPageSchema, getFAQSchema } from '../../../lib/seo/jsonld';
 import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
 import { getPersonaCategoryMapping } from '../../../lib/data/persona-category-mapping';
-import { Users, CheckCircle2, Compass, ArrowRight, Layers } from 'lucide-react';
+import { Users, CheckCircle2, Compass, ArrowRight, Layers, BookOpen } from 'lucide-react';
 import Link from 'next/link';
 import { PageHero, PageHeroAccentBadge } from '../../../components/ui/PageHero';
 
@@ -144,9 +144,17 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
     { name: persona.title, url: absoluteUrl(`/for/${persona.slug}`) }
   ]);
 
+  // Generate CollectionPage schema with the tools actually rendered on this page
+  const collectionPageSchema = generatePersonaCollectionPageSchema(persona, toolsRes, persona.slug);
+  
+  // Generate FAQ schema only if the persona has real FAQs
+  const faqSchema = persona.faqs && persona.faqs.length > 0 ? getFAQSchema(persona.faqs) : null;
+
   return (
     <div className="space-y-10">
       <JsonLd schema={breadcrumbSchema} />
+      <JsonLd schema={collectionPageSchema} />
+      {faqSchema && <JsonLd schema={faqSchema} />}
 
       <PageHero
         badge={
@@ -163,18 +171,31 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
           <Link
             href={`/category/${personaCategoryMapping.categorySlug}`}
             className="inline-flex items-center gap-2 text-xs font-bold text-foreground bg-foreground/5 border border-border/50 px-4 py-2.5 rounded-xl hover:bg-foreground/5 transition-colors"
+            aria-label={`Browse all ${categories.find((c) => c.slug === personaCategoryMapping.categorySlug)?.name || 'category'} tools for ${persona.title}`}
           >
-            <Layers className="w-4 h-4" />
+            <Layers className="w-4 h-4" aria-hidden="true" />
             Browse all {categories.find((c) => c.slug === personaCategoryMapping.categorySlug)?.name || 'category'} tools
-            <ArrowRight className="w-3.5 h-3.5" />
+            <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
           </Link>
           {personaCategoryMapping.secondaryCategorySlug && (
             <Link
               href={`/category/${personaCategoryMapping.secondaryCategorySlug}`}
               className="inline-flex items-center gap-2 text-xs font-bold text-foreground bg-background border border-border/50 px-4 py-2.5 rounded-xl hover:bg-foreground/5 transition-colors"
+              aria-label={`Browse ${categories.find((c) => c.slug === personaCategoryMapping.secondaryCategorySlug)?.name || 'category'} tools for ${persona.title}`}
             >
               Browse {categories.find((c) => c.slug === personaCategoryMapping.secondaryCategorySlug)?.name || 'category'} tools
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+            </Link>
+          )}
+          {persona.slug === 'teachers' && (
+            <Link
+              href="/for/teachers/lesson-planning"
+              className="inline-flex items-center gap-2 text-xs font-bold text-foreground bg-background border border-border/50 px-4 py-2.5 rounded-xl hover:bg-foreground/5 transition-colors"
+              aria-label="View dedicated AI lesson planning tools page"
+            >
+              <BookOpen className="w-4 h-4" aria-hidden="true" />
+              AI Lesson Planning Guide
+              <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
             </Link>
           )}
         </div>
@@ -190,6 +211,13 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
           toolUseCases={personaData.toolUseCases}
           useCases={personaData.useCases}
           headingLabel={personaData.headingLabel}
+          personaTitle={persona.title}
+        />
+      ) : HUB_PERSONA_SLUGS.has(persona.slug) && hubSections.length > 0 ? (
+        <StudentHubSections 
+          sections={hubSections} 
+          heading={HUB_SECTION_HEADINGS[persona.slug] || `${persona.title} Workflows`}
+          personaTitle={persona.title}
         />
       ) : (
         <div className="space-y-6">

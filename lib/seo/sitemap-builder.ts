@@ -76,7 +76,8 @@ export function buildPersonaSitemapEntries(
     .filter((p) => isPersonaIndexable(p, linkedToolCounts[p.slug] ?? 0).indexable)
     .map((p) => ({
       url: `${baseUrl}/for/${p.slug}`,
-      lastModified: now,
+      // Use actual update timestamp if available, otherwise fall back to current date
+      lastModified: p.updatedAt ? new Date(p.updatedAt) : now,
       changeFrequency: 'weekly' as const,
       priority: 0.7,
     }));

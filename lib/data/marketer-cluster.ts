@@ -1,5 +1,4 @@
-import { Persona, Tool } from '../../types/tool';
-import { UseCaseFitTier } from './pm-cluster';
+import { Persona, Tool, UseCaseFitTier } from '../../types/tool';
 import { CAT_MARKETING } from './marketing-category';
 
 export interface MarketerUseCaseSeed {

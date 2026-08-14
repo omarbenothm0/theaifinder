@@ -12,10 +12,10 @@ import {
   generateNotFoundMetadata,
 } from '../../../../lib/seo/metadata';
 import { isUseCasePageIndexable } from '../../../../lib/seo/indexability';
-import { generateBreadcrumbSchema } from '../../../../lib/seo/jsonld';
+import { generateBreadcrumbSchema, generatePersonaCollectionPageSchema } from '../../../../lib/seo/jsonld';
 import { getBaseUrl, absoluteUrl } from '../../../../lib/seo/base-url';
 import { ToolWithUseCaseFit } from '../../../../types/tool';
-import { ArrowLeft, CheckCircle2, Kanban } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Kanban, BookOpen } from 'lucide-react';
 import { PageHero, PageHeroAccentBadge } from '../../../../components/ui/PageHero';
 
 export const revalidate = 3600;
@@ -98,6 +98,7 @@ export default async function PersonaUseCasePage({
 
   const groupedTools = groupToolsBySection(page.tools);
   const isMergedTaskPage = useCaseSlug === 'task-management';
+  const isLessonPlanningPage = useCaseSlug === 'lesson-planning';
 
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: 'Home', url: getBaseUrl() },
@@ -106,9 +107,15 @@ export default async function PersonaUseCasePage({
     { name: page.useCase.title, url: absoluteUrl(`/for/${page.persona.slug}/${page.useCase.slug}`) },
   ]);
 
+  // Add CollectionPage schema for lesson planning page
+  const collectionPageSchema = isLessonPlanningPage 
+    ? generatePersonaCollectionPageSchema(page.persona, page.tools, page.persona.slug, page.useCase.slug, page.useCase.title, page.useCase.description)
+    : null;
+
   return (
     <div className="space-y-10">
       <JsonLd schema={breadcrumbSchema} />
+      {collectionPageSchema && <JsonLd schema={collectionPageSchema} />}
 
       <div className="max-w-4xl mx-auto space-y-4">
         <Link
@@ -126,12 +133,17 @@ export default async function PersonaUseCasePage({
               {page.persona.title} &bull; {page.useCase.title}
             </PageHeroAccentBadge>
           }
-          title={page.useCase.title}
+          title={isLessonPlanningPage ? 'AI Lesson Planning Tools for Teachers' : page.useCase.title}
           description={page.useCase.description}
         >
           {isMergedTaskPage && (
             <p className="text-xs text-inverted-foreground/70 max-w-xl mx-auto">
               Project planning is merged here — verified overlap between task and planning tools exceeded 70%.
+            </p>
+          )}
+          {isLessonPlanningPage && (
+            <p className="text-xs text-inverted-foreground/70 max-w-xl mx-auto">
+              Create lesson outlines, slide decks, and curriculum materials from prompts or uploaded sources. Verified tools for K-12 and higher education.
             </p>
           )}
         </PageHero>
@@ -141,8 +153,8 @@ export default async function PersonaUseCasePage({
         <div key={section.key} className="space-y-4">
           <div className="flex items-center justify-between border-b border-border/50 pb-3">
             <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-foreground" />
-              {section.label} ({section.tools.length})
+              {isLessonPlanningPage ? <BookOpen className="w-5 h-5 text-foreground" /> : <CheckCircle2 className="w-5 h-5 text-foreground" />}
+              {isLessonPlanningPage ? `Recommended Lesson Planning Tools (${section.tools.length})` : `${section.label} (${section.tools.length})`}
             </h2>
           </div>
           <div className="grid gap-4">

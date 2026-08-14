@@ -1,5 +1,4 @@
-import { Persona } from '../../types/tool';
-import { UseCaseFitTier } from './pm-cluster';
+import { Persona, UseCaseFitTier } from '../../types/tool';
 
 export interface TeacherUseCaseSeed {
   slug: string;
@@ -60,6 +59,8 @@ export const TEACHER_PERSONA: Persona = {
         'No — Educators is merged into this Teachers hub. All educator workflows live at /for/teachers with anchored workflow sections.',
     },
   ],
+  createdAt: `${VERIFIED_DATE}T00:00:00.000Z`,
+  updatedAt: `${VERIFIED_DATE}T00:00:00.000Z`,
 };
 
 export const TEACHER_USE_CASES: TeacherUseCaseSeed[] = [
@@ -130,7 +131,7 @@ export const TEACHER_PERSONA_USE_CASES: TeacherPersonaUseCaseSeed[] = [
     useCaseSlug: 'lesson-planning',
     order: 1,
     isPrimary: true,
-    pageEnabled: false,
+    pageEnabled: true,
     hubNote: 'Hub section — verified lesson planning tools on this page.',
   },
   {
@@ -199,6 +200,15 @@ export const TEACHER_TOOL_USE_CASES: TeacherToolUseCaseSeed[] = [
     limitation: 'General research engine — not a dedicated lesson-plan template tool',
     evidenceUrl: 'https://perplexity.ai',
     displayOrder: 3,
+  },
+  {
+    toolSlug: 'canva',
+    useCaseSlug: 'lesson-planning',
+    fitTier: 'strong',
+    capabilities: 'Magic Write, design templates for lesson materials and visual content',
+    limitation: 'Design-first — not a dedicated lesson planning tool but strong for visual lesson materials',
+    evidenceUrl: 'https://www.canva.com/ai/',
+    displayOrder: 4,
   },
   // worksheets-materials
   {

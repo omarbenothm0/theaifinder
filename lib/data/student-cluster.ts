@@ -1,5 +1,4 @@
-import { Category, Persona, Tool } from '../../types/tool';
-import { UseCaseFitTier } from './pm-cluster';
+import { Category, Persona, Tool, UseCaseFitTier } from '../../types/tool';
 
 export interface StudentUseCaseSeed {
   slug: string;

@@ -115,6 +115,8 @@ export interface Persona {
   topToolSlugs: string[];
   faqs: FAQItem[];
   publishStatus?: PublishStatus;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export type UseCaseFitTier = 'primary' | 'strong' | 'partial' | 'listed' | 'exclude';
