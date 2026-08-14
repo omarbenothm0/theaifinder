@@ -26,7 +26,6 @@ export function MarqueeLogoImage({ src, name, fallbackSrc }: MarqueeLogoImagePro
       alt=""
       width={32}
       height={32}
-      loading="lazy"
       decoding="async"
       referrerPolicy="no-referrer"
       className="home-marquee-logo"

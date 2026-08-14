@@ -21,6 +21,7 @@ const VARIANT_STYLES: Record<
   NavSearchVariant,
   {
     placeholder: string;
+    mobilePlaceholder: string;
     input: string;
     iconButton: string;
     icon: string;
@@ -32,6 +33,7 @@ const VARIANT_STYLES: Record<
 > = {
   nav: {
     placeholder: 'Search AI tools...',
+    mobilePlaceholder: 'Search AI tools...',
     input:
       'w-full h-9 bg-background-raised border border-border/50 rounded-lg pl-8 pr-3 text-xs font-medium text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:border-border transition-colors duration-200',
     iconButton: 'absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground',
@@ -44,6 +46,7 @@ const VARIANT_STYLES: Record<
   },
   hero: {
     placeholder: 'Already know a tool? Look it up here.',
+    mobilePlaceholder: 'Know the tool? Search it.',
     input:
       'w-full h-9 md:h-10 bg-white/[0.15] backdrop-blur-[12px] border border-white/[0.28] rounded-xl pl-11 md:pl-12 pr-4 text-sm md:text-base font-medium text-white/90 placeholder:text-white/65 shadow-none focus:outline-none focus:border-white/40 transition-colors duration-200',
     iconButton: 'absolute left-3.5 md:left-4 top-1/2 -translate-y-1/2 text-white/70',
@@ -64,6 +67,15 @@ export function NavSearch({ className, variant = 'nav', inputId }: NavSearchProp
   const router = useRouter();
   const rootRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Use responsive placeholder for mobile
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 640);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [tools, setTools] = useState<Tool[]>([]);
@@ -194,7 +206,7 @@ export function NavSearch({ className, variant = 'nav', inputId }: NavSearchProp
           id={resolvedInputId}
           name="search"
           type="search"
-          placeholder={styles.placeholder}
+          placeholder={isMobile ? styles.mobilePlaceholder : styles.placeholder}
           value={searchQuery}
           onChange={(e) => {
             setSearchQuery(e.target.value);

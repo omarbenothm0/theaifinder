@@ -103,14 +103,14 @@ export function Header() {
 
   return (
     <header className={`sticky top-0 z-50 bg-background ${geistMonoNav.variable} antialiased`}>
-      <div className="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10 xl:px-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 xl:px-12">
         <div className="flex items-center h-16 w-full">
           <Link
             href="/"
-            className="inline-flex items-center shrink-0 text-foreground-strong focus:outline-hidden group mr-8 lg:mr-12"
+            className="inline-flex items-center shrink-0 text-foreground-strong focus:outline-hidden group mr-4 sm:mr-6 lg:mr-12"
             id="header-logo-btn"
           >
-            <span className="inline-flex items-end gap-2.5">
+            <span className="inline-flex items-end gap-2 sm:gap-2.5">
               <LogoMark
                 height={31}
                 className="block shrink-0 group-hover:opacity-90 transition-opacity duration-200"
@@ -177,7 +177,7 @@ export function Header() {
             </Link>
           </nav>
 
-          <div className="flex items-center gap-5 sm:gap-6 shrink-0 ml-auto pl-6 lg:pl-10 h-16">
+          <div className="flex items-center gap-3 sm:gap-5 lg:gap-6 shrink-0 ml-auto pl-3 sm:pl-6 lg:pl-10 h-16">
             <NavSearch className="hidden md:block w-40 lg:w-48" />
 
             <Link
@@ -194,7 +194,7 @@ export function Header() {
             <button
               type="button"
               onClick={() => setShowMobileMenu(true)}
-              className="lg:hidden p-2 -mr-2 text-foreground hover:bg-foreground/5 rounded-lg transition-colors"
+              className="lg:hidden p-2 text-foreground hover:bg-foreground/5 rounded-lg transition-colors"
               aria-label="Open navigation menu"
               id="mobile-menu-btn"
             >
