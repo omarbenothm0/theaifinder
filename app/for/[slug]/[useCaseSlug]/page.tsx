@@ -101,7 +101,7 @@ export default async function PersonaUseCasePage({
 
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: 'Home', url: getBaseUrl() },
-    { name: 'Workflows', url: absoluteUrl('/ai-tools-directory') },
+    { name: 'By Role', url: absoluteUrl('/for') },
     { name: page.persona.title, url: absoluteUrl(`/for/${page.persona.slug}`) },
     { name: page.useCase.title, url: absoluteUrl(`/for/${page.persona.slug}/${page.useCase.slug}`) },
   ]);

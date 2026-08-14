@@ -20,6 +20,7 @@ const TOOLS_FETCH_LIMIT = 100;
 const VARIANT_STYLES: Record<
   NavSearchVariant,
   {
+    placeholder: string;
     input: string;
     iconButton: string;
     icon: string;
@@ -30,6 +31,7 @@ const VARIANT_STYLES: Record<
   }
 > = {
   nav: {
+    placeholder: 'Search AI tools...',
     input:
       'w-full h-9 bg-background-raised border border-border/50 rounded-lg pl-8 pr-3 text-xs font-medium text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:border-border transition-colors duration-200',
     iconButton: 'absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground',
@@ -41,9 +43,10 @@ const VARIANT_STYLES: Record<
     empty: 'px-3 py-2.5 text-xs',
   },
   hero: {
+    placeholder: 'Already know a tool? Look it up here.',
     input:
-      'w-full h-12 md:h-14 bg-background-raised border border-border/50 rounded-xl pl-11 md:pl-12 pr-4 text-base md:text-[17px] font-medium text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:border-border transition-colors duration-200',
-    iconButton: 'absolute left-3.5 md:left-4 top-1/2 -translate-y-1/2 text-muted-foreground',
+      'w-full h-9 md:h-10 bg-white/[0.15] backdrop-blur-[12px] border border-white/[0.28] rounded-xl pl-11 md:pl-12 pr-4 text-sm md:text-base font-medium text-white/90 placeholder:text-white/65 shadow-none focus:outline-none focus:border-white/40 transition-colors duration-200',
+    iconButton: 'absolute left-3.5 md:left-4 top-1/2 -translate-y-1/2 text-white/70',
     icon: 'w-5 h-5 pointer-events-none',
     dropdown:
       'absolute left-0 right-0 top-full z-[60] mt-2 max-h-[min(18rem,calc(100dvh-6rem))] overflow-y-auto overscroll-contain rounded-xl border border-border/50 bg-background-raised shadow-sm text-left',
@@ -191,7 +194,7 @@ export function NavSearch({ className, variant = 'nav', inputId }: NavSearchProp
           id={resolvedInputId}
           name="search"
           type="search"
-          placeholder="Search AI tools..."
+          placeholder={styles.placeholder}
           value={searchQuery}
           onChange={(e) => {
             setSearchQuery(e.target.value);

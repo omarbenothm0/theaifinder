@@ -62,7 +62,7 @@ export const sunoAiTool: Tool = {
   reviewCount: 0,
   screenshots: ['https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=500'],
   alternatives: ['elevenlabs'],
-  targetUsers: ['content-creators', 'youtubers', 'marketers'],
+  targetUsers: ['content-creators', 'marketers'],
   verified: true,
   featured: false,
   trending: true,

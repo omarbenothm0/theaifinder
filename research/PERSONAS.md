@@ -21,7 +21,6 @@ Track **proposed, verified, and approved** personas (workflow/role hubs) for AI 
 | Slug | Title (seed) | Treat as |
 |---|---|---|
 | `content-creators` | AI for Content Creators | Implementation placeholder |
-| `youtubers` | AI for YouTubers | Implementation placeholder |
 | `writers` | AI for Writers | Implementation placeholder |
 | `developers` | AI for Developers | Implementation placeholder |
 | `marketers` | AI for Marketers | Implementation placeholder |
@@ -43,10 +42,9 @@ Decisions applied in code — **seed/DB records kept** for reversibility; tool `
 |---|---|---|
 | `content-creators` | **301 redirect** → `/for/marketers` | Overlaps Marketers audience; no standalone hub |
 | `entrepreneurs` | **301 redirect** → `/for/small-business` | Redundant with Small Business persona |
-| `youtubers` | **NOINDEX** (`noindex, follow`) | Demand rejected — see `REJECTED.md` (`ai tools for youtubers`, 0% YoY Trends) |
 | `developers` | **NOINDEX** (`noindex, follow`) | Persona SERP is HARD; coding intent served by `/category/coding`, tool pages, and comparisons |
 
-Removed from: Header/Footer role nav, Finder role options, `/for` persona grid, persona sitemap. Pages remain reachable where not redirected (youtubers, developers).
+Removed from: Header/Footer role nav, Finder role options, `/for` persona grid, persona sitemap. Pages remain reachable where not redirected ( developers).
 
 ---
 

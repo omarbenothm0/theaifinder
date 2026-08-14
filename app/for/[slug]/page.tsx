@@ -72,7 +72,7 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
 
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: 'Home', url: getBaseUrl() },
-    { name: 'Workflows', url: absoluteUrl('/ai-tools-directory') },
+    { name: 'By Role', url: absoluteUrl('/for') },
     { name: persona.title, url: absoluteUrl(`/for/${persona.slug}`) }
   ]);
 

@@ -68,7 +68,7 @@ export const descriptTool: Tool = {
   reviewCount: 0,
   screenshots: ['https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=800&q=500'],
   alternatives: ['elevenlabs', 'runway'],
-  targetUsers: ['youtubers', 'content-creators', 'teachers'],
+  targetUsers: ['content-creators', 'teachers'],
   verified: true,
   featured: true,
   trending: false,

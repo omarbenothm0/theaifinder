@@ -135,18 +135,6 @@ export const INITIAL_PERSONAS: Persona[] = [
     ]
   },
   {
-    id: 'per-youtubers',
-    title: 'YouTubers & Video Producers',
-    slug: 'youtubers',
-    iconName: 'Youtube',
-    subtitle: 'Automate scriptwriting, voiceovers, and thumbnail creation',
-    description: 'Tailored AI tools designed for YouTube channel operators, video editors, and motion graphics artists.',
-    targetRole: 'YouTuber',
-    keyBenefits: ['AI script outlines & title hooks', 'High-click-through-rate thumbnail artwork', 'Multilingual video dubbing'],
-    topToolSlugs: ['runway', 'elevenlabs', 'chatgpt', 'midjourney', 'descript'],
-    faqs: []
-  },
-  {
     id: 'per-writers',
     title: 'Writers & Bloggers',
     slug: 'writers',

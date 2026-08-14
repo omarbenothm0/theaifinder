@@ -630,7 +630,7 @@ These are **not bugs**. They are deliberate scope boundaries in the current code
 | Public page cache up to 1 hour | `revalidate = 3600` on key routes |
 | Comparison pages link to tool profiles only | No direct vendor outbound links on comparison pages |
 | Seed skips existing slugs | Re-running seed does not update existing tools |
-| Legacy persona routes | `/for/youtubers` — noindex (thin seed hub). `/for/developers` — 301 → `/category/coding`. `/for/content-creators` — 301 → `/for/marketers`. `/for/entrepreneurs` — 301 → `/for/small-business`. Deprecated slugs hidden from nav via `DEPRECATED_PERSONA_NAV_SLUGS`. |
+| Legacy persona routes |  `/for/developers` — 301 → `/category/coding`. `/for/content-creators` — 301 → `/for/marketers`. `/for/entrepreneurs` — 301 → `/for/small-business`. Deprecated slugs hidden from nav via `DEPRECATED_PERSONA_NAV_SLUGS`. |
 | `/category/presentations` | Intentionally noindex (thin hub); excluded from Header/Footer nav |
 
 ---

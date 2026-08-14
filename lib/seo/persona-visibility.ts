@@ -8,12 +8,11 @@ export const PERSONA_REDIRECTS: Readonly<Record<string, string>> = {
   developers: '/category/coding',
 };
 
-export const PERSONA_NOINDEX_SLUGS: ReadonlySet<string> = new Set(['youtubers', 'developers']);
+export const PERSONA_NOINDEX_SLUGS: ReadonlySet<string> = new Set(['developers']);
 
 export const DEPRECATED_PERSONA_NAV_SLUGS: ReadonlySet<string> = new Set([
   'content-creators',
   'entrepreneurs',
-  'youtubers',
   'developers',
 ]);
 

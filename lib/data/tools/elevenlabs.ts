@@ -68,7 +68,7 @@ export const elevenlabsTool: Tool = {
   reviewCount: 0,
   screenshots: ['https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=800&q=500'],
   alternatives: ['descript', 'suno-ai'],
-  targetUsers: ['youtubers', 'content-creators', 'teachers'],
+  targetUsers: ['content-creators', 'teachers'],
   verified: true,
   featured: true,
   trending: true,

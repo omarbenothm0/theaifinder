@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ChevronDown, ArrowRight } from 'lucide-react';
 import { NavSearch } from './NavSearch';
-import { geistNav } from '../../lib/fonts/nav-font';
+import { geistMonoNav } from '../../lib/fonts/nav-font';
 import { LogoWordmark } from './LogoWordmark';
 import { LogoMark } from './LogoMark';
 import {
@@ -17,10 +17,13 @@ import {
 import { NavMegaMenu } from './NavMegaMenu';
 
 const NAV_LINK_BASE =
-  'inline-flex items-center px-4 h-9 text-sm font-medium text-foreground/75 hover:text-foreground hover:bg-foreground/5 transition-colors duration-200 rounded-lg';
+  'flex items-center h-16 px-4 gap-0.5 font-[family-name:var(--font-inter)] text-sm font-normal leading-[18.9px] tracking-[-0.42px] text-foreground/75 hover:text-foreground hover:bg-foreground/5 transition-colors duration-200';
 
 const NAV_LINK_ACTIVE =
-  'inline-flex items-center px-4 h-9 text-sm font-medium text-foreground bg-foreground/8 rounded-lg';
+  'flex items-center h-16 px-4 gap-0.5 font-[family-name:var(--font-inter)] text-sm font-normal leading-[18.9px] tracking-[-0.42px] text-foreground bg-foreground/8';
+
+const NAV_CTA =
+  'inline-flex items-center justify-center gap-1.5 h-8 py-1.5 px-2.5 border border-foreground/20 rounded bg-transparent font-[family-name:var(--font-nav-mono)] text-xs font-medium leading-[1.3] tracking-[0.015em] uppercase text-foreground hover:bg-foreground/5 active:scale-[0.97] cursor-pointer';
 
 const MENU_CLOSE_DELAY_MS = 175;
 
@@ -97,9 +100,7 @@ export function Header() {
     pathname === '/ai-apps';
 
   return (
-    <header
-      className={`sticky top-0 z-50 bg-background ${geistNav.variable} font-[family-name:var(--font-nav)] font-medium antialiased`}
-    >
+    <header className={`sticky top-0 z-50 bg-background ${geistMonoNav.variable} antialiased`}>
       <div className="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10 xl:px-12">
         <div className="flex items-center h-16 w-full">
           <Link
@@ -124,12 +125,12 @@ export function Header() {
             >
               <button
                 type="button"
-                className={`${pathname.startsWith('/for') ? NAV_LINK_ACTIVE : NAV_LINK_BASE} gap-1.5 cursor-pointer`}
+                className={`${pathname.startsWith('/for') ? NAV_LINK_ACTIVE : NAV_LINK_BASE} cursor-pointer`}
                 id="nav-by-role-btn"
                 aria-expanded={showRolesMenu}
                 aria-haspopup="true"
               >
-                By Role
+                I Am A...
                 <ChevronDown className="w-4 h-4 text-muted-foreground" />
               </button>
 
@@ -148,12 +149,12 @@ export function Header() {
             >
               <button
                 type="button"
-                className={`${allToolsActive ? NAV_LINK_ACTIVE : NAV_LINK_BASE} gap-1.5 cursor-pointer`}
+                className={`${allToolsActive ? NAV_LINK_ACTIVE : NAV_LINK_BASE} cursor-pointer`}
                 id="nav-all-tools-btn"
                 aria-expanded={showCategoriesMenu}
                 aria-haspopup="true"
               >
-                All Tools
+                AI Tools
                 <ChevronDown className="w-4 h-4 text-muted-foreground" />
               </button>
 
@@ -179,7 +180,8 @@ export function Header() {
 
             <Link
               href="/ai-tool-finder"
-              className="inline-flex items-center gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-xs sm:text-sm px-4 sm:px-5 h-9 rounded-full transition-colors duration-200"
+              className={NAV_CTA}
+              style={{ transition: 'transform 0.1s ease, border-color 0.1s ease, color 0.1s ease, background-color 0.5s linear' }}
               id="header-finder-btn"
             >
               <span className="hidden sm:inline">Tool Finder</span>

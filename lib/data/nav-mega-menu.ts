@@ -167,6 +167,6 @@ export const ROLE_MEGA_MENU_FOOTER = {
 };
 
 export const ALL_TOOLS_MEGA_MENU_FOOTER = {
-  label: 'View Full Taxonomy Directory',
-  href: '/ai-tools-directory',
+  label: 'Browse All Tools',
+  href: '/ai-tools',
 };

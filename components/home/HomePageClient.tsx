@@ -55,6 +55,17 @@ const PERSONA_ICONS: Record<string, LucideIcon> = {
   writers: PenTool,
 };
 
+const ROLE_CARD_LABELS: Record<string, string> = {
+  'project-managers': 'Project Manager',
+  students: 'Student',
+  'small-business': 'Small Business Owner',
+  'real-estate-agents': 'Real Estate Agent',
+  researchers: 'Researcher',
+  writers: 'Writer',
+  teachers: 'Teacher',
+  marketers: 'Marketer',
+};
+
 function SectionHeading({
   title,
   description,
@@ -83,31 +94,33 @@ function LogoMarquee() {
   const duplicated = [...logos, ...logos];
 
   return (
-    <div className="home-container mt-12 md:mt-16 pb-4">
-      <p className="text-[12px] font-medium uppercase tracking-[0.015em] text-muted-foreground text-center mb-6">
-        Popular tools on TheRadarHub
-      </p>
-      <div className="home-marquee-wrap py-4">
-        <div className="home-marquee-track">
-          {duplicated.map((item, i) => (
-            <Link
-              key={`${item.slug}-${i}`}
-              href={`/tools/${item.slug}`}
-              aria-label={item.name}
-              className="inline-flex items-center gap-3 shrink-0 min-h-10 opacity-[0.65] hover:opacity-100 transition-opacity duration-300"
-            >
-              <span className="flex h-8 shrink-0 items-center justify-center">
-                <MarqueeLogoImage
-                  src={item.logo}
-                  name={item.name}
-                  fallbackSrc={item.fallbackLogo}
-                />
-              </span>
-              <span className="text-[13px] font-medium leading-none text-foreground/80 whitespace-nowrap">
-                {item.name}
-              </span>
-            </Link>
-          ))}
+    <div className="home-logo-marquee-section">
+      <div className="home-container pb-4">
+        <p className="text-[12px] font-medium uppercase tracking-[0.015em] text-muted-foreground text-center mb-6">
+          Popular tools on theradarhub
+        </p>
+        <div className="home-marquee-wrap py-4">
+          <div className="home-marquee-track">
+            {duplicated.map((item, i) => (
+              <Link
+                key={`${item.slug}-${i}`}
+                href={`/tools/${item.slug}`}
+                aria-label={item.name}
+                className="inline-flex items-center gap-3 shrink-0 min-h-10 opacity-[0.65] hover:opacity-100 transition-opacity duration-300"
+              >
+                <span className="flex h-8 shrink-0 items-center justify-center">
+                  <MarqueeLogoImage
+                    src={item.logo}
+                    name={item.name}
+                    fallbackSrc={item.fallbackLogo}
+                  />
+                </span>
+                <span className="text-[13px] font-medium leading-none text-foreground/80 whitespace-nowrap">
+                  {item.name}
+                </span>
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -125,7 +138,6 @@ export function HomePageClient({
   comparisons,
 }: HomePageClientProps) {
   const [activeTab, setActiveTab] = useState<'featured' | 'free' | 'trending' | 'api'>('featured');
-  const [activeRole, setActiveRole] = useState<string | null>(null);
 
   const publicPersonas = filterPublicPersonas(personas);
 
@@ -148,70 +160,96 @@ export function HomePageClient({
   return (
     <div className="home-page relative left-1/2 -translate-x-1/2 w-screen max-w-[100vw] -mt-6 sm:-mt-4 home-fade-in">
       {/* Hero */}
-      <section className="home-section pt-10 md:pt-16 pb-6">
-        <div className="home-container text-center">
-          <span className="home-pill home-pill-outline mb-8">{HOMEPAGE_HERO_BADGE}</span>
-
-          <h1 className="text-[38px] md:text-[48px] leading-[1.1] tracking-[-0.3px] font-medium text-foreground-strong max-w-3xl mx-auto">
-            Discover the AI tools worth knowing.
-          </h1>
-
-          <p className="text-base md:text-[16px] leading-[1.35] text-muted-foreground max-w-[550px] mx-auto mt-6">
-            Search, compare, and explore AI software by task, role, category, and budget.
-          </p>
-
-          <div className="home-hero-search mt-8 md:mt-10">
-            <NavSearch variant="hero" className="w-full" />
-          </div>
-
-          <nav
-            aria-label="Hero navigation"
-            className="mt-5 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[13px] md:text-sm text-muted-foreground"
+      <section className="home-section !pt-0 pb-6 -mt-4 md:-mt-8">
+        <div className="home-container">
+          <div
+            className="-mx-5 sm:-mx-7 md:-mx-8 rounded-2xl bg-cover bg-center bg-no-repeat overflow-hidden px-4 sm:px-6 md:px-8 py-24 md:py-28 text-center"
+            style={{ backgroundImage: "url('/hero/radar-bg.png')" }}
           >
-            <Link href="/ai-tools" className="hover:text-foreground transition-colors duration-200">
-              Browse all tools
-            </Link>
-            <span aria-hidden="true" className="text-muted-foreground/50">
-              ·
+            <span className="home-pill home-pill-outline mb-8 text-inverted-foreground border-inverted-foreground/30 hover:bg-inverted-foreground/10 hover:border-inverted-foreground/50">
+              {HOMEPAGE_HERO_BADGE}
             </span>
-            <Link href="/compare" className="hover:text-foreground transition-colors duration-200">
-              Compare tools
-            </Link>
-            <span aria-hidden="true" className="text-muted-foreground/50">
-              ·
-            </span>
-            <Link href="/ai-tool-finder" className="hover:text-foreground transition-colors duration-200">
-              Tool Finder
-            </Link>
-          </nav>
-        </div>
 
-        <LogoMarquee />
+            <h1 className="text-[38px] md:text-[48px] leading-[1.1] tracking-[-0.3px] font-medium text-inverted-foreground max-w-3xl mx-auto">
+              Tell us what you do. We&apos;ll tell you what to use.
+            </h1>
+
+            <p className="text-base md:text-[16px] leading-[1.35] text-inverted-foreground/70 max-w-[550px] mx-auto mt-6">
+              We scan the noise so you don&apos;t have to.
+            </p>
+
+            <div className="home-hero-search mt-8 md:mt-10">
+              <NavSearch variant="hero" className="w-full" />
+            </div>
+
+            <nav
+              aria-label="Hero navigation"
+              className="mt-5 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[13px] md:text-sm text-inverted-foreground/70"
+            >
+              <Link href="/ai-tools" className="text-inverted-foreground/80 hover:text-inverted-foreground transition-colors duration-200">
+                Browse all tools
+              </Link>
+              <span aria-hidden="true" className="text-inverted-foreground/40">
+                ·
+              </span>
+              <Link href="/compare" className="text-inverted-foreground/80 hover:text-inverted-foreground transition-colors duration-200">
+                Compare tools
+              </Link>
+              <span aria-hidden="true" className="text-inverted-foreground/40">
+                ·
+              </span>
+              <Link href="/ai-tool-finder" className="text-inverted-foreground/80 hover:text-inverted-foreground transition-colors duration-200">
+                Tool Finder
+              </Link>
+            </nav>
+          </div>
+        </div>
       </section>
 
-      {/* Role category strip */}
-      <section className="border-t border-border/30">
-        <div className="home-container py-6">
-          <div className="home-scroll-strip flex gap-2 overflow-x-auto pb-1">
-            {publicPersonas.map((p) => {
+      {/* Find Tools For Your Role */}
+      <section className="home-section border-t border-border/30">
+        <SectionHeading
+          title="I am a..."
+          description="Find AI tools that fit the way you work."
+        />
+        <div className="home-container">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {publicPersonas.slice(0, 6).map((p) => {
               const Icon = PERSONA_ICONS[p.slug] ?? Users;
-              const isActive = activeRole === p.slug;
               return (
                 <Link
                   key={p.slug}
                   href={`/for/${p.slug}`}
-                  onMouseEnter={() => setActiveRole(p.slug)}
-                  onMouseLeave={() => setActiveRole(null)}
-                  className={`home-pill shrink-0 gap-1.5 px-3 py-1.5 ${isActive ? 'home-pill-active' : 'home-pill-outline'}`}
+                  className="home-card p-5 group transition-colors"
                 >
-                  <Icon className="w-3.5 h-3.5 text-muted-foreground" />
-                  {p.title}
+                  <div className="flex items-start gap-3">
+                    <Icon className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
+                    <div>
+                      <p className="text-[14px] font-medium text-foreground group-hover:text-accent transition-colors">
+                        {ROLE_CARD_LABELS[p.slug] ?? p.title}
+                      </p>
+                      <p className="text-[13px] leading-[1.35] text-muted-foreground mt-1 line-clamp-2">
+                        {p.subtitle || p.description || `AI tools curated for ${p.title.toLowerCase()}.`}
+                      </p>
+                    </div>
+                  </div>
                 </Link>
               );
             })}
           </div>
+          <div className="text-center mt-8">
+            <Link
+              href="/for"
+              className="inline-flex items-center gap-1 text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
+              View all roles
+              <ArrowRight className="w-3 h-3" />
+            </Link>
+          </div>
         </div>
       </section>
+
+      <LogoMarquee />
 
       {/* Featured stat card */}
       <section className="home-section !pt-8 !pb-8">
@@ -259,49 +297,6 @@ export function HomePageClient({
         </div>
       </section>
 
-      {/* Find Tools For Your Role */}
-      <section className="home-section border-t border-border/30">
-        <SectionHeading
-          title="Find Tools For Your Role"
-          description="Curated software stacks optimized for your specific professional role — start here"
-        />
-        <div className="home-container">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {publicPersonas.slice(0, 6).map((p) => {
-              const Icon = PERSONA_ICONS[p.slug] ?? Users;
-              return (
-                <Link
-                  key={p.slug}
-                  href={`/for/${p.slug}`}
-                  className="home-card p-5 group transition-colors"
-                >
-                  <div className="flex items-start gap-3">
-                    <Icon className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
-                    <div>
-                      <p className="text-[14px] font-medium text-foreground group-hover:text-accent transition-colors">
-                        {p.title}
-                      </p>
-                      <p className="text-[13px] leading-[1.35] text-muted-foreground mt-1 line-clamp-2">
-                        {p.subtitle || p.description || `AI tools curated for ${p.title.toLowerCase()}.`}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-          <div className="text-center mt-8">
-            <Link
-              href="/for"
-              className="inline-flex items-center gap-1 text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              View all roles
-              <ArrowRight className="w-3 h-3" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* Browse Categories */}
       <section className="home-section border-t border-border/30">
         <SectionHeading
@@ -323,10 +318,10 @@ export function HomePageClient({
           </div>
           <div className="text-center mt-8">
             <Link
-              href="/ai-tools-directory"
+              href="/ai-tools"
               className="inline-flex items-center gap-1 text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors"
             >
-              View full taxonomy directory
+              Browse all tools
               <ArrowRight className="w-3 h-3" />
             </Link>
           </div>

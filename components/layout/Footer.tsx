@@ -78,7 +78,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="text-[11px] font-medium uppercase tracking-[0.015em] text-foreground mb-4">By Role</h4>
+            <h4 className="text-[11px] font-medium uppercase tracking-[0.015em] text-foreground mb-4">I Am A...</h4>
             <ul className="space-y-2.5 text-[13px] text-muted-foreground">
               {[
                 { name: 'Project Managers', slug: 'project-managers' },
@@ -102,7 +102,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="text-[11px] font-medium uppercase tracking-[0.015em] text-foreground mb-4">Directory</h4>
+            <h4 className="text-[11px] font-medium uppercase tracking-[0.015em] text-foreground mb-4">Discover</h4>
             <ul className="space-y-2.5 text-[13px] text-muted-foreground">
               <li>
                 <Link href="/best-ai-tools" className="hover:text-foreground transition-colors">
@@ -124,11 +124,7 @@ export function Footer() {
                   Tool Finder
                 </Link>
               </li>
-              <li>
-                <Link href="/ai-tools-directory" className="hover:text-foreground transition-colors">
-                  Full Taxonomy
-                </Link>
-              </li>
+
               <li>
                 <Link href="/compare" className="hover:text-foreground transition-colors">
                   Comparisons

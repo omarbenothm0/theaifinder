@@ -25,7 +25,7 @@ export function NavMegaMenu({
     <div
       className={`absolute top-full left-1/2 -translate-x-1/2 z-50 pt-2 min-w-[min(100vw-2rem,52rem)] ${panelClassName}`}
     >
-      <div className="bg-background-raised rounded-xl p-6 border border-border/50">
+      <div className="bg-white/80 backdrop-blur-[8px] rounded-lg border border-black/[0.08] shadow-[0_10px_25px_rgba(0,0,0,0.15)] p-1">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {columns.map((column) => (
             <div key={column.label}>

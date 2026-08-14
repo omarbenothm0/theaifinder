@@ -74,7 +74,7 @@ export const runwayTool: Tool = {
   reviewCount: 0,
   screenshots: ['https://images.unsplash.com/photo-1536240478700-b869070f9279?auto=format&fit=crop&w=800&q=500'],
   alternatives: ['sora', 'synthesia', 'heygen'],
-  targetUsers: ['youtubers', 'content-creators', 'marketers'],
+  targetUsers: ['content-creators', 'marketers'],
   verified: true,
   featured: true,
   trending: true,

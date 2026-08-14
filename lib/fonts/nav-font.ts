@@ -1,9 +1,9 @@
-import { Geist } from 'next/font/google';
+import { Geist_Mono } from 'next/font/google';
 
-/** Geist — navbar UI only (links, search, CTA). Logo uses Comfortaa separately. */
-export const geistNav = Geist({
+/** Geist Mono — navbar CTA only. Nav links use Inter via --font-inter; logo uses Comfortaa separately. */
+export const geistMonoNav = Geist_Mono({
   subsets: ['latin'],
   weight: ['500'],
-  variable: '--font-nav',
+  variable: '--font-nav-mono',
   display: 'swap',
 });
