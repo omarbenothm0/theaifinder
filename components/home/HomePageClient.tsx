@@ -5,7 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Tool, Category, Persona, Comparison } from '../../types/tool';
 import { SITE_NAME } from '../../lib/brand';
-import { filterPublicPersonas } from '../../lib/seo/persona-visibility';
+import { sortPublicPersonasByNavOrder } from '../../lib/seo/persona-visibility';
+import { orderPublicCategories } from '../../lib/data/category-nav-links';
 import {
   HOMEPAGE_FAQ_UPDATE_CADENCE,
   HOMEPAGE_FEATURED_SECTION_SUBTITLE,
@@ -139,7 +140,8 @@ export function HomePageClient({
 }: HomePageClientProps) {
   const [activeTab, setActiveTab] = useState<'featured' | 'free' | 'trending' | 'api'>('featured');
 
-  const publicPersonas = filterPublicPersonas(personas);
+  const publicPersonas = sortPublicPersonasByNavOrder(personas);
+  const orderedCategories = orderPublicCategories(categories);
 
   const currentTabTools =
     activeTab === 'featured'
@@ -281,7 +283,7 @@ export function HomePageClient({
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             {[
               { value: totalToolCount, label: 'Curated AI Tools', sub: 'Verified listings' },
-              { value: categories.length, label: 'Categories', sub: 'Taxonomy map' },
+              { value: orderedCategories.length, label: 'Categories', sub: 'Taxonomy map' },
               { value: personas.length, label: 'Workflow Guides', sub: 'By role' },
               { value: 'Editorial', label: 'Source Profiles', sub: 'Official data' },
             ].map((stat) => (
@@ -305,7 +307,7 @@ export function HomePageClient({
         />
         <div className="home-container">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {categories.map((cat) => (
+            {orderedCategories.map((cat) => (
               <Link key={cat.id} href={`/category/${cat.slug}`} className="home-card p-5 group">
                 <p className="text-[14px] font-medium text-foreground group-hover:text-accent transition-colors">
                   {cat.name}

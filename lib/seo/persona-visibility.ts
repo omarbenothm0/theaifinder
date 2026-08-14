@@ -14,7 +14,41 @@ export const DEPRECATED_PERSONA_NAV_SLUGS: ReadonlySet<string> = new Set([
   'content-creators',
   'entrepreneurs',
   'developers',
+  'youtubers',
 ]);
+
+/** Nav/homepage persona groups — slugs only; titles come from persona records. */
+export const PUBLIC_PERSONA_NAV_GROUPS: ReadonlyArray<{
+  label: string;
+  slugs: readonly string[];
+}> = [
+  {
+    label: 'Delivery & Ops',
+    slugs: ['project-managers', 'small-business', 'real-estate-agents'],
+  },
+  {
+    label: 'Create & Teach',
+    slugs: ['writers', 'marketers', 'teachers'],
+  },
+  {
+    label: 'Research & Study',
+    slugs: ['students', 'researchers'],
+  },
+];
+
+export function getPublicPersonaNavSlugs(): string[] {
+  return PUBLIC_PERSONA_NAV_GROUPS.flatMap((group) =>
+    group.slugs.filter((slug) => !isDeprecatedPersonaNavSlug(slug))
+  );
+}
+
+export function sortPublicPersonasByNavOrder<T extends { slug: string }>(personas: T[]): T[] {
+  const order = getPublicPersonaNavSlugs();
+  const rank = new Map(order.map((slug, index) => [slug, index]));
+  return filterPublicPersonas(personas).sort(
+    (a, b) => (rank.get(a.slug) ?? Number.MAX_SAFE_INTEGER) - (rank.get(b.slug) ?? Number.MAX_SAFE_INTEGER)
+  );
+}
 
 export function isDeprecatedPersonaNavSlug(slug: string): boolean {
   return DEPRECATED_PERSONA_NAV_SLUGS.has(slug);

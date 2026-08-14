@@ -1,7 +1,7 @@
 'use client';
 
 import { Category, Persona, PricingModel, ToolFilterOptions } from '../../types/tool';
-import { filterPublicPersonas } from '../../lib/seo/persona-visibility';
+import { sortPublicPersonasByNavOrder } from '../../lib/seo/persona-visibility';
 import { Filter, RotateCcw, Check, DollarSign, Tag, Users } from 'lucide-react';
 
 interface ToolFilterSidebarProps {
@@ -53,7 +53,7 @@ export function ToolFilterSidebar({
     });
   };
 
-  const visiblePersonas = filterPublicPersonas(personas);
+  const visiblePersonas = sortPublicPersonasByNavOrder(personas);
 
   const hasActiveFilters =
     (filters.category && filters.category !== 'all') ||

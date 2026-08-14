@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Category, Persona, Comparison, Tool } from '../../types/tool';
 import { ArrowRight, Sparkles, Layers, Users, Zap } from 'lucide-react';
-import { filterPublicPersonas } from '../../lib/seo/persona-visibility';
+import { sortPublicPersonasByNavOrder } from '../../lib/seo/persona-visibility';
 import { isComparisonIndexable } from '../../lib/seo/indexability';
 
 interface InternalLinksProps {
@@ -28,7 +28,7 @@ export function InternalLinks({
   const visibleCategories = categories.filter(
     (cat) => !excludeCategorySlug || cat.slug !== excludeCategorySlug
   );
-  const visiblePersonas = filterPublicPersonas(personas).filter(
+  const visiblePersonas = sortPublicPersonasByNavOrder(personas).filter(
     (p) => !excludePersonaSlug || p.slug !== excludePersonaSlug
   );
   const visibleComparisons = comparisons.filter(

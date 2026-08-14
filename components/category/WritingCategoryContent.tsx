@@ -12,6 +12,7 @@ import {
 } from '../../lib/data/writing-category';
 import { getFAQSchema, getCollectionPageSchema } from '../../lib/seo/jsonld';
 import { PageHero, PageHeroAccentBadge } from '../ui/PageHero';
+import { sortPublicPersonasByNavOrder } from '../../lib/seo/persona-visibility';
 import {
   ArrowRight,
   BookOpen,
@@ -28,10 +29,7 @@ interface WritingCategoryContentProps {
 }
 
 function prioritizeWritingPersonas(personas: Persona[]): Persona[] {
-  const writers = personas.find((p) => p.slug === 'writers');
-  const marketers = personas.find((p) => p.slug === 'marketers');
-  const rest = personas.filter((p) => p.slug !== 'writers' && p.slug !== 'marketers');
-  return [writers, marketers, ...rest].filter(Boolean) as Persona[];
+  return sortPublicPersonasByNavOrder(personas);
 }
 
 async function loadToolsBySlugs(slugs: string[]): Promise<Map<string, Tool>> {

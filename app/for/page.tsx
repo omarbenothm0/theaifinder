@@ -6,7 +6,7 @@ import { generatePageMetadata } from '../../lib/seo/metadata';
 import { generateBreadcrumbSchema } from '../../lib/seo/jsonld';
 import { getBaseUrl, absoluteUrl } from '../../lib/seo/base-url';
 import { sitePageTitle } from '../../lib/brand';
-import { isDeprecatedPersonaNavSlug } from '../../lib/seo/persona-visibility';
+import { sortPublicPersonasByNavOrder } from '../../lib/seo/persona-visibility';
 import { Users, ArrowRight } from 'lucide-react';
 import { PageHero, PageHeroAccentBadge } from '../../components/ui/PageHero';
 
@@ -22,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ForIndexPage() {
   const allPersonas = await PersonaService.getPersonas();
-  const personas = allPersonas.filter((p) => !isDeprecatedPersonaNavSlug(p.slug));
+  const personas = sortPublicPersonasByNavOrder(allPersonas);
   const baseUrl = getBaseUrl();
 
   const breadcrumbSchema = generateBreadcrumbSchema([

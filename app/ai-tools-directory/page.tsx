@@ -8,6 +8,7 @@ import { isComparisonIndexable } from '../../lib/seo/indexability';
 import { sitePageTitle } from '../../lib/brand';
 import { Layers, Zap, ArrowRight, Database } from 'lucide-react';
 import { PageHero, PageHeroAccentBadge } from '../../components/ui/PageHero';
+import { orderPublicCategories } from '../../lib/data/category-nav-links';
 
 export const revalidate = 3600;
 
@@ -24,6 +25,7 @@ export default async function AIToolsDirectoryPage() {
     CategoryService.getCategories(),
     ComparisonService.getComparisons()
   ]);
+  const orderedCategories = orderPublicCategories(categories);
   const indexableComparisons = comparisons.filter((c) => isComparisonIndexable(c).indexable);
 
   return (
@@ -48,7 +50,7 @@ export default async function AIToolsDirectoryPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {categories.map((cat) => (
+          {orderedCategories.map((cat) => (
             <CategoryCard key={cat.id} category={cat} />
           ))}
         </div>

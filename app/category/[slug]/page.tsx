@@ -23,6 +23,7 @@ import { SeoCategoryContent } from '../../../components/category/SeoCategoryCont
 import { ImageCategoryContent } from '../../../components/category/ImageCategoryContent';
 import { VoiceCategoryContent } from '../../../components/category/VoiceCategoryContent';
 import { VideoCategoryContent } from '../../../components/category/VideoCategoryContent';
+import { orderPublicCategories } from '../../../lib/data/category-nav-links';
 
 const BASE_URL = getBaseUrl();
 
@@ -58,6 +59,8 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
     PersonaService.getPersonas()
   ]);
 
+  const orderedCategories = orderPublicCategories(categories);
+
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: 'Home', url: BASE_URL },
     { name: 'Categories', url: absoluteUrl('/ai-tools-directory') },
@@ -68,7 +71,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
     return (
       <>
         <JsonLd schema={breadcrumbSchema} />
-        <WritingCategoryContent category={category} categories={categories} personas={personas} />
+        <WritingCategoryContent category={category} categories={orderedCategories} personas={personas} />
       </>
     );
   }
@@ -77,7 +80,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
     return (
       <>
         <JsonLd schema={breadcrumbSchema} />
-        <CodingCategoryContent category={category} categories={categories} personas={personas} />
+        <CodingCategoryContent category={category} categories={orderedCategories} personas={personas} />
       </>
     );
   }
@@ -88,7 +91,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         <JsonLd schema={breadcrumbSchema} />
         <ProjectManagementCategoryContent
           category={category}
-          categories={categories}
+          categories={orderedCategories}
           personas={personas}
         />
       </>
@@ -101,7 +104,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         <JsonLd schema={breadcrumbSchema} />
         <StudyEducationCategoryContent
           category={category}
-          categories={categories}
+          categories={orderedCategories}
           personas={personas}
         />
       </>
@@ -114,7 +117,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         <JsonLd schema={breadcrumbSchema} />
         <ProductivityCategoryContent
           category={category}
-          categories={categories}
+          categories={orderedCategories}
           personas={personas}
         />
       </>
@@ -127,7 +130,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         <JsonLd schema={breadcrumbSchema} />
         <MarketingCategoryContent
           category={category}
-          categories={categories}
+          categories={orderedCategories}
           personas={personas}
         />
       </>
@@ -138,7 +141,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
     return (
       <>
         <JsonLd schema={breadcrumbSchema} />
-        <SeoCategoryContent category={category} categories={categories} personas={personas} />
+        <SeoCategoryContent category={category} categories={orderedCategories} personas={personas} />
       </>
     );
   }
@@ -147,7 +150,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
     return (
       <>
         <JsonLd schema={breadcrumbSchema} />
-        <ImageCategoryContent category={category} categories={categories} personas={personas} />
+        <ImageCategoryContent category={category} categories={orderedCategories} personas={personas} />
       </>
     );
   }
@@ -156,7 +159,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
     return (
       <>
         <JsonLd schema={breadcrumbSchema} />
-        <VoiceCategoryContent category={category} categories={categories} personas={personas} />
+        <VoiceCategoryContent category={category} categories={orderedCategories} personas={personas} />
       </>
     );
   }
@@ -165,7 +168,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
     return (
       <>
         <JsonLd schema={breadcrumbSchema} />
-        <VideoCategoryContent category={category} categories={categories} personas={personas} />
+        <VideoCategoryContent category={category} categories={orderedCategories} personas={personas} />
       </>
     );
   }
@@ -205,7 +208,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
       </div>
 
       <InternalLinks
-        categories={categories}
+        categories={orderedCategories}
         personas={personas}
         excludeCategorySlug={category.slug}
       />
