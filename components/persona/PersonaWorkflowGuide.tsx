@@ -71,7 +71,11 @@ export function PersonaWorkflowGuide({
 
   // Get tools for active workflow
   const activeSection = workflowSections.find(w => w.slug === activeWorkflow);
-  const workflowTools = activeSection?.tools || [];
+  const workflowTools = useMemo(() => {
+    const tools = activeSection?.tools || [];
+    // Dedupe by tool.id in case same tool appears in multiple sections
+    return Array.from(new Map(tools.map(t => [t.tool.id, t])).values());
+  }, [activeSection?.tools]);
 
   // Get problem context from config
   const activeContext = config.workflowContext[activeWorkflow] || { problem: '', solution: '' };

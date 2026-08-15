@@ -180,7 +180,7 @@ export const PM_TOOLS: Tool[] = [
     name: 'Otter.ai',
     slug: 'otter-ai',
     logo: favicon('otter.ai'),
-    tagline: 'AI meeting transcription, summaries, and action items for Zoom, Meet, and Teams.',
+    tagline: 'Connects meeting notes directly to project tools and platforms for seamless PM workflow integration.',
     description:
       'Otter.ai joins meetings to transcribe conversations, generate AI summaries with decisions and action items, and integrate with project tools. Verified for PM meeting-notes workflows from otter.ai.',
     tags: ['Meeting Notes', 'Transcription', 'Action Items'],
@@ -203,7 +203,7 @@ export const PM_TOOLS: Tool[] = [
     name: 'Fireflies.ai',
     slug: 'fireflies-ai',
     logo: favicon('fireflies.ai'),
-    tagline: 'AI notetaker with transcription, summaries, and CRM or PM integrations.',
+    tagline: 'Auto-joins calendar meetings and transcribes in 100+ languages for global PM teams.',
     description:
       'Fireflies.ai records and transcribes meetings, generates AI summaries and action items, and connects to project and CRM tools. Verified from fireflies.ai official pages.',
     tags: ['Meeting Notes', 'Transcription', 'Integrations'],
@@ -226,7 +226,7 @@ export const PM_TOOLS: Tool[] = [
     name: 'Fathom',
     slug: 'fathom',
     logo: favicon('fathom.video'),
-    tagline: 'AI meeting assistant with unlimited free recordings and instant summaries.',
+    tagline: 'Records without bots and highlights key moments with AI for meeting review and follow-up.',
     description:
       'Fathom captures meeting audio, provides transcripts and AI summaries with action items, and syncs to workflow tools. Verified from fathom.video pricing and product pages.',
     tags: ['Meeting Notes', 'Free Tier', 'Action Items'],
@@ -248,7 +248,7 @@ export const PM_TOOLS: Tool[] = [
     name: 'tl;dv',
     slug: 'tldv',
     logo: favicon('tldv.io'),
-    tagline: 'AI meeting minutes for Zoom, Google Meet, and Microsoft Teams.',
+    tagline: 'Customizable AI meeting minutes templates with action-item assignment for structured PM documentation.',
     description:
       'tl;dv records and transcribes meetings, offers customizable AI meeting minutes templates, and supports CRM workflow sync. Verified from tldv.io official sources.',
     tags: ['Meeting Notes', 'Templates', 'CRM'],
@@ -270,7 +270,7 @@ export const PM_TOOLS: Tool[] = [
     name: 'Sembly AI',
     slug: 'sembly-ai',
     logo: favicon('sembly.ai'),
-    tagline: 'Agentic meeting intelligence with notes, tasks, and project status reports.',
+    tagline: 'Generates project status reports directly from meeting transcripts for stakeholder updates.',
     description:
       'Sembly AI transcribes meetings across major platforms, detects tasks and action items, and generates project status report documents. Verified from sembly.ai official pages.',
     tags: ['Meeting Notes', 'Status Reports', 'Task Detection'],
@@ -290,12 +290,12 @@ export const PM_TOOLS: Tool[] = [
     targetUsers: ['project-managers'],
   }),
   pmTool({
-    name: 'Zoom AI My Notes',
+    name: 'Zoom My Notes',
     slug: 'zoom-ai-my-notes',
     logo: favicon('zoom.com'),
-    tagline: 'AI note-taking across Zoom and third-party meetings with summaries and action items.',
+    tagline: 'Bot-free AI note-taking across Zoom, Teams, Meet, and in-person meetings with summaries and action items.',
     description:
-      'Zoom Workplace AI My Notes provides transcription, post-meeting summaries, and action-item workflows within the Zoom ecosystem. Verified from zoom.com AI note-taking feature page.',
+      'Zoom My Notes captures insights from conversations on Zoom, in-person, on mobile, and across third-party platforms without requiring bots. Verified from zoom.com AI note-taking feature page.',
     tags: ['Meeting Notes', 'Platform Feature', 'Zoom'],
     pricingModel: 'Freemium',
     monthlyPrice: 8.33,
@@ -577,7 +577,7 @@ export const PM_TOOL_USE_CASES: PmToolUseCaseSeed[] = [
   { toolSlug: 'fathom', useCaseSlug: 'meeting-notes', fitTier: 'primary', capabilities: 'Recordings, transcripts, AI summaries, action items', evidenceUrl: 'https://www.fathom.video', displayOrder: 3 },
   { toolSlug: 'tldv', useCaseSlug: 'meeting-notes', fitTier: 'primary', capabilities: 'AI meeting minutes, templates, action items', evidenceUrl: 'https://tldv.io', displayOrder: 4 },
   { toolSlug: 'sembly-ai', useCaseSlug: 'meeting-notes', fitTier: 'primary', capabilities: 'Transcription, notes, automatic task detection', evidenceUrl: 'https://www.sembly.ai', displayOrder: 5 },
-  { toolSlug: 'zoom-ai-my-notes', useCaseSlug: 'meeting-notes', fitTier: 'strong', capabilities: 'AI note-taking, summaries, action items', limitation: 'Platform feature — requires Zoom Workplace', evidenceUrl: 'https://www.zoom.com/en/products/ai-assistant/features/ai-note-taking/', displayOrder: 6 },
+  { toolSlug: 'zoom-ai-my-notes', useCaseSlug: 'meeting-notes', fitTier: 'strong', capabilities: 'Bot-free capture, summaries, action items, cross-platform', limitation: 'Platform feature — requires Zoom Workplace', evidenceUrl: 'https://www.zoom.com/en/products/ai-assistant/features/ai-note-taking/', displayOrder: 6 },
   { toolSlug: 'google-gemini-meet', useCaseSlug: 'meeting-notes', fitTier: 'strong', capabilities: 'Automated Meet notes, summaries, Docs integration', limitation: 'Requires Google Workspace with Gemini in Meet', evidenceUrl: 'https://workspace.google.com/products/meet/', displayOrder: 7 },
   { toolSlug: 'microsoft-365-copilot', useCaseSlug: 'meeting-notes', fitTier: 'strong', capabilities: 'Teams meeting recap, transcript Q&A', limitation: 'Requires M365 Copilot license', evidenceUrl: 'https://learn.microsoft.com/en-us/microsoft-365-copilot/microsoft-365-copilot-overview', displayOrder: 8 },
   // project-reporting
