@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ToolRepository } from '../../../../lib/repositories/tool.repository';
 import { isAdminAuthenticatedFromRequest } from '../../../../lib/auth/edgeSession';
+import { getSessionFromCookie } from '../../../../lib/auth/adminSession';
 import {
   validateToolInput,
   validateToolForPublish,
   formatValidationErrors,
 } from '../../../../lib/validation/tool.validation';
+import { AdminAuditLogRepository } from '../../../../lib/repositories/audit.repository';
+import { AdminAuditActionEnum, AdminAuditEntityTypeEnum } from '@prisma/client';
 
 export async function GET(
   req: NextRequest,
@@ -48,6 +51,17 @@ export async function PUT(
     return NextResponse.json({ error: 'Tool not found' }, { status: 404 });
   }
 
+  const session = await getSessionFromCookie();
+  const actor = session?.sub || 'unknown';
+
+  await AdminAuditLogRepository.logAction({
+    action: AdminAuditActionEnum.tool_update,
+    entityType: AdminAuditEntityTypeEnum.tool,
+    entityId: updated.id,
+    actor,
+    details: `Updated tool: ${updated.slug}`,
+  });
+
   return NextResponse.json(updated);
 }
 
@@ -56,11 +70,28 @@ export async function DELETE(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
+  
+  const existing = await ToolRepository.getToolBySlug(slug, { includeUnpublished: true });
+  if (!existing) {
+    return NextResponse.json({ error: 'Tool not found' }, { status: 404 });
+  }
+
   const success = await ToolRepository.deleteTool(slug);
 
   if (!success) {
     return NextResponse.json({ error: 'Tool not found' }, { status: 404 });
   }
+
+  const session = await getSessionFromCookie();
+  const actor = session?.sub || 'unknown';
+
+  await AdminAuditLogRepository.logAction({
+    action: AdminAuditActionEnum.tool_delete,
+    entityType: AdminAuditEntityTypeEnum.tool,
+    entityId: existing.id,
+    actor,
+    details: `Deleted tool: ${existing.name} (${existing.slug})`,
+  });
 
   return NextResponse.json({ message: 'Tool deleted successfully' });
 }

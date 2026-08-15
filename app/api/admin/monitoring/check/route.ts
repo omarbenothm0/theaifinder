@@ -6,6 +6,9 @@ import {
 } from '../../../../../lib/rate-limit';
 import { MonitoringService } from '../../../../../lib/monitoring/monitoring.service';
 import { getMonitoringConfig } from '../../../../../lib/monitoring/config';
+import { getSessionFromCookie } from '../../../../../lib/auth/adminSession';
+import { AdminAuditLogRepository } from '../../../../../lib/repositories/audit.repository';
+import { AdminAuditActionEnum, AdminAuditEntityTypeEnum } from '@prisma/client';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -40,6 +43,18 @@ export async function POST(request: NextRequest) {
       }
 
       const batch = await MonitoringService.runWebsiteCheckBatch(body.toolIds);
+      
+      const session = await getSessionFromCookie();
+      const actor = session?.sub || 'unknown';
+
+      await AdminAuditLogRepository.logAction({
+        action: AdminAuditActionEnum.monitoring_check,
+        entityType: AdminAuditEntityTypeEnum.tool,
+        entityId: body.toolIds[0], // Log first tool ID as representative
+        actor,
+        details: `Batch monitoring check for ${body.toolIds.length} tools`,
+      });
+
       return NextResponse.json(batch);
     }
 
@@ -48,6 +63,18 @@ export async function POST(request: NextRequest) {
     }
 
     const result = await MonitoringService.runWebsiteCheckForTool(body.toolId);
+    
+    const session = await getSessionFromCookie();
+    const actor = session?.sub || 'unknown';
+
+    await AdminAuditLogRepository.logAction({
+      action: AdminAuditActionEnum.monitoring_check,
+      entityType: AdminAuditEntityTypeEnum.tool,
+      entityId: body.toolId,
+      actor,
+      details: `Monitoring check for tool: ${body.toolId}`,
+    });
+
     return NextResponse.json(result);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Monitoring check failed';

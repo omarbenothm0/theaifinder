@@ -5,12 +5,27 @@ import {
   verifyAdminPassword,
   getAdminCredentials,
 } from '../../../../lib/auth/adminSession';
+import { AdminAuditLogRepository } from '../../../../lib/repositories/audit.repository';
+import { AdminAuditActionEnum } from '@prisma/client';
+import { getClientIdentifier, checkRateLimit, rateLimitResponse } from '../../../../lib/rate-limit';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
+    // Rate limiting: 10 attempts per 15 minutes per IP
+    const identifier = getClientIdentifier(req);
+    const rate = checkRateLimit(identifier, {
+      key: 'admin_login',
+      limit: 10,
+      windowSec: 60 * 15, // 15 minutes
+    });
+
+    if (!rate.allowed) {
+      return rateLimitResponse(rate.resetAt);
+    }
+
     const contentType = req.headers.get('content-type') || '';
 
     let username = '';
@@ -57,6 +72,16 @@ export async function POST(req: NextRequest) {
     const passwordOk = verifyAdminPassword(password);
 
     if (!usernameOk || !passwordOk) {
+      const ipAddress = getClientIdentifier(req);
+      
+      await AdminAuditLogRepository.logAction({
+        action: AdminAuditActionEnum.admin_login_failed,
+        actor: username,
+        ipAddress,
+        success: false,
+        details: `Failed login for user: ${username}`,
+      });
+
       await new Promise((resolve) => setTimeout(resolve, 650));
 
       return NextResponse.redirect(
@@ -65,6 +90,13 @@ export async function POST(req: NextRequest) {
     }
 
     const sessionToken = await createSession(expectedCreds.username);
+
+    await AdminAuditLogRepository.logAction({
+      action: AdminAuditActionEnum.admin_login,
+      actor: expectedCreds.username,
+      success: true,
+      details: 'Admin login',
+    });
 
     const response = NextResponse.redirect(
       new URL(redirectTo, origin)

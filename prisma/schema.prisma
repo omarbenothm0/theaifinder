@@ -49,6 +49,24 @@ enum UseCaseFitTierEnum {
   exclude
 }
 
+enum AdminAuditActionEnum {
+  tool_create
+  tool_update
+  tool_delete
+  review_moderate
+  review_delete
+  admin_login
+  admin_login_failed
+  admin_logout
+  monitoring_check
+}
+
+enum AdminAuditEntityTypeEnum {
+  tool
+  review
+  none
+}
+
 model Category {
   id              String   @id @default(cuid())
   name            String   @unique
@@ -382,4 +400,22 @@ model Article {
 
   @@index([slug])
   @@index([publishStatus])
+}
+
+model AdminAuditLog {
+  id          String                  @id @default(cuid())
+  action      AdminAuditActionEnum
+  entityType  AdminAuditEntityTypeEnum @default(none)
+  entityId    String?
+  actor       String
+  ipAddress   String?
+  success     Boolean                 @default(true)
+  createdAt   DateTime                @default(now())
+  details     String?                 @db.Text
+
+  @@index([actor])
+  @@index([entityType, entityId])
+  @@index([action])
+  @@index([createdAt])
+  @@index([success])
 }

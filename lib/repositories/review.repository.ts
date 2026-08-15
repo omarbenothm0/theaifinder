@@ -133,7 +133,10 @@ export class ReviewRepository {
   }
 
   public static async deleteReview(id: string): Promise<boolean> {
-    const existing = await prisma.review.findUnique({ where: { id } });
+    const existing = await prisma.review.findUnique({
+      where: { id },
+      include: { tool: true },
+    });
     if (!existing) return false;
 
     await prisma.review.delete({ where: { id } });

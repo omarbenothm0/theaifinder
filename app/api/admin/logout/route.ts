@@ -1,11 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { clearAdminSessionCookie } from '../../../../lib/auth/adminSession';
+import { clearAdminSessionCookie, getSessionFromCookie } from '../../../../lib/auth/adminSession';
+import { AdminAuditLogRepository } from '../../../../lib/repositories/audit.repository';
+import { AdminAuditActionEnum } from '@prisma/client';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
+    const session = await getSessionFromCookie();
+    const actor = session?.sub || 'unknown';
+
+    await AdminAuditLogRepository.logAction({
+      action: AdminAuditActionEnum.admin_logout,
+      actor,
+      success: true,
+      details: 'Admin logout',
+    });
+
     const origin = req.nextUrl.origin;
     const response: NextResponse = NextResponse.redirect(new URL('/admin/login', origin));
     clearAdminSessionCookie(response);
@@ -23,6 +35,16 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
+  const session = await getSessionFromCookie();
+  const actor = session?.sub || 'unknown';
+
+  await AdminAuditLogRepository.logAction({
+    action: AdminAuditActionEnum.admin_logout,
+    actor,
+    success: true,
+    details: 'Admin logout',
+  });
+
   const origin = req.nextUrl.origin;
   const response: NextResponse = NextResponse.redirect(new URL('/admin/login', origin));
   clearAdminSessionCookie(response);

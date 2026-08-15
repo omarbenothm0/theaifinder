@@ -10,6 +10,9 @@ import {
   databaseUnavailableResponse,
   isDatabaseUnavailableError,
 } from '../../../lib/api/database-unavailable';
+import { getSessionFromCookie } from '../../../lib/auth/adminSession';
+import { AdminAuditLogRepository } from '../../../lib/repositories/audit.repository';
+import { AdminAuditActionEnum, AdminAuditEntityTypeEnum } from '@prisma/client';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -56,6 +59,18 @@ export async function POST(req: NextRequest) {
     }
 
     const newTool = await ToolRepository.createTool(body);
+
+    const session = await getSessionFromCookie();
+    const actor = session?.sub || 'unknown';
+
+    await AdminAuditLogRepository.logAction({
+      action: AdminAuditActionEnum.tool_create,
+      entityType: AdminAuditEntityTypeEnum.tool,
+      entityId: newTool.id,
+      actor,
+      details: `Created tool: ${newTool.name} (${newTool.slug})`,
+    });
+
     return NextResponse.json(newTool, { status: 201 });
   } catch (err: any) {
     return NextResponse.json({ error: err.message || 'Failed to create tool' }, { status: 400 });

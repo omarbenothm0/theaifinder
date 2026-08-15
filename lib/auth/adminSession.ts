@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 import crypto from 'crypto';
+import bcrypt from 'bcryptjs';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
@@ -55,58 +56,66 @@ const getHmacKey = async (): Promise<CryptoKey> => {
 export const getAdminCredentials = (): {
   username: string;
   passwordHash: string;
+  hashType: 'sha256' | 'bcrypt';
 } => {
   const username = process.env.ADMIN_USERNAME || 'admin';
   const envPassword = process.env.ADMIN_PASSWORD;
 
   let passwordHash: string;
+  let hashType: 'sha256' | 'bcrypt' = 'sha256';
 
-  if (envPassword && envPassword.startsWith('sha256:')) {
+  if (envPassword && envPassword.startsWith('bcrypt:')) {
+    passwordHash = envPassword.slice('bcrypt:'.length);
+    hashType = 'bcrypt';
+  } else if (envPassword && envPassword.startsWith('sha256:')) {
     passwordHash = envPassword.slice('sha256:'.length);
+    hashType = 'sha256';
   } else if (envPassword) {
-    passwordHash = crypto
-      .createHash('sha256')
-      .update(envPassword + getAuthSecret().slice(0, 8))
-      .digest('hex');
+    // New passwords default to bcrypt
+    passwordHash = bcrypt.hashSync(envPassword, 12);
+    hashType = 'bcrypt';
   } else if (process.env.NODE_ENV === 'production') {
     throw new Error('[ADMIN AUTH] ADMIN_PASSWORD must be set in production.');
   } else {
+    // Development fallback: use SHA-256 for backward compatibility
     passwordHash = crypto
       .createHash('sha256')
       .update('admin123' + getAuthSecret().slice(0, 8))
       .digest('hex');
+    hashType = 'sha256';
 
     console.warn(
       '[ADMIN AUTH] Using default fallback admin password. Set ADMIN_PASSWORD in env.'
     );
   }
 
-  return { username, passwordHash };
+  return { username, passwordHash, hashType };
 };
 
 export const hashPasswordForEnv = (password: string): string => {
-  return (
-    'sha256:' +
-    crypto
-      .createHash('sha256')
-      .update(password + getAuthSecret().slice(0, 8))
-      .digest('hex')
-  );
+  // Always use bcrypt for new passwords
+  const hash = bcrypt.hashSync(password, 12);
+  return `bcrypt:${hash}`;
 };
 
 export const verifyAdminPassword = (password: string): boolean => {
-  const { passwordHash } = getAdminCredentials();
-
-  const attemptHash = crypto
-    .createHash('sha256')
-    .update(password + getAuthSecret().slice(0, 8))
-    .digest('hex');
+  const { passwordHash, hashType } = getAdminCredentials();
 
   try {
-    const a = Buffer.from(attemptHash, 'hex');
-    const b = Buffer.from(passwordHash, 'hex');
+    if (hashType === 'bcrypt') {
+      return bcrypt.compareSync(password, passwordHash);
+    } else {
+      // SHA-256 fallback for backward compatibility
+      const attemptHash = crypto
+        .createHash('sha256')
+        .update(password + getAuthSecret().slice(0, 8))
+        .digest('hex');
 
-    return crypto.timingSafeEqual(a, b);
+      const a = Buffer.from(attemptHash, 'hex');
+      const b = Buffer.from(passwordHash, 'hex');
+
+      return crypto.timingSafeEqual(a, b);
+    }
   } catch {
     return false;
   }
