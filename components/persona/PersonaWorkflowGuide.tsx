@@ -3,8 +3,8 @@
 import { useState, useMemo } from 'react';
 import { Tool, UseCaseFitTier } from '../../types/tool';
 import { WorkflowTool, WorkflowSection } from '../../types/persona';
-import { ToolCard } from '../tool/ToolCard';
-import { BookOpen, Star, ArrowRight, Users, CheckCircle2, Layers } from 'lucide-react';
+import { PersonaWorkflowConfig } from '../../lib/data/persona-configs/types';
+import { BookOpen, ArrowRight, Users, CheckCircle2, Layers } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -22,19 +22,21 @@ interface PersonaUseCase {
   description: string;
 }
 
-interface ProjectManagersWorkflowGuideProps {
+interface PersonaWorkflowGuideProps {
   tools: Tool[];
   toolUseCases: PersonaToolUseCase[];
   useCases: PersonaUseCase[];
+  config: PersonaWorkflowConfig;
   personaTitle: string;
 }
 
-export function ProjectManagersWorkflowGuide({ 
+export function PersonaWorkflowGuide({ 
   tools, 
   toolUseCases, 
   useCases,
+  config,
   personaTitle
-}: ProjectManagersWorkflowGuideProps) {
+}: PersonaWorkflowGuideProps) {
   // Default to first use case
   const [activeWorkflow, setActiveWorkflow] = useState<string>(useCases.length > 0 ? useCases[0].slug : 'all');
 
@@ -71,65 +73,28 @@ export function ProjectManagersWorkflowGuide({
   const activeSection = workflowSections.find(w => w.slug === activeWorkflow);
   const workflowTools = activeSection?.tools || [];
 
-  // PM-specific problem context
-  const getProblemContext = (workflowSlug: string) => {
-    switch (workflowSlug) {
-      case 'meeting-notes':
-        return {
-          problem: "Meeting overload makes it hard to capture action items and decisions. As a project manager, you're often in back-to-back meetings where critical decisions get lost or action items are forgotten.",
-          solution: "AI meeting notetakers automatically transcribe conversations, extract decisions, and identify action items so you can focus on the discussion while ensuring nothing falls through the cracks.",
-        };
-      case 'task-management':
-        return {
-          problem: "Task chaos and unclear prioritization can derail projects. With multiple workstreams, dependencies, and shifting deadlines, it's challenging to keep everyone aligned on what matters most.",
-          solution: "AI-powered task management tools help prioritize work, automatically assign tasks based on team capacity, and provide intelligent planning assistance to keep projects on track.",
-        };
-      case 'project-reporting':
-        return {
-          problem: "Reporting pressure and stakeholder updates consume valuable time. Creating status reports and stakeholder presentations often means manually compiling updates from multiple sources and formatting them for different audiences.",
-          solution: "AI reporting tools automatically generate status updates and stakeholder presentations by synthesizing information from meetings, tickets, and project updates, saving hours of manual work.",
-        };
-      default:
-        return {
-          problem: "",
-          solution: "",
-        };
-    }
-  };
-
-  const activeContext = getProblemContext(activeWorkflow);
+  // Get problem context from config
+  const activeContext = config.workflowContext[activeWorkflow] || { problem: '', solution: '' };
 
   return (
     <div className="space-y-10">
-      {/* PM Problem Context */}
+      {/* Persona Problem Context */}
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="bg-background-raised rounded-2xl border border-border/50 p-6 sm:p-8">
           <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2 mb-4">
             <Users className="w-5 h-5 text-foreground" />
-            Common PM Challenges
+            {config.challengesSectionTitle}
           </h2>
           <div className="space-y-4">
-            <div className="flex gap-3">
-              <div className="flex-shrink-0 w-6 h-6 rounded-full bg-foreground/10 flex items-center justify-center text-xs font-bold text-foreground">1</div>
-              <div>
-                <h3 className="font-medium text-foreground-strong text-sm mb-1">Meeting Overload</h3>
-                <p className="text-sm text-muted-foreground">Back-to-back meetings make it difficult to capture action items and decisions that drive projects forward.</p>
+            {config.challenges.map((challenge, index) => (
+              <div key={index} className="flex gap-3">
+                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-foreground/10 flex items-center justify-center text-xs font-bold text-foreground">{index + 1}</div>
+                <div>
+                  <h3 className="font-medium text-foreground-strong text-sm mb-1">{challenge.title}</h3>
+                  <p className="text-sm text-muted-foreground">{challenge.description}</p>
+                </div>
               </div>
-            </div>
-            <div className="flex gap-3">
-              <div className="flex-shrink-0 w-6 h-6 rounded-full bg-foreground/10 flex items-center justify-center text-xs font-bold text-foreground">2</div>
-              <div>
-                <h3 className="font-medium text-foreground-strong text-sm mb-1">Task Chaos & Prioritization</h3>
-                <p className="text-sm text-muted-foreground">Multiple workstreams, dependencies, and shifting deadlines create uncertainty about what matters most.</p>
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <div className="flex-shrink-0 w-6 h-6 rounded-full bg-foreground/10 flex items-center justify-center text-xs font-bold text-foreground">3</div>
-              <div>
-                <h3 className="font-medium text-foreground-strong text-sm mb-1">Reporting Pressure</h3>
-                <p className="text-sm text-muted-foreground">Stakeholder updates and status reports consume hours of manual compilation and formatting work.</p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
@@ -139,7 +104,7 @@ export function ProjectManagersWorkflowGuide({
         <div className="flex items-center justify-between border-b border-border/50 pb-3">
           <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2">
             <BookOpen className="w-5 h-5 text-foreground" />
-            PM Workflow Guides
+            {config.workflowSectionTitle}
           </h2>
         </div>
 
@@ -219,7 +184,7 @@ export function ProjectManagersWorkflowGuide({
                         {capabilities}
                       </p>
                       <p className="text-xs text-foreground/70 mt-1">
-                        Why this works for PMs: {tool.tagline}
+                        {config.toolReasoningPrefix}: {tool.tagline}
                       </p>
                     </div>
                     <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground group-hover:translate-x-1 transition-all duration-200 shrink-0" />
@@ -229,7 +194,7 @@ export function ProjectManagersWorkflowGuide({
 
               {/* Link to dedicated workflow guide */}
               <Link
-                href={`/for/project-managers/${activeWorkflow}`}
+                href={`/for/${config.personaSlug}/${activeWorkflow}`}
                 className="inline-flex items-center gap-2 text-xs font-bold text-foreground bg-foreground/5 border border-border/50 px-4 py-2.5 rounded-xl hover:bg-foreground/5 transition-colors"
               >
                 <BookOpen className="w-4 h-4" />
@@ -252,17 +217,16 @@ export function ProjectManagersWorkflowGuide({
         <div className="bg-background-raised rounded-2xl border border-border/50 p-6 sm:p-8">
           <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2 mb-4">
             <CheckCircle2 className="w-5 h-5 text-foreground" />
-            How We Select Tools for Project Managers
+            {config.selectionCriteriaSectionTitle}
           </h2>
           <div className="space-y-3 text-sm text-muted-foreground leading-relaxed">
-            <p>We evaluate tools based on verified PM workflows from official product sources:</p>
+            <p>{config.selectionCriteriaIntro}</p>
             <ul className="list-disc list-inside space-y-2 ml-2">
-              <li><strong className="text-foreground-strong">Meeting capture:</strong> Transcription accuracy, action item extraction, and PM platform integrations</li>
-              <li><strong className="text-foreground-strong">Task management:</strong> AI prioritization, planning assistance, and team collaboration features</li>
-              <li><strong className="text-foreground-strong">Reporting:</strong> Status report generation, stakeholder deck creation, and update synthesis</li>
-              <li><strong className="text-foreground-strong">PM fit:</strong> Designed for or commonly adopted by project managers in real workflows</li>
+              {config.selectionCriteria.map((criteria, index) => (
+                <li key={index}><strong className="text-foreground-strong">{criteria.category}:</strong> {criteria.description}</li>
+              ))}
             </ul>
-            <p className="pt-2">All tools are verified from official product pages, documentation, or pricing information to ensure accuracy for PM decision-making.</p>
+            <p className="pt-2">{config.selectionCriteriaOutro}</p>
           </div>
         </div>
       </div>
@@ -270,11 +234,11 @@ export function ProjectManagersWorkflowGuide({
       {/* Category Link */}
       <div className="max-w-4xl mx-auto">
         <Link
-          href="/category/project-management"
+          href={config.categoryLink.href}
           className="inline-flex items-center gap-2 text-xs font-bold text-foreground bg-foreground/5 border border-border/50 px-4 py-2.5 rounded-xl hover:bg-foreground/5 transition-colors"
         >
           <Layers className="w-4 h-4" />
-          Browse all AI project management software
+          {config.categoryLink.text}
           <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </div>

@@ -9,7 +9,7 @@ import { PersonaToolsFilter } from '../../../components/tool/PersonaToolsFilter'
 import { StudentHubSections } from '../../../components/persona/StudentHubSections';
 import { WritersCuratedHub } from '../../../components/persona/WritersCuratedHub';
 import { PersonaCuratedHub } from '../../../components/persona/PersonaCuratedHub';
-import { ProjectManagersWorkflowGuide } from '../../../components/persona/ProjectManagersWorkflowGuide';
+import { PersonaWorkflowGuide } from '../../../components/persona/PersonaWorkflowGuide';
 import { InternalLinks } from '../../../components/shared/InternalLinks';
 import { STUDENT_TOOL_USE_CASES, STUDENT_USE_CASES } from '../../../lib/data/student-cluster';
 import { MARKETER_TOOL_USE_CASES, MARKETER_USE_CASES } from '../../../lib/data/marketer-cluster';
@@ -18,6 +18,7 @@ import { SMALL_BUSINESS_TOOL_USE_CASES, SMALL_BUSINESS_USE_CASES } from '../../.
 import { RESEARCHER_TOOL_USE_CASES, RESEARCHER_USE_CASES } from '../../../lib/data/researcher-cluster';
 import { REAL_ESTATE_TOOL_USE_CASES, REAL_ESTATE_USE_CASES } from '../../../lib/data/real-estate-cluster';
 import { PM_TOOL_USE_CASES, PM_USE_CASES } from '../../../lib/data/pm-cluster';
+import { PROJECT_MANAGERS_CONFIG } from '../../../lib/data/persona-configs/project-managers';
 import { JsonLd } from '../../../components/shared/JsonLd';
 import { generatePersonaMetadata, generateNotFoundMetadata } from '../../../lib/seo/metadata';
 import { isPersonaIndexable } from '../../../lib/seo/indexability';
@@ -206,10 +207,11 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
       {persona.slug === 'writers' ? (
         <WritersCuratedHub tools={toolsRes} />
       ) : persona.slug === 'project-managers' && personaData ? (
-        <ProjectManagersWorkflowGuide
+        <PersonaWorkflowGuide
           tools={toolsRes}
           toolUseCases={personaData.toolUseCases}
           useCases={personaData.useCases}
+          config={PROJECT_MANAGERS_CONFIG}
           personaTitle={persona.title}
         />
       ) : personaData ? (
