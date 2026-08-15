@@ -20,7 +20,7 @@ import { PM_TOOL_USE_CASES, PM_USE_CASES } from '../../../lib/data/pm-cluster';
 import { JsonLd } from '../../../components/shared/JsonLd';
 import { generatePersonaMetadata, generateNotFoundMetadata } from '../../../lib/seo/metadata';
 import { isPersonaIndexable } from '../../../lib/seo/indexability';
-import { dbRepository } from '../../../lib/dbRepository';
+import { PersonaRepository } from '../../../lib/repositories/persona.repository';
 import { generateBreadcrumbSchema, generatePersonaCollectionPageSchema, getFAQSchema } from '../../../lib/seo/jsonld';
 import { getBaseUrl, absoluteUrl } from '../../../lib/seo/base-url';
 import { getPersonaCategoryMapping } from '../../../lib/data/persona-category-mapping';
@@ -44,7 +44,7 @@ const HUB_SECTION_HEADINGS: Record<string, string> = {
 
 export async function generateStaticParams() {
   const personas = await PersonaService.getPersonas();
-  const linkedToolCounts = await dbRepository.getPersonaLinkedToolCounts();
+  const linkedToolCounts = await PersonaRepository.getPersonaLinkedToolCounts();
   return personas
     .filter((p) => isPersonaIndexable(p, linkedToolCounts[p.slug] ?? 0).indexable)
     .map((p) => ({
@@ -56,7 +56,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const persona = await PersonaService.getPersonaBySlug(slug);
   if (!persona) return generateNotFoundMetadata('Persona Not Found');
-  const linkedToolCount = await dbRepository.getPersonaLinkedToolCount(slug);
+  const linkedToolCount = await PersonaRepository.getPersonaLinkedToolCount(slug);
   return generatePersonaMetadata(persona, linkedToolCount);
 }
 

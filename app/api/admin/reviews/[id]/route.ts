@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbRepository } from '../../../../../lib/dbRepository';
+import { ReviewRepository } from '../../../../../lib/repositories/review.repository';
 import { getSessionFromCookie } from '../../../../../lib/auth/adminSession';
 import { ReviewStatus } from '../../../../../types/tool';
 
@@ -40,7 +40,7 @@ export async function PATCH(
   }
   const moderatedBy = session.sub;
 
-  const updated = await dbRepository.moderateReview(
+  const updated = await ReviewRepository.moderateReview(
     id,
     ACTION_TO_STATUS[body.action],
     moderatedBy,
@@ -59,7 +59,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const deleted = await dbRepository.deleteReview(id);
+  const deleted = await ReviewRepository.deleteReview(id);
 
   if (!deleted) {
     return NextResponse.json({ error: 'Review not found' }, { status: 404 });

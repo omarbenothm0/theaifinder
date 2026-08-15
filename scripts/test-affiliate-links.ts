@@ -2,7 +2,8 @@
  * QA script for affiliate link routing — creates a test tool, verifies CTA logic, deletes it.
  * Run: npx tsx scripts/test-affiliate-links.ts
  */
-import { dbRepository } from '../lib/dbRepository';
+import { ToolRepository } from '../lib/repositories/tool.repository';
+import { CategoryRepository } from '../lib/repositories/category.repository';
 import { validateToolInput } from '../lib/validation/tool.validation';
 import { getToolOutboundLink, getToolOfficialWebsiteUrl } from '../lib/utils/toolOutboundLink';
 
@@ -11,17 +12,17 @@ const TEST_SLUG = 'qa-affiliate-link-test-tool';
 async function main() {
   console.log('=== Affiliate Link QA ===\n');
 
-  const existing = await dbRepository.getToolBySlug(TEST_SLUG, { includeUnpublished: true });
+  const existing = await ToolRepository.getToolBySlug(TEST_SLUG, { includeUnpublished: true });
   if (existing) {
-    await dbRepository.deleteTool(TEST_SLUG);
+    await ToolRepository.deleteTool(TEST_SLUG);
     console.log('Cleaned up pre-existing test tool');
   }
 
-  const categories = await dbRepository.getCategories({ includeUnpublished: true });
+  const categories = await CategoryRepository.getCategories({ includeUnpublished: true });
   const cat = categories[0];
   if (!cat) throw new Error('No categories in DB');
 
-  const chatgpt = await dbRepository.getToolBySlug('chatgpt', { includeUnpublished: true });
+  const chatgpt = await ToolRepository.getToolBySlug('chatgpt', { includeUnpublished: true });
   const chatgptBefore = chatgpt
     ? {
         websiteUrl: chatgpt.websiteUrl,
@@ -62,14 +63,14 @@ async function main() {
     publishStatus: 'draft' as const,
   };
 
-  const created = await dbRepository.createTool(basePayload);
+  const created = await ToolRepository.createTool(basePayload);
   let link = getToolOutboundLink(created);
   if (link.href !== 'https://example.com') throw new Error('Expected official URL in CTA');
   if (link.isAffiliate) throw new Error('Should not be affiliate without enable flag');
   if (link.rel !== 'noopener noreferrer') throw new Error('Expected standard rel for official link');
   console.log('✓ CTA uses official URL when no affiliate configured');
 
-  const withAffiliateDisabled = await dbRepository.updateTool(TEST_SLUG, {
+  const withAffiliateDisabled = await ToolRepository.updateTool(TEST_SLUG, {
     affiliateUrl: 'https://example.com/?ref=qa-test',
     affiliateEnabled: false,
   });
@@ -77,7 +78,7 @@ async function main() {
   if (link.href !== 'https://example.com') throw new Error('Disabled affiliate should fall back to official');
   console.log('✓ CTA uses official URL when affiliate disabled');
 
-  const withAffiliateEnabled = await dbRepository.updateTool(TEST_SLUG, {
+  const withAffiliateEnabled = await ToolRepository.updateTool(TEST_SLUG, {
     affiliateEnabled: true,
     affiliateProgram: 'QA Network',
   });
@@ -110,7 +111,7 @@ async function main() {
   }
   console.log('✓ Validation blocks affiliate enabled without URL');
 
-  const disabledAgain = await dbRepository.updateTool(TEST_SLUG, {
+  const disabledAgain = await ToolRepository.updateTool(TEST_SLUG, {
     affiliateEnabled: false,
   });
   link = getToolOutboundLink(disabledAgain!);
@@ -118,7 +119,7 @@ async function main() {
   console.log('✓ CTA returns to official URL when affiliate disabled');
 
   if (chatgptBefore) {
-    const chatgptAfter = await dbRepository.getToolBySlug('chatgpt', { includeUnpublished: true });
+    const chatgptAfter = await ToolRepository.getToolBySlug('chatgpt', { includeUnpublished: true });
     if (
       chatgptAfter?.websiteUrl !== chatgptBefore.websiteUrl ||
       chatgptAfter?.affiliateUrl !== chatgptBefore.affiliateUrl ||
@@ -129,7 +130,7 @@ async function main() {
     console.log('✓ Existing tool data unchanged');
   }
 
-  await dbRepository.deleteTool(TEST_SLUG);
+  await ToolRepository.deleteTool(TEST_SLUG);
   console.log('✓ Test tool deleted');
 
   console.log('\n=== All affiliate link QA checks passed ===');
@@ -138,7 +139,7 @@ async function main() {
 main().catch(async (err) => {
   console.error('\nQA FAILED:', err);
   try {
-    await dbRepository.deleteTool(TEST_SLUG);
+    await ToolRepository.deleteTool(TEST_SLUG);
   } catch {
     // ignore
   }

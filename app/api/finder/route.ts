@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbRepository } from '../../../lib/dbRepository';
+import { FinderRepository } from '../../../lib/repositories/finder.repository';
 import { FinderAnswer } from '../../../types/tool';
 import {
   checkRateLimit,
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const recommendations = await dbRepository.evaluateFinder(answer);
+    const recommendations = await FinderRepository.evaluateFinder(answer);
     return NextResponse.json({ recommendations });
   } catch (err: any) {
     return NextResponse.json({ error: err.message || 'Invalid request' }, { status: 400 });

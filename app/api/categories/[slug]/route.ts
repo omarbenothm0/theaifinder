@@ -1,17 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbRepository } from '../../../../lib/dbRepository';
+import { CategoryRepository } from '../../../../lib/repositories/category.repository';
+import { ToolRepository } from '../../../../lib/repositories/tool.repository';
 
 export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const cat = await dbRepository.getCategoryBySlug(slug);
+  const cat = await CategoryRepository.getCategoryBySlug(slug);
 
   if (!cat) {
     return NextResponse.json({ error: 'Category not found' }, { status: 404 });
   }
 
-  const tools = (await dbRepository.getTools({ category: cat.slug })).tools;
+  const tools = (await ToolRepository.getTools({ category: cat.slug })).tools;
   return NextResponse.json({ category: cat, tools });
 }

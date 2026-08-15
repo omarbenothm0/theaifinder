@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbRepository } from '../../../lib/dbRepository';
+import { ReviewRepository } from '../../../lib/repositories/review.repository';
 import {
   validateReviewInput,
   normalizeReviewInput,
@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'toolSlug query param is required' }, { status: 400 });
   }
 
-  const reviews = await dbRepository.getApprovedReviewsForTool(toolSlug);
+  const reviews = await ReviewRepository.getApprovedReviewsForTool(toolSlug);
   return NextResponse.json(reviews);
 }
 
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     }
 
     const normalized = normalizeReviewInput(body);
-    const review = await dbRepository.addReview(normalized);
+    const review = await ReviewRepository.addReview(normalized);
 
     return NextResponse.json(
       {

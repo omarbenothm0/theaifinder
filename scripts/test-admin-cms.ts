@@ -2,7 +2,8 @@
  * QA script for Admin CMS completeness — creates a test tool, verifies persistence, deletes it.
  * Run: npx tsx scripts/test-admin-cms.ts
  */
-import { dbRepository } from '../lib/dbRepository';
+import { ToolRepository } from '../lib/repositories/tool.repository';
+import { CategoryRepository } from '../lib/repositories/category.repository';
 import { validateToolInput, validateToolForPublish } from '../lib/validation/tool.validation';
 import { isToolIndexable } from '../lib/seo/indexability';
 
@@ -11,17 +12,17 @@ const TEST_SLUG = 'qa-admin-cms-test-tool';
 async function main() {
   console.log('=== Admin CMS QA ===\n');
 
-  const existing = await dbRepository.getToolBySlug(TEST_SLUG, { includeUnpublished: true });
+  const existing = await ToolRepository.getToolBySlug(TEST_SLUG, { includeUnpublished: true });
   if (existing) {
-    await dbRepository.deleteTool(TEST_SLUG);
+    await ToolRepository.deleteTool(TEST_SLUG);
     console.log('Cleaned up pre-existing test tool');
   }
 
-  const categories = await dbRepository.getCategories({ includeUnpublished: true });
+  const categories = await CategoryRepository.getCategories({ includeUnpublished: true });
   const cat = categories[0];
   if (!cat) throw new Error('No categories in DB');
 
-  const chatgpt = await dbRepository.getToolBySlug('chatgpt', { includeUnpublished: true });
+  const chatgpt = await ToolRepository.getToolBySlug('chatgpt', { includeUnpublished: true });
   const chatgptRatingBefore = chatgpt?.rating;
 
   const draftPayload = {
@@ -81,10 +82,10 @@ async function main() {
   }
   console.log('✓ Draft validation passed');
 
-  const created = await dbRepository.createTool(draftPayload);
+  const created = await ToolRepository.createTool(draftPayload);
   console.log('✓ Created draft tool:', created.id);
 
-  const fetched = await dbRepository.getToolBySlug(TEST_SLUG, { includeUnpublished: true });
+  const fetched = await ToolRepository.getToolBySlug(TEST_SLUG, { includeUnpublished: true });
   if (!fetched) throw new Error('Tool not found after create');
 
   const checks: Array<[string, boolean]> = [
@@ -123,7 +124,7 @@ async function main() {
   }
   console.log('✓ Publish validation + indexability passed');
 
-  const updated = await dbRepository.updateTool(TEST_SLUG, {
+  const updated = await ToolRepository.updateTool(TEST_SLUG, {
     publishStatus: 'published',
     targetUsers: [],
     tags: ['QA', 'Test', 'Updated'],
@@ -134,14 +135,14 @@ async function main() {
   if (updated?.publishStatus !== 'published') throw new Error('Publish update failed');
   console.log('✓ Updated to published');
 
-  const chatgptAfter = await dbRepository.getToolBySlug('chatgpt', { includeUnpublished: true });
+  const chatgptAfter = await ToolRepository.getToolBySlug('chatgpt', { includeUnpublished: true });
   if (chatgptRatingBefore !== undefined && chatgptAfter?.rating !== chatgptRatingBefore) {
     throw new Error('Existing tool data was modified unexpectedly');
   }
   console.log('✓ Existing tool data unchanged');
 
-  await dbRepository.deleteTool(TEST_SLUG);
-  const gone = await dbRepository.getToolBySlug(TEST_SLUG, { includeUnpublished: true });
+  await ToolRepository.deleteTool(TEST_SLUG);
+  const gone = await ToolRepository.getToolBySlug(TEST_SLUG, { includeUnpublished: true });
   if (gone) throw new Error('Test tool not deleted');
   console.log('✓ Test tool deleted');
 
@@ -151,9 +152,9 @@ async function main() {
 main()
   .then(async () => {
     try {
-      const leftover = await dbRepository.getToolBySlug(TEST_SLUG, { includeUnpublished: true });
+      const leftover = await ToolRepository.getToolBySlug(TEST_SLUG, { includeUnpublished: true });
       if (leftover) {
-        await dbRepository.deleteTool(TEST_SLUG);
+        await ToolRepository.deleteTool(TEST_SLUG);
         console.log('Cleanup: removed leftover test tool');
       }
     } catch {
@@ -163,7 +164,7 @@ main()
   .catch(async (err) => {
     console.error('\nQA FAILED:', err);
     try {
-      await dbRepository.deleteTool(TEST_SLUG);
+      await ToolRepository.deleteTool(TEST_SLUG);
     } catch {
       // ignore
     }

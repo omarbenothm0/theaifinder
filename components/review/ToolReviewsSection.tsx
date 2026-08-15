@@ -1,5 +1,5 @@
 import { Star } from 'lucide-react';
-import { dbRepository } from '../../lib/dbRepository';
+import { ReviewRepository } from '../../lib/repositories/review.repository';
 import { ReviewList } from './ReviewList';
 import { ReviewForm } from './ReviewForm';
 
@@ -9,7 +9,7 @@ interface ToolReviewsSectionProps {
 }
 
 export async function ToolReviewsSection({ toolSlug, toolName }: ToolReviewsSectionProps) {
-  const reviews = await dbRepository.getApprovedReviewsForTool(toolSlug);
+  const reviews = await ReviewRepository.getApprovedReviewsForTool(toolSlug);
   const approvedCount = reviews.length;
   const aggregateRating =
     approvedCount > 0

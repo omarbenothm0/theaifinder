@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbRepository } from '../../../../lib/dbRepository';
+import { ReviewRepository } from '../../../../lib/repositories/review.repository';
 import { ReviewStatus } from '../../../../types/tool';
 
 export const dynamic = 'force-dynamic';
@@ -21,8 +21,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid status filter' }, { status: 400 });
   }
 
-  const reviews = await dbRepository.getReviewsForModeration({ status: statusParam });
-  const pendingCount = await dbRepository.getPendingReviewCount();
+  const reviews = await ReviewRepository.getReviewsForModeration({ status: statusParam });
+  const pendingCount = await ReviewRepository.getPendingReviewCount();
 
   return NextResponse.json({ reviews, pendingCount });
 }

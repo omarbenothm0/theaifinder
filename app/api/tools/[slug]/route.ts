@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbRepository } from '../../../../lib/dbRepository';
+import { ToolRepository } from '../../../../lib/repositories/tool.repository';
 import { isAdminAuthenticatedFromRequest } from '../../../../lib/auth/edgeSession';
 import {
   validateToolInput,
@@ -15,8 +15,8 @@ export async function GET(
   const isAdmin = await isAdminAuthenticatedFromRequest(req);
 
   const tool = isAdmin
-    ? await dbRepository.getToolBySlug(slug, { includeUnpublished: true })
-    : await dbRepository.getToolBySlug(slug);
+    ? await ToolRepository.getToolBySlug(slug, { includeUnpublished: true })
+    : await ToolRepository.getToolBySlug(slug);
 
   if (!tool) {
     return NextResponse.json({ error: 'Tool not found' }, { status: 404 });
@@ -42,7 +42,7 @@ export async function PUT(
     );
   }
 
-  const updated = await dbRepository.updateTool(slug, body);
+  const updated = await ToolRepository.updateTool(slug, body);
 
   if (!updated) {
     return NextResponse.json({ error: 'Tool not found' }, { status: 404 });
@@ -56,7 +56,7 @@ export async function DELETE(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const success = await dbRepository.deleteTool(slug);
+  const success = await ToolRepository.deleteTool(slug);
 
   if (!success) {
     return NextResponse.json({ error: 'Tool not found' }, { status: 404 });

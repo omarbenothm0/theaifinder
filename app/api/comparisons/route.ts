@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { dbRepository } from '../../../lib/dbRepository';
+import { ComparisonRepository } from '../../../lib/repositories/comparison.repository';
 
 export async function GET() {
-  const comparisons = await dbRepository.getComparisons();
+  const comparisons = await ComparisonRepository.getComparisons();
   return NextResponse.json(comparisons);
 }

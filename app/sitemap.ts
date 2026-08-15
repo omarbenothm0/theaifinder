@@ -1,5 +1,9 @@
 import { MetadataRoute } from 'next';
-import { dbRepository } from '../lib/dbRepository';
+import { ToolRepository } from '../lib/repositories/tool.repository';
+import { CategoryRepository } from '../lib/repositories/category.repository';
+import { PersonaRepository } from '../lib/repositories/persona.repository';
+import { ComparisonRepository } from '../lib/repositories/comparison.repository';
+import { UseCaseRepository } from '../lib/repositories/use-case.repository';
 import {
   SITEMAP_PAGE_SIZE,
   buildStaticSitemapEntries,
@@ -12,11 +16,11 @@ import {
 } from '../lib/seo/sitemap-builder';
 
 async function getAllToolsForSitemap() {
-  const { tools, totalPages } = await dbRepository.getToolsPageForSitemap(1, SITEMAP_PAGE_SIZE);
+  const { tools, totalPages } = await ToolRepository.getToolsPageForSitemap(1, SITEMAP_PAGE_SIZE);
   const allTools = [...tools];
 
   for (let page = 2; page <= totalPages; page += 1) {
-    const pageResult = await dbRepository.getToolsPageForSitemap(page, SITEMAP_PAGE_SIZE);
+    const pageResult = await ToolRepository.getToolsPageForSitemap(page, SITEMAP_PAGE_SIZE);
     allTools.push(...pageResult.tools);
   }
 
@@ -28,11 +32,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const [categories, personas, comparisons, personaToolCounts, useCasePages, tools] =
     await Promise.all([
-      dbRepository.getCategories(),
-      dbRepository.getPersonas(),
-      dbRepository.getComparisons(),
-      dbRepository.getPersonaLinkedToolCounts(),
-      dbRepository.getIndexablePersonaUseCasePages(),
+      CategoryRepository.getCategories(),
+      PersonaRepository.getPersonas(),
+      ComparisonRepository.getComparisons(),
+      PersonaRepository.getPersonaLinkedToolCounts(),
+      UseCaseRepository.getIndexablePersonaUseCasePages(),
       getAllToolsForSitemap(),
     ]);
 

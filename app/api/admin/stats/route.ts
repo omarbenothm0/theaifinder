@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { dbRepository } from '../../../../lib/dbRepository';
+import { AdminRepository } from '../../../../lib/repositories/admin.repository';
 
 export async function GET() {
-  const stats = await dbRepository.getAdminStats();
+  const stats = await AdminRepository.getAdminStats();
   return NextResponse.json(stats);
 }

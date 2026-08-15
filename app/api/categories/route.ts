@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { dbRepository } from '../../../lib/dbRepository';
+import { CategoryRepository } from '../../../lib/repositories/category.repository';
 
 export async function GET() {
-  const categories = await dbRepository.getCategories();
+  const categories = await CategoryRepository.getCategories();
   return NextResponse.json(categories);
 }

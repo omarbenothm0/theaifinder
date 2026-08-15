@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbRepository } from '../../../lib/dbRepository';
+import { ToolRepository } from '../../../lib/repositories/tool.repository';
 import { ToolFilterOptions } from '../../../types/tool';
 import {
   validateToolInput,
@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
   };
 
   try {
-    const result = await dbRepository.getTools(options);
+    const result = await ToolRepository.getTools(options);
     return NextResponse.json(result);
   } catch (error) {
     if (isDatabaseUnavailableError(error)) {
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const newTool = await dbRepository.createTool(body);
+    const newTool = await ToolRepository.createTool(body);
     return NextResponse.json(newTool, { status: 201 });
   } catch (err: any) {
     return NextResponse.json({ error: err.message || 'Failed to create tool' }, { status: 400 });

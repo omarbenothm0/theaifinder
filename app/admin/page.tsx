@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { PersonaService } from '../../lib/services/persona.service';
 import { CategoryService } from '../../lib/services/category.service';
 import { ToolService } from '../../lib/services/tool.service';
-import { dbRepository } from '../../lib/dbRepository';
+import { AdminRepository } from '../../lib/repositories/admin.repository';
 import { MonitoringService } from '../../lib/monitoring/monitoring.service';
 import { AdminDashboard } from '../../components/admin/AdminDashboard';
 import { generatePageMetadata } from '../../lib/seo/metadata';
@@ -48,7 +48,7 @@ export default async function AdminPage() {
   const [categories, toolsRes, adminStats, personas] = await Promise.all([
     CategoryService.getCategories({ includeUnpublished: true }),
     ToolService.getTools({ limit: 500, includeUnpublished: true }),
-    dbRepository.getAdminStats(),
+    AdminRepository.getAdminStats(),
     PersonaService.getPersonas(),
   ]);
 

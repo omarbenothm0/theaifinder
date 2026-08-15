@@ -20,7 +20,7 @@ export class UseCaseService {
   static async getIndexablePages(): Promise<
     Array<{ personaSlug: string; useCaseSlug: string; strongPlusCount: number }>
   > {
-    return UseCaseRepository.getIndexablePages();
+    return UseCaseRepository.getIndexablePersonaUseCasePages();
   }
 
   static async getToolUseCaseLinks(toolSlug: string) {

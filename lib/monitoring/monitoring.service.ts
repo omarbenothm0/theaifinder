@@ -3,7 +3,8 @@ import {
   ToolMonitoringCheck,
   ToolMonitoringSummary,
 } from '../../types/monitoring';
-import { dbRepository } from '../dbRepository';
+import { ToolRepository } from '../repositories/tool.repository';
+import { MonitoringRepository } from '../repositories/monitoring.repository';
 import { checkWebsiteHealth } from './website-health.service';
 import {
   deriveMonitoringSignal,
@@ -39,7 +40,7 @@ export class MonitoringService {
 
   static async getSummariesForTools(tools: Tool[]): Promise<ToolMonitoringSummary[]> {
     const toolIds = tools.map((t) => t.id);
-    const latestMap = await dbRepository.getLatestMonitoringChecksForTools(toolIds);
+    const latestMap = await MonitoringRepository.getLatestMonitoringChecksForTools(toolIds);
 
     const summaries = await Promise.all(
       tools.map(async (tool) => {
@@ -47,7 +48,7 @@ export class MonitoringService {
         const lastSuccessful =
           latestCheck?.status === 'success'
             ? latestCheck
-            : await dbRepository.getLastSuccessfulMonitoringCheck(tool.id);
+            : await MonitoringRepository.getLastSuccessfulMonitoringCheck(tool.id);
         return MonitoringService.buildSummary(tool, latestCheck, lastSuccessful ?? null);
       })
     );
@@ -56,15 +57,15 @@ export class MonitoringService {
   }
 
   static async getSummaryForTool(toolId: string): Promise<ToolMonitoringSummary | null> {
-    const tool = await dbRepository.getToolById(toolId, { includeUnpublished: true });
+    const tool = await ToolRepository.getToolById(toolId, { includeUnpublished: true });
     if (!tool) return null;
 
-    const latestMap = await dbRepository.getLatestMonitoringChecksForTools([toolId]);
+    const latestMap = await MonitoringRepository.getLatestMonitoringChecksForTools([toolId]);
     const latestCheck = latestMap.get(toolId) ?? null;
     const lastSuccessful =
       latestCheck?.status === 'success'
         ? latestCheck
-        : await dbRepository.getLastSuccessfulMonitoringCheck(toolId);
+        : await MonitoringRepository.getLastSuccessfulMonitoringCheck(toolId);
 
     return MonitoringService.buildSummary(tool, latestCheck, lastSuccessful ?? null);
   }
@@ -78,14 +79,14 @@ export class MonitoringService {
     summary: ToolMonitoringSummary;
     check: ToolMonitoringCheck;
   }> {
-    const tool = await dbRepository.getToolById(toolId, { includeUnpublished: true });
+    const tool = await ToolRepository.getToolById(toolId, { includeUnpublished: true });
     if (!tool) {
       throw new Error('Tool not found');
     }
 
     const urlValidation = validateMonitoringUrl(tool.websiteUrl);
     if (urlValidation.valid === false) {
-      const check = await dbRepository.createMonitoringCheck({
+      const check = await MonitoringRepository.createMonitoringCheck({
         toolId: tool.id,
         status: 'invalid_url',
         errorCode: urlValidation.errorCode,
@@ -99,7 +100,7 @@ export class MonitoringService {
     }
 
     const health = await checkWebsiteHealth(urlValidation.normalizedUrl);
-    const check = await dbRepository.createMonitoringCheck({
+    const check = await MonitoringRepository.createMonitoringCheck({
       toolId: tool.id,
       status: health.status,
       httpStatus: health.httpStatus ?? null,
@@ -113,7 +114,7 @@ export class MonitoringService {
     });
 
     if (health.status === 'success') {
-      await dbRepository.touchToolLastVerifiedDate(tool.id);
+      await ToolRepository.touchToolLastVerifiedDate(tool.id);
     }
 
     const summary = await MonitoringService.getSummaryForTool(toolId);
