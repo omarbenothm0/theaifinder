@@ -96,9 +96,9 @@ export const PM_PERSONA: Persona = {
   title: 'Project Managers',
   slug: 'project-managers',
   iconName: 'Kanban',
-  subtitle: 'Meeting notes, tasks, plans, and stakeholder reports',
+  subtitle: 'WHO ARE YOU? HOW CAN AI HELP YOU DO YOUR JOB?',
   description:
-    'Verified AI tools for project managers — capture meeting action items, manage tasks and plans, and generate stakeholder status reports. Curated from official product sources.',
+    'A practical workflow guide for project managers: discover AI tools that help you capture meeting notes, manage tasks and priorities, and generate status reports. Role-specific recommendations with PM context for real workflows.',
   targetRole: 'Project Manager',
   keyBenefits: [
     'Automate meeting notes and action items',

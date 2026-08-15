@@ -9,6 +9,7 @@ import { PersonaToolsFilter } from '../../../components/tool/PersonaToolsFilter'
 import { StudentHubSections } from '../../../components/persona/StudentHubSections';
 import { WritersCuratedHub } from '../../../components/persona/WritersCuratedHub';
 import { PersonaCuratedHub } from '../../../components/persona/PersonaCuratedHub';
+import { ProjectManagersWorkflowGuide } from '../../../components/persona/ProjectManagersWorkflowGuide';
 import { InternalLinks } from '../../../components/shared/InternalLinks';
 import { STUDENT_TOOL_USE_CASES, STUDENT_USE_CASES } from '../../../lib/data/student-cluster';
 import { MARKETER_TOOL_USE_CASES, MARKETER_USE_CASES } from '../../../lib/data/marketer-cluster';
@@ -204,6 +205,13 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
       {/* Writers-specific curated hub */}
       {persona.slug === 'writers' ? (
         <WritersCuratedHub tools={toolsRes} />
+      ) : persona.slug === 'project-managers' && personaData ? (
+        <ProjectManagersWorkflowGuide
+          tools={toolsRes}
+          toolUseCases={personaData.toolUseCases}
+          useCases={personaData.useCases}
+          personaTitle={persona.title}
+        />
       ) : personaData ? (
         <PersonaCuratedHub
           tools={toolsRes}

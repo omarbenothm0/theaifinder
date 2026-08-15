@@ -9,14 +9,11 @@ import { PM_SECTIONS } from '../../lib/data/project-management-category';
 import { getFAQSchema, getCollectionPageSchema } from '../../lib/seo/jsonld';
 import {
   ArrowRight,
-  ClipboardList,
   Compass,
-  FileText,
-  Kanban,
   Layers,
-  Mic,
   Sparkles,
   Zap,
+  Users,
 } from 'lucide-react';
 import { PageHero, PageHeroAccentBadge } from '../ui/PageHero';
 
@@ -60,81 +57,45 @@ export async function ProjectManagementCategoryContent({
       <PageHero
         badge={
           <PageHeroAccentBadge icon={<Layers className="w-4 h-4 text-inverted-foreground/80" />}>
-            Category Hub &bull; {curatedCount} Curated {curatedCount === 1 ? 'Tool' : 'Tools'}
+            Category Hub &bull; {curatedCount} Software Listings
           </PageHeroAccentBadge>
         }
         title={<>Best AI Project Management Tools</>}
         description={category.longDescription || category.description}
       />
 
-      {/* Intent split */}
-      <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-background-raised border border-border/50 rounded-2xl p-5 space-y-2">
-          <div className="flex items-center gap-2 text-xs font-bold text-foreground-strong uppercase tracking-wider">
-            <Mic className="w-4 h-4" />
-            Meeting notes
+      {/* Category Overview */}
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-background-raised rounded-2xl border border-border/50 p-6 sm:p-8">
+          <h2 className="text-xl font-medium text-foreground-strong flex items-center gap-2 mb-4">
+            <Layers className="w-5 h-5 text-foreground" />
+            What is AI Project Management Software?
+          </h2>
+          <div className="space-y-3 text-sm text-muted-foreground leading-relaxed">
+            <p>AI project management software enhances traditional PM workflows with artificial intelligence capabilities. These tools fall into several categories:</p>
+            <ul className="list-disc list-inside space-y-2 ml-2">
+              <li><strong className="text-foreground-strong">AI Meeting Notetakers:</strong> Automatically transcribe meetings, extract action items, and generate summaries</li>
+              <li><strong className="text-foreground-strong">AI Task Management Platforms:</strong> Prioritize work, suggest assignments, and provide intelligent planning assistance</li>
+              <li><strong className="text-foreground-strong">Status Report Generators:</strong> Synthesize project updates into stakeholder-ready reports and presentations</li>
+            </ul>
+            <p className="pt-2">This category page organizes AI project management software by type, so you can compare capabilities and find the right tool for your needs.</p>
           </div>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            Transcription, AI summaries, and action items from Zoom, Meet, Teams, and standalone
-            notetakers.
-          </p>
-          <Link
-            href="/for/project-managers/meeting-notes"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-foreground hover:text-foreground-strong"
-          >
-            Meeting notes guide
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-        <div className="bg-background-raised border border-intent-secondary-border rounded-2xl p-5 space-y-2">
-          <div className="flex items-center gap-2 text-xs font-bold text-intent-secondary-foreground uppercase tracking-wider">
-            <Kanban className="w-4 h-4" />
-            Task &amp; planning
-          </div>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            AI task prioritization, project plans, Gantt views, and Planner Agent workflows on PM
-            platforms.
-          </p>
-          <Link
-            href="/for/project-managers/task-management"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-intent-secondary hover:text-intent-secondary-hover"
-          >
-            Task management guide
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-        <div className="bg-background-raised border border-border/50 rounded-2xl p-5 space-y-2">
-          <div className="flex items-center gap-2 text-xs font-bold text-foreground-strong uppercase tracking-wider">
-            <FileText className="w-4 h-4" />
-            Reporting &amp; decks
-          </div>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            Status reports, RAG executive updates, and stakeholder presentation decks from meeting
-            or pasted content.
-          </p>
-          <Link
-            href="/for/project-managers/project-reporting"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-foreground hover:text-foreground-strong"
-          >
-            Project reporting guide
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
         </div>
       </div>
 
-      {/* Persona hub */}
+      {/* Persona Link */}
       <div className="max-w-4xl mx-auto">
         <Link
           href="/for/project-managers"
           className="inline-flex items-center gap-2 text-xs font-bold text-foreground bg-foreground/5 border border-border/50 px-4 py-2.5 rounded-xl hover:bg-foreground/5 transition-colors"
         >
-          <ClipboardList className="w-4 h-4 text-inverted-foreground/80" />
-          Project Managers workflow hub
+          <Users className="w-4 h-4" />
+          Looking for recommendations specifically for your role?
           <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </div>
 
-      {/* Comparison CTAs */}
+      {/* Software Comparison CTAs */}
       <div className="max-w-4xl mx-auto flex flex-wrap gap-3">
         <Link
           href="/compare/otter-ai-vs-fireflies-ai"
@@ -162,12 +123,26 @@ export async function ProjectManagementCategoryContent({
         </Link>
       </div>
 
-      {/* Tool sections */}
+      {/* Tool sections organized by software type */}
       {PM_SECTIONS.map((section) => {
         const sectionTools = section.toolSlugs
           .map((slug) => toolMap.get(slug))
           .filter(Boolean) as Tool[];
         if (sectionTools.length === 0) return null;
+
+        // Get software type description based on section
+        const getSoftwareTypeDescription = (sectionSlug: string) => {
+          switch (sectionSlug) {
+            case 'meeting-notes':
+              return 'AI meeting notetakers automatically transcribe conversations, extract decisions and action items, and integrate with PM platforms. Compare transcription accuracy, platform support, and workflow integrations.';
+            case 'task-management':
+              return 'AI task management platforms provide intelligent prioritization, automated task assignment, project planning assistance, and team collaboration features. Compare AI capabilities, planning tools, and platform ecosystems.';
+            case 'project-reporting':
+              return 'AI status report generators synthesize project updates into stakeholder-ready reports and presentations. Compare report generation capabilities, data sources, and output formats.';
+            default:
+              return section.description;
+          }
+        };
 
         return (
           <div key={section.slug} className="space-y-4">
@@ -176,7 +151,7 @@ export async function ProjectManagementCategoryContent({
                 <Sparkles className="w-5 h-5 text-foreground" />
                 {section.title}
               </h2>
-              <p className="text-sm text-muted-foreground max-w-3xl leading-relaxed">{section.description}</p>
+              <p className="text-sm text-muted-foreground max-w-3xl leading-relaxed">{getSoftwareTypeDescription(section.slug)}</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {sectionTools.map((tool) => (

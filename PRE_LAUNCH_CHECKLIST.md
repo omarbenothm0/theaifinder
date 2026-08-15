@@ -61,3 +61,8 @@ Read this checklist before deploying to production. None of these are urgent whi
 **Priority:** P2  
 **Files/systems likely requiring changes:** `app/api/admin/login/route.ts`, attempt tracking system  
 **Status:** Deferred
+
+## Content/Architecture Notes
+
+### Category/Persona Metadata Updates
+**Important:** Updating category/persona metadata in file configs (`lib/data/*.ts`) requires running `npm run db:seed` afterward for the change to take effect on the live site — these enriched categories (writing, coding, study-education, project-management, productivity, marketing, seo, image, voice, video) and likely personas pull their runtime metadata from the database, not directly from the files.

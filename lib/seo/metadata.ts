@@ -138,7 +138,7 @@ export function generateCategoryMetadata(category: Category): Metadata {
   const description = category.seoDescription?.trim()
     ? category.seoDescription
     : category.description;
-  const ogImage = `${BASE_URL}/api/og?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}&badge=${encodeURIComponent('AI CATEGORY HUB')}&type=category`;
+  const ogImage = `${BASE_URL}/api/og?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}&badge=${encodeURIComponent('SOFTWARE DIRECTORY')}&type=category`;
 
   return constructMetadata({
     title: sitePageTitle(title),
@@ -158,7 +158,7 @@ const PERSONA_TITLE_TEMPLATES: Record<string, string> = {
   'small-business': 'AI Tools for Small Business: Marketing, CRM & Operations (2026)',
   researchers: 'AI Research Tools: Literature Discovery & Academic Writing (2026)',
   'real-estate-agents': 'AI Tools for Real Estate: Listings, Marketing & Client Management (2026)',
-  'project-managers': 'AI Project Management Tools: Meeting Notes, Tasks & Reporting (2026)',
+  'project-managers': 'AI Tools for Project Managers: Workflow Guide & Recommendations (2026)',
 };
 
 // Persona-specific meta descriptions with unique value propositions
@@ -178,7 +178,7 @@ const PERSONA_META_DESCRIPTIONS: Record<string, (persona: Persona, toolCount: nu
   'real-estate-agents': (persona, toolCount) => 
     `Find AI tools for real estate agents: listing descriptions, property visuals, client presentations, market research, and meeting notes. Verified tools for real estate workflows.`,
   'project-managers': (persona, toolCount) => 
-    `Discover AI project management tools for meeting notes, task planning, status reporting, and stakeholder communication. ${toolCount > 0 ? `${toolCount}+ verified tools` : 'Verified tools'} for PM workflows.`,
+    `Practical AI workflow guide for project managers: capture meeting notes, manage tasks and priorities, generate status reports. Role-specific recommendations with PM context for real workflows.`,
 };
 
 export function generatePersonaMetadata(
@@ -196,7 +196,7 @@ export function generatePersonaMetadata(
     ? descriptionGenerator(persona, linkedToolCount)
     : persona.description;
   
-  const ogImage = `${BASE_URL}/api/og?title=${encodeURIComponent(ogTitle)}&description=${encodeURIComponent(ogDescription)}&badge=${encodeURIComponent(persona.title)}&type=persona&persona=${persona.slug}`;
+  const ogImage = `${BASE_URL}/api/og?title=${encodeURIComponent(ogTitle)}&description=${encodeURIComponent(ogDescription)}&badge=${encodeURIComponent('WORKFLOW GUIDE')}&type=persona&persona=${persona.slug}`;
 
   return constructMetadata({
     title: sitePageTitle(ogTitle),
