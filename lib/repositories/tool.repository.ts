@@ -295,6 +295,7 @@ export class ToolRepository {
     if (updates.pricingModel !== undefined) data.pricingModel = updates.pricingModel;
     if (updates.monthlyPrice !== undefined) data.monthlyPrice = updates.monthlyPrice;
     if (updates.hasFreeTrial !== undefined) data.hasFreeTrial = updates.hasFreeTrial;
+    if (updates.hasFreeTier !== undefined) data.hasFreeTier = updates.hasFreeTier;
     if (updates.companyName !== undefined) data.companyName = updates.companyName;
     if (updates.verifiedBy !== undefined) data.verifiedBy = updates.verifiedBy;
     if (updates.pricingSource !== undefined) data.pricingSource = updates.pricingSource;
@@ -326,6 +327,9 @@ export class ToolRepository {
     if (updates.targetUsers !== undefined) data.targetUsers = updates.targetUsers;
     if (updates.rating !== undefined) data.rating = updates.rating;
     if (updates.reviewCount !== undefined) data.reviewCount = updates.reviewCount;
+    if (updates.monitoringEnabled !== undefined) data.monitoringEnabled = updates.monitoringEnabled;
+    if (updates.pricingSourceUrl !== undefined) data.pricingSourceUrl = updates.pricingSourceUrl;
+    if (updates.featuresSourceUrl !== undefined) data.featuresSourceUrl = updates.featuresSourceUrl;
 
     data.lastVerifiedDate = new Date();
 

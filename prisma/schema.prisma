@@ -1,7 +1,6 @@
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
 }
 
 generator client {
@@ -108,6 +107,7 @@ model Tool {
   pricingModel      PricingModelEnum  @default(Freemium)
   monthlyPrice      Float?
   hasFreeTrial      Boolean           @default(true)
+  hasFreeTier       Boolean           @default(false)
   companyName       String?
   lastVerifiedDate  DateTime?
   verifiedBy        String?
@@ -141,6 +141,11 @@ model Tool {
   platforms   String[]
   targetUsers String[]
 
+  // Monitoring configuration
+  monitoringEnabled  Boolean  @default(true)
+  pricingSourceUrl   String?
+  featuresSourceUrl  String?
+
   category     Category      @relation(fields: [categoryId], references: [id])
   sources      ToolSource[]
   pricingTiers PricingTier[]
@@ -155,6 +160,8 @@ model Tool {
   comparisonsAs1 Comparison[] @relation("Tool1Comparisons")
   comparisonsAs2 Comparison[] @relation("Tool2Comparisons")
   monitoringChecks ToolMonitoringCheck[]
+  snapshots       ToolSnapshot[]
+  changes         ToolChangeRecord[]
 
   @@index([slug])
   @@index([categoryId])
@@ -196,14 +203,81 @@ model ToolMonitoringCheck {
   @@index([checkedAt])
 }
 
+model ToolSnapshot {
+  id                   String             @id @default(cuid())
+  toolId               String
+  snapshotAt           DateTime           @default(now())
+
+  // Factual fields to monitor
+  pricingModel         String
+  monthlyPrice         Float?
+  hasFreeTrial         Boolean
+  hasFreeTier          Boolean
+  pricingTiers         Json
+  features             String[]
+  platforms            String[]
+  integrations         String[]
+  usageLimits          Json?
+  languages            String[]
+  exportFormats        String[]
+  limitations          String[]
+  productName          String?
+  targetAudience       String[]
+  discontinuedFeatures String[]
+  policyChanges        String[]
+
+  // Source evidence
+  sourceUrls           Json
+
+  tool                 Tool               @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  changes              ToolChangeRecord[]
+
+  @@index([toolId, snapshotAt(sort: Desc)])
+  @@index([snapshotAt])
+}
+
+model ToolChangeRecord {
+  id              String   @id @default(cuid())
+  toolId          String
+  snapshotId      String
+
+  // Change categorization
+  category        String
+
+  // Change details
+  fieldName       String
+  previousValue   String?
+  currentValue    String?
+
+  // Evidence
+  sourceUrl       String?
+
+  // Status
+  severity        String   @default("info")
+  status          String   @default("needs_review")
+
+  // Metadata
+  detectedAt      DateTime @default(now())
+
+  tool            Tool         @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  snapshot        ToolSnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+
+  @@index([toolId, detectedAt(sort: Desc)])
+  @@index([status])
+  @@index([severity])
+  @@index([category])
+}
+
 model PricingTier {
-  id            String   @id @default(cuid())
-  toolId        String
-  name          String
-  price         Float?
-  billingPeriod String
-  features      String[]
-  tool          Tool     @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  id                String   @id @default(cuid())
+  toolId            String
+  name              String
+  price             Float? // Deprecated: use monthlyPrice and annualMonthlyPrice
+  monthlyPrice      Float? // Actual month-to-month price
+  annualMonthlyPrice Float? // Monthly equivalent when billed annually
+  billingPeriod     String
+  features          String[]
+  tool              Tool     @relation(fields: [toolId], references: [id], onDelete: Cascade)
 
   @@index([toolId])
 }

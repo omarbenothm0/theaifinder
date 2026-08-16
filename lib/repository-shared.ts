@@ -46,6 +46,7 @@ export function mapTool(t: any): Tool {
     pricingModel: t.pricingModel,
     monthlyPrice: t.monthlyPrice ?? undefined,
     hasFreeTrial: t.hasFreeTrial,
+    hasFreeTier: t.hasFreeTier ?? undefined,
     companyName: t.companyName ?? undefined,
     lastVerifiedDate: t.lastVerifiedDate
       ? t.lastVerifiedDate.toISOString().split('T')[0]
@@ -99,6 +100,9 @@ export function mapTool(t: any): Tool {
     publishStatus: t.publishStatus ?? 'published',
     createdAt: t.createdAt ? t.createdAt.toISOString() : undefined,
     updatedAt: t.updatedAt ? t.updatedAt.toISOString() : undefined,
+    monitoringEnabled: t.monitoringEnabled ?? undefined,
+    pricingSourceUrl: t.pricingSourceUrl ?? undefined,
+    featuresSourceUrl: t.featuresSourceUrl ?? undefined,
   };
 }
 

@@ -17,6 +17,7 @@ import {
   ShieldCheck,
   User,
   Clock,
+  Activity,
 } from 'lucide-react';
 import { AdminReviewModeration } from './AdminReviewModeration';
 import { AdminToolForm } from './AdminToolForm';
@@ -244,6 +245,14 @@ export function AdminDashboard({
             <Plus className="w-4 h-4" />
             Add New AI Tool
           </button>
+
+          <a
+            href="/admin/monitoring/changes"
+            className="bg-indigo-500 hover:bg-indigo-400 text-white font-extrabold text-xs px-5 py-3 rounded-2xl transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-md shrink-0"
+          >
+            <Activity className="w-4 h-4" />
+            Change Monitoring
+          </a>
         </div>
       </div>
 

@@ -7,6 +7,14 @@ export interface PricingTier {
   features: string[];
 }
 
+export interface UsageLimits {
+  minutes?: number;
+  credits?: number;
+  generations?: number;
+  storage?: string;
+  seats?: number;
+}
+
 export interface FAQItem {
   question: string;
   answer: string;
@@ -52,6 +60,7 @@ export interface Tool {
   pricingModel: PricingModel;
   monthlyPrice?: number | null;
   hasFreeTrial: boolean;
+  hasFreeTier?: boolean;
   companyName?: string;
   lastVerifiedDate?: string;
   verifiedBy?: string;
@@ -87,6 +96,10 @@ export interface Tool {
   publishStatus?: PublishStatus;
   createdAt?: string;
   updatedAt?: string;
+  // Monitoring configuration
+  monitoringEnabled?: boolean;
+  pricingSourceUrl?: string;
+  featuresSourceUrl?: string;
 }
 
 export interface Category {
