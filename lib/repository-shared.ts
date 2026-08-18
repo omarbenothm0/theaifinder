@@ -26,7 +26,7 @@ export const TOOL_INCLUDE = {
   category: true,
   sources: true,
   pricingTiers: true,
-  alternativesFrom: { include: { targetTool: true } },
+  alternativesFrom: { select: { targetTool: { select: { slug: true } } } },
 };
 
 // --- Mapping helpers: Prisma model -> app-facing Tool/Category/etc shape ---
@@ -88,7 +88,7 @@ export function mapTool(t: any): Tool {
     reviewCount: t.reviewCount,
     screenshots: t.screenshots ?? [],
     alternatives: t.alternativesFrom
-      ? t.alternativesFrom.map((a: any) => a.targetTool?.slug).filter(Boolean)
+      ? t.alternativesFrom.map((a: any) => a.targetTool?.slug || a.targetTool).filter(Boolean)
       : [],
     targetUsers: t.targetUsers ?? [],
     verified: t.verified,
@@ -137,7 +137,7 @@ export function mapPersona(p: any): Persona {
     topToolSlugs: p.topTools
       ? p.topTools
           .sort((a: any, b: any) => a.order - b.order)
-          .map((tt: any) => tt.tool?.slug)
+          .map((tt: any) => tt.tool?.slug || tt.tool)
           .filter(Boolean)
       : [],
     faqs: p.faqs

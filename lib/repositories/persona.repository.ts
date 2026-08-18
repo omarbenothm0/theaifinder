@@ -6,7 +6,7 @@ export class PersonaRepository {
   public static async getPersonas(options: { includeUnpublished?: boolean } = {}): Promise<Persona[]> {
     const personas = await prisma.persona.findMany({
       where: options.includeUnpublished ? {} : { publishStatus: 'published' },
-      include: { faqs: true, topTools: { include: { tool: true } } },
+      include: { faqs: true, topTools: { select: { tool: { select: { slug: true } }, order: true } } },
     });
     return personas.map(mapPersona);
   }
@@ -20,7 +20,7 @@ export class PersonaRepository {
         slug: { equals: slug, mode: 'insensitive' },
         ...(options.includeUnpublished ? {} : { publishStatus: 'published' }),
       },
-      include: { faqs: true, topTools: { include: { tool: true } } },
+      include: { faqs: true, topTools: { select: { tool: { select: { slug: true } }, order: true } } },
     });
     return persona ? mapPersona(persona) : undefined;
   }

@@ -94,7 +94,7 @@ export class UseCaseRepository {
         },
       },
       include: {
-        persona: { include: { faqs: true, topTools: { include: { tool: true } } } },
+        persona: { include: { faqs: true, topTools: { select: { tool: { select: { slug: true } }, order: true } } } },
         useCase: true,
       },
     });
