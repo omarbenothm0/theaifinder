@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ChevronDown, ArrowRight, Menu, X } from 'lucide-react';
 import { NavSearch } from './NavSearch';
-import { geistMonoNav } from '../../lib/fonts/nav-font';
+import { geistMono } from '../../lib/fonts/nav-font';
+import { geistSans } from '../../lib/fonts/geist-sans';
 import { LogoWordmark } from './LogoWordmark';
 import { LogoMark } from './LogoMark';
 import {
@@ -18,13 +19,13 @@ import { NavMegaMenu } from './NavMegaMenu';
 import { MobileNav } from './MobileNav';
 
 const NAV_LINK_BASE =
-  'flex items-center h-16 px-4 gap-0.5 font-[family-name:var(--font-inter)] text-sm font-normal leading-[18.9px] tracking-[-0.42px] text-foreground/75 hover:text-foreground hover:bg-foreground/5 transition-colors duration-200';
+  'flex items-center h-16 px-4 gap-0.5 text-sm font-normal leading-[18.9px] tracking-[-0.42px] text-foreground/75 hover:text-foreground hover:bg-foreground/5 transition-colors duration-200';
 
 const NAV_LINK_ACTIVE =
-  'flex items-center h-16 px-4 gap-0.5 font-[family-name:var(--font-inter)] text-sm font-normal leading-[18.9px] tracking-[-0.42px] text-foreground bg-foreground/8';
+  'flex items-center h-16 px-4 gap-0.5 text-sm font-normal leading-[18.9px] tracking-[-0.42px] text-foreground bg-foreground/8';
 
 const NAV_CTA =
-  'inline-flex items-center justify-center gap-1.5 h-8 py-1.5 px-2.5 border border-foreground/20 rounded bg-transparent font-[family-name:var(--font-nav-mono)] text-xs font-medium leading-[1.3] tracking-[0.015em] uppercase text-foreground hover:bg-foreground/5 active:scale-[0.97] cursor-pointer';
+  'inline-flex items-center justify-center gap-1.5 h-8 py-1.5 px-2.5 border border-foreground/20 rounded bg-transparent text-xs font-medium leading-[1.3] tracking-[0.015em] uppercase text-foreground hover:bg-foreground/5 active:scale-[0.97] cursor-pointer';
 
 const MENU_CLOSE_DELAY_MS = 175;
 
@@ -102,7 +103,7 @@ export function Header() {
     pathname === '/ai-apps';
 
   return (
-    <header className={`sticky top-0 z-50 bg-background ${geistMonoNav.variable} antialiased`}>
+    <header className={`sticky top-0 z-50 bg-background ${geistSans.className} ${geistMono.variable} antialiased`}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 xl:px-12">
         <div className="flex items-center h-16 w-full">
           <Link
@@ -127,7 +128,7 @@ export function Header() {
             >
               <button
                 type="button"
-                className={`${pathname.startsWith('/for') ? NAV_LINK_ACTIVE : NAV_LINK_BASE} cursor-pointer`}
+                className={`${geistSans.className} ${pathname.startsWith('/for') ? NAV_LINK_ACTIVE : NAV_LINK_BASE} cursor-pointer`}
                 id="nav-by-role-btn"
                 aria-expanded={showRolesMenu}
                 aria-haspopup="true"
@@ -151,7 +152,7 @@ export function Header() {
             >
               <button
                 type="button"
-                className={`${allToolsActive ? NAV_LINK_ACTIVE : NAV_LINK_BASE} cursor-pointer`}
+                className={`${geistSans.className} ${allToolsActive ? NAV_LINK_ACTIVE : NAV_LINK_BASE} cursor-pointer`}
                 id="nav-all-tools-btn"
                 aria-expanded={showCategoriesMenu}
                 aria-haspopup="true"
@@ -170,7 +171,7 @@ export function Header() {
 
             <Link
               href="/compare"
-              className={pathname.startsWith('/compare') ? NAV_LINK_ACTIVE : NAV_LINK_BASE}
+              className={`${geistSans.className} ${pathname.startsWith('/compare') ? NAV_LINK_ACTIVE : NAV_LINK_BASE}`}
               id="nav-comparisons-btn"
             >
               Compare
@@ -182,7 +183,7 @@ export function Header() {
 
             <Link
               href="/ai-tool-finder"
-              className={NAV_CTA}
+              className={`${geistMono.className} ${NAV_CTA}`}
               style={{ transition: 'transform 0.1s ease, border-color 0.1s ease, color 0.1s ease, background-color 0.5s linear' }}
               id="header-finder-btn"
             >

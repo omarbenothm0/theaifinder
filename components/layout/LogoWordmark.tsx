@@ -1,3 +1,5 @@
+import { comfortaaWordmark } from '../../lib/fonts/wordmark-font';
+
 type LogoWordmarkProps = {
   className?: string;
 };
@@ -5,7 +7,7 @@ type LogoWordmarkProps = {
 export function LogoWordmark({ className = '' }: LogoWordmarkProps) {
   return (
     <span
-      className={`font-[family-name:var(--font-wordmark)] text-[19px] font-semibold tracking-[-0.02em] text-foreground leading-none truncate ${className}`}
+      className={`${comfortaaWordmark.className} text-[19px] font-semibold tracking-[-0.02em] text-foreground leading-none truncate ${className}`}
     >
       theradarhub
     </span>

@@ -1,19 +1,14 @@
 import './globals.css';
 import React from 'react';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import { comfortaaWordmark } from '../lib/fonts/wordmark-font';
+import { geistSans } from '../lib/fonts/geist-sans';
+import { geistMono } from '../lib/fonts/nav-font';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
 import { getBaseUrl } from '../lib/seo/base-url';
 import { SITE_NAME, SITE_OG_NAME, siteRootTitle, SITE_HERO_TITLE } from '../lib/brand';
 import { SITE_DESCRIPTION, SITE_DESCRIPTION_SHORT } from '../lib/seo/site-copy';
-
-const inter = Inter({
-  subsets: ['latin'],
-  weight: ['400', '500'],
-  variable: '--font-inter',
-});
 
 const BASE_URL = getBaseUrl();
 
@@ -57,7 +52,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${comfortaaWordmark.variable} font-sans bg-background text-foreground min-h-screen flex flex-col antialiased`}>
+      <body className={`${geistSans.className} ${geistMono.variable} ${comfortaaWordmark.variable} bg-background text-foreground min-h-screen flex flex-col antialiased`}>
         <Header />
         <main className="flex-1 w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">{children}</main>
         <Footer />

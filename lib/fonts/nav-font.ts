@@ -1,9 +1,11 @@
 import { Geist_Mono } from 'next/font/google';
 
-/** Geist Mono — navbar CTA only. Nav links use Inter via --font-inter; logo uses Comfortaa separately. */
-export const geistMonoNav = Geist_Mono({
+/** Geist Mono — headings, UI/display text, h1, h2, h3, section headers, card titles, and navbar CTA. */
+export const geistMono = Geist_Mono({
   subsets: ['latin'],
-  weight: ['500'],
-  variable: '--font-nav-mono',
+  variable: '--font-geist-mono',
   display: 'swap',
 });
+
+/** Legacy alias for navbar CTA only — kept for backward compatibility. */
+export const geistMonoNav = geistMono;
