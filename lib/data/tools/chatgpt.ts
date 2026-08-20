@@ -84,7 +84,7 @@ export const chatgptTool: Tool = {
   cons: ['Free tier rate limits during peak usage', 'Requires $20/mo Plus subscription for top models'],
   rating: 0,
   reviewCount: 0,
-  screenshots: ['https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=500'],
+  screenshots: ['/screenshots/chatgpt-1.png'],
   alternatives: ['claude', 'gemini', 'perplexity'],
   targetUsers: ['content-creators', 'developers', 'writers', 'marketers', 'teachers', 'real-estate-agents'],
   verified: true,

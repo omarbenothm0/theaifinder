@@ -67,7 +67,7 @@ function pmTool(partial: PmToolInput): Tool {
     hasMobileApp: partial.hasMobileApp ?? false,
     hasExtension: partial.hasExtension ?? false,
     alternatives: [],
-    screenshots: [],
+    screenshots: partial.screenshots ?? [],
     createdAt: `${VERIFIED_DATE}T00:00:00.000Z`,
     updatedAt: `${VERIFIED_DATE}T00:00:00.000Z`,
     lastVerifiedDate: VERIFIED_DATE,
@@ -198,6 +198,7 @@ export const PM_TOOLS: Tool[] = [
     cons: ['Minute caps on free tier'],
     alternatives: ['fireflies-ai', 'fathom', 'tldv'],
     targetUsers: ['project-managers', 'students', 'teachers', 'real-estate-agents'],
+    screenshots: ['/screenshots/otter-1.png'],
   }),
   pmTool({
     name: 'Fireflies.ai',
@@ -221,6 +222,7 @@ export const PM_TOOLS: Tool[] = [
     cons: ['Storage limits on lower tiers'],
     alternatives: ['otter-ai', 'fathom', 'sembly-ai'],
     targetUsers: ['project-managers'],
+    screenshots: ['/screenshots/fireflies-1.png'],
   }),
   pmTool({
     name: 'Fathom',
@@ -243,6 +245,7 @@ export const PM_TOOLS: Tool[] = [
     pros: ['Generous free tier for individuals'],
     cons: ['Team features require paid seats'],
     targetUsers: ['project-managers', 'real-estate-agents'],
+    screenshots: ['/screenshots/fathom-1.png'],
   }),
   pmTool({
     name: 'tl;dv',
@@ -265,6 +268,7 @@ export const PM_TOOLS: Tool[] = [
     pros: ['Free forever tier cited on official site'],
     cons: ['Pricing displayed in EUR on official page'],
     targetUsers: ['project-managers'],
+    screenshots: ['/screenshots/tldv-1.png'],
   }),
   pmTool({
     name: 'Sembly AI',
@@ -288,6 +292,7 @@ export const PM_TOOLS: Tool[] = [
     cons: ['AI document caps on lower tiers'],
     alternatives: ['otter-ai', 'fireflies-ai', 'microsoft-365-copilot'],
     targetUsers: ['project-managers'],
+    screenshots: ['/screenshots/sembly-1.png'],
   }),
   pmTool({
     name: 'Zoom My Notes',
@@ -331,6 +336,7 @@ export const PM_TOOLS: Tool[] = [
     pros: ['Native Workspace workflow'],
     cons: ['Requires Google Workspace plan with Gemini in Meet'],
     targetUsers: ['project-managers'],
+    screenshots: ['/screenshots/GoogleGeminiinGoogleMeet-1.png'],
   }),
   pmTool({
     name: 'Microsoft 365 Copilot',
@@ -353,6 +359,7 @@ export const PM_TOOLS: Tool[] = [
     pros: ['Enterprise M365 integration'],
     cons: ['Requires M365 Copilot license'],
     targetUsers: ['project-managers'],
+    screenshots: ['/screenshots/Microsoft365Copilot-1.png'],
   }),
   pmTool({
     name: 'Onplana',

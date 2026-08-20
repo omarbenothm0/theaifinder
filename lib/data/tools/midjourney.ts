@@ -72,7 +72,7 @@ export const midjourneyTool: Tool = {
   cons: ['No permanent free trial tier', 'Prompt engineering required for exact composition'],
   rating: 0,
   reviewCount: 0,
-  screenshots: ['https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=500'],
+  screenshots: ['/screenshots/midjourney-1.png'],
   alternatives: ['dall-e-3', 'stable-diffusion'],
   targetUsers: ['content-creators', 'marketers', 'real-estate-agents'],
   verified: true,

@@ -72,7 +72,7 @@ export const v0Tool: Tool = {
   cons: ['Limited backend API logic generation', 'Credit quota on free tier'],
   rating: 0,
   reviewCount: 0,
-  screenshots: ['https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=500'],
+  screenshots: ['/screenshots/v0-1.png'],
   alternatives: ['cursor', 'claude', 'github-copilot'],
   targetUsers: ['developers', 'marketers', 'entrepreneurs'],
   verified: true,

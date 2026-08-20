@@ -60,7 +60,7 @@ export const notionAiTool: Tool = {
   cons: ['Add-on fee on top of standard Notion plan'],
   rating: 0,
   reviewCount: 0,
-  screenshots: ['https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=800&q=500'],
+  screenshots: ['/screenshots/notion-1.png'],
   alternatives: ['chatgpt', 'claude'],
   targetUsers: ['entrepreneurs', 'developers', 'writers', 'marketers', 'project-managers', 'small-business'],
   verified: true,

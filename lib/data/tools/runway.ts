@@ -72,7 +72,7 @@ export const runwayTool: Tool = {
   cons: ['Video credit consumption can be rapid', 'High render times during peak server loads'],
   rating: 0,
   reviewCount: 0,
-  screenshots: ['https://images.unsplash.com/photo-1536240478700-b869070f9279?auto=format&fit=crop&w=800&q=500'],
+  screenshots: ['/screenshots/runway-1.png'],
   alternatives: ['sora', 'synthesia', 'heygen'],
   targetUsers: ['content-creators', 'marketers'],
   verified: true,

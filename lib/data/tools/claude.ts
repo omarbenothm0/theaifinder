@@ -72,7 +72,7 @@ export const claudeTool: Tool = {
   cons: ['Hourly message volume caps on Pro', 'No built-in web search grounding on default UI'],
   rating: 0,
   reviewCount: 0,
-  screenshots: ['https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=500'],
+  screenshots: ['/screenshots/claude1.png'],
   alternatives: ['chatgpt', 'gemini', 'cursor'],
   targetUsers: ['writers', 'developers', 'content-creators', 'teachers'],
   verified: true,

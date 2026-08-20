@@ -66,7 +66,7 @@ export const descriptTool: Tool = {
   cons: ['Export processing can be resource intensive'],
   rating: 0,
   reviewCount: 0,
-  screenshots: ['https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=800&q=500'],
+  screenshots: ['/screenshots/descript-1.png'],
   alternatives: ['elevenlabs', 'runway'],
   targetUsers: ['content-creators', 'teachers'],
   verified: true,

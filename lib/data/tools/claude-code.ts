@@ -104,7 +104,7 @@ export const claudeCodeTool: Tool = {
   ],
   rating: 0,
   reviewCount: 0,
-  screenshots: [],
+  screenshots: ['/screenshots/claudecode-1.png'],
   alternatives: ['cursor', 'claude'],
   targetUsers: ['developers'],
   verified: true,

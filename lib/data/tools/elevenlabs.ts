@@ -66,7 +66,7 @@ export const elevenlabsTool: Tool = {
   cons: ['Character limit tier quotas', 'Requires clear audio samples for quality voice clones'],
   rating: 0,
   reviewCount: 0,
-  screenshots: ['https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=800&q=500'],
+  screenshots: ['/screenshots/elevellabs-1.png'],
   alternatives: ['descript', 'suno-ai'],
   targetUsers: ['content-creators', 'teachers'],
   verified: true,

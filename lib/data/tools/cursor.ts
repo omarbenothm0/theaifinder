@@ -111,7 +111,7 @@ export const cursorTool: Tool = {
   ],
   rating: 0,
   reviewCount: 0,
-  screenshots: [],
+  screenshots: ['/screenshots/cursor-1.webp'],
   alternatives: ['claude-code', 'v0', 'claude'],
   targetUsers: ['developers', 'entrepreneurs'],
   verified: true,
